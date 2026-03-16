@@ -296,7 +296,7 @@ h1 {
   background-size: 200%;
   color: #fff;
   outline: none;
-  cursor: pointer;          
+  cursor: pointer;
   transition: 0.5s;
   border-radius: 25px;
   font-size: 16px;
@@ -311,9 +311,50 @@ h1 {
 
 // 基本資料確定
 .basicInformation{
-  font-size: 20px;
+  font-size: 18px;
   display: flex;
   justify-self: left;
   margin-bottom: 50px;
 
+}
+
+.errorNext{display: block;
+  width: 100%;
+  height: 50px;
+  border: none;
+
+  background-size: 200%;
+
+  outline: none;
+  cursor: pointer;
+  transition: 0.5s;
+  border-radius: 25px;
+  font-size: 16px;
+  margin-top: 65px;
+background: #ccc; /* 灰色底色 */
+  color: #666;      /* 深灰色文字，增加易讀性 */
+
+  opacity: 0.7;       /* 稍微調低透明度 */
+}
+
+
+.errornext2{
+
+  display: inline-block;     /* 改為行內塊 */
+  width: 40%;                /* 保持你設定的寬度 */
+  height: 50px;
+  border: none;
+
+  background-size: 200%;
+
+  outline: none;
+  cursor: pointer;
+  transition: 0.5s;
+  border-radius: 25px;
+  font-size: 16px;
+
+background: #ccc; /* 灰色底色 */
+  color: #666;      /* 深灰色文字，增加易讀性 */
+
+  opacity: 0.7;       /* 稍微調低透明度 */
 }
