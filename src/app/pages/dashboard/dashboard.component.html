@@ -1,0 +1,81 @@
+<div class="dashboard-container">
+  <!-- 頁面標題 -->
+  <div class="page-header">
+    <h1>社區總覽</h1>
+    <span class="subtitle">Overview of your community management system</span>
+  </div>
+
+  <!-- 統計卡片區塊:用@for 把 status 陣列的每筆資料渲染成一張卡片  -->
+<div class="stats-grid">
+  @for (stat of stats; track stat.label) {
+    <div class="stat-card">
+      <!-- icon 在左上角 -->
+      <div class="stat-top">
+        <div class="stat-icon" [style.background]="stat.bg">
+          <mat-icon [style.color]="stat.color">{{ stat.icon }}</mat-icon>
+        </div>
+      </div>
+      <!-- label 和 value 在 icon 下面 -->
+      <div class="stat-info">
+        <span class="stat-value">{{ stat.value }}</span>
+        <span class="stat-label">{{ stat.label }}</span>
+      </div>
+      <!-- 預留空間給之後新增功能，例如趨勢箭頭、比較數據等 -->
+      <div class="stat-extra"></div>
+    </div>
+  }
+</div>
+
+  <!-- 下方兩欄: 公告 + 訪客 -->
+  <div class="bottom-grid">
+
+    <!-- 最新公告 -->
+    <div class="card">
+      <div class="card-header">
+        <mat-icon>campaign</mat-icon>
+        <h2>最新公告</h2>
+      </div>
+      <!-- @for 把 announcements 陣列每筆資料渲染成一列 -->
+      @for (item of announcements;track item.title) {
+      <div class="announcements-item">
+        <div class="announcements-left">
+          <!-- 公告分類標籤 -->
+          <span class="category-badge">{{ item.category }}</span>
+          <span class="announcements-title"> {{ item.title }}</span>
+        </div>
+        <span class="announcements-date">{{ item.date }}</span>
+      </div>
+      }
+    </div>
+
+    <!-- 最近訪客 -->
+    <div class="card">
+      <div class="card-header">
+        <mat-icon>person_add</mat-icon>
+        <h2>最近訪客</h2>
+      </div>
+      <!-- @for 把 recentVisitors 陣列每筆資料渲染成一列 -->
+      @for (visitor of recentVisitors; track visitor.name) {
+      <div class="visitor-item">
+        <div class="visitor-avatar">
+          <!-- 取訪客姓名第一個字當作頭像 -->
+          {{ visitor.name.charAt(0) }}
+        </div>
+        <div class="visitor-info">
+          <span class="visitor-name">{{ visitor.name }}</span>
+          <span class="visitor-unit">{{ visitor.unit }}</span>
+        </div>
+        <div class="visitor-right">
+          <span class="visitor-time">{{ visitor.time }}</span>
+          <!-- @if 根據狀態動態切換樣式，在內=綠色，已離=灰色 -->
+          @if (visitor.status === '在內') {
+          <span class="visitor-status status-inside">{{ visitor.status }}</span>
+          } @else {
+          <span class="visitor-status status-left">{{ visitor.status }}</span>
+          }
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>
