@@ -6,23 +6,25 @@
   </div>
 
   <!-- 統計卡片區塊:用@for 把 status 陣列的每筆資料渲染成一張卡片  -->
-  <div class="stats-grid">
-    @for (stat of stats; track stat.label) {
+<div class="stats-grid">
+  @for (stat of stats; track stat.label) {
     <div class="stat-card">
-      <!-- icon 在右上角 -->
+      <!-- icon 在左上角 -->
       <div class="stat-top">
         <div class="stat-icon" [style.background]="stat.bg">
           <mat-icon [style.color]="stat.color">{{ stat.icon }}</mat-icon>
         </div>
       </div>
-      <!-- 數字和標籤在下方 -->
+      <!-- label 和 value 在 icon 下面 -->
       <div class="stat-info">
         <span class="stat-value">{{ stat.value }}</span>
         <span class="stat-label">{{ stat.label }}</span>
       </div>
+      <!-- 預留空間給之後新增功能，例如趨勢箭頭、比較數據等 -->
+      <div class="stat-extra"></div>
     </div>
-    }
-  </div>
+  }
+</div>
 
   <!-- 下方兩欄: 公告 + 訪客 -->
   <div class="bottom-grid">
