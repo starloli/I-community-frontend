@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { LoginComponent } from './dialog/login/login.component';
 import { RouterOutlet } from '@angular/router';
+import { LoginComponent } from './dialog/login/login.component';
 
 @Component({
   selector: 'app-root',

@@ -1,4 +1,4 @@
-export interface user {
+interface user {
   userName: string,
   password: string,
   fullName: string,
@@ -8,12 +8,12 @@ export interface user {
   token?: string
 }
 
-export interface loginInfo {
+interface loginInfo {
   userName: string,
   password: string
 }
 
-export interface getUserResponse {
+interface getUserResponse {
   userId: number,
   userName: string,
   fullName: string,
@@ -21,12 +21,12 @@ export interface getUserResponse {
   unitNumber: string
 }
 
-export interface res {
+interface res {
   message: string,
   data: any,
   status: number
 }
 
-export interface loginToken {
+interface loginToken {
   accessToken: string
 }

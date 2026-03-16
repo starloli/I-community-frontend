@@ -3,10 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MatDialogTitle, MatDialogActions, MatDialogContent, MatDialogClose } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpServiceService } from '../../@service/http-service.service';
-import { loginToken, user } from '../../interface/interface';
-import { takeUntil } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
-
 
 @Component({
   selector: 'app-login',
@@ -33,18 +29,10 @@ export class LoginComponent {
     if (this.user.userName !== '' &&
       this.user.password !== '') {
       this.httpService.postApi<loginToken>(this.loginUrl, this.user)
-        .pipe(
-          takeUntil(this.dialogRef.afterClosed())
-        )
-        .subscribe((res: any) => {
-          next: (res: loginToken) => {
-            this.user.token = res.accessToken;
-            console.log(this.user);
-            this.dialogRef.close(this.user);
-          }
-          error: (res: HttpErrorResponse) => {
-            console.log(res);
-          }
+        .subscribe((res: loginToken) => {
+          this.user.token = res.accessToken;
+          console.log(this.user);
+          this.dialogRef.close(this.user);
         });
     } else {
       this.snackBar.open(('請輸入' +
