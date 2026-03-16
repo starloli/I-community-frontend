@@ -1,0 +1,319 @@
+/* 全域重置與居中設定 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+align-items: center;
+  justify-content: center;
+}
+.ManagerIcon svg {
+  width: 28px;   /*icon 寬度 */
+  height: 28px;  /* icon高度 */
+}
+  .ManagerIcon {
+   position: absolute;
+   position: absolute; /* 絕對定位 */
+  top: 13px;          /* 距離上邊 15px */
+  right: 10px;
+    background: none;        // 去除按鈕預設背景
+    border: none;            // 去除邊框
+    cursor: pointer;         // 鼠標變手指
+    padding: 8px;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: scale(1.1); // 滑鼠移上去稍微變大
+    }
+  }
+
+
+
+
+.login-container {
+  height: 100vh; /* 滿屏高度 */
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center;     /* 垂直居中 */
+  background-color: #f5f7fa; /* 背景色可放這裡 */
+}
+body {
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  align-items: center;      /* 垂直居中 */
+  justify-content: center;   /* 水平居中 */
+  background-color: #f5f7fa; /* 淺灰色底色 */
+}
+
+/* 登錄容器 */
+.allPage {
+   position: relative;
+  width: 550px;
+  height: 550px;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  text-align: center; /* 讓標題和底部文字居中 */
+}
+
+h1 {
+  margin-top: 15px;
+  margin-bottom: 40px;
+  color: #333;
+  font-weight: 500;
+  letter-spacing: 2px;
+}
+
+/* 輸入框容器 */
+.txtb  {
+  margin-bottom: 40px;
+  width: 100%;
+  display: flex;         /* 使用 flex 輔助佈局 */
+  flex-direction: column; /* 讓 span 和 input 上下排列 */
+  align-items: flex-start; /* 確保內容靠左 */
+}
+.txtb span {
+  display: block;        /* 轉為區塊，使其獨佔一行 */
+  text-align: left;      /* 強制左對齊 */
+  font-size: 14px;       /* 標籤字體稍微小一點點，更有質感 */
+  color: #555;           /* 深灰色 */
+  margin-bottom: 8px;    /* 與輸入框保持一點距離 */
+  font-weight: bold;     /* 加粗讓標題更明顯 */
+}
+.txtb input  {
+  width: 100%;
+  height: 45px;
+  padding: 0 10px;
+  font-size: 16px;
+  border: none;
+  border-bottom: 2px solid #adadad;
+  outline: none;
+  background: none;
+  transition: border-color 0.5s;
+}
+
+/* 當點擊輸入框時，下劃線變成漸層色 */
+.txtb input:focus {
+  border-bottom: 2px solid #3498db;
+}
+
+/* 登錄按鈕 - 保留原始漸層色 */
+.logtb {
+
+  display: block;
+  width: 100%;
+  height: 50px;
+  border: none;
+  background: linear-gradient(120deg, #3498db, #8e44ad, #3498db);
+  background-size: 200%;
+  color: #fff;
+  outline: none;
+  cursor: pointer;
+  transition: 0.5s;
+  border-radius: 25px;
+  font-size: 16px;
+  margin-top: 65px;
+}
+
+.logtb:hover {
+  background-position: right; /* 懸停時的流動效果 */
+}
+
+/* 底部文字與鏈接 */
+.bottom-text {
+  margin-top: 40px;
+  font-size: 16px;
+  color: #666;
+}
+
+
+.link-btn {
+  background: none;
+  border: none;
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 1em;
+  padding: 0;
+}
+
+
+
+
+
+
+
+
+
+//注冊界面
+/* 全域重置與居中設定 */
+.ManagerIcon svg {
+  width: 28px;   /*icon 寬度 */
+  height: 28px;  /* icon高度 */
+}
+  .ManagerIcon {
+   position: absolute;
+   position: absolute; /* 絕對定位 */
+  top: 13px;          /* 距離上邊 15px */
+  right: 10px;
+    background: none;        // 去除按鈕預設背景
+    border: none;            // 去除邊框
+    cursor: pointer;         // 鼠標變手指
+    padding: 8px;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: scale(1.1); // 滑鼠移上去稍微變大
+    }
+  }
+
+
+
+
+/* 注冊容器 */
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f7fa;
+}/* 按鈕組容器：讓按鈕並排 */
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f7fa;
+}
+
+
+
+.allPage1 {
+  position: relative;
+  width: 650px;
+  height: 650px;
+  background: #ffffff;
+  padding: 60px 50px 40px 50px; /* 增加頂部 padding 給步進器 */
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  text-align: center;
+}
+/* --- 步進器樣式 --- */
+.stepper {
+  margin-top: -15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.step .circle {
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  background: #f0f2f5;
+  color: #adadad;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  border: 2px solid #e0e0e0;
+  z-index: 2;
+}
+.step .label {
+  font-size: 14px;
+  color: #adadad;
+  margin-top: 8px;
+  font-weight: 500;
+}
+.line {
+  width: 100px;
+  height: 2px;
+  background: #e0e0e0;
+  margin: 0 10px;
+  position: relative;
+  top: -12px; /* 對齊圓圈中心 */
+}
+.step.active .circle {
+  border-color: #3498db;
+  color: #3498db;
+  background: #fff;
+}
+.step.active .label {
+  color: #333;
+}
+/* 輸入框容器 */
+.signUpTxtb {
+  margin-bottom: 20px;
+}
+.signUpTxtb input {
+  width: 100%;
+  height: 45px;
+  padding: 0 10px;
+  font-size: 16px;
+  border: none;
+  border-bottom: 2px solid #adadad;
+  outline: none;
+  background: none;
+  transition: border-color 0.5s;
+}
+.signUpTxtb span {
+  display: block;        /* 轉為區塊，使其獨佔一行 */
+  text-align: left;      /* 強制左對齊 */
+  font-size: 14px;       /* 標籤字體稍微小一點點，更有質感 */
+  color: #555;           /* 深灰色 */
+  margin-bottom: 8px;    /* 與輸入框保持一點距離 */
+  font-weight: bold;     /* 加粗讓標題更明顯 */
+}
+/* 當點擊輸入框時，下劃線變成漸層色 */
+.signUpTxtb input:focus {
+  border-bottom: 2px solid #3498db;
+}
+
+
+.button-container {
+  display: flex;             /* 開啟 Flex 佈局 */
+  justify-content: center;   /* 水平居中 */
+  gap:100px;                 /* 兩個按鈕之間的間距 */
+  width: 100%;
+  margin-top: 40px;          /* 根據你的需求調整與上方內容的間距 */
+}
+
+/* 修改：移除 display: block，讓它們可以並排 */
+.lastStep, .nextStep {
+  display: inline-block;     /* 改為行內塊 */
+  width: 40%;                /* 保持你設定的寬度 */
+  height: 50px;
+  border: none;
+  background: linear-gradient(120deg, #3498db, #8e44ad, #3498db);
+  background-size: 200%;
+  color: #fff;
+  outline: none;
+  cursor: pointer;          
+  transition: 0.5s;
+  border-radius: 25px;
+  font-size: 16px;
+
+}
+
+.lastStep:hover, .nextStep:hover {
+  background-position: right;
+}
+
+
+
+// 基本資料確定
+.basicInformation{
+  font-size: 20px;
+  display: flex;
+  justify-self: left;
+  margin-bottom: 50px;
+
+}

@@ -1,0 +1,133 @@
+@if(booleanSignup==false && booleanIsManager ==false){
+<div class="login-container">
+<div class='allPage'>
+  <button class="ManagerIcon" (click)="switchUser()">
+     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343">
+        <path d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm146.5-204.5Q340-521 340-580t40.5-99.5Q421-720 480-720t99.5 40.5Q620-639 620-580t-40.5 99.5Q539-440 480-440t-99.5-40.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm100-95.5q47-15.5 86-44.5-39-29-86-44.5T480-280q-53 0-100 15.5T294-220q39 29 86 44.5T480-160q53 0 100-15.5ZM523-537q17-17 17-43t-17-43q-17-17-43-17t-43 17q-17 17-17 43t17 43q17 17 43 17t43-17Zm-43-43Zm0 360Z"/>
+      </svg>
+</button>
+
+
+<h1>登錄</h1>
+<div class="txtb">
+<span class="input-label">賬號</span>
+  <input type="text" placeholder="請輸入賬號">
+</div>
+
+<div class="txtb"> <span class="input-label">密碼</span>
+<input type="password" placeholder="請輸入密碼">
+</div>
+<button class="logtb" >登錄</button>
+<div class="bottom-text"><span>還沒有賬號?點擊
+ <button type="button" class="link-btn" (click)="sign_up()">注冊</button></span>
+</div>
+</div>
+</div>
+}
+
+
+@if(booleanIsManager==true){
+<div class="login-container">
+<div class='allPage'>
+  <button class="ManagerIcon" (click)="switchUser()">
+     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343">
+        <path d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm146.5-204.5Q340-521 340-580t40.5-99.5Q421-720 480-720t99.5 40.5Q620-639 620-580t-40.5 99.5Q539-440 480-440t-99.5-40.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm100-95.5q47-15.5 86-44.5-39-29-86-44.5T480-280q-53 0-100 15.5T294-220q39 29 86 44.5T480-160q53 0 100-15.5ZM523-537q17-17 17-43t-17-43q-17-17-43-17t-43 17q-17 17-17 43t17 43q17 17 43 17t43-17Zm-43-43Zm0 360Z"/>
+      </svg>
+</button>
+
+
+<h1>登錄(管理員)</h1>
+<div class="txtb">
+<span class="input-label">賬號</span>
+  <input type="text" placeholder="請輸入賬號">
+</div>
+
+<div class="txtb"> <span class="input-label">密碼</span>
+<input type="password" placeholder="請輸入密碼">
+</div>
+<button class="logtb" >登錄</button>
+
+</div>
+</div>
+}
+
+
+
+
+
+
+<!-- 注冊 -->
+@if(booleanSignup==true){
+<div class="login-container">
+<div class='allPage1'>
+<div class="stepper">
+      <div class="step " [class.active]="signUpStep === 1" [class.completed]="signUpStep > 1">
+        <div class="circle">1</div>
+        <div class="label">注冊賬號</div>
+      </div>
+      <div class="line" [class.completed]="signUpStep > 1"></div>
+      <div class="step" [class.active]="signUpStep === 2" [class.completed]="signUpStep > 2">
+        <div class="circle">2</div>
+        <div class="label">基本資料</div>
+      </div>
+      <div class="line" [class.completed]="signUpStep > 2"></div>
+      <div class="step" [class.active]="signUpStep === 3">
+        <div class="circle">3</div>
+        <div class="label">資料確認</div>
+      </div>
+    </div>
+  <!-- <button class="ManagerIcon">
+     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343">
+        <path d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm146.5-204.5Q340-521 340-580t40.5-99.5Q421-720 480-720t99.5 40.5Q620-639 620-580t-40.5 99.5Q539-440 480-440t-99.5-40.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm100-95.5q47-15.5 86-44.5-39-29-86-44.5T480-280q-53 0-100 15.5T294-220q39 29 86 44.5T480-160q53 0 100-15.5ZM523-537q17-17 17-43t-17-43q-17-17-43-17t-43 17q-17 17-17 43t17 43q17 17 43 17t43-17Zm-43-43Zm0 360Z"/>
+      </svg>
+</button> -->
+
+
+@if(signUpStep==1){
+<div class="signUpTxtb"><span class="input-label">賬號</span>
+  <input type="text" placeholder="請輸入賬號">
+</div>
+
+<div class="signUpTxtb"><span class="input-label">密碼</span>
+<input type="password" placeholder="請輸入密碼">
+</div><div class="signUpTxtb"><span class="input-label">確認密碼</span>
+<input type="password" placeholder="請確認密碼">
+</div>
+<button class="logtb" (click)="Stepper()">下一步</button>
+<div class="bottom-text"><span>
+ <button type="button" class="link-btn" (click)="backLogin()">返回登錄</button></span>
+</div>
+
+}
+@if(signUpStep==2){
+  <div class="signUpTxtb"><span class="input-label">姓名</span>
+  <input type="text" placeholder="請輸入您的真實姓名">
+</div>
+
+<div class="signUpTxtb"><span class="input-label">Email</span>
+<input   type="text"placeholder="請輸入您的Email">
+</div><div class="signUpTxtb"><span class="input-label">電話</span>
+<input   type="number" placeholder="請輸入您的電話">
+</div>
+<div class="signUpTxtb"><span class="input-label">門牌號</span>
+<input type="password" placeholder="請輸入您的門牌號（如 A棟3F-1）"><div class="button-container">
+<button class="lastStep" (click)="lastStep()">上一步</button>
+<button class="nextStep" (click)="Stepper()">下一步</button></div></div>
+<!-- <div class="bottom-text"><span> -->
+ <!-- <button type="button" class="link-btn" (click)="backLogin()">返回登錄</button></span> -->
+<!-- </div> -->
+}
+
+@if(signUpStep==3){
+  <h1>基本資料</h1>
+<p class="basicInformation">姓名:</p>
+<p class="basicInformation">Email:</p>
+<p class="basicInformation">電話:</p>
+<p class="basicInformation">門牌號:</p>
+<div class="button-container">
+<button class="lastStep" (click)="lastStep()">返回修改</button>
+<button class="nextStep" (click)="Stepper()">提交</button></div>
+}
+</div>
+</div>
+}
