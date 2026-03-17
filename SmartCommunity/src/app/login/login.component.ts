@@ -30,6 +30,8 @@ signUpStep:number=1;
 // user登錄
 userName!:string;
 password!:string;
+//判斷是否登錄成功
+userloginStatus=true;
 
 //注冊
 signUpUserName!:string;
@@ -43,11 +45,21 @@ unitNumber!:string;
 //管理者密碼賬號
 adminAccountn!:string;
 adminPassword!:string;
+//管理者是否登錄成功
+isManagerStatus=true;
 
 // 用來追蹤使用者是否點擊過確認密碼框
 isConfirmTouched = false;
 isClickPhone=false;
 isClickEmail=false;
+
+//判斷密碼長度
+isPasswordLength=false  ;
+
+// icon
+emailIcon='stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=mail';
+
+
 //判斷email和phone格式
 isValidEmail(email: string): boolean {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -72,11 +84,13 @@ console.log(LoginAccount);
 this.http.postApi("http://localhost:8083/auth/login",LoginAccount).subscribe({
   next: (res) => {
     console.log('成功:', res);
+    this.userloginStatus=true;
   },
   error: (error: HttpErrorResponse) => {
     // 這裡就是獲取報錯程序碼（狀態碼）的地方
     console.log('狀態碼:', error.status);
     console.log('錯誤訊息:', error.message);
+this.userloginStatus=false;
 
 
   }
@@ -109,9 +123,31 @@ this.backLogin();
 //管理者登錄api
 adminLoginApi(){
   let adminAccount={
-
   }
+  //當他輸入錯誤時
+  this.isManagerStatus=false;
 }
+
+
+
+
+
+
+
+//登錄狀態判斷
+loginstatus(){
+  this.userloginStatus=true;
+}
+//管理者是否登錄成功
+adminloginstatus(){
+this.isManagerStatus=true;
+}
+
+
+
+
+
+
 
 
 
@@ -127,6 +163,8 @@ this.booleanSignup=!this.booleanSignup;
     this.password='';
 this.adminAccountn='';
 this.adminPassword='';
+this.isManagerStatus=true;
+this.userloginStatus=true;
   }
 
 
@@ -137,7 +175,7 @@ this.adminPassword='';
 
   if(this.signUpStep == 1){
 
-    if(!this.signUpUserName?.trim() || !this.signUpPassword?.trim() || !this.confirmPassword?.trim()){
+    if(!this.signUpUserName?.trim() || !this.signUpPassword?.trim() || !this.confirmPassword?.trim() || (this.signUpPassword.length<6 || this.signUpPassword.length>12)){
 
       return;
     }
