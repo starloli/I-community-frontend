@@ -1,1 +1,126 @@
-<p>visitor works!</p>
+<div class="visitor-container">
+
+  <!-- 頁面標題 + 新增按鈕 -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1>訪客登記</h1>
+      <span class="subtitle">記錄社區訪客進出資訊</span>
+    </div>
+    <!-- 點擊開啟新增表單 -->
+    <button class="add-btn" (click)="openForm()">
+      <mat-icon>person_add</mat-icon>
+      新增訪客
+    </button>
+  </div>
+
+  <!-- 新增訪客表單：只有 showForm 為 true 時才顯示 -->
+  @if (showForm) {
+    <div class="form-overlay" (click)="closeForm()">
+      <!-- stopPropagation 防止點擊表單內部時關閉 -->
+      <div class="form-card" (click)="$event.stopPropagation()">
+        <div class="form-header">
+          <h2>新增訪客登記</h2>
+          <mat-icon class="close-btn" (click)="closeForm()">close</mat-icon>
+        </div>
+
+        <div class="form-body">
+          <!-- 訪客姓名 -->
+          <div class="form-group">
+            <label>訪客姓名 <span class="required">*</span></label>
+            <input type="text" [(ngModel)]="newVisitor.name" placeholder="請輸入訪客姓名" />
+          </div>
+
+          <!-- 訪客電話 -->
+          <div class="form-group">
+            <label>訪客電話</label>
+            <input type="text" [(ngModel)]="newVisitor.phone" placeholder="請輸入訪客電話" />
+          </div>
+
+          <!-- 被訪住戶 -->
+          <div class="form-group">
+            <label>被訪住戶門牌 <span class="required">*</span></label>
+            <input type="text" [(ngModel)]="newVisitor.hostUnit" placeholder="例如：A101" />
+          </div>
+
+          <!-- 車牌號碼 -->
+          <div class="form-group">
+            <label>車牌號碼</label>
+            <input type="text" [(ngModel)]="newVisitor.licensePlate" placeholder="無車輛請留空" />
+          </div>
+        </div>
+
+        <div class="form-footer">
+          <button class="cancel-btn" (click)="closeForm()">取消</button>
+          <button class="submit-btn" (click)="addVisitor()">確認登記</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- 搜尋欄 -->
+<div class="search-bar">
+  <mat-icon>search</mat-icon>
+  <input
+    type="text"
+    [(ngModel)]="searchKeyword"
+    placeholder="搜尋訪客姓名、電話、門牌、車牌、時間..."
+  />
+  <!-- 有輸入內容時顯示清除按鈕 -->
+  @if (searchKeyword) {
+    <mat-icon class="clear-btn" (click)="searchKeyword = ''">close</mat-icon>
+  }
+</div>
+
+  <!-- 訪客列表 -->
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>姓名</th>
+          <th>電話</th>
+          <th>被訪門牌</th>
+          <th>車牌號碼</th>
+          <th>進入時間</th>
+          <th>離開時間</th>
+          <th>狀態</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (visitor of filteredVisitors; track visitor.id) {
+          <tr>
+            <td>
+              <div class="visitor-name-cell">
+                <!-- 頭像顯示姓名第一個字 -->
+                <div class="avatar">{{ visitor.name.charAt(0) }}</div>
+                {{ visitor.name }}
+              </div>
+            </td>
+            <td>{{ visitor.phone || '-' }}</td>
+            <td>{{ visitor.hostUnit }}</td>
+            <td>{{ visitor.licensePlate || '-' }}</td>
+            <td>{{ visitor.checkInTime }}</td>
+            <td>{{ visitor.checkOutTime || '-' }}</td>
+            <td>
+              <!-- 根據狀態顯示不同顏色的標籤 -->
+              @if (visitor.status === '在內') {
+                <span class="status-badge status-inside">在內</span>
+              } @else {
+                <span class="status-badge status-left">已離</span>
+              }
+            </td>
+            <td>
+              <!-- 只有狀態為在內才顯示離開按鈕 -->
+              @if (visitor.status === '在內') {
+                <button class="checkout-btn" (click)="checkOut(visitor)">
+                  登記離開
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</div>
