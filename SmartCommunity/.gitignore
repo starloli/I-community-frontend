@@ -9,10 +9,7 @@
 # Node
 /node_modules
 npm-debug.log
-npm-debug.log*
 yarn-error.log
-yarn-debug.log*
-yarn-error.log*
 
 # IDEs and editors
 .idea/
@@ -39,7 +36,6 @@ yarn-error.log*
 /libpeerconnection.log
 testem.log
 /typings
-.metadata
 
 # System files
 .DS_Store
