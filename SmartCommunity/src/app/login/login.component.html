@@ -1,0 +1,204 @@
+<!-- //使用者登錄 -->
+@if(booleanSignup==false && booleanIsManager ==false){
+
+<div class="login-container">
+  <div class='allPage'>
+    <button class="ManagerIcon" (click)="switchUser()">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343">
+        <path
+          d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm146.5-204.5Q340-521 340-580t40.5-99.5Q421-720 480-720t99.5 40.5Q620-639 620-580t-40.5 99.5Q539-440 480-440t-99.5-40.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm100-95.5q47-15.5 86-44.5-39-29-86-44.5T480-280q-53 0-100 15.5T294-220q39 29 86 44.5T480-160q53 0 100-15.5ZM523-537q17-17 17-43t-17-43q-17-17-43-17t-43 17q-17 17-17 43t17 43q17 17 43 17t43-17Zm-43-43Zm0 360Z" />
+      </svg>
+    </button>
+
+    @if(userloginStatus){
+    <h1>登入</h1>
+    <div class="txtb">
+      <span class="input-label">帳號</span>
+      <input type="text" [(ngModel)]="userName" placeholder="請輸入帳號" (input)="handleInput1($event)"
+        (compositionend)="onCompositionEnd1($event)">
+    </div>
+
+    <div class="txtb"> <span class="input-label">密碼</span>
+      <input type="password" placeholder="請輸入密碼" [(ngModel)]="password" (keydown.space)="$event.preventDefault()">
+    </div>
+    <button class="logtb" (click)="useLoginApi()">登入</button>
+    <div class="bottom-text"><span>還沒有帳號?點擊
+        <button type="button" class="link-btn" (click)="sign_up()">註冊</button></span>
+    </div>
+    }@else if(userloginStatus==false){
+    <h1>登入</h1>
+    <div class="txtbfalse">
+      <span class="input-label">帳號</span>
+      <input type="text" [(ngModel)]="userName" placeholder="請輸入帳號" (input)="handleInput1($event)"
+        (compositionend)="onCompositionEnd1($event)" (input)="loginstatus()">
+    </div>
+
+    <div class="txtbfalse"> <span class="input-label">密碼</span>
+      <input type="password" placeholder="請輸入密碼" [(ngModel)]="password" (keydown.space)="$event.preventDefault()"
+        (input)="loginstatus()">
+    </div>
+    <button class="errorNext">登入</button>
+    <span class="errorMessage">帳號或密碼有誤</span>
+    <div class="bottom-text"><span>還沒有帳號?點擊
+        <button type="button" class="link-btn" (click)="sign_up()">註冊</button></span>
+    </div>
+
+    }
+  </div>
+</div>
+}
+
+
+
+
+<!-- //管理者登錄 -->
+@if(booleanIsManager==true){
+
+
+<div class="login-container">
+  <div class='allPage'>
+    <button class="ManagerIcon" (click)="switchUser()">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343">
+        <path
+          d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm146.5-204.5Q340-521 340-580t40.5-99.5Q421-720 480-720t99.5 40.5Q620-639 620-580t-40.5 99.5Q539-440 480-440t-99.5-40.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm100-95.5q47-15.5 86-44.5-39-29-86-44.5T480-280q-53 0-100 15.5T294-220q39 29 86 44.5T480-160q53 0 100-15.5ZM523-537q17-17 17-43t-17-43q-17-17-43-17t-43 17q-17 17-17 43t17 43q17 17 43 17t43-17Zm-43-43Zm0 360Z" />
+      </svg>
+    </button>
+
+    @if(isManagerStatus){
+    <h1>登入(管理員)</h1>
+    <div class="txtb">
+      <span class="input-label">帳號</span>
+      <input type="text" placeholder="請輸入帳號" (input)="handleInput2($event)" (compositionend)="onCompositionEnd2($event)"
+        [(ngModel)]="adminAccountn">
+    </div>
+
+    <div class="txtb"> <span class="input-label">密碼</span>
+      <input type="password" placeholder="請輸入密碼" [(ngModel)]="adminPassword" (keydown.space)="$event.preventDefault()">
+    </div>
+    <button class="logtb" (click)="adminLoginApi()">登入</button>
+    }
+
+
+
+    @else if(isManagerStatus==false){
+    <h1>登入(管理員)</h1>
+    <div class="txtbfalse">
+      <span class="input-label">帳號</span>
+      <input type="txtbfalse" placeholder="請輸入帳號" (input)="handleInput2($event)"
+        (compositionend)="onCompositionEnd2($event)" [(ngModel)]="adminAccountn" (input)="adminloginstatus()">
+    </div>
+
+    <div class="txtbfalse"> <span class="input-label">密碼</span>
+      <input type="password" placeholder="請輸入密碼" [(ngModel)]="adminPassword" (keydown.space)="$event.preventDefault()"
+        (input)="adminloginstatus()">
+    </div>
+    <button class="errorNext">登入</button>
+    <span class="errorMessage">帳號或密碼有誤</span>}
+  </div>
+</div>
+}
+
+
+
+
+
+
+<!-- 注冊 -->
+@if(booleanSignup==true){
+<div class="login-container">
+  <div class='allPage1'>
+    <div class="stepper">
+      <div class="step " [class.active]="signUpStep === 1" [class.completed]="signUpStep > 1">
+        <div class="circle">1</div>
+        <div class="label">註冊帳號</div>
+      </div>
+      <div class="line" [class.completed]="signUpStep > 1"></div>
+      <div class="step" [class.active]="signUpStep === 2" [class.completed]="signUpStep > 2">
+        <div class="circle">2</div>
+        <div class="label">基本資料</div>
+      </div>
+      <div class="line" [class.completed]="signUpStep > 2"></div>
+      <div class="step" [class.active]="signUpStep === 3">
+        <div class="circle">3</div>
+        <div class="label">資料確認</div>
+      </div>
+    </div>
+    <!-- <button class="ManagerIcon">
+     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343">
+        <path d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm146.5-204.5Q340-521 340-580t40.5-99.5Q421-720 480-720t99.5 40.5Q620-639 620-580t-40.5 99.5Q539-440 480-440t-99.5-40.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm100-95.5q47-15.5 86-44.5-39-29-86-44.5T480-280q-53 0-100 15.5T294-220q39 29 86 44.5T480-160q53 0 100-15.5ZM523-537q17-17 17-43t-17-43q-17-17-43-17t-43 17q-17 17-17 43t17 43q17 17 43 17t43-17Zm-43-43Zm0 360Z"/>
+      </svg>
+</button> -->
+
+
+    @if(signUpStep==1){
+    <div class="signUpTxtb"><span class="input-label">帳號</span>
+      <input type="text" placeholder="請輸入帳號" [(ngModel)]="signUpUserName" (input)="handleInput($event)"
+        (compositionend)="onCompositionEnd($event)">
+    </div>
+
+    <div class="signUpTxtb"><span class="input-label">密碼</span>@if(isPasswordLength &&(signUpPassword.length>16 || signUpPassword.length<6) ){<span
+        style="color: red;">密碼長度必須是6位-12位</span>}
+
+        <input type="password" placeholder="請輸入密碼" [(ngModel)]="signUpPassword"  (keydown.space)="$event.preventDefault()" (focus)="isPasswordLength=true"
+        [class.input-error]="isPasswordLength && ((signUpPassword.length>12 || signUpPassword.length<6) || signUpPassword !== confirmPassword)">
+    </div>
+
+
+    <div class="signUpTxtb"><span class="input-label">確認密碼 @if(
+        isConfirmTouched&&signUpPassword!==confirmPassword){<span style="color: red;">密碼不一致</span>}</span>
+      <input type="password" placeholder="請確認密碼" [(ngModel)]="confirmPassword" (keydown.space)="$event.preventDefault()"
+        (focus)="isConfirmTouched = true" [class.input-error]="isConfirmTouched && signUpPassword !== confirmPassword">
+    </div>@if(this.signUpUserName?.trim() && this.signUpPassword?.trim() && this.confirmPassword?.trim() &&
+    this.signUpPassword == this.confirmPassword &&(signUpPassword.length<=12 && signUpPassword.length>=6)){
+    <button class="logtb" (click)="Stepper1()">下一步</button>
+    }
+    @else{<button class="errorNext">下一步</button>}
+    <div class="bottom-text"><span>
+        <button type="button" class="link-btn" (click)="backLogin()">返回登入</button></span>
+    </div>
+
+    }
+    @if(signUpStep==2){
+    <div class="signUpTxtb"><span class="input-label">姓名</span>
+      <input type="text" placeholder="請輸入您的真實姓名" [(ngModel)]="fullName" (keydown.space)="$event.preventDefault()">
+    </div>
+
+    <div class="signUpTxtb"><span class="input-label">Email@if(isClickEmail && !isValidEmail(email)){<span
+          style="color: red;">Email格式不正確</span>}</span>
+      <input type="text" placeholder="請輸入您的Email" [(ngModel)]="email" (keydown.space)="$event.preventDefault()"
+        (focus)="isClickEmail =true" [class.input-error]="isClickEmail && !isValidEmail(email)">
+    </div>
+    <div class="signUpTxtb"><span class="input-label">電話@if( isClickPhone &&!isValidPhone(phone)){<span
+          style="color: red;">電話格式不正確</span>}</span>
+      <input type="tel" placeholder="請輸入您的電話" [(ngModel)]="phone" (keydown.space)="$event.preventDefault()"
+        (focus)="isClickPhone =true" [class.input-error]="isClickPhone && !isValidPhone(phone)">
+    </div>
+    <div class="signUpTxtb"><span class="input-label">門牌號</span>
+      <input type="text" placeholder="請輸入您的門牌號（如 A棟3F-1）" [(ngModel)]="unitNumber">
+      <div class="button-container">
+        <button class="lastStep" (click)="lastStep()">上一步</button>
+        @if(this.email?.trim() && this.phone && this.unitNumber?.trim() && isValidEmail(email) &&
+        isValidPhone(phone)){<button class="nextStep" (click)="stepper2()">下一步</button>}
+        @else{<button class="errornext2">下一步</button>}
+      </div>
+    </div>
+    <!-- <div class="bottom-text"><span> -->
+    <!-- <button type="button" class="link-btn" (click)="backLogin()">返回登錄</button></span> -->
+    <!-- </div> -->
+    }
+
+    @if(signUpStep==3){
+    <!-- <h1>基本資料</h1> -->
+    <p class="basicInformation"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"><path d="M367-527q-47-47-47-113t47-113q47-47 113-47t113 47q47 47 47 113t-47 113q-47 47-113 47t-113-47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm296.5-343.5Q560-607 560-640t-23.5-56.5Q513-720 480-720t-56.5 23.5Q400-673 400-640t23.5 56.5Q447-560 480-560t56.5-23.5ZM480-640Zm0 400Z"/></svg>&nbsp;帳號 :&nbsp;&nbsp;{{signUpUserName}}</p>
+    <p class="basicInformation"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"><path d="M560-440h200v-80H560v80Zm0-120h200v-80H560v80ZM200-320h320v-22q0-45-44-71.5T360-440q-72 0-116 26.5T200-342v22Zm216.5-183.5Q440-527 440-560t-23.5-56.5Q393-640 360-640t-56.5 23.5Q280-593 280-560t23.5 56.5Q327-480 360-480t56.5-23.5ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm0-80h640v-480H160v480Zm0 0v-480 480Z"/></svg>&nbsp;姓名 :&nbsp;&nbsp;{{fullName}}</p>
+    <p class="basicInformation"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm320-280L160-640v400h640v-400L480-440Zm0-80 320-200H160l320 200ZM160-640v-80 480-400Z"/></svg>&nbsp;Email :&nbsp;&nbsp;{{email}}</p>
+    <p class="basicInformation"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"><path d="M280-40q-33 0-56.5-23.5T200-120v-720q0-33 23.5-56.5T280-920h400q33 0 56.5 23.5T760-840v124q18 7 29 22t11 34v80q0 19-11 34t-29 22v404q0 33-23.5 56.5T680-40H280Zm0-80h400v-720H280v720Zm0 0v-720 720Zm228.5-611.5Q520-743 520-760t-11.5-28.5Q497-800 480-800t-28.5 11.5Q440-777 440-760t11.5 28.5Q463-720 480-720t28.5-11.5Z"/></svg>&nbsp;電話 :&nbsp;&nbsp;{{phone}}</p>
+    <p class="basicInformation"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>&nbsp;門牌號 :&nbsp;&nbsp;{{unitNumber}}</p>
+    <div class="button-container">
+      <button class="lastStep" (click)="lastStep()">返回修改</button>
+      <button class="nextStep" (click)="signUpApi()">提交</button>
+    </div>
+    }
+  </div>
+</div>
+}
