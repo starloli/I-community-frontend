@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MatDialogTitle, MatDialogActions, MatDialogContent, MatDialogClose } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { HttpServiceService } from '../../@service/http-service.service';
+import { HttpServiceService } from '../../@service/http.service';
 
 @Component({
   selector: 'app-login',
