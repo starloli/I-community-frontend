@@ -40,3 +40,36 @@ export interface Facility {
   closeTime: string,
   isAvailable: boolean
 }
+
+export interface RepairRequest {
+  id: number,
+  location: string,
+  category: string,
+  description: string,
+  status: '待處理' | '處理中' | '已完工',
+  submittedAt: string,
+  resolvedAt: string,
+  handler: string,
+  note: string
+}
+
+export interface Bill {
+  id: number,
+  billingMonth: string,
+  billType: '水費' | '電費' | '管理費',
+  amount: number,
+  dueDate: string,
+  status: '待繳' | '已繳' | '逾期',
+  paidAt: string
+}
+
+export interface Visitor {
+  id: number,
+  name: string,
+  phone: string,
+  hostUnit: string,
+  licensePlate: string,
+  checkInTime: string,
+  checkOutTime: string,
+  status: '在內' | '已離'
+}

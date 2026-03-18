@@ -4,18 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Visitor } from '../../interface/interface';
 
-// 訪客資料的型別定義
-interface Visitor {
-  id: number;
-  name: string;        // 訪客姓名
-  phone: string;       // 訪客電話
-  hostUnit: string;    // 被訪住戶門牌
-  licensePlate: string; // 車牌號碼
-  checkInTime: string; // 進入時間
-  checkOutTime: string; // 離開時間
-  status: '在內' | '已離'; // 目前狀態
-}
 
 @Component({
   selector: 'app-visitor',
