@@ -1,18 +1,19 @@
-<button (click)="getFacility()">aaaaaaaaaaa</button>
+<button (click)="getFacility()">獲得公共設施資訊</button>
+<button (click)="registFacility()">新增設備</button>
 @for (item of facilities; track item.id) {
-  <div>
-    <h1>{{item.name}}</h1>
-    <h2>{{item.description}}</h2>
-    <p>可容納人數：{{item.capacity}}</p>
-    <p>開始時間：{{item.open_time}}</p>
-    <p>結束時間：{{item.close_time}}
-    <p>
-      現在是否可用：
-      @if (item.is_available) {
-        <span>是</span>
-      } @else {
-        <span>否</span>
-      }
-    </p>
-  </div>
+<div>
+  <h1>{{item.name}}</h1>
+  <h2>{{item.description}}</h2>
+  <p>可容納人數：{{item.capacity}}</p>
+  <p>開始時間：{{item.openTime}}</p>
+  <p>結束時間：{{item.closeTime}}
+  <p>
+    現在是否可用：
+    @if (item.isAvailable) {
+    <span>是</span>
+    } @else {
+    <span>否</span>
+    }
+  </p>
+</div>
 }

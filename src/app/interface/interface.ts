@@ -32,11 +32,11 @@ export interface LoginToken {
 }
 
 export interface Facility {
-  id: number,
+  id?: number,
   name: string,
   description: string,
   capacity: number,
-  open_time: string,
-  close_time: string,
-  is_available: boolean
+  openTime: string,
+  closeTime: string,
+  isAvailable: boolean
 }

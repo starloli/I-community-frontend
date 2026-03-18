@@ -1,0 +1,15 @@
+<form #facilityForm="ngForm" (ngSubmit)="check()" class="a">
+  <span>設備名稱</span>
+  <input type="text" name="name" [(ngModel)]="facility.name" required>
+  <span>設備描述</span>
+  <input type="text" name="description" [(ngModel)]="facility.description" required>
+  <span>可容納人數</span>
+  <input type="number" name="capacity" [(ngModel)]="facility.capacity" required>
+  <span>開始時間</span>
+  <input type="time" name="open_time" [(ngModel)]="facility.openTime" required>
+  <span>結束時間</span>
+  <input type="time" name="close_time" [(ngModel)]="facility.closeTime" required>
+  <span>是否可用</span>
+  <input type="checkbox" name="is_available" [(ngModel)]="facility.isAvailable">
+  <button type="submit" [disabled]="facilityForm.invalid">送出</button>
+</form>
