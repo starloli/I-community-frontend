@@ -1,1 +1,62 @@
-<p>announcement works!</p>
+<input
+  type="text"
+  placeholder="標題或分類搜尋..."
+  [(ngModel)]="keyword"
+  class="search-input"
+/> <br>
+@if (isAdmin) {
+  <button class="btn check" [routerLink]="['/announcement/create']">
+    新增
+  </button>
+}
+
+<table class="custom-table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>標題</th>
+      <th>分類</th>
+      <th>發布時間</th>
+      <th>結束時間</th>
+      <th>發布人員</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    @for (announ of filteredAnnouncements; track announ.announcementId; let i = $index) {
+      <tr>
+        @if (announ.isPinned) {
+          <td>📌</td>
+        } @else {
+          <td>{{ announ.announcementId }}</td>
+        }
+        <td>{{ announ.title }}</td>
+        <td>{{ announ.category }}</td>
+        <td>{{ announ.publishedAt | date:'yyyy/MM/dd HH:mm' }}</td>
+        @if (announ.expiresAt) {
+          <td>{{ announ.expiresAt + 'Z' | date:'yyyy/MM/dd HH:mm':'Asia/Taipei' }}</td>
+        } @else {
+          <td>{{ announ.expiresAt | date:'yyyy/MM/dd HH:mm' }}</td>
+        }
+        <td>{{ announ.authorName }}</td>
+        <td>
+          @if (isAdmin) {
+            <button class="btn check" [routerLink]="['/announcement/edit', announ.announcementId]">編輯</button>
+            <button class="btn delete" (click)="delete(announ)">刪除</button>
+          } @else {
+            <button class="btn check" [routerLink]="['/announcement/view', announ.announcementId]">查看</button>
+          }
+        </td>
+      </tr>
+    } @empty {
+      <tr>
+        <td colspan="4">目前沒有公告</td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<button (click)="loginAdmin()">登入管理員</button>
+<button (click)="loginUser()">登入使用者</button>
+<button (click)="logout()">登出</button>

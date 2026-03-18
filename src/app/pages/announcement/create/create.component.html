@@ -1,0 +1,87 @@
+@if (mode !== 'preview') {
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <div class="form-title">
+      {{ id ? '編輯公告' : '新增公告' }}
+    </div>
+
+    <div>
+      <label>標題</label>
+      <input type="text" formControlName="title" />
+      @if (form.get('title')?.invalid && form.get('title')?.touched) {
+        <div class="error">*必填</div>
+      }
+    </div>
+
+    <div>
+      <label>內容</label>
+      <textarea formControlName="content"></textarea>
+      @if (form.get('content')?.invalid && form.get('content')?.touched) {
+        <div class="error">*必填</div>
+      }
+    </div>
+
+    <div>
+      <label>分類</label>
+      <input type="text" formControlName="category" />
+      @if (form.get('category')?.invalid && form.get('category')?.touched) {
+        <div class="error">*必填</div>
+      }
+    </div>
+
+    <div>
+      <label>結束時間</label>
+      <input type="datetime-local" formControlName="expiresAt" [min]="minDateTime"/>
+      @if (form.get('expiresAt')?.hasError('notTomorrowOrLater')) {
+        <div class="error">*只能選擇明天之後的時間</div>
+      }
+    </div>
+
+    <div>
+      <label>
+        <input type="checkbox" formControlName="isPinned" />
+        置頂
+      </label>
+    </div>
+
+    <div class="button-group">
+      <button [routerLink]="['/announcement']">返回列表</button>
+      <button type="button" (click)="goPreview()" [disabled]="form.invalid">預覽</button>
+    </div>
+
+  </form>
+}
+
+@if (mode === 'preview') {
+  <div class="preview-card">
+
+    <h2>
+      {{ form.value.title }}
+      @if (form.value.isPinned) {
+        <span class="pin">📌 置頂</span>
+      }
+    </h2>
+
+    <div class="meta">
+      <span>分類：{{ form.value.category }}</span>
+      <span>
+        結束時間：
+        {{ form.value.expiresAt | date:'yyyy/MM/dd HH:mm' }}
+      </span>
+    </div>
+
+    <hr />
+
+    <p class="content">
+      {{ form.value.content }}
+    </p>
+
+    <div class="button-group">
+      <button (click)="backToEdit()">返回修改</button>
+      <button (click)="submit()">
+        {{ id ? '確認更新' : '確認送出' }}
+      </button>
+    </div>
+
+  </div>
+}

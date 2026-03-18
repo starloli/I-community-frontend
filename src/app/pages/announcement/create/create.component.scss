@@ -1,0 +1,141 @@
+/* 容器 */
+form {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 24px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: Arial, sans-serif;
+}
+
+/* 每一欄 */
+form > div {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* label */
+label {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* input / textarea / select */
+input,
+textarea,
+select {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+/* focus 效果 */
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #4a90e2;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+/* textarea */
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* checkbox 區塊 */
+label input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+/* 按鈕 */
+button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #4a90e2;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+/* hover */
+button:hover {
+  background-color: #357abd;
+}
+
+/* disabled */
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.form-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.preview-card {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 24px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.preview-card h2 {
+  margin-bottom: 10px;
+}
+
+.meta {
+  font-size: 13px;
+  color: #666;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.content {
+  white-space: pre-line;
+  line-height: 1.6;
+
+  overflow-wrap: anywhere;
+
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.pin {
+  color: #e67e22;
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+.button-group {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+
