@@ -1,17 +1,8 @@
 import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { Bill } from '../../interface/interface';
 
-// 帳單資料型別
-interface Bill {
-  id: number;
-  billingMonth: string;  // 帳單月份
-  billType: '水費' | '電費' | '管理費'; // 帳單類型
-  amount: number;        // 金額
-  dueDate: string;       // 截止日期
-  status: '待繳' | '已繳' | '逾期'; // 狀態
-  paidAt: string;        // 繳費時間
-}
 
 @Component({
   selector: 'app-bill',
