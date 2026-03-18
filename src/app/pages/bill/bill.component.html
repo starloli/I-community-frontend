@@ -1,1 +1,99 @@
-<p>bill works!</p>
+<div class="bill-container">
+
+  <!-- 頁面標題 -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1>帳單繳費</h1>
+      <span class="subtitle">查詢及繳納水電雜費帳單</span>
+    </div>
+  </div>
+
+  <!-- 統計卡片 -->
+  <div class="stats-row">
+    <div class="stat-card pending" (click)="selectedFilter = '待繳'">
+      <mat-icon>pending_actions</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">{{ pendingCount }}</span>
+        <span class="stat-label">待繳帳單</span>
+      </div>
+    </div>
+    <div class="stat-card paid" (click)="selectedFilter = '已繳'">
+      <mat-icon>check_circle</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">{{ paidCount }}</span>
+        <span class="stat-label">已繳帳單</span>
+      </div>
+    </div>
+    <div class="stat-card overdue" (click)="selectedFilter = '逾期'">
+      <mat-icon>warning</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">{{ overdueCount }}</span>
+        <span class="stat-label">逾期帳單</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 篩選按鈕 -->
+  <div class="filter-row">
+    <!-- [class.active] 根據目前篩選狀態動態加上 active 樣式 -->
+    <button class="filter-btn" [class.active]="selectedFilter === '全部'"    (click)="selectedFilter = '全部'">全部</button>
+    <button class="filter-btn" [class.active]="selectedFilter === '待繳'"    (click)="selectedFilter = '待繳'">待繳</button>
+    <button class="filter-btn" [class.active]="selectedFilter === '已繳'"    (click)="selectedFilter = '已繳'">已繳</button>
+    <button class="filter-btn" [class.active]="selectedFilter === '逾期'"    (click)="selectedFilter = '逾期'">逾期</button>
+  </div>
+
+  <!-- 帳單列表 -->
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>帳單月份</th>
+          <th>類型</th>
+          <th>金額</th>
+          <th>截止日期</th>
+          <th>繳費時間</th>
+          <th>狀態</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (bill of filteredBills; track bill.id) {
+          <tr>
+            <td>{{ bill.billingMonth }}</td>
+            <td>
+              <!-- 帳單類型加上 icon 和顏色 -->
+              <div class="bill-type-cell">
+                <mat-icon [style.color]="getBillColor(bill.billType)">
+                  {{ getBillIcon(bill.billType) }}
+                </mat-icon>
+                {{ bill.billType }}
+              </div>
+            </td>
+            <td class="amount">NT$ {{ bill.amount }}</td>
+            <td>{{ bill.dueDate }}</td>
+            <td>{{ bill.paidAt || '-' }}</td>
+            <td>
+              <!-- 根據狀態顯示不同顏色標籤 -->
+              @if (bill.status === '待繳') {
+                <span class="status-badge status-pending">待繳</span>
+              } @else if (bill.status === '已繳') {
+                <span class="status-badge status-paid">已繳</span>
+              } @else {
+                <span class="status-badge status-overdue">逾期</span>
+              }
+            </td>
+            <td>
+              <!-- 只有待繳和逾期才顯示繳費按鈕 -->
+              @if (bill.status !== '已繳') {
+                <button class="pay-btn" (click)="payBill(bill)">
+                  立即繳費
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</div>
