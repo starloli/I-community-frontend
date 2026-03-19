@@ -15,6 +15,16 @@ import { RepairStatus, UserRole } from '../../interface/enum';
 })
 export class RepairComponent {
 
+  // ===== 目前篩選狀態 =====
+  selectedFilter: '全部' | '待處理' | '處理中' | '已完工' = '全部';
+
+  // ===== 控制表單顯示 =====
+  showForm = false;
+
+  // ===== 控制完工回報表單 =====
+  showCompleteForm = false;
+  selectedRepair: RepairRequest | null = null;
+
   // ===== 新增報修表單資料 =====
   newRepair = {
     location: '',
@@ -27,6 +37,27 @@ export class RepairComponent {
     handler: '',
     note: '',
   };
+
+  // ===== 報修假資料 =====
+  // TODO: 之後改成呼叫 GET /api/v1/repairs 取得真實資料
+  fakeAdmin: User = {
+    userId: 0,
+    userName: '假資料人',
+    passwordHash: 'qweradsgfshrtws',
+    fullName: '假資料人',
+    email: 'fake@email.com',
+    phone: '0987654321',
+    unitNumber: '假樓假住戶',
+    role: UserRole.ADMIN,
+    isActive: true,
+    createdAt: new Date().toLocaleDateString('zh-TW')
+  };
+  repairs: RepairRequest[] = [
+    { id: 1, location: 'A棟電梯', category: '電梯', description: '電梯門無法正常關閉', status: RepairStatus.IN_PROGRESS, submittedAt: '2026-03-16', resolvedAt: '', handler: this.fakeAdmin, note: '' },
+    { id: 2, location: 'B棟2樓走廊', category: '水電', description: '走廊燈泡損壞，夜間昏暗', status: RepairStatus.DONE, submittedAt: '2026-03-15', resolvedAt: '', handler: this.fakeAdmin, note: '' },
+    { id: 3, location: 'C棟地下室', category: '水管', description: '水管漏水，地面積水', status: RepairStatus.IN_PROGRESS, submittedAt: '2026-03-14', resolvedAt: '2026-03-15', handler: this.fakeAdmin, note: '已更換破損水管，問題解決' },
+    { id: 4, location: '社區大門', category: '門禁', description: '門禁感應器故障', status: RepairStatus.PENDING, submittedAt: '2026-03-13', resolvedAt: '', handler: this.fakeAdmin, note: '' },
+  ];
 
   // ===== 根據篩選條件過濾 =====
   get filteredRepairs(): RepairRequest[] {
