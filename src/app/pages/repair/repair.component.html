@@ -14,21 +14,21 @@
 
   <!-- 統計卡片 -->
   <div class="stats-row">
-    <div class="stat-card pending" (click)="setFilter('待處理')">
+    <div class="stat-card pending" (click)="setFilter(RepairStatus.PENDING)">
       <mat-icon>pending_actions</mat-icon>
       <div class="stat-info">
         <span class="stat-value">{{ pendingCount }}</span>
         <span class="stat-label">待處理</span>
       </div>
     </div>
-    <div class="stat-card processing" (click)="setFilter('處理中')">
+    <div class="stat-card processing" (click)="setFilter(RepairStatus.IN_PROGRESS)">
       <mat-icon>engineering</mat-icon>
       <div class="stat-info">
         <span class="stat-value">{{ processingCount }}</span>
         <span class="stat-label">處理中</span>
       </div>
     </div>
-    <div class="stat-card done" (click)="setFilter('已完工')">
+    <div class="stat-card done" (click)="setFilter(RepairStatus.DONE)">
       <mat-icon>check_circle</mat-icon>
       <div class="stat-info">
         <span class="stat-value">{{ doneCount }}</span>
@@ -39,219 +39,222 @@
 
   <!-- 篩選按鈕 -->
   <div class="filter-row">
-    <button class="filter-btn" [class.active]="selectedFilter === '全部'"   (click)="setFilter('全部')">全部</button>
-    <button class="filter-btn" [class.active]="selectedFilter === '待處理'" (click)="setFilter('待處理')">待處理</button>
-    <button class="filter-btn" [class.active]="selectedFilter === '處理中'" (click)="setFilter('處理中')">處理中</button>
-    <button class="filter-btn" [class.active]="selectedFilter === '已完工'" (click)="setFilter('已完工')">已完工</button>
+    <button class="filter-btn" [class.active]="selectedFilter === '全部'" (click)="setFilter('全部')">全部</button>
+    <button class="filter-btn" [class.active]="selectedFilter === RepairStatus.PENDING"
+      (click)="setFilter(RepairStatus.PENDING)">待處理</button>
+    <button class="filter-btn" [class.active]="selectedFilter === RepairStatus.IN_PROGRESS"
+      (click)="setFilter(RepairStatus.IN_PROGRESS)">處理中</button>
+    <button class="filter-btn" [class.active]="selectedFilter === RepairStatus.DONE"
+      (click)="setFilter(RepairStatus.DONE)">已完工</button>
   </div>
 
   <!-- 報修列表 -->
+  <!-- 報修列表 -->
   <div class="repair-list">
     @for (repair of pagedRepairs; track repair.id) {
-      <div class="repair-card">
-        <div class="repair-left">
-          <div class="category-icon">
-            <mat-icon>{{ getCategoryIcon(repair.category) }}</mat-icon>
-          </div>
-          <div class="repair-info">
-            <div class="repair-title-row">
-              <h3>{{ repair.location }}</h3>
-              <span class="category-tag">{{ repair.category }}</span>
-            </div>
-            <p class="repair-desc">{{ repair.description }}</p>
-            <div class="repair-meta">
-              <span>
-                <mat-icon>calendar_today</mat-icon>
-                提交：{{ repair.submittedAt }}
-              </span>
-              @if (repair.status === '已完工') {
-                <span>
-                  <mat-icon>done_all</mat-icon>
-                  完工：{{ repair.resolvedAt }}
-                </span>
-                <span>
-                  <mat-icon>person</mat-icon>
-                  處理：{{ repair.handler }}
-                </span>
-              }
-              @if (repair.status === '處理中' && repair.handler) {
-                <span>
-                  <mat-icon>person</mat-icon>
-                  負責：{{ repair.handler }}
-                </span>
-              }
-            </div>
-            @if (repair.note) {
-              <div class="repair-note">
-                <mat-icon>notes</mat-icon>
-                {{ repair.note }}
-              </div>
-            }
-          </div>
+    <div class="repair-card">
+      <div class="repair-left">
+        <div class="category-icon">
+          <mat-icon>{{ getCategoryIcon(repair.category) }}</mat-icon>
         </div>
-
-        <!-- 右側：狀態 + 操作按鈕 -->
-        <div class="repair-right">
-          @if (repair.status === '待處理') {
-            <span class="status-badge status-pending">待處理</span>
-          } @else if (repair.status === '處理中') {
-            <span class="status-badge status-processing">處理中</span>
-          } @else {
-            <span class="status-badge status-done">已完工</span>
-          }
-
-          <div class="action-btns">
-            <!-- 編輯按鈕 -->
-            <button class="icon-btn edit-btn" (click)="openEditForm(repair)" title="編輯">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <!-- 刪除按鈕 -->
-            <button class="icon-btn delete-btn" (click)="deleteRepair(repair)" title="刪除">
-              <mat-icon>delete</mat-icon>
-            </button>
-            <!-- 處理中才顯示完工回報 -->
-            @if (repair.status === '處理中') {
-              <button class="complete-btn" (click)="openCompleteForm(repair)">
-                <mat-icon>done</mat-icon>
-                完工回報
-              </button>
+        <div class="repair-info">
+          <div class="repair-title-row">
+            <h3>{{ repair.location }}</h3>
+            <span class="category-tag">{{ repair.category }}</span>
+          </div>
+          <p class="repair-desc">{{ repair.description }}</p>
+          <div class="repair-meta">
+            <span>
+              <mat-icon>calendar_today</mat-icon>
+              提交：{{ repair.submittedAt }}
+            </span>
+            <!-- 已完工才顯示完工時間和處理人員 -->
+            @if (repair.status === RepairStatus.DONE) {
+            <span>
+              <mat-icon>done_all</mat-icon>
+              完工：{{ repair.resolvedAt }}
+            </span>
+            <span>
+              <mat-icon>person</mat-icon>
+              處理：{{ repair.handler.fullName }}
+            </span>
+            }
+            <!-- 處理中顯示負責人員 -->
+            @if (repair.status === RepairStatus.IN_PROGRESS) {
+            <span>
+              <mat-icon>person</mat-icon>
+              負責：{{ repair.handler.fullName }}
+            </span>
             }
           </div>
+          @if (repair.note) {
+          <div class="repair-note">
+            <mat-icon>notes</mat-icon>
+            {{ repair.note }}
+          </div>
+          }
         </div>
       </div>
+      <!-- 右側：狀態 + 操作按鈕 -->
+      <div class="repair-right">
+        @if (repair.status === '待處理') {
+        <span class="status-badge status-pending">待處理</span>
+        } @else if (repair.status === '處理中') {
+        <span class="status-badge status-processing">處理中</span>
+        } @else {
+        <span class="status-badge status-done">已完工</span>
+        }
+
+        <div class="action-btns">
+          <!-- 編輯按鈕 -->
+          <button class="icon-btn edit-btn" (click)="openEditForm(repair)" title="編輯">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <!-- 刪除按鈕 -->
+          <button class="icon-btn delete-btn" (click)="deleteRepair(repair)" title="刪除">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <!-- 處理中才顯示完工回報 -->
+          @if (repair.status === '處理中') {
+          <button class="complete-btn" (click)="openCompleteForm(repair)">
+            <mat-icon>done</mat-icon>
+            完工回報
+          </button>
+          }
+        </div>
+      </div>
+    </div>
     }
   </div>
 
   <!-- 分頁 -->
   @if (totalPages > 1) {
-    <div class="pagination">
-      <!-- 上一頁 -->
-      <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
-        <mat-icon>chevron_left</mat-icon>
-      </button>
+  <div class="pagination">
+    <!-- 上一頁 -->
+    <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
 
-      <!-- 頁碼 -->
-      @for (page of pageNumbers; track page) {
-        <button class="page-btn" [class.active]="currentPage === page" (click)="goToPage(page)">
-          {{ page }}
-        </button>
-      }
+    <!-- 頁碼 -->
+    @for (page of pageNumbers; track page) {
+    <button class="page-btn" [class.active]="currentPage === page" (click)="goToPage(page)">
+      {{ page }}
+    </button>
+    }
 
-      <!-- 下一頁 -->
-      <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
-        <mat-icon>chevron_right</mat-icon>
-      </button>
-    </div>
+    <!-- 下一頁 -->
+    <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
   }
 
   <!-- 新增報修表單 -->
   @if (showForm) {
-    <div class="form-overlay" (click)="closeForm()">
-      <div class="form-card" (click)="$event.stopPropagation()">
-        <div class="form-header">
-          <h2>新增報修申請</h2>
-          <mat-icon class="close-btn" (click)="closeForm()">close</mat-icon>
+  <div class="form-overlay" (click)="closeForm()">
+    <div class="form-card" (click)="$event.stopPropagation()">
+      <div class="form-header">
+        <h2>新增報修申請</h2>
+        <mat-icon class="close-btn" (click)="closeForm()">close</mat-icon>
+      </div>
+      <div class="form-body">
+        <div class="form-group">
+          <label>報修地點 <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="newRepair.location" placeholder="例如：A棟1樓大廳" />
         </div>
-        <div class="form-body">
-          <div class="form-group">
-            <label>報修地點 <span class="required">*</span></label>
-            <input type="text" [(ngModel)]="newRepair.location" placeholder="例如：A棟1樓大廳" />
-          </div>
-          <div class="form-group">
-            <label>問題分類 <span class="required">*</span></label>
-            <select [(ngModel)]="newRepair.category">
-              <option>水電</option>
-              <option>水管</option>
-              <option>電梯</option>
-              <option>門禁</option>
-              <option>照明</option>
-              <option>其他</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>問題描述 <span class="required">*</span></label>
-            <textarea [(ngModel)]="newRepair.description" rows="4"
-              placeholder="請詳細描述問題狀況..."></textarea>
-          </div>
+        <div class="form-group">
+          <label>問題分類 <span class="required">*</span></label>
+          <select [(ngModel)]="newRepair.category">
+            <option>水電</option>
+            <option>水管</option>
+            <option>電梯</option>
+            <option>門禁</option>
+            <option>照明</option>
+            <option>其他</option>
+          </select>
         </div>
-        <div class="form-footer">
-          <button class="cancel-btn" (click)="closeForm()">取消</button>
-          <button class="submit-btn" (click)="submitRepair()">提交報修</button>
+        <div class="form-group">
+          <label>問題描述 <span class="required">*</span></label>
+          <textarea [(ngModel)]="newRepair.description" rows="4" placeholder="請詳細描述問題狀況..."></textarea>
         </div>
       </div>
+      <div class="form-footer">
+        <button class="cancel-btn" (click)="closeForm()">取消</button>
+        <button class="submit-btn" (click)="submitRepair()">提交報修</button>
+      </div>
     </div>
+  </div>
   }
 
   <!-- 編輯報修表單 -->
   @if (showEditForm) {
-    <div class="form-overlay" (click)="closeEditForm()">
-      <div class="form-card" (click)="$event.stopPropagation()">
-        <div class="form-header">
-          <h2>編輯報修資料</h2>
-          <mat-icon class="close-btn" (click)="closeEditForm()">close</mat-icon>
+  <div class="form-overlay" (click)="closeEditForm()">
+    <div class="form-card" (click)="$event.stopPropagation()">
+      <div class="form-header">
+        <h2>編輯報修資料</h2>
+        <mat-icon class="close-btn" (click)="closeEditForm()">close</mat-icon>
+      </div>
+      <div class="form-body">
+        <div class="form-group">
+          <label>報修地點 <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="editForm.location" />
         </div>
-        <div class="form-body">
-          <div class="form-group">
-            <label>報修地點 <span class="required">*</span></label>
-            <input type="text" [(ngModel)]="editForm.location" />
-          </div>
-          <div class="form-group">
-            <label>問題分類</label>
-            <select [(ngModel)]="editForm.category">
-              <option>水電</option>
-              <option>水管</option>
-              <option>電梯</option>
-              <option>門禁</option>
-              <option>照明</option>
-              <option>其他</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>問題描述 <span class="required">*</span></label>
-            <textarea [(ngModel)]="editForm.description" rows="4"></textarea>
-          </div>
-          <div class="form-group">
-            <label>狀態</label>
-            <select [(ngModel)]="editForm.status">
-              <option>待處理</option>
-              <option>處理中</option>
-              <option>已完工</option>
-            </select>
-          </div>
+        <div class="form-group">
+          <label>問題分類</label>
+          <select [(ngModel)]="editForm.category">
+            <option>水電</option>
+            <option>水管</option>
+            <option>電梯</option>
+            <option>門禁</option>
+            <option>照明</option>
+            <option>其他</option>
+          </select>
         </div>
-        <div class="form-footer">
-          <button class="cancel-btn" (click)="closeEditForm()">取消</button>
-          <button class="submit-btn" (click)="submitEdit()">儲存變更</button>
+        <div class="form-group">
+          <label>問題描述 <span class="required">*</span></label>
+          <textarea [(ngModel)]="editForm.description" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+          <label>狀態</label>
+          <select [(ngModel)]="editForm.status">
+            <option [ngValue]="RepairStatus.PENDING">待處理</option>
+            <option [ngValue]="RepairStatus.IN_PROGRESS">處理中</option>
+            <option [ngValue]="RepairStatus.DONE">已完工</option>
+          </select>
         </div>
       </div>
+      <div class="form-footer">
+        <button class="cancel-btn" (click)="closeEditForm()">取消</button>
+        <button class="submit-btn" (click)="submitEdit()">儲存變更</button>
+      </div>
     </div>
+  </div>
   }
 
   <!-- 完工回報表單 -->
   @if (showCompleteForm) {
-    <div class="form-overlay" (click)="closeCompleteForm()">
-      <div class="form-card" (click)="$event.stopPropagation()">
-        <div class="form-header">
-          <h2>完工回報</h2>
-          <mat-icon class="close-btn" (click)="closeCompleteForm()">close</mat-icon>
+  <div class="form-overlay" (click)="closeCompleteForm()">
+    <div class="form-card" (click)="$event.stopPropagation()">
+      <div class="form-header">
+        <h2>完工回報</h2>
+        <mat-icon class="close-btn" (click)="closeCompleteForm()">close</mat-icon>
+      </div>
+      <div class="form-body">
+        <div class="form-group">
+          <label>處理人員 <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="completeForm.handler" placeholder="請輸入處理人員姓名" />
         </div>
-        <div class="form-body">
-          <div class="form-group">
-            <label>處理人員 <span class="required">*</span></label>
-            <input type="text" [(ngModel)]="completeForm.handler" placeholder="請輸入處理人員姓名" />
-          </div>
-          <div class="form-group">
-            <label>完工備註</label>
-            <textarea [(ngModel)]="completeForm.note" rows="4"
-              placeholder="請描述處理方式及結果..."></textarea>
-          </div>
-        </div>
-        <div class="form-footer">
-          <button class="cancel-btn" (click)="closeCompleteForm()">取消</button>
-          <button class="submit-btn" (click)="submitComplete()">確認完工</button>
+        <div class="form-group">
+          <label>完工備註</label>
+          <textarea [(ngModel)]="completeForm.note" rows="4" placeholder="請描述處理方式及結果..."></textarea>
         </div>
       </div>
+      <div class="form-footer">
+        <button class="cancel-btn" (click)="closeCompleteForm()">取消</button>
+        <button class="submit-btn" (click)="submitComplete()">確認完工</button>
+      </div>
     </div>
+  </div>
   }
 
 </div>

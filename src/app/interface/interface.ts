@@ -1,11 +1,110 @@
+import { BillStatus, BillType, NotificationType, PackageStatus, RepairStatus, ReservationStatus, UserRole, VisitorStatus } from "./enum"
+
+export interface Announcement {
+  announcementId?: number,
+  title: string,
+  content: string,
+  category: string,
+  author: User,
+  isPinned: boolean,
+  publishedAt: string,
+  expiresAt: string
+}
+
+export interface Bill {
+  id?: number,
+  user?: User,
+  billType: BillType,
+  amount: number,
+  billingMonth: string,
+  dueDate: string,
+  status: BillStatus,
+  paidAt: string,
+  paymendMethod: string,
+  createdAt: string
+}
+
+export interface Facility {
+  id?: number,
+  name: string,
+  description: string,
+  capacity: number,
+  openTime: string,
+  closeTime: string,
+  isAvailable: boolean
+}
+
+export interface Notification {
+  id?: number,
+  user: User,
+  NotificationType: NotificationType,
+  message: string,
+  isRead: boolean,
+  createdAt: string,
+}
+
+export interface Package {
+  id?: number,
+  user: User,
+  trackingNumber: string,
+  courier: string,
+  arrivedAt: string,
+  pickupAt: string,
+  status: PackageStatus,
+  notes: string,
+  isNotified: boolean
+}
+
+export interface RepairRequest {
+  id?: number,
+  user: User,
+  location: string,
+  category: string,
+  description: string,
+  status: RepairStatus,
+  imageUrl: string,
+  handler: User,
+  submittedAt: string,
+  resolvedAt: string,
+  note?:string
+}
+
+export interface Reservation {
+  id?: number,
+  user?: User,
+  facility: Facility,
+  date: string,
+  startTime: string,
+  endTime: string,
+  attendees: number,
+  status: ReservationStatus,
+  createdAt: string
+}
+
 export interface User {
+  userId?: number,
   userName: string,
-  password: string,
+  passwordHash: string,
   fullName: string,
   email: string,
-  phone: number,
+  phone: string,
   unitNumber: string,
+  role: UserRole,
+  isActive: boolean,
+  createdAt: string,
   token?: string
+}
+
+export interface Visitor {
+  id: number,
+  visitorName: string,
+  visitorPhone: string,
+  licensePlate: string,
+  hostUser: User,
+  purpose: string,
+  checkInTime: string,
+  checkOutTime: string,
+  status: VisitorStatus
 }
 
 export interface LoginInfo {
@@ -29,47 +128,4 @@ export interface Res {
 
 export interface LoginToken {
   accessToken: string
-}
-
-export interface Facility {
-  id?: number,
-  name: string,
-  description: string,
-  capacity: number,
-  openTime: string,
-  closeTime: string,
-  isAvailable: boolean
-}
-
-export interface RepairRequest {
-  id: number,
-  location: string,
-  category: string,
-  description: string,
-  status: '待處理' | '處理中' | '已完工',
-  submittedAt: string,
-  resolvedAt: string,
-  handler: string,
-  note: string
-}
-
-export interface Bill {
-  id: number,
-  billingMonth: string,
-  billType: '水費' | '電費' | '管理費',
-  amount: number,
-  dueDate: string,
-  status: '待繳' | '已繳' | '逾期',
-  paidAt: string
-}
-
-export interface Visitor {
-  id: number,
-  name: string,
-  phone: string,
-  hostUnit: string,
-  licensePlate: string,
-  checkInTime: string,
-  checkOutTime: string,
-  status: '在內' | '已離'
 }
