@@ -1,0 +1,76 @@
+/* 整個 table */
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+}
+
+/* 表頭 */
+.custom-table thead {
+  background-color: #f5f6fa;
+}
+
+.custom-table th {
+  text-align: left;
+  padding: 12px;
+  font-weight: 600;
+  border-bottom: 2px solid #ddd;
+}
+
+/* 表格內容 */
+.custom-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+/* 滑過效果 */
+.custom-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* zebra 條紋 */
+.custom-table tbody tr:nth-child(even) {
+  background-color: #fcfcfc;
+}
+
+/* 空資料 */
+.custom-table .empty {
+  text-align: center;
+  color: #999;
+  padding: 20px;
+}
+
+/* 按鈕 */
+.btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 6px;
+  font-size: 14px;
+}
+
+/* 編輯按鈕 */
+.btn.check {
+  background-color: #3498db;
+  color: white;
+}
+
+/* 刪除按鈕 */
+.btn.delete {
+  background-color: #e74c3c;
+  color: white;
+}
+
+/* hover 按鈕 */
+.btn:hover {
+  opacity: 0.85;
+}
+
+.search-input {
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
