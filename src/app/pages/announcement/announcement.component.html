@@ -1,16 +1,31 @@
-<input
-  type="text"
-  placeholder="標題或分類搜尋..."
-  [(ngModel)]="keyword"
-  class="search-input"
-/> <br>
-@if (isAdmin) {
-  <button class="btn check" [routerLink]="['/announcement/create']">
-    新增
-  </button>
-}
+<div class="announcement-container">
 
-<table class="custom-table">
+  <div class="page-header">
+    <div class="header-left">
+      <h1>社區公告</h1>
+      <span class="subtitle">社區公告資訊列表</span>
+    </div>
+
+    @if (isAdmin) {
+      <button class="add-btn" [routerLink]="['/announcement/create']">
+        <mat-icon>add</mat-icon>
+        新增公告
+      </button>
+    }
+  </div>
+
+</div>
+
+<div class="search-bar">
+  <mat-icon>search</mat-icon>
+  <input
+    type="text"
+    placeholder="標題或分類搜尋..."
+    [(ngModel)]="keyword"
+  />
+</div>
+
+<table class="table-card">
   <thead>
     <tr>
       <th>#</th>

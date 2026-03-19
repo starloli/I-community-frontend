@@ -1,45 +1,3 @@
-/* 整個 table */
-.custom-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: Arial, sans-serif;
-}
-
-/* 表頭 */
-.custom-table thead {
-  background-color: #f5f6fa;
-}
-
-.custom-table th {
-  text-align: left;
-  padding: 12px;
-  font-weight: 600;
-  border-bottom: 2px solid #ddd;
-}
-
-/* 表格內容 */
-.custom-table td {
-  padding: 12px;
-  border-bottom: 1px solid #eee;
-}
-
-/* 滑過效果 */
-.custom-table tbody tr:hover {
-  background-color: #f9f9f9;
-}
-
-/* zebra 條紋 */
-.custom-table tbody tr:nth-child(even) {
-  background-color: #fcfcfc;
-}
-
-/* 空資料 */
-.custom-table .empty {
-  text-align: center;
-  color: #999;
-  padding: 20px;
-}
-
 /* 按鈕 */
 .btn {
   padding: 6px 12px;
@@ -67,10 +25,144 @@
   opacity: 0.85;
 }
 
-.search-input {
-  margin-bottom: 12px;
-  padding: 8px 12px;
-  width: 250px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+// ===== 整體容器 =====
+.announcement-container {
+  padding: 0;
+}
+
+// ===== 頁面標題列 =====
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+
+  h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 4px 0;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: #888;
+  }
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 14px;
+  padding: 12px 18px;
+  margin-bottom: 16px;
+
+  mat-icon {
+    color: #aaa;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+
+  input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+
+    &::placeholder {
+      color: #bbb;
+    }
+  }
+
+  // 清除按鈕
+  .clear-btn {
+    color: #aaa;
+    cursor: pointer;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #555;
+    }
+  }
+}
+
+// ===== 新增按鈕 =====
+.add-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #3f51b5;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    background: #303f9f;
+  }
+}
+
+// ===== 訪客列表表格 =====
+.table-card {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead tr {
+  background: rgba(63, 81, 181, 0.08);
+}
+
+th {
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+td {
+  padding: 16px 20px;
+  font-size: 15px;
+  color: #333;
+  // 每列之間加分隔線
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background: rgba(63, 81, 181, 0.03);
 }
