@@ -26,7 +26,7 @@ export class FacilityComponent implements OnInit {
     const dialogRef = this.dialog.open(RegistFacilityComponent);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-          this.getFacility();
+        this.getFacility();
       }
     });
 
@@ -60,24 +60,24 @@ export class FacilityComponent implements OnInit {
 
   // ===== 假資料（等後端好了再換成真實 API）=====
   mockFacilities: Facility[] = [
-    { id: 1, name: '健身房',   description: '提供各式健身器材',     capacity: 20, openTime: '06:00', closeTime: '22:00', isAvailable: true },
-    { id: 2, name: '游泳池',   description: '25公尺標準游泳池',     capacity: 30, openTime: '07:00', closeTime: '21:00', isAvailable: true },
-    { id: 3, name: '會議室',   description: '可容納20人的會議空間', capacity: 20, openTime: '08:00', closeTime: '20:00', isAvailable: false },
-    { id: 4, name: '交誼廳',   description: '社區居民休閒聚會空間', capacity: 50, openTime: '08:00', closeTime: '22:00', isAvailable: true },
+    { id: 1, name: '健身房', description: '提供各式健身器材', capacity: 20, openTime: '06:00', closeTime: '22:00', isAvailable: true },
+    { id: 2, name: '游泳池', description: '25公尺標準游泳池', capacity: 30, openTime: '07:00', closeTime: '21:00', isAvailable: true },
+    { id: 3, name: '會議室', description: '可容納20人的會議空間', capacity: 20, openTime: '08:00', closeTime: '20:00', isAvailable: false },
+    { id: 4, name: '交誼廳', description: '社區居民休閒聚會空間', capacity: 50, openTime: '08:00', closeTime: '22:00', isAvailable: true },
     { id: 5, name: '兒童遊樂室', description: '安全的兒童遊樂空間', capacity: 15, openTime: '09:00', closeTime: '18:00', isAvailable: true },
   ]; // ===== 控制預約表單是否顯示 =====
-showReserveForm = false;
+  showReserveForm = false;
 
-// ===== 目前選擇的設施 =====
-selectedFacility: Facility | null = null;
+  // ===== 目前選擇的設施 =====
+  selectedFacility: Facility | null = null;
 
-// ===== 預約表單資料 =====
-reserveForm = {
-  date: '',
-  startTime: '',
-  endTime: '',
-  attendees: 1,
-};
+  // ===== 預約表單資料 =====
+  reserveForm = {
+    date: '',
+    startTime: '',
+    endTime: '',
+    attendees: 1,
+  };
 
   // ===== 設施對應 icon =====
   getFacilityIcon(name: string): string {
@@ -89,32 +89,32 @@ reserveForm = {
     return 'apartment';
   }
 
-// 開啟預約表單
-openReserveForm(facility: Facility) {
-  this.selectedFacility = facility;
-  this.showReserveForm = true;
-}
-
-// 關閉預約表單
-closeReserveForm() {
-  this.showReserveForm = false;
-  this.selectedFacility = null;
-  this.reserveForm = { date: '', startTime: '', endTime: '', attendees: 1 };
-}
-
-// ===== 送出預約 =====
-// TODO: 之後改成呼叫 POST /api/v1/reservations 送出預約
-submitReservation() {
-  if (!this.reserveForm.date || !this.reserveForm.startTime || !this.reserveForm.endTime) {
-    return;
+  // 開啟預約表單
+  openReserveForm(facility: Facility) {
+    this.selectedFacility = facility;
+    this.showReserveForm = true;
   }
-  console.log('預約資料：', {
-    facilityId: this.selectedFacility?.id,
-    ...this.reserveForm
-  });
-  alert(`已成功預約 ${this.selectedFacility?.name}！`);
-  this.closeReserveForm();
-}
+
+  // 關閉預約表單
+  closeReserveForm() {
+    this.showReserveForm = false;
+    this.selectedFacility = null;
+    this.reserveForm = { date: '', startTime: '', endTime: '', attendees: 1 };
+  }
+
+  // ===== 送出預約 =====
+  // TODO: 之後改成呼叫 POST /api/v1/reservations 送出預約
+  submitReservation() {
+    if (!this.reserveForm.date || !this.reserveForm.startTime || !this.reserveForm.endTime) {
+      return;
+    }
+    console.log('預約資料：', {
+      facilityId: this.selectedFacility?.id,
+      ...this.reserveForm
+    });
+    alert(`已成功預約 ${this.selectedFacility?.name}！`);
+    this.closeReserveForm();
+  }
 }
 
 
