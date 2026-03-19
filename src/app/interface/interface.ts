@@ -13,7 +13,7 @@ export interface Announcement {
 
 export interface Bill {
   id?: number,
-  user: User,
+  user?: User,
   billType: BillType,
   amount: number,
   billingMonth: string,
@@ -72,6 +72,7 @@ export interface Reservation {
   id?: number,
   user?: User,
   facility: Facility,
+  date: string,
   startTime: string,
   endTime: string,
   attendees: number,
@@ -85,7 +86,7 @@ export interface User {
   passwordHash: string,
   fullName: string,
   email: string,
-  phone: number,
+  phone: string,
   unitNumber: string,
   role: UserRole,
   isActive: boolean,

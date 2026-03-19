@@ -67,7 +67,7 @@
                 提交：{{ repair.submittedAt }}
               </span>
               <!-- 已完工才顯示完工時間和處理人員 -->
-              @if (repair.status === '已完工') {
+              @if (repair.status === RepairStatus.done) {
                 <span>
                   <mat-icon>done_all</mat-icon>
                   完工：{{ repair.resolvedAt }}

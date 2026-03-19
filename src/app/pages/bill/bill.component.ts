@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { Bill } from '../../interface/interface';
+import { BillStatus, BillType } from '../../interface/enum';
 
 
 @Component({
@@ -19,15 +20,13 @@ export class BillComponent {
   // ===== 帳單假資料 =====
   // TODO: 之後改成呼叫 GET /api/v1/bills 取得真實資料
   bills: Bill[] = [
-    { id: 1, billingMonth: '2026-03', billType: '水費',  amount: 350,  dueDate: '2026-03-31', status: '待繳', paidAt: '' },
-    { id: 2, billingMonth: '2026-03', billType: '電費',  amount: 1200, dueDate: '2026-03-31', status: '待繳', paidAt: '' },
-    { id: 3, billingMonth: '2026-03', billType: '管理費', amount: 2000, dueDate: '2026-03-31', status: '逾期', paidAt: '' },
-    { id: 4, billingMonth: '2026-02', billType: '水費',  amount: 320,  dueDate: '2026-02-28', status: '已繳', paidAt: '2026-02-15' },
-    { id: 5, billingMonth: '2026-02', billType: '電費',  amount: 980,  dueDate: '2026-02-28', status: '已繳', paidAt: '2026-02-15' },
-    { id: 6, billingMonth: '2026-02', billType: '管理費', amount: 2000, dueDate: '2026-02-28', status: '已繳', paidAt: '2026-02-10' },
-  ];
-
-  // ===== 根據篩選條件過濾帳單 =====
+    { id: 1, billingMonth: '2026-03', billType: BillType.WATER, amount: 350, dueDate: '2026-03-31', status: BillStatus.PAID, paidAt: '', paymendMethod: '', createdAt: '' },
+    { id: 2, billingMonth: '2026-03', billType: BillType.ELECTRICITY, amount: 1200, dueDate: '2026-03-31', status: BillStatus.UNPAID, paidAt: '', paymendMethod: '', createdAt: '' },
+    { id: 3, billingMonth: '2026-03', billType: BillType.MAINTENANCE, amount: 2000, dueDate: '2026-03-31', status: BillStatus.OVERDUE, paidAt: '', paymendMethod: '', createdAt: '' },
+    { id: 4, billingMonth: '2026-02', billType: BillType.MANAGEMENT, amount: 320, dueDate: '2026-02-28', status: BillStatus.PAID, paidAt: '2026-02-15', paymendMethod: '', createdAt: '' },
+    { id: 5, billingMonth: '2026-02', billType: BillType.WATER, amount: 980, dueDate: '2026-02-28', status: BillStatus.UNPAID, paidAt: '2026-02-15', paymendMethod: '', createdAt: '' },
+    { id: 6, billingMonth: '2026-02', billType: BillType.ELECTRICITY, amount: 2000, dueDate: '2026-02-28', status: BillStatus.OVERDUE, paidAt: '2026-02-10', paymendMethod: '', createdAt: '' },
+  ];// ===== 根據篩選條件過濾帳單 =====
   get filteredBills(): Bill[] {
     if (this.selectedFilter === '全部') return this.bills;
     return this.bills.filter(b => b.status === this.selectedFilter);
@@ -48,7 +47,7 @@ export class BillComponent {
   // TODO: 之後改成呼叫 POST /api/v1/bills/{id}/pay 送出繳費
   payBill(bill: Bill) {
     const now = new Date();
-    bill.status = '已繳';
+    bill.status = BillStatus.PAID;
     bill.paidAt = now.toLocaleDateString('zh-TW');
   }
 
