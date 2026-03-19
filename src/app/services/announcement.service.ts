@@ -1,6 +1,6 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +27,10 @@ export class AnnouncementService {
         tap(newItem => {
           const current = this.announsSubject.value;
           this.announsSubject.next([...current, newItem]);
+        }),
+        catchError((error) => {
+          console.error('新增失敗', error);
+          return throwError(() => error);
         })
       );
   }
@@ -60,6 +64,10 @@ export class AnnouncementService {
           );
 
           this.announsSubject.next(updatedList);
+        }),
+        catchError((error) => {
+          console.error('新增失敗', error);
+          return throwError(() => error);
         })
       );
   }

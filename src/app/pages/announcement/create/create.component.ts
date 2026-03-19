@@ -128,7 +128,7 @@ export class CreateComponent {
           console.log('成功', res);
         },
         error: (err) => {
-          console.error('失敗', err);
+          console.error('失敗', err.message);
         }
       });
     } else {
@@ -138,7 +138,7 @@ export class CreateComponent {
           console.log('成功', res);
         },
         error: (err) => {
-          console.error('失敗', err);
+          console.error('失敗', err.message);
         }
       });
     }
