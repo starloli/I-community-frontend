@@ -452,3 +452,103 @@
   cursor: pointer;
   &:hover { background: #303f9f; }
 }
+
+// ===== 操作按鈕群組 =====
+.action-btns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+// 圓形 icon 按鈕
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+// 編輯按鈕：藍色
+.edit-btn {
+  background: #e3f2fd;
+  color: #0288d1;
+
+  &:hover {
+    background: #0288d1;
+    color: #ffffff;
+  }
+}
+
+// 刪除按鈕：紅色
+.delete-btn {
+  background: #ffebee;
+  color: #e53935;
+
+  &:hover {
+    background: #e53935;
+    color: #ffffff;
+  }
+}
+
+// ===== 分頁 =====
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.page-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1.5px solid #e0e0e0;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(8px);
+  color: #555;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover:not(:disabled) {
+    background: #C47A5A;
+    border-color: #C47A5A;
+    color: #ffffff;
+  }
+
+  // 目前頁碼
+  &.active {
+    background: #C47A5A;
+    border-color: #C47A5A;
+    color: #ffffff;
+  }
+
+  // 停用狀態
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}

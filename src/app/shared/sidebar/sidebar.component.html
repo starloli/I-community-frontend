@@ -1,6 +1,6 @@
 <div class="sidebar">
   <div class="sidebar-header">
-    <mat-icon class="logo-icon">apartment</mat-icon>
+    <mat-icon class="logo-icon">home_work</mat-icon>
     <div class="logo-text">
       <span class="logo-title">Community</span>
       <span class="logo-subtitle">Management System</span>
@@ -8,39 +8,28 @@
   </div>
 
   <nav class="sidebar-nav">
-    <a class="nav-item" routerLink="/dashboard" routerLinkActive="active">
-      <mat-icon>dashboard</mat-icon>
-      <span>社區總覽</span>
+    <!-- 滑動色塊（果凍效果） -->
+    <div class="sliding-pill" [style.top.px]="pillTop" [style.background]="pillColor">
+    </div>
+
+    @for (item of navItems; track item.route; let i = $index) {
+    <a class="nav-item" [routerLink]="'/' + item.route" routerLinkActive="active" (mouseenter)="onMouseEnter(i)"
+      (mouseleave)="onMouseLeave()">
+      <mat-icon>{{ item.icon }}</mat-icon>
+      <span>{{ item.label }}</span>
     </a>
-    <a class="nav-item" routerLink="/visitor" routerLinkActive="active">
-      <mat-icon>person_add</mat-icon>
-      <span>訪客登記</span>
-    </a>
-    <a class="nav-item" routerLink="/announcement" routerLinkActive="active">
-      <mat-icon>campaign</mat-icon>
-      <span>社區公告</span>
-    </a>
-    <a class="nav-item" routerLink="/bill" routerLinkActive="active">
-      <mat-icon>receipt_long</mat-icon>
-      <span>帳單繳費</span>
-    </a>
-    <a class="nav-item" routerLink="/facility" routerLinkActive="active">
-      <mat-icon>meeting_room</mat-icon>
-      <span>設施預約</span>
-    </a>
-    <a class="nav-item" routerLink="/package" routerLinkActive="active">
-      <mat-icon>inventory_2</mat-icon>
-      <span>包裹查詢</span>
-    </a>
-    <a class="nav-item" routerLink="/repair" routerLinkActive="active">
-      <mat-icon>build</mat-icon>
-      <span>報修申請</span>
-    </a>
+    }
   </nav>
 
-  <div class="sidebar-footer"  (click)="login()">
+  @if (isLoggedIn) {
+  <div class="sidebar-footer" (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    <span>登出</span>
+  </div>
+  } @else {
+  <div class="sidebar-footer" (click)="login()">
     <mat-icon>login</mat-icon>
     <span>登入</span>
   </div>
+  }
 </div>
-
