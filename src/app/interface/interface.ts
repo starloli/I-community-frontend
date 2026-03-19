@@ -70,7 +70,7 @@ export interface RepairRequest {
 
 export interface Reservation {
   id?: number,
-  user: User,
+  user?: User,
   facility: Facility,
   startTime: string,
   endTime: string,
