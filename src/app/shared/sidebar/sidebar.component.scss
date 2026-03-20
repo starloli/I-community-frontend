@@ -1,18 +1,63 @@
+// ===== 寬度常數 =====
+$sidebar-expanded: 240px;
+$sidebar-collapsed: 68px;
+$transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+// ===== 整體 sidebar =====
 .sidebar {
-  width: 240px;
+  width: $sidebar-expanded;
   height: 100vh;
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
-  box-shadow: 2px 0 8px rgba(0,0,0,0.08);
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+  transition: width $transition;
+  overflow: visible; // ← 改成 visible，讓按鈕可以超出 sidebar 邊緣
+  flex-shrink: 0;
+  position: relative; // ← 讓 collapse-btn absolute 定位在這裡
+
+  // ===== 收合狀態 =====
+  &.collapsed {
+    width: $sidebar-collapsed;
+
+    // header 收合：隱藏文字，icon 置中
+    .logo-text { opacity: 0; width: 0; }
+    .collapse-btn { margin-left: 0; }
+
+    // nav-item 收合：icon 置中
+    .nav-item {
+      justify-content: center;
+      padding: 12px 0;
+    }
+
+    // sliding-pill 收合：左右 padding 對應縮小
+    .sliding-pill {
+      left: 8px;
+      right: 8px;
+    }
+
+    // footer 收合：icon 置中
+    .sidebar-footer {
+      justify-content: center;
+      padding: 12px 0;
+      margin: 16px 8px;
+    }
+
+    // 文字全部隱藏
+    .nav-label { opacity: 0; width: 0; }
+  }
 }
 
+// ===== Header =====
 .sidebar-header {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 24px 20px;
+  padding: 20px 16px;
   border-bottom: 1px solid #f0f0f0;
+  min-height: 72px;
+  flex-shrink: 0;
+  overflow: hidden; // 收合時隱藏 logo 文字
 }
 
 .logo-icon {
@@ -20,11 +65,17 @@
   font-size: 32px;
   width: 32px;
   height: 32px;
+  flex-shrink: 0;
 }
 
 .logo-text {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  // 文字淡出動畫
+  transition: opacity $transition, width $transition;
+  white-space: nowrap;
 }
 
 .logo-title {
@@ -38,12 +89,78 @@
   color: #888;
 }
 
+// 收合按鈕：從 sidebar 右側邊緣隆起的小山丘
+.collapse-btn {
+  position: absolute;
+  top: 50%;
+  right: -20px;           // 突出 sidebar 右側
+  transform: translateY(-50%);
+  z-index: 100;
+  width: 20px;
+  height: 56px;           // 高扁形，像山丘側面
+  border-radius: 0 50px 50px 0;  // 左側直、右側圓弧
+  border: none;
+  border-top: 1.5px solid #e8e8e8;
+  border-right: 1.5px solid #e8e8e8;
+  border-bottom: 1.5px solid #e8e8e8;
+  background: #ffffff;
+  cursor: pointer;
+  color: #bbb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // 只往右側散的陰影，強化從 sidebar 長出來的感覺
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  padding: 0;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin-right: -2px;  // 稍微往右偏，視覺置中
+  }
+
+  &:hover {
+    width: 24px;         // hover 時山丘隆起更多
+    right: -24px;
+    color: #555;
+    box-shadow: 6px 0 16px rgba(0, 0, 0, 0.12);
+  }
+
+  &:active {
+    width: 18px;
+    right: -18px;
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.06);
+  }
+}
+
+// ===== Nav =====
 .sidebar-nav {
   flex: 1;
   padding: 16px 12px;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  position: relative;
+  overflow: hidden; // 收合時隱藏溢出的文字
+}
+
+// 滑動色塊
+.sliding-pill {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  height: 44px;
+  border-radius: 10px;
+  transition:
+    top 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    background 0.25s ease,
+    left $transition,
+    right $transition;
+  z-index: 0;
+  pointer-events: none;
+  will-change: top, background;
 }
 
 .nav-item {
@@ -53,29 +170,42 @@
   padding: 12px 16px;
   border-radius: 10px;
   text-decoration: none;
-  color: #555;
   font-size: 16px;
   font-weight: 500;
-  transition: all 0.2s;
+  position: relative;
+  z-index: 1;
+  color: #555;
+  transition: color 0.25s ease, padding $transition, justify-content $transition;
+  white-space: nowrap;
+
+  mat-icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    transition: color 0.25s ease;
+  }
+
+  &:hover {
+    color: #ffffff;
+    mat-icon { color: #ffffff; }
+  }
+
+  &.active {
+    color: #555;
+    font-weight: 600;
+    mat-icon { color: #555; }
+  }
 }
 
-.nav-item:hover {
-  background-color: #f0f2ff;
-  color: #3f51b5;
+// 文字標籤：收合時淡出
+.nav-label {
+  transition: opacity $transition, width $transition;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
-.nav-item.active {
-  background-color: #e8eaf6;
-  color: #3f51b5;
-  font-weight: 600;
-}
-
-.nav-item mat-icon {
-  font-size: 22px;
-  width: 22px;
-  height: 22px;
-}
-
+// ===== Footer =====
 .sidebar-footer {
   display: flex;
   align-items: center;
@@ -89,11 +219,19 @@
   cursor: pointer;
   font-size: 16px;
   font-weight: 600;
-  transition: all 0.2s;
-}
+  transition: all $transition;
+  white-space: nowrap;
+  overflow: hidden;
+  flex-shrink: 0;
 
-.sidebar-footer:hover {
-  background-color: #e53935;
-  color: #ffffff;
-}
+  mat-icon { flex-shrink: 0; }
 
+  .nav-label {
+    transition: opacity $transition, width $transition;
+  }
+
+  &:hover {
+    background-color: #e53935;
+    color: #ffffff;
+  }
+}
