@@ -38,15 +38,9 @@
   cursor: pointer;
   transition: background 0.2s;
 
-  mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-  }
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
 
-  &:hover {
-    background: #303f9f;
-  }
+  &:hover { background: #303f9f; }
 }
 
 // ===== 統計卡片 =====
@@ -75,26 +69,11 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   }
 
-  mat-icon {
-    font-size: 32px;
-    width: 32px;
-    height: 32px;
-  }
+  mat-icon { font-size: 32px; width: 32px; height: 32px; }
 
-  &.pending {
-    mat-icon { color: #f57c00; }
-    .stat-value { color: #f57c00; }
-  }
-
-  &.processing {
-    mat-icon { color: #0288d1; }
-    .stat-value { color: #0288d1; }
-  }
-
-  &.done {
-    mat-icon { color: #388e3c; }
-    .stat-value { color: #388e3c; }
-  }
+  &.pending   { mat-icon { color: #f57c00; } .stat-value { color: #f57c00; } }
+  &.processing { mat-icon { color: #0288d1; } .stat-value { color: #0288d1; } }
+  &.done      { mat-icon { color: #388e3c; } .stat-value { color: #388e3c; } }
 }
 
 .stat-info {
@@ -132,16 +111,8 @@
   cursor: pointer;
   transition: all 0.2s;
 
-  &:hover {
-    border-color: #3f51b5;
-    color: #3f51b5;
-  }
-
-  &.active {
-    background: #3f51b5;
-    border-color: #3f51b5;
-    color: #ffffff;
-  }
+  &:hover { border-color: #3f51b5; color: #3f51b5; }
+  &.active { background: #3f51b5; border-color: #3f51b5; color: #ffffff; }
 }
 
 // ===== 報修列表 =====
@@ -162,13 +133,11 @@
   padding: 20px 24px;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;  // ← center 讓左右垂直置中對齊
   gap: 16px;
   transition: box-shadow 0.2s;
 
-  &:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  }
+  &:hover { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); }
 }
 
 // 左側內容
@@ -189,12 +158,7 @@
   justify-content: center;
   flex-shrink: 0;
 
-  mat-icon {
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
-    color: #3f51b5;
-  }
+  mat-icon { font-size: 24px; width: 24px; height: 24px; color: #3f51b5; }
 }
 
 .repair-info {
@@ -210,12 +174,7 @@
   align-items: center;
   gap: 10px;
 
-  h3 {
-    font-size: 16px;
-    font-weight: 700;
-    color: #1a1a2e;
-    margin: 0;
-  }
+  h3 { font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0; }
 }
 
 // 分類標籤
@@ -235,7 +194,7 @@
   margin: 0;
 }
 
-// 時間、人員等 meta 資訊
+// meta 資訊
 .repair-meta {
   display: flex;
   flex-wrap: wrap;
@@ -249,11 +208,7 @@
     font-size: 13px;
     color: #999;
 
-    mat-icon {
-      font-size: 15px;
-      width: 15px;
-      height: 15px;
-    }
+    mat-icon { font-size: 15px; width: 15px; height: 15px; }
   }
 }
 
@@ -269,23 +224,37 @@
   border-radius: 8px;
   margin-top: 4px;
 
-  mat-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-    color: #888;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
+  mat-icon { font-size: 16px; width: 16px; height: 16px; color: #888; flex-shrink: 0; margin-top: 1px; }
 }
 
-// 右側狀態和按鈕
+// ===== 右側：grid 三欄固定 =====
+// [ 狀態 80px ] [ 編輯+刪除 84px ] [ 完工回報 110px ]
 .repair-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: 80px 84px 110px;
+  align-items: center;
+  gap: 0 8px;
   flex-shrink: 0;
+}
+
+// 第1欄：狀態標籤靠右
+.repair-status-col {
+  display: flex;
+  justify-content: flex-end;
+}
+
+// 第2欄：編輯+刪除置中
+.repair-icons-col {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+}
+
+// 第3欄：完工回報置中，沒有時留空白
+.repair-complete-col {
+  display: flex;
+  justify-content: center;
 }
 
 // ===== 狀態標籤 =====
@@ -297,19 +266,35 @@
   white-space: nowrap;
 }
 
-.status-pending {
-  background: #fff3e0;
-  color: #f57c00;
+.status-pending    { background: #fff3e0; color: #f57c00; }
+.status-processing { background: #e3f2fd; color: #0288d1; }
+.status-done       { background: #e8f5e9; color: #388e3c; }
+
+// ===== 圓形 icon 按鈕 =====
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
 }
 
-.status-processing {
+.edit-btn {
   background: #e3f2fd;
   color: #0288d1;
+  &:hover { background: #0288d1; color: #ffffff; }
 }
 
-.status-done {
-  background: #e8f5e9;
-  color: #388e3c;
+.delete-btn {
+  background: #ffebee;
+  color: #e53935;
+  &:hover { background: #e53935; color: #ffffff; }
 }
 
 // ===== 完工回報按鈕 =====
@@ -326,25 +311,18 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
+  white-space: nowrap;
 
-  mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-  }
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
 
-  &:hover {
-    background: #2e7d32;
-  }
+  &:hover { background: #2e7d32; }
 }
 
-// ===== 表單樣式 =====
+// ===== 表單 =====
 .form-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
@@ -367,18 +345,8 @@
   padding: 24px 28px;
   border-bottom: 1px solid #f0f0f0;
 
-  h2 {
-    font-size: 18px;
-    font-weight: 700;
-    color: #1a1a2e;
-    margin: 0;
-  }
-
-  .close-btn {
-    color: #aaa;
-    cursor: pointer;
-    &:hover { color: #333; }
-  }
+  h2 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 0; }
+  .close-btn { color: #aaa; cursor: pointer; &:hover { color: #333; } }
 }
 
 .form-body {
@@ -393,12 +361,7 @@
   flex-direction: column;
   gap: 6px;
 
-  label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #555;
-  }
-
+  label { font-size: 14px; font-weight: 600; color: #555; }
   .required { color: #e53935; }
 
   input, select, textarea {
@@ -415,10 +378,7 @@
     &::placeholder { color: #bbb; }
   }
 
-  textarea {
-    resize: vertical;
-    min-height: 100px;
-  }
+  textarea { resize: vertical; min-height: 100px; }
 }
 
 .form-footer {
@@ -453,55 +413,6 @@
   &:hover { background: #303f9f; }
 }
 
-// ===== 操作按鈕群組 =====
-.action-btns {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-// 圓形 icon 按鈕
-.icon-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-  }
-}
-
-// 編輯按鈕：藍色
-.edit-btn {
-  background: #e3f2fd;
-  color: #0288d1;
-
-  &:hover {
-    background: #0288d1;
-    color: #ffffff;
-  }
-}
-
-// 刪除按鈕：紅色
-.delete-btn {
-  background: #ffebee;
-  color: #e53935;
-
-  &:hover {
-    background: #e53935;
-    color: #ffffff;
-  }
-}
-
 // ===== 分頁 =====
 .pagination {
   display: flex;
@@ -527,28 +438,9 @@
   justify-content: center;
   transition: all 0.2s;
 
-  mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-  }
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
 
-  &:hover:not(:disabled) {
-    background: #C47A5A;
-    border-color: #C47A5A;
-    color: #ffffff;
-  }
-
-  // 目前頁碼
-  &.active {
-    background: #C47A5A;
-    border-color: #C47A5A;
-    color: #ffffff;
-  }
-
-  // 停用狀態
-  &:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
+  &:hover:not(:disabled) { background: #C47A5A; border-color: #C47A5A; color: #ffffff; }
+  &.active { background: #C47A5A; border-color: #C47A5A; color: #ffffff; }
+  &:disabled { opacity: 0.3; cursor: not-allowed; }
 }
