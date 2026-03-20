@@ -14,8 +14,8 @@ import { filter } from 'rxjs/operators';
 export class SidebarComponent implements OnInit {
 
   currentRoute = 'dashboard';
+  isCollapsed = false; // 收合狀態
 
-  // 導覽列清單
   navItems = [
     { route: 'dashboard',    icon: 'home_work',    label: '社區總覽', color: '#5B7FA6' },
     { route: 'visitor',      icon: 'person_add',   label: '訪客登記', color: '#6A9E7F' },
@@ -26,11 +26,32 @@ export class SidebarComponent implements OnInit {
     { route: 'repair',       icon: 'build',        label: '報修申請', color: '#C47A5A' },
   ];
 
-  // 目前 active 的 index
   activeIndex = 0;
-  // hover 的 index（-1 代表沒有 hover）
   hoverIndex = -1;
   private hoverTimer: any;
+
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    // 初始化時設定當前 route
+    const current = this.router.url.replace('/', '').split('/')[0] || 'dashboard';
+    this.currentRoute = current;
+    this.activeIndex = this.navItems.findIndex(item => item.route === current);
+
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      const route = event.url.replace('/', '').split('/')[0] || 'dashboard';
+      this.currentRoute = route;
+      this.activeIndex = this.navItems.findIndex(item => item.route === route);
+    });
+  }
+
+  // 切換收合狀態
+  toggleCollapse() {
+    this.isCollapsed = !this.isCollapsed;
+  }
+
   onMouseEnter(i: number) {
     clearTimeout(this.hoverTimer);
     this.hoverIndex = i;
@@ -42,23 +63,9 @@ export class SidebarComponent implements OnInit {
     }, 100);
   }
 
-  constructor(private router: Router) {}
-
-  ngOnInit() {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      const route = event.url.replace('/', '').split('/')[0] || 'dashboard';
-      this.currentRoute = route;
-      this.activeIndex = this.navItems.findIndex(item => item.route === route);
-    });
-  }
-
-  // 計算 sliding pill 的位置
-  // 每個 nav-item 高度約 48px，間距 4px
   get pillTop(): number {
     const index = this.hoverIndex >= 0 ? this.hoverIndex : this.activeIndex;
-    return index * 52 + 16; // 16px 是 padding-top
+    return index * 52 + 16;
   }
 
   get pillColor(): string {
