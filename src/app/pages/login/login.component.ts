@@ -1,8 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+
+
 import { ApiService } from '../../services/api.service';
+import { Router, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
@@ -78,12 +80,18 @@ let LoginAccount =  {
 // console.log(LoginAccount);
 
 this.http.postApi("/auth/login",LoginAccount).subscribe({
-  next: (res) => {
+  next: (res:any) => {
     console.log('成功:', res);
+    if (res.accessToken) {
+        localStorage.setItem('token', res.accessToken);
+        console.log('Token 已儲存到 localStorage');
+      }
     this.userloginStatus=true;
     this.router.navigate(['/dashboard'])
   },
   error: (error: HttpErrorResponse) => {
+
+
     // 這裡就是獲取報錯程序碼（狀態碼）的地方
     console.log('狀態碼:', error.status);
     console.log('錯誤訊息:', error.message);
