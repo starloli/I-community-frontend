@@ -38,7 +38,7 @@ export class PackageComponent implements OnInit {
 
   // 分頁
   currentPage: number = 1;
-  pageSize: number = 8;
+  pageSize: number = 5;
 
   // Modal
   showDetailModal: boolean = false;

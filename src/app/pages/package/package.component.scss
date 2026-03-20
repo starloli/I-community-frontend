@@ -252,11 +252,13 @@
   }
 }
 
-// 包裹右側：時間 + 等待天數 + 操作
+// 包裹右側：用 grid 三欄固定，保證每列完全對齊
+// [ 日期+天數 ] [ 取貨按鈕 ] [ 鈴鐺 ]
 .pkg-right {
-  display: flex;
+  display: grid;
+  grid-template-columns: 130px 90px 46px;
+  gap: 0 12px;
   align-items: center;
-  gap: 12px;
   flex-shrink: 0;
 
   .pkg-date-wrap {
@@ -275,12 +277,22 @@
       border-radius: 10px;
       font-weight: 600;
 
-      &.warn { background: #fff3e0; color: #e65100; }
+      &.warn   { background: #fff3e0; color: #e65100; }
       &.danger { background: #ffebee; color: #c62828; }
     }
   }
 
-  .pkg-actions { display: flex; gap: 6px; }
+  .pkg-pickup-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .pkg-bell-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 // ===== 狀態標籤（與 bill 的狀態標籤格式一致）=====
@@ -324,7 +336,7 @@
   transition: background 0.2s;
   background: transparent;
 
-  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  mat-icon { font-size: 22px; width: 22px; height: 22px; }
 
   &.pickup  { color: #7BA89E; &:hover { background: rgba(123,168,158,0.12); } }
   &.notify  { color: #e65100; &:hover { background: #fff3e0; } }
@@ -581,6 +593,9 @@
 
 // 通知按鈕（橘色，對應 #e65100 主題）
 .notify-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   padding: 10px 24px;
   background: #fff3e0;
   color: #e65100;
@@ -590,10 +605,16 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
+
+  mat-icon { font-size: 28px !important; width: 28px !important; height: 28px !important; }
+
   &:hover { background: #ffe0b2; }
 }
 
 .confirm-submit-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   padding: 10px 24px;
   background: #388e3c;
   color: #fff;
@@ -602,5 +623,9 @@
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.2s;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+
   &:hover { background: #2e7d32; }
 }
