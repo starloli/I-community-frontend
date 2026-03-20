@@ -1,5 +1,7 @@
 <div class="visitor-container">
-
+<button (click)="getVisitorData()">測試</button>
+<button (click)="getResidentData(ad)">獲取住戶信息</button>
+<button (click)="getMyVisitors()">我自己的token</button>
   <!-- 頁面標題 + 新增按鈕 -->
   <div class="page-header">
     <div class="header-left">
@@ -39,7 +41,7 @@
           <!-- 被訪住戶 -->
           <div class="form-group">
             <label>被訪住戶門牌 <span class="required">*</span></label>
-            <input type="text" [(ngModel)]="newVisitor.hostUnit" placeholder="例如：A101" />
+            <input type="text" [(ngModel)]="newVisitor.hostUnit" placeholder="例如：A棟 1A-1" />
           </div>
 
           <!-- 車牌號碼 -->
@@ -47,7 +49,13 @@
             <label>車牌號碼</label>
             <input type="text" [(ngModel)]="newVisitor.licensePlate" placeholder="無車輛請留空" />
           </div>
+
+           <div class="form-group">
+            <label>來訪目的</label>
+            <input type="text" [(ngModel)]="newVisitor.licensePlate" placeholder="來訪墓地" />
+          </div>
         </div>
+
 
         <div class="form-footer">
           <button class="cancel-btn" (click)="closeForm()">取消</button>
@@ -87,23 +95,23 @@
         </tr>
       </thead>
       <tbody>
-        @for (visitor of filteredVisitors; track visitor.id) {
+        @for (visitor of filteredVisitors; track $index) {
           <tr>
             <td>
               <div class="visitor-name-cell">
                 <!-- 頭像顯示姓名第一個字 -->
-                <div class="avatar">{{ visitor.name.charAt(0) }}</div>
-                {{ visitor.name }}
+                <div class="avatar">{{ visitor.visitorName.charAt(0) }}</div>
+                {{ visitor.visitorName }}
               </div>
             </td>
-            <td>{{ visitor.phone || '-' }}</td>
-            <td>{{ visitor.hostUnit }}</td>
+            <td>{{ visitor.visitorPhone || '-' }}</td>
+            <td>{{ visitor.residentialAddress }}</td>
             <td>{{ visitor.licensePlate || '-' }}</td>
             <td>{{ visitor.checkInTime }}</td>
             <td>{{ visitor.checkOutTime || '-' }}</td>
             <td>
               <!-- 根據狀態顯示不同顏色的標籤 -->
-              @if (visitor.status === '在內') {
+              @if (visitor.status === 'INSIDE') {
                 <span class="status-badge status-inside">在內</span>
               } @else {
                 <span class="status-badge status-left">已離</span>
@@ -111,8 +119,8 @@
             </td>
             <td>
               <!-- 只有狀態為在內才顯示離開按鈕 -->
-              @if (visitor.status === '在內') {
-                <button class="checkout-btn" (click)="checkOut(visitor)">
+              @if (visitor.status === 'INSIDE') {
+                <button class="checkout-btn" (click)="checkOut(visitor.visitorId)">
                   登記離開
                 </button>
               }
