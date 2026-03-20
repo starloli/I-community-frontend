@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api.service';
+import { AuthService } from '../../services/auth.service';
 
 
 @Component({
@@ -14,7 +15,7 @@ import { ApiService } from '../../services/api.service';
 })
 export class LoginComponent {
 
-  constructor(private router : Router,private http:ApiService){}
+  constructor(private router : Router,private http:ApiService, private service: AuthService){}
   // 判斷是否是在注冊界面
 booleanSignup=false;
 //判斷使用者或者管理者
@@ -71,27 +72,19 @@ isValidPhone(phone: any): boolean {
 }
 //登錄api
 useLoginApi(){
-let LoginAccount =  {
-    "userName": this.userName,
-    "password": this.password
+  this.service.login(this.userName, this.password).subscribe({
+    next: (res) => {
+      console.log('成功:', res);
+      this.userloginStatus=true;
+      this.router.navigate(['/dashboard'])
+    },
+    error: (error: HttpErrorResponse) => {
+      // 這裡就是獲取報錯程序碼（狀態碼）的地方
+      console.log('狀態碼:', error.status);
+      console.log('錯誤訊息:', error.message);
+      this.userloginStatus=false;
+  }});
 }
-// console.log(LoginAccount);
-
-this.http.postApi("/auth/login",LoginAccount).subscribe({
-  next: (res) => {
-    console.log('成功:', res);
-    this.userloginStatus=true;
-    this.router.navigate(['/dashboard'])
-  },
-  error: (error: HttpErrorResponse) => {
-    // 這裡就是獲取報錯程序碼（狀態碼）的地方
-    console.log('狀態碼:', error.status);
-    console.log('錯誤訊息:', error.message);
-this.userloginStatus=false;
-
-
-  }
-});}
 
 
 //註冊api

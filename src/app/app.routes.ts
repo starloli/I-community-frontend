@@ -8,6 +8,9 @@ import { FacilityComponent } from './pages/facility/facility.component';
 import { PackageComponent } from './pages/package/package.component';
 import { RepairComponent } from './pages/repair/repair.component';
 import { LayoutComponent } from './shared/layout/layout.component';
+import { ViewComponent } from './pages/announcement/view/view.component';
+import { CreateComponent } from './pages/announcement/create/create.component';
+import { EditComponent } from './pages/announcement/edit/edit.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -18,6 +21,9 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'visitor', component: VisitorComponent },
       { path: 'announcement', component: AnnouncementComponent },
+      { path: 'announcement/view/:id', component: ViewComponent },
+      { path: 'announcement/create', component: CreateComponent },
+      { path: 'announcement/edit/:id', component: CreateComponent },
       { path: 'bill', component: BillComponent },
       { path: 'facility', component: FacilityComponent },
       { path: 'package', component: PackageComponent },

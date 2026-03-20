@@ -1,0 +1,34 @@
+<div class="preview-card">
+  @if(data) {
+
+    <h2>
+      {{ data.title }}
+      @if (data.isPinned) {
+        <span class="pin">📌 置頂</span>
+      }
+    </h2>
+
+    <div class="meta">
+      <span>分類：{{ data.category }}</span>
+      <span>
+        結束時間：
+        {{ data.expiresAt | date:'yyyy/MM/dd HH:mm' }}
+      </span>
+    </div>
+
+    <hr />
+
+    <p class="content">
+      {{ data.content }}
+    </p>
+
+    <div class="button-group">
+      <button [routerLink]="['/announcement']">返回</button>
+    </div>
+
+  } @else {
+    <tr>
+      <td colspan="4">找不到此公告</td>
+    </tr>
+  }
+</div>
