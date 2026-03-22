@@ -1,5 +1,4 @@
 <div class="facility-container">
-
   <!-- 頁面標題 -->
   <div class="page-header">
     <div class="header-left">
@@ -45,7 +44,7 @@
       </div>
 
       <!-- 預約按鈕 -->
-      @if (item.isAvailable) {
+      @if (item.openTime) {
       <button class="reserve-btn" (click)="openReserveForm(item)">
         <mat-icon>event_available</mat-icon>
         立即預約
