@@ -45,7 +45,8 @@ export interface Notification {
 
 export interface Package {
   id?: number,
-  user: User,
+  user: string,
+  unitNumber: string,
   trackingNumber: string,
   courier: string,
   arrivedAt: string,
