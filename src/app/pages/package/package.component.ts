@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { ApiService } from '../../services/api.service';
+import { ApiService } from '../../@service/api.service';
 import { Package, Res, User } from '../../interface/interface';
 import { PackageStatus, UserRole } from '../../interface/enum';
 
