@@ -78,7 +78,7 @@ export interface Reservation {
   endTime: string,
   attendees: number,
   status: ReservationStatus,
-  createdAt: string
+  createdAt?: string
 }
 
 export interface User {

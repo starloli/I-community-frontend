@@ -66,7 +66,6 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
       endTime: '',
       attendees: 1,
       status: ReservationStatus.CANCELLED,
-      createdAt: new Date().toISOString()
     }
 
     this.startTimeControl.valueChanges.pipe(
@@ -94,7 +93,7 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
       date: this.today,
       startTime: this.startTimeControl.value?.toISOString().split('T')[1] || 'start-time-rror',
       endTime: this.endTimeControl.value?.toISOString().split('T')[1] || 'end-time-rror',
-      status: ReservationStatus.CONFIRMED,
+      status: ReservationStatus.CONFIRMING,
     }
     console.log(this.reservation);
   }

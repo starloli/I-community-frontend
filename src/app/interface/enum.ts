@@ -32,6 +32,7 @@ export enum RepairStatus {
 
 export enum ReservationStatus {
   CONFIRMED = '已確認',
+  CONFIRMING = '確認中',
   CANCELLED = '已取消'
 }
 
