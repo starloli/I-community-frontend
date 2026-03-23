@@ -13,7 +13,8 @@ import { CreateComponent } from './pages/announcement/create/create.component';
 import { EditComponent } from './pages/announcement/edit/edit.component';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
+{ path: '', redirectTo: 'login', pathMatch: 'full' },
+{ path: 'login', component: LoginComponent },
   {
     path: '',
     component: LayoutComponent,
@@ -28,8 +29,8 @@ export const routes: Routes = [
       { path: 'facility', component: FacilityComponent },
       { path: 'package', component: PackageComponent },
       { path: 'repair', component: RepairComponent },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },  { path: 'login', component: LoginComponent },
     ]
   },
-  { path: '**', redirectTo: 'dashboard' }
+
 ];
