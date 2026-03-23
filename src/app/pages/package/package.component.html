@@ -91,10 +91,10 @@
       <div class="pkg-main">
         <div class="pkg-title-row">
           <!-- user.fullName -->
-          <span class="pkg-name">{{ pkg.user.fullName }}</span>
+          <span class="pkg-name">{{ pkg.user }}</span>
           <!-- user.unitNumber -->
           @if (isAdmin || isGuard) {
-          <span class="unit-tag">{{ pkg.user.unitNumber }}</span>
+          <span class="unit-tag">{{ pkg.unitNumber }}</span>
           }
           <!-- isNotified -->
           @if (!pkg.isNotified && pkg.status === PackageStatus.WAITING) {
@@ -138,7 +138,7 @@
 
         <div class="pkg-bell-col" (click)="$event.stopPropagation()">
           @if ((isAdmin || isGuard) && pkg.status === PackageStatus.WAITING && !pkg.isNotified) {
-          <button class="icon-btn notify" (click)="notifyResident(pkg, $event)" title="通知住戶">
+          <button class="icon-btn notify" (click)="notifyResident(pkg.id!)" title="通知住戶">
             <mat-icon>notifications</mat-icon>
           </button>
           }
@@ -187,12 +187,12 @@
         <div class="detail-item">
           <span class="d-label">收件人</span>
           <!-- user.fullName -->
-          <span class="d-value">{{ selectedPackage.user.fullName }}</span>
+          <span class="d-value">{{ selectedPackage.user }}</span>
         </div>
         <div class="detail-item">
           <span class="d-label">房號</span>
           <!-- user.unitNumber -->
-          <span class="d-value">{{ selectedPackage.user.unitNumber }}</span>
+          <span class="d-value">{{ selectedPackage.unitNumber }}</span>
         </div>
         <div class="detail-item">
           <span class="d-label">快遞業者</span>
@@ -236,7 +236,7 @@
     <div class="form-footer">
       @if (selectedPackage.status === PackageStatus.WAITING) {
       @if ((isAdmin || isGuard) && !selectedPackage.isNotified) {
-      <button class="notify-btn" (click)="notifyResident(selectedPackage, $event); closeDetail()">
+      <button class="notify-btn" (click)="notifyResident(selectedPackage.id!); closeDetail()">
         <mat-icon>notifications</mat-icon> 通知住戶
       </button>
       }
@@ -322,7 +322,7 @@
 
       <div class="pickup-info">
         <!-- user.fullName + user.unitNumber -->
-        <p><strong>{{ pickupTarget.user.fullName }}</strong>（{{ pickupTarget.user.unitNumber }}）</p>
+        <p><strong>{{ pickupTarget.user }}</strong>（{{ pickupTarget.unitNumber }}）</p>
         <!-- trackingNumber -->
         <p class="tracking-txt">{{ pickupTarget.trackingNumber }}</p>
         <!-- notes -->
@@ -334,7 +334,7 @@
 
     <div class="confirm-footer">
       <button class="cancel-btn" (click)="closePickup()">取消</button>
-      <button class="confirm-submit-btn" (click)="confirmPickup()">✅ 確認取貨</button>
+      <button class="confirm-submit-btn" (click)="confirmPickup(pickupTarget.id!)">✅ 確認取貨</button>
     </div>
   </div>
 </div>
