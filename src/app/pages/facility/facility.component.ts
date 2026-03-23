@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Facility } from '../../interface/interface';
 import { FormsModule } from '@angular/forms';
 import { ReserveFacilityComponent } from '../../dialog/reserve-facility/reserve-facility.component';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-facility',
@@ -20,7 +21,7 @@ export class FacilityComponent implements OnInit {
 
   constructor(private http: HttpService, private snackBar: MatSnackBar, private dialogRef: MatDialog) { }
 
-  getUrl = "http://localhost:8083/auth/facilities";
+  getUrl = "http://localhost:8083/user/facilities";
   facilities: Facility[] = [];
 
   ngOnInit() {
@@ -97,7 +98,7 @@ export class FacilityComponent implements OnInit {
 
   // 開啟預約表單
   openReserveForm(facility: Facility) {
-    this.dialogRef.open(ReserveFacilityComponent, {
+    const deslogRef = this.dialogRef.open(ReserveFacilityComponent, {
       data: facility
     });
   }

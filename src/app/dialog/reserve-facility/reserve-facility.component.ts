@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Facility, Reservation } from '../../interface/interface';
+import { Facility, Res, Reservation, User } from '../../interface/interface';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { ReservationStatus } from '../../interface/enum';
@@ -11,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { JsonPipe } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
 import { HttpService } from '../../@service/http.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -26,12 +27,16 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
   constructor(
     private dialogRef: MatDialogRef<ReserveFacilityComponent>,
     private http: HttpService,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public facility: Facility,
   ) { }
 
   private destroy$ = new Subject<void>();
 
-  postUrl = ''
+  private readonly token = localStorage.getItem('token');
+
+  postUrl = 'http://localhost:8083/user/reserve'
+  getUrl = 'http://localhost:8083/user/me'
   reservation!: Reservation;
   now = new Date();
   minDay = '';
@@ -94,8 +99,35 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
       startTime: this.startTimeControl.value?.toISOString().split('T')[1] || 'start-time-rror',
       endTime: this.endTimeControl.value?.toISOString().split('T')[1] || 'end-time-rror',
       status: ReservationStatus.CONFIRMING,
-    }
+    };
     console.log(this.reservation);
+    this.http.getApi<User>(this.getUrl)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: res => {
+          this.reservation.user = res;
+          this.http.postApi<Res>(this.postUrl, this.reservation)
+          .pipe(takeUntil(this.destroy$)).subscribe({
+            next: res => {
+              this.snackBar.open(res.message, '關閉', {
+                duration: 2000,
+              })
+              this.dialogRef.close();
+            },
+            error: err => {
+              this.snackBar.open(err.error.message, '關閉', {
+                duration: 2000,
+              })
+            }
+          })
+        },
+        error: err => {
+          this.snackBar.open(err.error.message, '關閉', {
+            duration: 2000,
+          })
+        }
+      }
+      )
   }
 
   ngOnDestroy(): void {

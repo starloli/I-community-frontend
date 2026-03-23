@@ -84,15 +84,14 @@ export interface Reservation {
 export interface User {
   userId?: number,
   userName: string,
-  passwordHash: string,
+  passwordHash?: string,
   fullName: string,
   email: string,
   phone: string,
   unitNumber: string,
-  role: UserRole,
-  isActive: boolean,
-  createdAt: string,
-  token?: string
+  role?: UserRole,
+  isActive?: boolean,
+  createdAt?: string
 }
 
 export interface Visitor {

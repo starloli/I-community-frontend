@@ -16,7 +16,7 @@ export class RegistFacilityComponent {
 
   constructor(private http: HttpService, private snackBar: MatSnackBar, public dialogRef: MatDialogRef<RegistFacilityComponent>) { }
 
-  postUrl = "http://localhost:8083/auth/regist-facility";
+  postUrl = "http://localhost:8083/user/regist-facility";
   facility: Facility = {
     name: '',
     description: '',
