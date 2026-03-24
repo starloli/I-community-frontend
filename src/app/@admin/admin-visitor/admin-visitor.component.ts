@@ -274,29 +274,71 @@ getAllVisitors() {
 
   this.http.getApi('/visitor/getVisitor').subscribe({
     next: (res: any) => {
-      console.log('後端回傳的原始資料:', res);
+    //   console.log('後端回傳的原始資料:', res);
 
-      if (Array.isArray(res)) {
-        this.allVisitor = res;
+    //   if (Array.isArray(res)) {
+    //     this.allVisitor = res;
 
-      } else if (res && Array.isArray(res.data)) {
-        this.allVisitor = res.data;
-      } else {
-        this.allVisitor = [];
+    //   } else if (res && Array.isArray(res.data)) {
+    //     this.allVisitor = res.data;
+    //   } else {
+    //     this.allVisitor = [];
+    //   }
+    //    this.allVisitor = this.allVisitor.map((v: any) => ({
+    //     ...v,
+    //     // 檢查是否有時間，有的話將 'T' 換成空格並截取前 16 個字元
+    //     estimatedTime: v.estimatedTime ? v.estimatedTime.replace('T', ' ').slice(0, 16) : '-',
+    //     checkInTime: v.checkInTime ? v.checkInTime.replace('T',' ').slice(0,16): '-',
+    //     checkOutTime: v.checkOutTime ? v.checkOutTime.replace('T', ' ').slice(0, 16) : '-',
+    //   }));
+    //           console.log(this.allVisitor)
+    //           this.allVisitor=this.allVisitor.reverse();
+    // },
+    // error: (err :any) => {
+    //   console.error('API 請求失敗:', err);
+    // }
+
+
+    let processedData = Array.isArray(res) ? res : (res?.data || []);
+
+    const nowStr = new Date().toISOString().slice(0, 16).replace('T', ' ');
+
+    this.allVisitor = processedData.map((v: any) => ({
+      ...v,
+      // 保持原始字串格式方便比較，或者先格式化
+      formattedEstimated: v.estimatedTime ? v.estimatedTime.replace('T', ' ').slice(0, 16) : '9999-12-31',
+      estimatedTime: v.estimatedTime ? v.estimatedTime.replace('T', ' ').slice(0, 16) : '-',
+      checkInTime: v.checkInTime ? v.checkInTime.replace('T', ' ').slice(0, 16) : '-',
+      checkOutTime: v.checkOutTime ? v.checkOutTime.replace('T', ' ').slice(0, 16) : '-',
+    }));
+
+    // --- 自定義權重排序開始 ---
+    this.allVisitor.sort((a :any, b:any) => {
+      const getPriority = (visitor: any) => {
+        // 1. 未到且日期還沒過期 (最優先)
+        if (visitor.status === 'NOTYET' && visitor.formattedEstimated >= nowStr) return 1;
+        // 2. 人在裡面 (第二優先)
+        if (visitor.status === 'INSIDE') return 2;
+        // 3. 已完成離開 (第三)
+        if (visitor.status === 'COMPLETED') return 3;
+        // 4. 未到但已經過期 (放最後)
+        if (visitor.status === 'NOTYET' && visitor.formattedEstimated < nowStr) return 4;
+        return 5; // 其他未知狀態
+      };
+
+      const priorityA = getPriority(a);
+      const priorityB = getPriority(b);
+
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB; // 權重小的排前面
       }
-       this.allVisitor = this.allVisitor.map((v: any) => ({
-        ...v,
-        // 檢查是否有時間，有的話將 'T' 換成空格並截取前 16 個字元
-        estimatedTime: v.estimatedTime ? v.estimatedTime.replace('T', ' ').slice(0, 16) : '-',
-        checkInTime: v.checkInTime ? v.checkInTime.replace('T',' ').slice(0,16): '-',
-        checkOutTime: v.checkOutTime ? v.checkOutTime.replace('T', ' ').slice(0, 16) : '-',
-      }));
-              console.log(this.allVisitor)
-              this.allVisitor=this.allVisitor.reverse();
-    },
-    error: (err :any) => {
-      console.error('API 請求失敗:', err);
-    }
+
+      // 如果權重相同，則按預約日期排序 (最近的日期排前面)
+      return a.formattedEstimated.localeCompare(b.formattedEstimated);
+    });
+    // --- 自定義權重排序結束 ---
+
+    console.log('排序後的訪客清單:', this.allVisitor);}
   });
 }
 //獲取更多訪客資料
