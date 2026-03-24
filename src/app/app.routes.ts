@@ -8,13 +8,16 @@ import { FacilityComponent } from './pages/facility/facility.component';
 import { PackageComponent } from './pages/package/package.component';
 import { RepairComponent } from './pages/repair/repair.component';
 import { LayoutComponent } from './shared/layout/layout.component';
+import { VisitorDialogComponent } from './dialog/visitor-dialog/visitor-dialog.component';
 import { ViewComponent } from './pages/announcement/view/view.component';
 import { CreateComponent } from './pages/announcement/create/create.component';
-import { EditComponent } from './pages/announcement/edit/edit.component';
+import { AdminVisitorComponent } from './@admin/admin-visitor/admin-visitor.component';
 
 export const routes: Routes = [
 { path: '', redirectTo: 'login', pathMatch: 'full' },
 { path: 'login', component: LoginComponent },
+{path:'visitorDialog' ,component:VisitorDialogComponent},
+{path:'adminVisitor',component:AdminVisitorComponent},
   {
     path: '',
     component: LayoutComponent,
