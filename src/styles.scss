@@ -5,29 +5,71 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
 :root {
-  --color-dashboard:   #5B7FA6;
-  --color-visitor:     #6A9E7F;
-  --color-announcement:#B07A8A;
-  --color-bill:        #B8935A;
-  --color-facility:    #7B7FBA;
-  --color-package:     #7BA89E;
-  --color-repair:      #C47A5A;
+  --color-dashboard: #5b7fa6;
+  --color-visitor: #6a9e7f;
+  --color-announcement: #b07a8a;
+  --color-bill: #b8935a;
+  --color-facility: #7b7fba;
+  --color-package: #7ba89e;
+  --color-repair: #c47a5a;
 
-  --color-dashboard-light:    rgba(91, 127, 166, 0.15);
-  --color-visitor-light:      rgba(106, 158, 127, 0.15);
+  --color-dashboard-light: rgba(91, 127, 166, 0.15);
+  --color-visitor-light: rgba(106, 158, 127, 0.15);
   --color-announcement-light: rgba(176, 122, 138, 0.15);
-  --color-bill-light:         rgba(184, 147, 90, 0.15);
-  --color-facility-light:     rgba(123, 127, 186, 0.15);
-  --color-package-light:      rgba(123, 168, 158, 0.15);
-  --color-repair-light:       rgba(196, 122, 90, 0.15);
+  --color-bill-light: rgba(184, 147, 90, 0.15);
+  --color-facility-light: rgba(123, 127, 186, 0.15);
+  --color-package-light: rgba(123, 168, 158, 0.15);
+  --color-repair-light: rgba(196, 122, 90, 0.15);
+}
+
+// ===== 分頁按鈕共用 mixin =====
+@mixin page-btn-color($color) {
+  .page-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1.5px solid #e0e0e0;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(8px);
+    color: #555;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover:not(:disabled) {
+      background: $color;
+      border-color: $color;
+      color: #ffffff;
+    }
+    &.active {
+      background: $color;
+      border-color: $color;
+      color: #ffffff;
+    }
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  }
 }

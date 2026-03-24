@@ -1,77 +1,265 @@
 <div class="announcement-container">
 
+  <!-- ── 頁面標題 ─────────────────────────────── -->
   <div class="page-header">
     <div class="header-left">
       <h1>社區公告</h1>
-      <span class="subtitle">社區公告資訊列表</span>
+      <span class="subtitle">掌握社區最新動態與重要通知</span>
     </div>
-
     @if (isAdmin) {
-      <button class="add-btn" [routerLink]="['/announcement/create']">
+      <button class="add-btn" (click)="openAdd()">
         <mat-icon>add</mat-icon>
-        新增公告
+        發布公告
       </button>
     }
   </div>
 
-</div>
+  <!-- ── 統計卡片 ───────────────────────────────── -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <mat-icon class="stat-icon-wrap" style="color: #B07A8A; font-size: 32px; width: 32px; height: 32px;">push_pin</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value" style="color: #B07A8A">{{ pinnedCount }}</span>
+        <span class="stat-label">置頂公告</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <mat-icon class="stat-icon-wrap" style="color: #3f51b5; font-size: 32px; width: 32px; height: 32px;">campaign</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value" style="color: #3f51b5">{{ activeCount }}</span>
+        <span class="stat-label">有效公告</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <mat-icon class="stat-icon-wrap" style="color: #888; font-size: 32px; width: 32px; height: 32px;">article</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value" style="color: #888">{{ announcements.length }}</span>
+        <span class="stat-label">全部公告</span>
+      </div>
+    </div>
+  </div>
 
-<div class="search-bar">
-  <mat-icon>search</mat-icon>
-  <input
-    type="text"
-    placeholder="標題或分類搜尋..."
-    [(ngModel)]="keyword"
-  />
-</div>
-
-<table class="table-card">
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>標題</th>
-      <th>分類</th>
-      <th>發布時間</th>
-      <th>結束時間</th>
-      <th>發布人員</th>
-      <th>操作</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    @for (announ of filteredAnnouncements; track announ.announcementId; let i = $index) {
-      <tr>
-        @if (announ.isPinned) {
-          <td>📌</td>
-        } @else {
-          <td>{{ announ.announcementId }}</td>
-        }
-        <td>{{ announ.title }}</td>
-        <td>{{ announ.category }}</td>
-        <td>{{ announ.publishedAt | date:'yyyy/MM/dd HH:mm' }}</td>
-        @if (announ.expiresAt) {
-          <td>{{ announ.expiresAt + 'Z' | date:'yyyy/MM/dd HH:mm':'Asia/Taipei' }}</td>
-        } @else {
-          <td>{{ announ.expiresAt | date:'yyyy/MM/dd HH:mm' }}</td>
-        }
-        <td>{{ announ.authorName }}</td>
-        <td>
-          @if (isAdmin) {
-            <button class="btn check" [routerLink]="['/announcement/edit', announ.announcementId]">編輯</button>
-            <button class="btn delete" (click)="delete(announ)">刪除</button>
-          } @else {
-            <button class="btn check" [routerLink]="['/announcement/view', announ.announcementId]">查看</button>
-          }
-        </td>
-      </tr>
-    } @empty {
-      <tr>
-        <td colspan="4">目前沒有公告</td>
-      </tr>
+  <!-- ── 篩選列 ────────────────────────────────── -->
+  <div class="filter-bar">
+    @for (cat of categories; track cat.value) {
+      <button
+        class="filter-btn"
+        [class.active]="selectedCategory === cat.value"
+        (click)="selectedCategory = cat.value; onFilterChange()"
+      >{{ cat.label }}</button>
     }
-  </tbody>
-</table>
+    <div class="search-box">
+      <mat-icon>search</mat-icon>
+      <input
+        type="text"
+        placeholder="搜尋公告標題或內容…"
+        [(ngModel)]="searchKeyword"
+        (ngModelChange)="onFilterChange()"
+      />
+    </div>
+  </div>
 
-<button (click)="loginAdmin()">登入管理員</button>
-<button (click)="loginUser()">登入使用者</button>
-<button (click)="logout()">登出</button>
+  <!-- ── 公告列表 ──────────────────────────────── -->
+  @if (pagedAnnouncements.length === 0) {
+    <div class="list-card">
+      <div class="empty-state">
+        <mat-icon class="empty-icon">inbox</mat-icon>
+        <p>目前沒有符合條件的公告</p>
+      </div>
+    </div>
+  } @else {
+    <div class="list-card">
+      @for (ann of pagedAnnouncements; track ann.announcementId) {
+        <div
+          class="announcement-item"
+          [class.pinned]="ann.isPinned"
+          [class.expired]="isExpired(ann)"
+          (click)="openDetail(ann)"
+        >
+          <div class="ann-icon-box" [ngClass]="getCategoryClass(ann.category)">
+            <mat-icon>campaign</mat-icon>
+          </div>
+
+          <div class="ann-main">
+            <div class="ann-title-row">
+              <span class="category-badge" [ngClass]="getCategoryClass(ann.category)">
+                {{ getCategoryLabel(ann.category) }}
+              </span>
+              @if (ann.isPinned) {
+                <span class="pin-badge">
+                  <mat-icon style="font-size:12px;width:12px;height:12px;vertical-align:middle;">push_pin</mat-icon>
+                  置頂
+                </span>
+              }
+              @if (isExpired(ann)) {
+                <span class="expired-badge">已到期</span>
+              }
+              <span class="ann-title">{{ ann.title }}</span>
+            </div>
+            <span class="ann-sub">
+              <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">person</mat-icon>
+              {{ ann.authorName }} &nbsp;·&nbsp;
+              到期：{{ formatDate(ann.expiresAt) }}
+            </span>
+          </div>
+
+          <div class="ann-right">
+            <span class="ann-date">{{ formatDate(ann.publishedAt) }}</span>
+            @if (isAdmin) {
+              <div class="ann-actions" (click)="$event.stopPropagation()">
+                <button class="icon-btn edit" (click)="openEdit(ann, $event)" title="編輯">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button class="icon-btn delete" (click)="openDelete(ann.announcementId, $event)" title="刪除">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ── 分頁 ──────────────────────────────────── -->
+  @if (totalPages > 1) {
+    <div class="pagination">
+      <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">‹</button>
+      @for (page of pageNumbers; track page) {
+        <button class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">{{ page }}</button>
+      }
+      <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">›</button>
+    </div>
+  }
+
+</div>
+
+<!-- ════════════════════════════════════════════
+     詳情 Modal
+════════════════════════════════════════════ -->
+@if (showDetailModal && selectedAnnouncement) {
+  <div class="form-overlay" (click)="closeDetail()">
+    <div class="form-card" (click)="$event.stopPropagation()">
+
+      <div class="form-header">
+        <h2>
+          <span class="category-badge" [ngClass]="getCategoryClass(selectedAnnouncement.category)" style="margin-right:8px">
+            {{ getCategoryLabel(selectedAnnouncement.category) }}
+          </span>
+          {{ selectedAnnouncement.title }}
+        </h2>
+        <mat-icon class="close-btn" (click)="closeDetail()">close</mat-icon>
+      </div>
+
+      <div class="detail-body">
+        <div class="detail-meta">
+          <span>
+            <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">person</mat-icon>
+            {{ selectedAnnouncement.authorName }}
+          </span>
+          <span>
+            <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">calendar_today</mat-icon>
+            發布：{{ formatDatetime(selectedAnnouncement.publishedAt) }}
+          </span>
+          <span>
+            <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">schedule</mat-icon>
+            到期：{{ formatDatetime(selectedAnnouncement.expiresAt) }}
+          </span>
+          @if (selectedAnnouncement.isPinned) {
+            <span class="pin-badge">
+              <mat-icon style="font-size:12px;width:12px;height:12px;vertical-align:middle;">push_pin</mat-icon>
+              置頂
+            </span>
+          }
+          @if (isExpired(selectedAnnouncement)) {
+            <span class="expired-badge">已到期</span>
+          }
+        </div>
+        <div class="detail-content">{{ selectedAnnouncement.content }}</div>
+      </div>
+
+      @if (isAdmin) {
+        <div class="form-footer">
+          <button class="cancel-btn" (click)="closeDetail()">關閉</button>
+          <button class="submit-btn" (click)="openEdit(selectedAnnouncement, $event); closeDetail()">
+            <mat-icon style="font-size:16px;width:16px;height:16px;vertical-align:middle;">edit</mat-icon>
+            編輯此公告
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+}
+
+<!-- ════════════════════════════════════════════
+     新增 / 編輯 Modal
+════════════════════════════════════════════ -->
+@if (showFormModal) {
+  <div class="form-overlay" (click)="closeForm()">
+    <div class="form-card" (click)="$event.stopPropagation()">
+
+      <div class="form-header">
+        <h2>{{ isEditMode ? '編輯公告' : '發布新公告' }}</h2>
+        <mat-icon class="close-btn" (click)="closeForm()">close</mat-icon>
+      </div>
+
+      <div class="form-body">
+        <div class="form-group">
+          <label>公告標題 <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="formData['title']" placeholder="請輸入公告標題…" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>公告分類 <span class="required">*</span></label>
+            <select [(ngModel)]="formData['category']">
+              @for (cat of categories.slice(1); track cat.value) {
+                <option [value]="cat.value">{{ cat.label }}</option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label>到期日期 <span class="required">*</span></label>
+            <input type="datetime-local" [(ngModel)]="formData['expiresAt']" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>公告內容 <span class="required">*</span></label>
+          <textarea [(ngModel)]="formData['content']" placeholder="請輸入公告詳細內容…" rows="6"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="formData['isPinned']" />
+            置頂此公告
+          </label>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button class="cancel-btn" (click)="closeForm()">取消</button>
+        <button class="submit-btn" (click)="submitForm()">
+          {{ isEditMode ? '儲存變更' : '發布公告' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ════════════════════════════════════════════
+     刪除確認 Modal
+════════════════════════════════════════════ -->
+@if (showDeleteConfirm) {
+  <div class="form-overlay" (click)="cancelDelete()">
+    <div class="confirm-card" (click)="$event.stopPropagation()">
+      <mat-icon class="confirm-icon">delete</mat-icon>
+      <h3>確定要刪除這則公告嗎？</h3>
+      <p>刪除後無法復原，請確認操作。</p>
+      <div class="confirm-footer">
+        <button class="cancel-btn" (click)="cancelDelete()">取消</button>
+        <button class="delete-btn" (click)="confirmDelete()">確認刪除</button>
+      </div>
+    </div>
+  </div>
+}
