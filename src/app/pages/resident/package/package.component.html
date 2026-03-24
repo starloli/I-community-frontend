@@ -1,0 +1,124 @@
+<div class="package-container">
+
+  <!-- ── 頁面標題 ─────────────────────────────── -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1>我的包裹</h1>
+      <span class="subtitle">查看到達包裹、確認取貨狀態</span>
+    </div>
+  </div>
+
+  <!-- ── 統計卡片 ────────────────────────────────── -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <mat-icon class="stat-icon-wrap" style="color: #7BA89E;">markunread_mailbox</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value" style="color: #7BA89E">{{ waitingCount }}</span>
+        <span class="stat-label">待取包裹</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <mat-icon class="stat-icon-wrap" style="color: #388e3c;">check_circle</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value" style="color: #388e3c">{{ pickedUpCount }}</span>
+        <span class="stat-label">已取包裹</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <mat-icon class="stat-icon-wrap" style="color: #5B7FA6;">inventory_2</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value" style="color: #5B7FA6">{{ totalCount }}</span>
+        <span class="stat-label">總件數</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 篩選列 ────────────────────────────────── -->
+  <div class="filter-bar">
+    <button class="filter-btn" [class.active]="selectedStatus === 'all'"
+      (click)="selectedStatus = 'all'; onFilterChange()">全部</button>
+    <button class="filter-btn" [class.active]="selectedStatus === 'waiting'"
+      (click)="selectedStatus = 'waiting'; onFilterChange()">待取貨</button>
+    <button class="filter-btn" [class.active]="selectedStatus === 'pickedup'"
+      (click)="selectedStatus = 'pickedup'; onFilterChange()">已取貨</button>
+
+    <!-- 搜尋框 -->
+    <div class="search-box">
+      <mat-icon>search</mat-icon>
+      <input type="text" placeholder="搜尋追蹤號碼、快遞業者…" [(ngModel)]="searchKeyword" (ngModelChange)="onFilterChange()" />
+    </div>
+  </div>
+
+  <!-- ── 包裹列表 ──────────────────────────────── -->
+  @if (pagedPackages.length === 0) {
+  <div class="list-card">
+    <div class="empty-state">
+      <mat-icon class="empty-icon">inventory_2</mat-icon>
+      <p>沒有符合條件的包裹</p>
+    </div>
+  </div>
+  } @else {
+  <div class="list-card">
+    @for (pkg of pagedPackages; track pkg.id) {
+    <div class="package-item" [class.row-waiting]="pkg.status === PackageStatus.WAITING">
+      <!-- 圖示框 -->
+      <div class="pkg-icon-box" [class.waiting]="pkg.status === PackageStatus.WAITING" [class.picked]="pkg.status === PackageStatus.PICKED_UP">
+        <mat-icon>{{ pkg.status === PackageStatus.WAITING ? 'markunread_mailbox' : 'check_circle' }}</mat-icon>
+      </div>
+
+      <!-- 文字主區 -->
+      <div class="pkg-main">
+        <div class="pkg-title-row">
+          <span class="pkg-courier">{{ pkg.courier }}</span>
+          <!-- 狀態標籤 -->
+          <span class="status-badge" [class.waiting]="pkg.status === PackageStatus.WAITING" [class.picked]="pkg.status === PackageStatus.PICKED_UP">
+            @if (pkg.status === PackageStatus.WAITING) { 待取貨 } @else { 已取貨 }
+          </span>
+        </div>
+        <div class="pkg-sub">
+          <span class="tracking">{{ pkg.trackingNumber }}</span>
+          @if (pkg.notes) { <span class="notes">· {{ pkg.notes }}</span> }
+        </div>
+      </div>
+
+      <!-- 右側：到達時間 + 等待天數 + 操作 -->
+      <div class="pkg-right">
+        <div class="pkg-date-wrap">
+          <span class="pkg-date">{{ formatDate(pkg.arrivedAt) }}</span>
+          @if (pkg.status === PackageStatus.WAITING) {
+          <span class="days-badge" [class.warn]="waitingDays(pkg.arrivedAt) >= 3" [class.danger]="waitingDays(pkg.arrivedAt) >= 7">
+            等待 {{ waitingDays(pkg.arrivedAt) }} 天
+          </span>
+          }
+        </div>
+
+        @if (pkg.status === PackageStatus.WAITING) {
+        <button class="pickup-btn" (click)="pickupPackage(pkg)">
+          <mat-icon>check</mat-icon>
+          取貨
+        </button>
+        }
+      </div>
+    </div>
+    }
+  </div>
+  }
+
+  <!-- ── 分頁 ────────────────────────────────── -->
+  @if (totalPages > 1) {
+  <div class="pagination">
+    <button class="page-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    @for (page of pageNumbers; track page) {
+    <button class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">
+      {{ page }}
+    </button>
+    }
+    <button class="page-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+  }
+
+</div>
