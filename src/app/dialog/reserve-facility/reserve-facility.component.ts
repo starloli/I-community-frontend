@@ -8,7 +8,6 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { JsonPipe } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
 import { HttpService } from '../../@service/http.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -17,7 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-reserve-facility',
   standalone: true,
-  imports: [FormsModule, MatIcon, MatFormFieldModule, MatInputModule, MatTimepickerModule, ReactiveFormsModule, JsonPipe],
+  imports: [FormsModule, MatIcon, MatFormFieldModule, MatInputModule, MatTimepickerModule, ReactiveFormsModule],
   templateUrl: './reserve-facility.component.html',
   providers: [provideNativeDateAdapter()],
   styleUrl: './reserve-facility.component.scss'
@@ -37,7 +36,13 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
 
   postUrl = 'http://localhost:8083/user/reserve'
   getUrl = 'http://localhost:8083/user/me'
-  reservation!: Reservation;
+  reservation: Reservation = {
+    facilityId: 0,
+    date: '',
+    startTime: '',
+    endTime: '',
+    attendees: 0,
+  };
   now = new Date();
   minDay = '';
   today = '';
@@ -61,22 +66,20 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
     } else {
       this.minDay = this.now.toISOString().split('T')[0];
     }
-    console.log('today:', this.minDay);
-    console.log('min:', this.minTime);
-    console.log('max:', this.maxTime);
-    this.reservation = {
-      facility: this.facility,
-      date: this.minDay,
-      startTime: '',
-      endTime: '',
-      attendees: 1,
-      status: ReservationStatus.CANCELLED,
+
+    if (this.facility.id) {
+      this.reservation = {
+        facilityId: this.facility.id,
+        date: this.minDay,
+        startTime: '',
+        endTime: '',
+        attendees: 1,
+      }
     }
 
     this.startTimeControl.valueChanges.pipe(
       takeUntil(this.destroy$)
     ).subscribe(newStartTime => {
-      console.log(newStartTime);
       if (newStartTime) {
         this.maxTime = new Date(newStartTime.getTime() + 30 * 60 * 1000);
         if (this.endTimeControl.value) {
@@ -105,26 +108,28 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: res => {
-          this.reservation.user = res;
+          this.reservation.userId = res.userId;
           this.http.postApi<Res>(this.postUrl, this.reservation)
-          .pipe(takeUntil(this.destroy$)).subscribe({
-            next: res => {
-              this.snackBar.open(res.message, '關閉', {
-                duration: 2000,
-              })
-              this.dialogRef.close();
-            },
-            error: err => {
-              this.snackBar.open(err.error.message, '關閉', {
-                duration: 2000,
-              })
-            }
-          })
+            .pipe(takeUntil(this.destroy$)).subscribe({
+              next: res => {
+                this.snackBar.open(res.message, '關閉', {
+                  duration: 2000,
+                })
+                this.dialogRef.close();
+              },
+              error: err => {
+                this.snackBar.open(err.error.message, '關閉', {
+                  duration: 2000,
+                })
+                console.log(err.error.message);
+              }
+            })
         },
         error: err => {
           this.snackBar.open(err.error.message, '關閉', {
             duration: 2000,
           })
+          console.log(err.error.message);
         }
       }
       )

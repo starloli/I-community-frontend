@@ -21,7 +21,7 @@ export class HttpService {
     return this.http.put(url, putData);
   }
 
-  // deleteApi(url: string, id: number) {
-  //   return this.http.delete(`${url}/${id}`);
-  // }
+  deleteApi(url: string, id: number) {
+    return this.http.delete(`${url}/${id}`);
+  }
 }

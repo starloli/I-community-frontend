@@ -71,13 +71,13 @@ export interface RepairRequest {
 
 export interface Reservation {
   id?: number,
-  user?: User,
-  facility: Facility,
+  userId?: number,
+  facilityId: number,
   date: string,
   startTime: string,
   endTime: string,
   attendees: number,
-  status: ReservationStatus,
+  status?: ReservationStatus,
   createdAt?: string
 }
 
