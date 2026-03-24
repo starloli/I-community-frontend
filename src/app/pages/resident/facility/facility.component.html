@@ -1,0 +1,127 @@
+<div class="facility-container">
+
+  <!-- 頁面標題 -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1>公設預約</h1>
+      <span class="subtitle">查詢社區公共設施及預約時段</span>
+    </div>
+  </div>
+
+  <!-- Tab 切換 -->
+  <div class="tab-bar">
+    <button class="tab-btn" [class.active]="activeTab === 'facilities'" (click)="activeTab = 'facilities'">
+      <mat-icon>apartment</mat-icon>
+      設施列表
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'my-reservations'" (click)="activeTab = 'my-reservations'">
+      <mat-icon>event_note</mat-icon>
+      我的預約
+      @if (myReservations.length > 0) {
+      <span class="tab-badge">{{ myReservations.length }}</span>
+      }
+    </button>
+  </div>
+
+  <!-- ════════════════════════════
+       設施列表
+  ════════════════════════════ -->
+  @if (activeTab === 'facilities') {
+  <div class="facility-grid">
+    @for (item of facilities; track item.id) {
+    <div class="facility-card" [class.unavailable]="!item.isAvailable">
+
+      <div class="facility-icon">
+        <mat-icon>{{ getFacilityIcon(item.name) }}</mat-icon>
+      </div>
+
+      <div class="facility-info">
+        <div class="facility-header">
+          <h2>{{ item.name }}</h2>
+          @if (item.isAvailable) {
+          <span class="available-badge available">可預約</span>
+          } @else {
+          <span class="available-badge unavailable">暫停開放</span>
+          }
+        </div>
+
+        <p class="facility-desc">{{ item.description }}</p>
+
+        <div class="facility-details">
+          <div class="detail-item">
+            <mat-icon>people</mat-icon>
+            <span>最多 {{ item.capacity }} 人</span>
+          </div>
+          <div class="detail-item">
+            <mat-icon>schedule</mat-icon>
+            <span>{{ item.openTime }} - {{ item.closeTime }}</span>
+          </div>
+        </div>
+      </div>
+
+      @if (item.isAvailable) {
+      <button class="reserve-btn" (click)="openReserveForm(item)">
+        <mat-icon>event_available</mat-icon>
+        立即預約
+      </button>
+      } @else {
+      <button class="reserve-btn disabled" disabled>暫停開放</button>
+      }
+
+    </div>
+    }
+  </div>
+  }
+
+  <!-- ════════════════════════════
+       我的預約記錄
+  ════════════════════════════ -->
+  @if (activeTab === 'my-reservations') {
+  @if (myReservations.length === 0) {
+  <div class="empty-state">
+    <mat-icon class="empty-icon">event_busy</mat-icon>
+    <p>目前沒有預約記錄</p>
+    <button class="reserve-btn-sm" (click)="activeTab = 'facilities'">
+      <mat-icon>add</mat-icon> 立即預約
+    </button>
+  </div>
+  } @else {
+  <div class="reservation-list">
+    @for (r of myReservations; track r.id) {
+    <div class="reservation-card" [class.cancelled]="r.status === ReservationStatus.CANCELLED">
+
+      <!-- 左側：設施 icon -->
+      <div class="res-icon">
+        <mat-icon>{{ getFacilityIcon(r.facilityName) }}</mat-icon>
+      </div>
+
+      <!-- 中間：資訊 -->
+      <div class="res-info">
+        <div class="res-title-row">
+          <span class="res-name">{{ r.facilityName }}</span>
+          <span class="res-status" [class.status-confirmed]="r.status === ReservationStatus.CONFIRMED"
+            [class.status-cancelled]="r.status === ReservationStatus.CANCELLED">
+            @if (r.status === ReservationStatus.CONFIRMED) { 已確認 } @else { 已取消 }
+          </span>
+        </div>
+        <div class="res-details">
+          <span><mat-icon>calendar_today</mat-icon>{{ formatDate(r.date) }}</span>
+          <span><mat-icon>schedule</mat-icon>{{ r.startTime }} - {{ r.endTime }}</span>
+          <span><mat-icon>people</mat-icon>{{ r.attendees }} 人</span>
+        </div>
+      </div>
+
+      <!-- 右側：取消按鈕 -->
+      @if (r.status === ReservationStatus.CONFIRMED) {
+      <button class="cancel-res-btn" (click)="openCancelConfirm(r.id)">
+        取消預約
+      </button>
+      }
+
+    </div>
+    }
+  </div>
+  }
+  }
+
+</div>

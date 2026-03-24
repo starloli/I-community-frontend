@@ -20,7 +20,7 @@ export interface Bill {
   dueDate: string,
   status: BillStatus,
   paidAt: string,
-  paymendMethod: string,
+  paymentMethod: string,
   createdAt: string
 }
 

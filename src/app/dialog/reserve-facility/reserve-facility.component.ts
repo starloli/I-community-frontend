@@ -12,7 +12,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { HttpService } from '../../@service/http.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-
 @Component({
   selector: 'app-reserve-facility',
   standalone: true,
