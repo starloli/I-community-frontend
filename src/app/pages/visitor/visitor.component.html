@@ -66,7 +66,7 @@
 
         <div class="form-footer">
           <button class="cancel-btn" (click)="closeForm()">取消</button>
-          @if(newVisitorName){
+          @if(newVisitorName && estimatedTime ){
           <button class="submit-btn" (click)="usertestapi()">確認登記</button>}
           @else{<button class="submit-btn1" >確認登記</button>}
         </div>
