@@ -1,14 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink,FormsModule
+  imports: [FormsModule
 ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -74,7 +74,7 @@ isValidPhone(phone: any): boolean {
 useLoginApi(){
   this.service.login(this.userName, this.password).subscribe({
     next: (res) => {
-      console.log('成功:', res);
+      console.log('登入成功:', res);
       this.userloginStatus=true;
       this.router.navigate(['/dashboard'])
     },

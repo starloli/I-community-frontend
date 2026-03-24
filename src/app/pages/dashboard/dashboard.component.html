@@ -43,7 +43,7 @@
           <span class="category-badge">{{ item.category }}</span>
           <span class="announcements-title"> {{ item.title }}</span>
         </div>
-        <span class="announcements-date">{{ item.date }}</span>
+        <span class="announcements-date">{{ item.publishedAt | date: 'yyyy/MM/dd' }}</span>
       </div>
       }
     </div>

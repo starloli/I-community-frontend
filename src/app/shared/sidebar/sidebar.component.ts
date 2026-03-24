@@ -1,3 +1,4 @@
+import { AuthService } from './../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,6 +14,7 @@ import { filter } from 'rxjs/operators';
 })
 export class SidebarComponent implements OnInit {
 
+  isLogin: boolean = false;
   currentRoute = 'dashboard';
   isCollapsed = false; // 收合狀態
 
@@ -30,7 +32,10 @@ export class SidebarComponent implements OnInit {
   hoverIndex = -1;
   private hoverTimer: any;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     // 初始化時設定當前 route
@@ -45,6 +50,8 @@ export class SidebarComponent implements OnInit {
       this.currentRoute = route;
       this.activeIndex = this.navItems.findIndex(item => item.route === route);
     });
+
+    this.isLogin = this.authService.isLoggedIn();
   }
 
   // 切換收合狀態
@@ -73,14 +80,9 @@ export class SidebarComponent implements OnInit {
     return this.navItems[index]?.color || '#5B7FA6';
   }
 
-  get isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
-  }
-
   login() { this.router.navigate(['/login']); }
 
   logout() {
-    localStorage.removeItem('token');
-    this.router.navigate(['/login']);
+    this.authService.logout()
   }
 }
