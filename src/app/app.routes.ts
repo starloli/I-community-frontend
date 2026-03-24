@@ -15,7 +15,7 @@ import { RepairComponent } from './pages/repair/repair.component';
 // ── 住戶頁面（之後陸續新增）──────────────────────────
 import { ResidentDashboardComponent } from './pages/resident/dashboard/dashboard.component';
 import { ResidentAnnouncementComponent } from './pages/resident/announcement/announcement.component';
-// import { ResidentBillComponent } from './pages/resident/bill/resident-bill.component';
+import { BillComponent as ResidentBillComponent } from './pages/resident/bill/bill.component';
 import { ResidentFacilityComponent } from './pages/resident/facility/facility.component';
 // import { ResidentPackageComponent } from './pages/resident/package/resident-package.component';
 // import { ResidentRepairComponent } from './pages/resident/repair/resident-repair.component';
@@ -48,7 +48,7 @@ export const routes: Routes = [
       // 頁面做好後逐一取消註解
       { path: 'dashboard', component: ResidentDashboardComponent },
       { path: 'announcement', component: ResidentAnnouncementComponent },
-      // { path: 'bill',         component: ResidentBillComponent },
+      { path: 'bill',         component: ResidentBillComponent },
       { path: 'facility',     component: ResidentFacilityComponent },
       // { path: 'package',      component: ResidentPackageComponent },
       // { path: 'repair',       component: ResidentRepairComponent },

@@ -60,12 +60,12 @@ export class BillComponent implements OnInit {
   // ── 住戶帳單假資料 ────────────────────────────────────
   // TODO: GET /bills/my（帶 token，只回傳自己的帳單）
   bills: Bill[] = [
-    { id: 1, billingMonth: '2026-03', billType: BillType.WATER,       amount: 350,  dueDate: '2026-03-31', status: BillStatus.PAID,    paidAt: '', paymendMethod: '', createdAt: '' },
-    { id: 2, billingMonth: '2026-03', billType: BillType.ELECTRICITY, amount: 1200, dueDate: '2026-03-31', status: BillStatus.UNPAID,  paidAt: '', paymendMethod: '', createdAt: '' },
-    { id: 3, billingMonth: '2026-03', billType: BillType.MAINTENANCE, amount: 2000, dueDate: '2026-03-31', status: BillStatus.OVERDUE, paidAt: '', paymendMethod: '', createdAt: '' },
-    { id: 4, billingMonth: '2026-02', billType: BillType.MANAGEMENT,  amount: 320,  dueDate: '2026-02-28', status: BillStatus.PAID,    paidAt: '2026-02-15', paymendMethod: '', createdAt: '' },
-    { id: 5, billingMonth: '2026-02', billType: BillType.WATER,       amount: 980,  dueDate: '2026-02-28', status: BillStatus.UNPAID,  paidAt: '2026-02-15', paymendMethod: '', createdAt: '' },
-    { id: 6, billingMonth: '2026-02', billType: BillType.ELECTRICITY, amount: 2000, dueDate: '2026-02-28', status: BillStatus.OVERDUE, paidAt: '2026-02-10', paymendMethod: '', createdAt: '' },
+    { id: 1, billingMonth: '2026-03', billType: BillType.WATER,       amount: 350,  dueDate: '2026-03-31', status: BillStatus.PAID,    paidAt: '', paymentMethod: '', createdAt: '' },
+    { id: 2, billingMonth: '2026-03', billType: BillType.ELECTRICITY, amount: 1200, dueDate: '2026-03-31', status: BillStatus.UNPAID,  paidAt: '', paymentMethod: '', createdAt: '' },
+    { id: 3, billingMonth: '2026-03', billType: BillType.MAINTENANCE, amount: 2000, dueDate: '2026-03-31', status: BillStatus.OVERDUE, paidAt: '', paymentMethod: '', createdAt: '' },
+    { id: 4, billingMonth: '2026-02', billType: BillType.MANAGEMENT,  amount: 320,  dueDate: '2026-02-28', status: BillStatus.PAID,    paidAt: '2026-02-15', paymentMethod: '', createdAt: '' },
+    { id: 5, billingMonth: '2026-02', billType: BillType.WATER,       amount: 980,  dueDate: '2026-02-28', status: BillStatus.UNPAID,  paidAt: '2026-02-15', paymentMethod: '', createdAt: '' },
+    { id: 6, billingMonth: '2026-02', billType: BillType.ELECTRICITY, amount: 2000, dueDate: '2026-02-28', status: BillStatus.OVERDUE, paidAt: '2026-02-10', paymentMethod: '', createdAt: '' },
   ];
 
   // ── 管理員社區費用假資料 ──────────────────────────────

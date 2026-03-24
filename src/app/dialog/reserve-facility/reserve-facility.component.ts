@@ -92,7 +92,7 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
       this.snackBar.open('請填寫所有必填欄位', '關閉', { duration: 2000 });
       return;
     }
-    
+
     this.reservation = {
       ...this.reservation,
       date: this.today,

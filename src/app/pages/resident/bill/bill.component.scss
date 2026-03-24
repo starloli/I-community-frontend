@@ -1,0 +1,147 @@
+// ===== 整體容器 =====
+.bill-container { padding: 0; }
+
+// ===== 頁面標題 =====
+.page-header {
+  margin-bottom: 24px;
+  h1 { font-size: 36px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px 0; }
+  .subtitle { font-size: 15px; color: #888; }
+}
+
+// ===== 統計卡片列 =====
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+
+  &:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+
+  mat-icon { font-size: 32px; width: 32px; height: 32px; flex-shrink: 0; }
+
+  &.pending {
+    mat-icon { color: #f57c00; } .stat-value { color: #f57c00; }
+  }
+  &.paid {
+    mat-icon { color: #388e3c; } .stat-value { color: #388e3c; }
+  }
+  &.overdue {
+    mat-icon { color: #e53935; } .stat-value { color: #e53935; }
+  }
+}
+
+.stat-info { display: flex; flex-direction: column; gap: 4px; }
+.stat-value { font-size: 28px; font-weight: 700; line-height: 1; }
+.stat-label { font-size: 14px; color: #888; }
+
+// ===== 篩選列 =====
+.filter-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-btn {
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: 1.5px solid #e0e0e0;
+  background: transparent;
+  color: #888;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover { border-color: #7B7FBA; color: #7B7FBA; }
+  &.active { background: #7B7FBA; border-color: #7B7FBA; color: #ffffff; }
+}
+
+// ===== 帳單表格 =====
+.table-card {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: rgba(123, 127, 186, 0.08); }
+th { padding: 16px 20px; text-align: left; font-size: 14px; font-weight: 600; color: #555; white-space: nowrap; }
+td { padding: 16px 20px; font-size: 15px; color: #333; border-bottom: 1px solid rgba(0,0,0,0.05); }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: rgba(123, 127, 186, 0.03); }
+
+.row-overdue { border-left: 3px solid #e53935; }
+.amount { font-weight: 700; color: #1a1a2e; }
+.empty-row { text-align: center; padding: 48px !important; color: #bbb; font-size: 15px; }
+
+.bill-type-cell {
+  display: flex; align-items: center; gap: 8px;
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+}
+
+.status-badge { padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+.status-pending { background: #fff3e0; color: #f57c00; }
+.status-paid    { background: #e8f5e9; color: #388e3c; }
+.status-overdue { background: #ffebee; color: #e53935; }
+
+.pay-btn {
+  padding: 6px 16px; background: #7B7FBA; color: #ffffff;
+  border: none; border-radius: 8px; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: background 0.2s;
+  &:hover { background: #6b6fa8; }
+}
+
+.paid-text {
+  font-size: 13px; color: #388e3c; font-weight: 600;
+}
+
+// ===== 分頁 =====
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+
+  .page-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1.5px solid #e0e0e0;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(8px);
+    color: #555;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) { background: #B8935A; border-color: #B8935A; color: #fff; }
+    &.active               { background: #B8935A; border-color: #B8935A; color: #fff; }
+    &:disabled             { opacity: 0.3; cursor: not-allowed; }
+  }
+}
