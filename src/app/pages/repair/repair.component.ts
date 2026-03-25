@@ -64,19 +64,19 @@ export class RepairComponent {
 
   // ===== 假資料 =====
   // TODO: 之後改成呼叫 GET /api/v1/repairs 取得真實資料
-repairs: RepairRequest[] = [
-    { id: 1,  user: this.fakeAdmin, location: 'A棟電梯',    category: '電梯', description: '電梯門無法正常關閉',    status: RepairStatus.PENDING,     submittedAt: '2026-03-16', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 2,  user: this.fakeAdmin, location: 'B棟2樓走廊', category: '水電', description: '走廊燈泡損壞，夜間昏暗', status: RepairStatus.IN_PROGRESS,  submittedAt: '2026-03-15', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 3,  user: this.fakeAdmin, location: 'C棟地下室',  category: '水管', description: '水管漏水，地面積水',     status: RepairStatus.DONE,        submittedAt: '2026-03-14', resolvedAt: '2026-03-15', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 4,  user: this.fakeAdmin, location: '社區大門',   category: '門禁', description: '門禁感應器故障',        status: RepairStatus.PENDING,     submittedAt: '2026-03-13', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 5,  user: this.fakeAdmin, location: 'A棟1樓',    category: '水電', description: '插座無法使用',          status: RepairStatus.PENDING,     submittedAt: '2026-03-12', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 6,  user: this.fakeAdmin, location: 'B棟停車場', category: '照明', description: '停車場照明故障',         status: RepairStatus.IN_PROGRESS, submittedAt: '2026-03-11', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 7,  user: this.fakeAdmin, location: 'C棟頂樓',   category: '水管', description: '屋頂漏水',              status: RepairStatus.DONE,        submittedAt: '2026-03-10', resolvedAt: '2026-03-12', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 8,  user: this.fakeAdmin, location: 'A棟2樓',    category: '其他', description: '走廊地板破損',          status: RepairStatus.PENDING,     submittedAt: '2026-03-09', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 9,  user: this.fakeAdmin, location: '社區游泳池', category: '其他', description: '游泳池排水孔堵塞',       status: RepairStatus.IN_PROGRESS, submittedAt: '2026-03-08', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 10, user: this.fakeAdmin, location: 'B棟大廳',   category: '電梯', description: '電梯按鈕故障',          status: RepairStatus.DONE,        submittedAt: '2026-03-07', resolvedAt: '2026-03-09', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 11, user: this.fakeAdmin, location: 'A棟地下室', category: '水電', description: '配電箱跳電',            status: RepairStatus.PENDING,     submittedAt: '2026-03-06', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 12, user: this.fakeAdmin, location: 'C棟2樓',    category: '門禁', description: '門禁卡片無法感應',       status: RepairStatus.PENDING,     submittedAt: '2026-03-05', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
+  repairs: RepairRequest[] = [
+    { id: 1, user: this.fakeAdmin, location: 'A棟電梯', category: '電梯', description: '電梯門無法正常關閉', status: RepairStatus.PENDING, submittedAt: '2026-03-16', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
+    { id: 2, user: this.fakeAdmin, location: 'B棟2樓走廊', category: '水電', description: '走廊燈泡損壞，夜間昏暗', status: RepairStatus.IN_PROGRESS, submittedAt: '2026-03-15', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
+    { id: 3, user: this.fakeAdmin, location: 'C棟地下室', category: '水管', description: '水管漏水，地面積水', status: RepairStatus.DONE, submittedAt: '2026-03-14', resolvedAt: '2026-03-15', handler: this.fakeAdmin, imageUrl: '' },
+    { id: 4, user: this.fakeAdmin, location: '社區大門', category: '門禁', description: '門禁感應器故障', status: RepairStatus.PENDING, submittedAt: '2026-03-13', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
+    { id: 5, user: this.fakeAdmin, location: 'A棟1樓', category: '水電', description: '插座無法使用', status: RepairStatus.PENDING, submittedAt: '2026-03-12', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
+    { id: 6, user: this.fakeAdmin, location: 'B棟停車場', category: '照明', description: '停車場照明故障', status: RepairStatus.IN_PROGRESS, submittedAt: '2026-03-11', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
+    { id: 7, user: this.fakeAdmin, location: 'C棟頂樓', category: '水管', description: '屋頂漏水', status: RepairStatus.DONE, submittedAt: '2026-03-10', resolvedAt: '2026-03-12', handler: this.fakeAdmin, imageUrl: '' },
+    { id: 8, user: this.fakeAdmin, location: 'A棟2樓', category: '其他', description: '走廊地板破損', status: RepairStatus.PENDING, submittedAt: '2026-03-09', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
+    { id: 9, user: this.fakeAdmin, location: '社區游泳池', category: '其他', description: '游泳池排水孔堵塞', status: RepairStatus.IN_PROGRESS, submittedAt: '2026-03-08', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
+    { id: 10, user: this.fakeAdmin, location: 'B棟大廳', category: '電梯', description: '電梯按鈕故障', status: RepairStatus.DONE, submittedAt: '2026-03-07', resolvedAt: '2026-03-09', handler: this.fakeAdmin, imageUrl: '' },
+    { id: 11, user: this.fakeAdmin, location: 'A棟地下室', category: '水電', description: '配電箱跳電', status: RepairStatus.PENDING, submittedAt: '2026-03-06', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
+    { id: 12, user: this.fakeAdmin, location: 'C棟2樓', category: '門禁', description: '門禁卡片無法感應', status: RepairStatus.PENDING, submittedAt: '2026-03-05', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
   ];
   // ===== 篩選後資料 =====
   get filteredRepairs(): RepairRequest[] {
@@ -126,22 +126,22 @@ repairs: RepairRequest[] = [
   }
 
   // TODO: 之後改成呼叫 POST /api/v1/repairs
-submitRepair() {
-  if (!this.newRepair.location || !this.newRepair.description) return;
-  this.repairs.unshift({
-    id: this.repairs.length + 1,
-    user: this.fakeAdmin,  // 加這行
-    location: this.newRepair.location,
-    category: this.newRepair.category,
-    description: this.newRepair.description,
-    status: RepairStatus.PENDING,
-    submittedAt: new Date().toLocaleDateString('zh-TW'),
-    resolvedAt: '',
-    handler: this.fakeAdmin,
-    imageUrl: '',
-  });
-  this.closeForm();
-}
+  submitRepair() {
+    if (!this.newRepair.location || !this.newRepair.description) return;
+    this.repairs.unshift({
+      id: this.repairs.length + 1,
+      user: this.fakeAdmin,  // 加這行
+      location: this.newRepair.location,
+      category: this.newRepair.category,
+      description: this.newRepair.description,
+      status: RepairStatus.PENDING,
+      submittedAt: new Date().toLocaleDateString('zh-TW'),
+      resolvedAt: '',
+      handler: this.fakeAdmin,
+      imageUrl: '',
+    });
+    this.closeForm();
+  }
 
   // ===== 編輯報修 =====
   openEditForm(repair: RepairRequest) {

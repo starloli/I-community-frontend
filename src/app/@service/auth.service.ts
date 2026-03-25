@@ -1,5 +1,7 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 
 @Injectable({
@@ -7,9 +9,13 @@ import { tap } from 'rxjs';
 })
 export class AuthService {
 
+  private snackBar = inject(MatSnackBar);
   private apiUrl = 'http://localhost:8083';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
   login(userName: string, password: string) {
     return this.http.post<any>(
@@ -44,5 +50,29 @@ export class AuthService {
 
   isAdmin(): boolean {
     return this.getUser()?.role === 'ADMIN';
+  }
+
+  isLoggedIn(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+
+      // 檢查是否過期
+      const now = Math.floor(Date.now() / 1000);
+      return payload.exp && payload.exp > now;
+
+    } catch {
+      return false;
+    }
+  }
+
+  logout(): void {
+    if (confirm('確定要登出嗎？')) {
+      localStorage.removeItem('token');
+      this.router.navigate(['/login']);
+      this.snackBar.open('登出成功', '關閉', { duration: 2000 });
+    }
   }
 }

@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Facility } from '../../interface/interface';
 import { FormsModule } from '@angular/forms';
+import { ReserveFacilityComponent } from '../../dialog/reserve-facility/reserve-facility.component';
 
 @Component({
   selector: 'app-facility',
@@ -17,22 +18,22 @@ import { FormsModule } from '@angular/forms';
 })
 export class FacilityComponent implements OnInit {
 
-  constructor(private http: HttpService, private snackBar: MatSnackBar, private dialog: MatDialog) { }
+  constructor(private http: HttpService, private snackBar: MatSnackBar, private dialogRef: MatDialog) { }
 
   getUrl = "http://localhost:8083/auth/facilities";
   facilities: Facility[] = [];
 
+  ngOnInit() {
+    this.getFacility();
+  }
+
   registFacility() {
-    const dialogRef = this.dialog.open(RegistFacilityComponent);
+    const dialogRef = this.dialogRef.open(RegistFacilityComponent);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.getFacility();
       }
     });
-  }
-
-  ngOnInit() {
-    this.getFacility();
   }
 
   getFacility() {
@@ -96,7 +97,9 @@ export class FacilityComponent implements OnInit {
 
   // 開啟預約表單
   openReserveForm(facility: Facility) {
-    this.selectedFacility = facility;
+    this.dialogRef.open(ReserveFacilityComponent, {
+      data: facility
+    });
   }
 
   // 關閉預約表單
@@ -115,7 +118,7 @@ export class FacilityComponent implements OnInit {
       facilityId: this.selectedFacility?.id,
       ...this.reserveForm
     });
-    alert(`已成功預約 ${this.selectedFacility?.name}！`);
+    alert(`已成功預約 ${this.selectedFacility?.name}!`);
     this.closeReserveForm();
   }
 }

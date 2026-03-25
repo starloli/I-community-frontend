@@ -33,7 +33,7 @@
     }
   </nav>
 
-  @if (isLoggedIn) {
+  @if (isLogin) {
     <div class="sidebar-footer" (click)="logout()" [title]="isCollapsed ? '登出' : ''">
       <mat-icon>logout</mat-icon>
       <span class="nav-label">登出</span>
