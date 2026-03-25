@@ -13,7 +13,7 @@ export class ApiService {
   constructor(private httpClient: HttpClient) {}
 
   // 取得資料
-  getApi(url: string) {
+  getApi(url: string, options?: any) {
     return this.httpClient.get(`${this.baseUrl}${url}`);
   }
 
@@ -23,7 +23,7 @@ export class ApiService {
   }
 
   // 更新資料
-  putApi(url: string, putData: any) {
+  putApi(url: string, putData?: any) {
     return this.httpClient.put(`${this.baseUrl}${url}`, putData);
   }
 
