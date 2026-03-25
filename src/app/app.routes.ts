@@ -20,11 +20,17 @@ import { ResidentFacilityComponent } from './pages/resident/facility/facility.co
 import { PackageComponent as ResidentPackageComponent } from './pages/resident/package/package.component';
 import { ResidentRepairComponent } from './pages/resident/repair/repair.component';
 
+import { VisitorDialogComponent } from './dialog/visitor-dialog/visitor-dialog.component';
+import { ViewComponent } from './pages/announcement/view/view.component';
+import { CreateComponent } from './pages/announcement/create/create.component';
+import { AdminVisitorComponent } from './@admin/admin-visitor/admin-visitor.component';
+
 export const routes: Routes = [
   // ── 登入頁 ──────────────────────────────────────────
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-
-  // ── 管理員路由 ───────────────────────────────────────
+  {path:'visitorDialog' ,component:VisitorDialogComponent},
+  {path:'adminVisitor',component:AdminVisitorComponent},
   {
     path: 'admin',
     component: LayoutComponent,
@@ -32,11 +38,14 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'visitor', component: VisitorComponent },
       { path: 'announcement', component: AnnouncementComponent },
+      { path: 'announcement/view/:id', component: ViewComponent },
+      { path: 'announcement/create', component: CreateComponent },
+      { path: 'announcement/edit/:id', component: CreateComponent },
       { path: 'bill', component: BillComponent },
       { path: 'facility', component: FacilityComponent },
       { path: 'package', component: PackageComponent },
       { path: 'repair', component: RepairComponent },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },  { path: 'login', component: LoginComponent },
     ]
   },
 
@@ -58,4 +67,3 @@ export const routes: Routes = [
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
-];

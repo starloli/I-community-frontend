@@ -182,6 +182,18 @@
   }
 }
 
+.submit-btn1 {
+  padding: 10px 24px;
+  background: #edebeb;
+  color: #989898;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background 0.2s;
+
+  }
+
 // ===== 搜尋欄 =====
 .search-bar {
   display: flex;
@@ -302,7 +314,10 @@ tbody tr:hover {
   font-size: 13px;
   font-weight: 600;
 }
-
+.status-notyet{
+  background: #fff3e0; /* 淺橙背景 */
+  color: #ef6c00;
+}
 .status-inside {
   background: #e8f5e9;
   color: #388e3c;

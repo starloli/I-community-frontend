@@ -140,11 +140,18 @@
         <tr>
           <th>姓名</th>
           <th>電話</th>
+<<<<<<< HEAD
           <th>被訪門牌</th>
           <th>來訪目的</th>
           <th>車牌號碼</th>
           <th>進入時間</th>
           <th>離開時間</th>
+=======
+          <th>車牌號碼</th>
+                    <th>被訪住戶</th>
+          <th>預約時間</th>
+
+>>>>>>> Vince
           <th>狀態</th>
           <th>操作</th>
         </tr>
@@ -160,11 +167,19 @@
               </div>
             </td>
             <td>{{ visitor.visitorPhone || '-' }}</td>
+<<<<<<< HEAD
             <td>{{ visitor.residentialAddress || '-' }}</td>
             <td>{{ visitor.purpose || '-' }}</td>
             <td>{{ visitor.licensePlate || '-' }}</td>
             <td>{{ visitor.checkInTime || '-' }}</td>
             <td>{{ visitor.checkOutTime || '-' }}</td>
+=======
+            <!-- <td>{{ visitor.residentialAddress }}</td> -->
+            <td>{{ visitor.licensePlate || '-' }}</td>
+
+            <td>{{ visitor.residentialAddress || '-' }}</td>
+                        <td>{{ visitor.estimatedTime || '-'}}</td>
+>>>>>>> Vince
             <td>
               <!-- 根據狀態顯示不同顏色的標籤 -->
                @if(visitor.status =='NOTYET'){<span class="status-badge status-NOTYET">未到</span>}
