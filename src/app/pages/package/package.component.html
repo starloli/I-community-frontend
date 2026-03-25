@@ -1,1 +1,341 @@
-<p>package works!</p>
+<div class="package-container">
+
+  <!-- ── 頁面標題 ─────────────────────────────── -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1>包裹查詢</h1>
+      <span class="subtitle">包裹到達通知、取貨確認與歷史記錄</span>
+    </div>
+    @if (isAdmin || isGuard) {
+    <button class="add-btn" (click)="openAdd()">
+      <mat-icon>add</mat-icon>
+      登記新包裹
+    </button>
+    }
+  </div>
+
+  <!-- ── 統計卡片（三欄，與 bill/repair 一致）───── -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <mat-icon class="stat-icon-wrap"
+        style="color: #B8935A; font-size: 32px; width: 32px; height: 32px;">markunread_mailbox</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value" style="color: #B8935A">{{ waitingCount }}</span>
+        <span class="stat-label">待取包裹</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <mat-icon class="stat-icon-wrap"
+        style="color: #388e3c; font-size: 32px; width: 32px; height: 32px;">check_circle</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value" style="color: #388e3c">{{ pickedUpCount }}</span>
+        <span class="stat-label">已取包裹</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <mat-icon class="stat-icon-wrap"
+        style="color: #e53935; font-size: 32px; width: 32px; height: 32px;">notifications_active</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value" style="color: #e53935">{{ notNotifiedCount }}</span>
+        <span class="stat-label">未通知件數</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 篩選列 ────────────────────────────────── -->
+  <div class="filter-bar">
+    <!-- 狀態 pill 按鈕 -->
+    <button class="filter-btn" [class.active]="selectedStatus === ''"
+      (click)="selectedStatus = ''; onFilterChange()">全部</button>
+    <button class="filter-btn" [class.active]="selectedStatus === 'WAITING'"
+      (click)="selectedStatus = 'WAITING'; onFilterChange()">待取貨</button>
+    <button class="filter-btn" [class.active]="selectedStatus === 'PICKED_UP'"
+      (click)="selectedStatus = 'PICKED_UP'; onFilterChange()">已取貨</button>
+
+    <!-- 房號下拉（僅 ADMIN/GUARD）-->
+    @if (isAdmin || isGuard) {
+    <select class="filter-select" [(ngModel)]="selectedUnit" (ngModelChange)="onFilterChange()">
+      <option value="">全部房號</option>
+      @for (unit of uniqueUnits; track unit) {
+      <option [value]="unit">{{ unit }}</option>
+      }
+    </select>
+    }
+
+    <!-- 搜尋框 -->
+    <div class="search-box">
+      <mat-icon>search</mat-icon>
+      <input type="text" placeholder="搜尋收件人、追蹤號碼…" [(ngModel)]="searchKeyword" (ngModelChange)="onFilterChange()" />
+    </div>
+  </div>
+
+  <!-- ── 包裹列表 ──────────────────────────────── -->
+  @if (pagedPackages.length === 0) {
+  <div class="list-card">
+    <div class="empty-state">
+      <mat-icon class="empty-icon">inbox</mat-icon>
+      <p>沒有符合條件的包裹</p>
+    </div>
+  </div>
+  } @else {
+  <div class="list-card">
+    @for (pkg of pagedPackages; track pkg.id) {
+    <div class="package-item" [class.row-waiting]="pkg.status === PackageStatus.WAITING" (click)="openDetail(pkg)">
+      <!-- 圖示框 -->
+      <div class="pkg-icon-box" [class.waiting]="pkg.status === PackageStatus.WAITING"
+        [class.picked]="pkg.status !== PackageStatus.WAITING">
+        <mat-icon>{{ pkg.status === PackageStatus.WAITING ? 'inventory_2' : 'check_circle' }}</mat-icon>
+      </div>
+
+      <!-- 文字主區 -->
+      <div class="pkg-main">
+        <div class="pkg-title-row">
+          <!-- user.fullName -->
+          <span class="pkg-name">{{ pkg.user }}</span>
+          <!-- user.unitNumber -->
+          @if (isAdmin || isGuard) {
+          <span class="unit-tag">{{ pkg.unitNumber }}</span>
+          }
+          <!-- isNotified -->
+          @if (!pkg.isNotified && pkg.status === PackageStatus.WAITING) {
+          <span class="unnotified-dot" title="尚未通知住戶"></span>
+          }
+          <!-- 狀態標籤 -->
+          <span class="status-badge" [class.waiting]="pkg.status === PackageStatus.WAITING"
+            [class.picked]="pkg.status !== PackageStatus.WAITING">
+            @if (pkg.status === PackageStatus.WAITING) { 待取貨 } @else { 已取貨 }
+          </span>
+        </div>
+        <div class="pkg-sub">
+          <span>{{ pkg.courier }}</span>
+          <!-- trackingNumber -->
+          <span class="tracking">{{ pkg.trackingNumber }}</span>
+          @if (pkg.notes) { <span>· {{ pkg.notes }}</span> }
+        </div>
+      </div>
+
+      <!-- 右側：到達時間 + 等待天數 + 操作 -->
+      <div class="pkg-right">
+        <div class="pkg-date-wrap">
+          <!-- arrivedAt -->
+          <span class="pkg-date">{{ formatDate(pkg.arrivedAt) }}</span>
+          @if (pkg.status === PackageStatus.WAITING) {
+          <span class="days-badge" [class.warn]="waitingDays(pkg.arrivedAt) >= 3"
+            [class.danger]="waitingDays(pkg.arrivedAt) >= 7">
+            等待 {{ waitingDays(pkg.arrivedAt) }} 天
+          </span>
+          }
+        </div>
+
+        <div class="pkg-pickup-col" (click)="$event.stopPropagation()">
+          @if (pkg.status === PackageStatus.WAITING) {
+          <button class="pickup-btn" (click)="openPickup(pkg, $event)">
+            <mat-icon>check</mat-icon>
+            取貨
+          </button>
+          }
+        </div>
+
+        <div class="pkg-bell-col" (click)="$event.stopPropagation()">
+          @if ((isAdmin || isGuard) && pkg.status === PackageStatus.WAITING && !pkg.isNotified) {
+          <button class="icon-btn notify" (click)="notifyResident(pkg.id!)" title="通知住戶">
+            <mat-icon>notifications</mat-icon>
+          </button>
+          }
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+  }
+
+  <!-- ── 分頁 ──────────────────────────────────── -->
+  @if (totalPages > 1) {
+  <div class="pagination">
+    <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">‹</button>
+    @for (page of pageNumbers; track page) {
+    <button class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">{{ page }}</button>
+    }
+    <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">›</button>
+  </div>
+  }
+
+</div>
+
+<!-- ════════════════════════════════════════════
+     包裹詳情 Modal
+════════════════════════════════════════════ -->
+@if (showDetailModal && selectedPackage) {
+<div class="form-overlay" (click)="closeDetail()">
+  <div class="form-card" (click)="$event.stopPropagation()">
+
+    <div class="form-header">
+      <h2>包裹詳細資訊</h2>
+      <mat-icon class="close-btn" (click)="closeDetail()">close</mat-icon>
+    </div>
+
+    <div class="detail-body">
+      <div class="detail-grid">
+        <div class="detail-item full">
+          <span class="d-label">狀態</span>
+          <!-- status -->
+          <span class="status-badge" [class.waiting]="selectedPackage.status === PackageStatus.WAITING"
+            [class.picked]="selectedPackage.status !== PackageStatus.WAITING">
+            @if (selectedPackage.status === PackageStatus.WAITING) { 待取貨 } @else { 已取貨 }
+          </span>
+        </div>
+        <div class="detail-item">
+          <span class="d-label">收件人</span>
+          <!-- user.fullName -->
+          <span class="d-value">{{ selectedPackage.user }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="d-label">房號</span>
+          <!-- user.unitNumber -->
+          <span class="d-value">{{ selectedPackage.unitNumber }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="d-label">快遞業者</span>
+          <span class="d-value">{{ selectedPackage.courier }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="d-label">通知狀態</span>
+          <!-- isNotified -->
+          <span class="d-value">{{ selectedPackage.isNotified ? '✅ 已通知' : '❌ 尚未通知' }}</span>
+        </div>
+        <div class="detail-item full">
+          <span class="d-label">追蹤號碼</span>
+          <!-- trackingNumber -->
+          <span class="d-value">{{ selectedPackage.trackingNumber }}</span>
+        </div>
+        <div class="detail-item full">
+          <span class="d-label">包裹備注</span>
+          <!-- notes -->
+          <span class="d-value">{{ selectedPackage.notes || '無' }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="d-label">到達時間</span>
+          <!-- arrivedAt -->
+          <span class="d-value">{{ formatDateFull(selectedPackage.arrivedAt) }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="d-label">取貨時間</span>
+          <!-- pickupAt -->
+          <span class="d-value">
+            {{ selectedPackage.pickupAt ? formatDateFull(selectedPackage.pickupAt) : '—' }}
+          </span>
+        </div>
+        @if (selectedPackage.status === PackageStatus.WAITING && waitingDays(selectedPackage.arrivedAt) >= 3) {
+        <div class="detail-item full">
+          <span class="waiting-hint">⚠️ 已等待 {{ waitingDays(selectedPackage.arrivedAt) }} 天，請盡快取貨</span>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="form-footer">
+      @if (selectedPackage.status === PackageStatus.WAITING) {
+      @if ((isAdmin || isGuard) && !selectedPackage.isNotified) {
+      <button class="notify-btn" (click)="notifyResident(selectedPackage.id!); closeDetail()">
+        <mat-icon>notifications</mat-icon> 通知住戶
+      </button>
+      }
+      <button class="confirm-submit-btn" (click)="openPickup(selectedPackage, $event); closeDetail()">
+        <mat-icon>check_circle</mat-icon> 確認取貨
+      </button>
+      } @else {
+      <button class="cancel-btn" (click)="closeDetail()">關閉</button>
+      }
+    </div>
+  </div>
+</div>
+}
+
+<!-- ════════════════════════════════════════════
+     新增包裹 Modal
+════════════════════════════════════════════ -->
+@if (showAddModal) {
+<div class="form-overlay" (click)="closeAdd()">
+  <div class="form-card" (click)="$event.stopPropagation()">
+
+    <div class="form-header">
+      <h2>登記新包裹</h2>
+      <mat-icon class="close-btn" (click)="closeAdd()">close</mat-icon>
+    </div>
+
+    <div class="form-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>收件人姓名 <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="newPackageForm.recipientName" placeholder="例：林家宇" />
+        </div>
+        <div class="form-group">
+          <label>房號 <span class="required">*</span></label>
+          <!-- 對應 user.unitNumber -->
+          <input type="text" [(ngModel)]="newPackageForm.unitNumber" placeholder="例：A-1201" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>追蹤號碼 <span class="required">*</span></label>
+          <!-- 對應 trackingNumber -->
+          <input type="text" [(ngModel)]="newPackageForm.trackingNumber" placeholder="快遞追蹤號碼" />
+        </div>
+        <div class="form-group">
+          <label>快遞業者</label>
+          <!-- 對應 courier -->
+          <select [(ngModel)]="newPackageForm.courier">
+            <option value="">請選擇</option>
+            @for (c of couriers; track c) {
+            <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>包裹備注</label>
+        <!-- 對應 notes -->
+        <input type="text" [(ngModel)]="newPackageForm.notes" placeholder="例：易碎品、需本人簽收…" />
+      </div>
+    </div>
+
+    <div class="form-footer">
+      <button class="cancel-btn" (click)="closeAdd()">取消</button>
+      <button class="submit-btn" (click)="submitAdd()">登記包裹</button>
+    </div>
+  </div>
+</div>
+}
+
+<!-- ════════════════════════════════════════════
+     取貨確認 Modal
+════════════════════════════════════════════ -->
+@if (showPickupModal && pickupTarget) {
+<div class="form-overlay" (click)="closePickup()">
+  <div class="confirm-card" (click)="$event.stopPropagation()">
+
+    <div class="confirm-body">
+      <mat-icon class="confirm-icon">receipt</mat-icon>
+      <h3>確認取貨？</h3>
+
+      <div class="pickup-info">
+        <!-- user.fullName + user.unitNumber -->
+        <p><strong>{{ pickupTarget.user }}</strong>（{{ pickupTarget.unitNumber }}）</p>
+        <!-- trackingNumber -->
+        <p class="tracking-txt">{{ pickupTarget.trackingNumber }}</p>
+        <!-- notes -->
+        @if (pickupTarget.notes) { <p>{{ pickupTarget.notes }}</p> }
+      </div>
+
+      <p class="confirm-note">確認後將記錄取貨時間（pickupAt），此操作無法撤銷。</p>
+    </div>
+
+    <div class="confirm-footer">
+      <button class="cancel-btn" (click)="closePickup()">取消</button>
+      <button class="confirm-submit-btn" (click)="confirmPickup(pickupTarget.id!)">✅ 確認取貨</button>
+    </div>
+  </div>
+</div>
+}

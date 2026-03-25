@@ -9,33 +9,27 @@
       <h1>訪客登記</h1>
       <span class="subtitle">記錄社區訪客進出資訊</span>
     </div>
-    <!-- 點擊開啟新增表單 -->
     <button class="add-btn" (click)="openForm()">
       <mat-icon>person_add</mat-icon>
       新增訪客
     </button>
   </div>
 
-  <!-- 新增訪客表單：只有 showForm 為 true 時才顯示 -->
+  <!-- 新增訪客表單 -->
   @if (showForm) {
     <div class="form-overlay" (click)="closeForm()">
-      <!-- stopPropagation 防止點擊表單內部時關閉 -->
       <div class="form-card" (click)="$event.stopPropagation()">
         <div class="form-header">
           <h2>新增訪客登記</h2>
           <mat-icon class="close-btn" (click)="closeForm()">close</mat-icon>
         </div>
-
         <div class="form-body">
-          <!-- 訪客姓名 -->
           <div class="form-group">
             <label>訪客姓名 <span class="required">*</span></label>
             <input type="text" [(ngModel)]="newVisitorName" placeholder="請輸入訪客姓名" (keydown.space)="$event.preventDefault()" (compositionstart)="onCompositionStart()"
   (compositionend)="onCompositionEnd($event)"
   (input)="filterInput($event)" >
           </div>
-
-          <!-- 訪客電話 -->
           <div class="form-group">
             <label>訪客電話</label>
             <input type="text" [(ngModel)]="newVisitorPhone" placeholder="請輸入訪客電話" (keydown.space)="$event.preventDefault()">

@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink,FormsModule
+  imports: [FormsModule
 ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -76,7 +76,7 @@ isValidPhone(phone: any): boolean {
 useLoginApi(){
   this.service.login(this.userName, this.password).subscribe({
     next: (res) => {
-      console.log('成功:', res);
+      console.log('登入成功:', res);
       this.userloginStatus=true;
       this.router.navigate(['/dashboard'])
     },

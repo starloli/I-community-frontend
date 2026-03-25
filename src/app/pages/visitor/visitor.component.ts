@@ -116,6 +116,7 @@ updateMinDateTime() {
   }
 
 
+  openForm() { this.showForm = true; }
 
   // 開啟新增表單
   openForm() {
@@ -357,4 +358,7 @@ this.openDialog();
 
     })
   }
+
+  // 讓 HTML 可以使用 enum
+  VisitorStatus = VisitorStatus;
 }
