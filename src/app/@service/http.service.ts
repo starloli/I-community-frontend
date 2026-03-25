@@ -9,7 +9,14 @@ export class HttpService {
 
   constructor(private http: HttpClient) { }
 
-  getApi<T>(url: string): Observable<T> {
+  getApi<T>(url: string, id?: number, id2?: number): Observable<T> {
+    if (id) {
+      if (id2) {
+        url = `${url}/${id}/${id2}`;
+      } else {
+        url = `${url}/${id}`;
+      }
+    }
     return this.http.get<T>(url);
   }
 
@@ -17,7 +24,7 @@ export class HttpService {
     return this.http.post<T>(url, postData);
   }
 
-  putApi(url: string, putData: any) {
+  putApi(url: string, putData?: any) {
     return this.http.put(url, putData);
   }
 

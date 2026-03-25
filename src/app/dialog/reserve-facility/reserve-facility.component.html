@@ -8,15 +8,14 @@
     <div class="form-body">
       <div class="form-group">
         <label>預約日期 <span class="required">*</span></label>
-        <input type="date" name="date" [(ngModel)]="today" [min]="minDay" />
+        <input type="date" name="date" [min]="minDay" [formControl]="dateControl">
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <mat-form-field>
             <mat-label>開始時間</mat-label>
-            <input matInput [matTimepicker]="pickerStart"
-              [matTimepickerMin]="(reservation.date===minDay?minTime:facility.openTime)"
+            <input matInput [matTimepicker]="pickerStart" [matTimepickerMin]="minTime"
               [matTimepickerMax]="facility.closeTime" [formControl]="startTimeControl">
             <mat-timepicker-toggle matIconSuffix [for]="pickerStart" />
             <mat-timepicker #pickerStart />
@@ -35,8 +34,7 @@
         <div class="form-group">
           <mat-form-field>
             <mat-label>結束時間</mat-label>
-            <input matInput [matTimepicker]="pickerEnd"
-              [matTimepickerMin]="(maxTime)"
+            <input matInput [matTimepicker]="pickerEnd" [matTimepickerMin]="(maxTime)"
               [matTimepickerMax]="facility.closeTime" [formControl]="endTimeControl">
             <mat-timepicker-toggle matIconSuffix [for]="pickerEnd" />
             <mat-timepicker #pickerEnd />
@@ -56,8 +54,7 @@
 
       <div class="form-group">
         <label>參與人數</label>
-        <input type="number" name="attendees" [(ngModel)]="reservation.attendees" min="1"
-          [max]="facility.capacity" />
+        <input type="number" name="attendees" [(ngModel)]="reservation.attendees" min="1" [max]="facility.capacity" />
       </div>
     </div>
 

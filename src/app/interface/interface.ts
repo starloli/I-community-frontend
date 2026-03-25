@@ -25,13 +25,15 @@ export interface Bill {
 }
 
 export interface Facility {
-  id?: number,
+  facilityId?: number,
   name: string,
   description: string,
+  lastCapacity: number,
   capacity: number,
   openTime: string,
   closeTime: string,
-  isAvailable: boolean
+  isReservable: boolean,
+  isAvailable: boolean,
 }
 
 export interface Notification {
@@ -66,12 +68,13 @@ export interface RepairRequest {
   handler: User,
   submittedAt: string,
   resolvedAt: string,
-  note?:string
+  note?: string
 }
 
 export interface Reservation {
   id?: number,
   userId?: number,
+  unitNumber?: string,
   facilityId: number,
   date: string,
   startTime: string,
@@ -79,6 +82,17 @@ export interface Reservation {
   attendees: number,
   status?: ReservationStatus,
   createdAt?: string
+}
+
+export interface ResReservation {
+  reservationId: number,
+  userName: string,
+  facilityName: string,
+  date: string,
+  startTime: string,
+  endTime: string,
+  attendees: number,
+  status: ReservationStatus
 }
 
 export interface User {

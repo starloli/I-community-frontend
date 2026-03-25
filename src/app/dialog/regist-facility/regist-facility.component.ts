@@ -21,9 +21,11 @@ export class RegistFacilityComponent {
     name: '',
     description: '',
     capacity: 0,
+    lastCapacity: 0,
     openTime: '',
     closeTime: '',
-    isAvailable: false
+    isReservable: false,
+    isAvailable: false,
   };
 
   check() {

@@ -14,7 +14,8 @@
       <mat-icon>apartment</mat-icon>
       設施列表
     </button>
-    <button class="tab-btn" [class.active]="activeTab === 'my-reservations'" (click)="activeTab = 'my-reservations'">
+    <button class="tab-btn" [class.active]="activeTab === 'my-reservations'" (click)="getReservation()"
+      (click)="activeTab = 'my-reservations'">
       <mat-icon>event_note</mat-icon>
       我的預約
       @if (myReservations.length > 0) {
@@ -28,7 +29,7 @@
   ════════════════════════════ -->
   @if (activeTab === 'facilities') {
   <div class="facility-grid">
-    @for (item of facilities; track item.id) {
+    @for (item of facilities; track item.facilityId) {
     <div class="facility-card" [class.unavailable]="!item.isAvailable">
 
       <div class="facility-icon">
@@ -50,7 +51,7 @@
         <div class="facility-details">
           <div class="detail-item">
             <mat-icon>people</mat-icon>
-            <span>最多 {{ item.capacity }} 人</span>
+            <span>{{ item.capacity }}人</span>
           </div>
           <div class="detail-item">
             <mat-icon>schedule</mat-icon>
@@ -87,12 +88,12 @@
   </div>
   } @else {
   <div class="reservation-list">
-    @for (r of myReservations; track r.id) {
+    @for (r of myReservations; track r.reservationId) {
     <div class="reservation-card" [class.cancelled]="r.status === ReservationStatus.CANCELLED">
 
       <!-- 左側：設施 icon -->
       <div class="res-icon">
-        <mat-icon>{{ getFacilityIcon(r.facilityName) }}</mat-icon>
+        <!-- <mat-icon>{{ getFacilityIcon(r.) }}</mat-icon> -->
       </div>
 
       <!-- 中間：資訊 -->
@@ -112,8 +113,8 @@
       </div>
 
       <!-- 右側：取消按鈕 -->
-      @if (r.status === ReservationStatus.CONFIRMED) {
-      <button class="cancel-res-btn" (click)="openCancelConfirm(r.id)">
+      @if (r.status === ReservationStatus.CONFIRMED && r.reservationId) {
+      <button class="cancel-res-btn" (click)="openCancelConfirm(r.reservationId)">
         取消預約
       </button>
       }

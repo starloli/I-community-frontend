@@ -44,7 +44,7 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
   };
   now = new Date();
   minDay = '';
-  today = '';
+  dateControl = new FormControl<Date | null>(null);
   startTimeControl = new FormControl<Date | null>(null);
   endTimeControl = new FormControl<Date | null>(null);
   minTime = new Date();
@@ -66,15 +66,23 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
       this.minDay = this.now.toISOString().split('T')[0];
     }
 
-    if (this.facility.id) {
+    if (this.facility.facilityId) {
       this.reservation = {
-        facilityId: this.facility.id,
+        facilityId: this.facility.facilityId,
         date: this.minDay,
         startTime: '',
         endTime: '',
         attendees: 1,
       }
     }
+
+    this.dateControl.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(newDate => {
+      if (newDate && new Date(newDate) >= this.now) {
+        this.minTime = new Date(`${this.now.toISOString().split('T')[0]}T${this.facility.openTime}`)
+      }
+    })
 
     this.startTimeControl.valueChanges.pipe(
       takeUntil(this.destroy$)
@@ -97,9 +105,9 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
   submitReservation() {
     this.reservation = {
       ...this.reservation,
-      date: this.today,
-      startTime: this.startTimeControl.value?.toISOString().split('T')[1] || 'start-time-rror',
-      endTime: this.endTimeControl.value?.toISOString().split('T')[1] || 'end-time-rror',
+      date: this.dateControl.value?.toString() || 'date-error',
+      startTime: this.startTimeControl.value?.toISOString().split('T')[1].split('.')[0] || 'start-time-rror',
+      endTime: this.endTimeControl.value?.toISOString().split('T')[1].split('.')[0] || 'end-time-rror',
       status: ReservationStatus.CONFIRMING,
     };
     console.log(this.reservation);
@@ -114,7 +122,8 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
                 this.snackBar.open(res.message, '關閉', {
                   duration: 2000,
                 })
-                this.dialogRef.close();
+                console.log(res);
+                this.dialogRef.close(true);
               },
               error: err => {
                 this.snackBar.open(err.error.message, '關閉', {
