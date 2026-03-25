@@ -1,0 +1,375 @@
+// ===== 整體容器 =====
+.visitor-container {
+  padding: 0;
+}
+
+// ===== 頁面標題列 =====
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+
+  h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 4px 0;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: #888;
+  }
+}
+
+// ===== 新增訪客按鈕 =====
+.add-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #3f51b5;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    background: #303f9f;
+  }
+}
+
+// ===== 表單遮罩（點擊背景關閉）=====
+.form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+// ===== 表單卡片 =====
+.form-card {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 480px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 28px;
+  border-bottom: 1px solid #f0f0f0;
+
+  h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0;
+  }
+
+  .close-btn {
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #333;
+    }
+  }
+}
+
+.form-body {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// ===== 表單欄位 =====
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+  }
+
+  // 必填標示紅色星號
+  .required {
+    color: #e53935;
+  }
+
+  input {
+    padding: 10px 14px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.2s;
+
+    &:focus {
+      border-color: #3f51b5;
+    }
+
+    &::placeholder {
+      color: #bbb;
+    }
+  }
+}
+
+.form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 28px;
+  border-top: 1px solid #f0f0f0;
+}
+
+// 取消按鈕
+.cancel-btn {
+  padding: 10px 24px;
+  background: #f5f5f5;
+  color: #555;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #eeeeee;
+  }
+}
+
+// 確認登記按鈕
+.submit-btn {
+  padding: 10px 24px;
+  background: #3f51b5;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #303f9f;
+  }
+}
+
+.submit-btn1 {
+  padding: 10px 24px;
+  background: #edebeb;
+  color: #989898;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background 0.2s;
+
+  }
+// ===== 搜尋欄 =====
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 14px;
+  padding: 12px 18px;
+  margin-bottom: 16px;
+
+  mat-icon {
+    color: #aaa;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+
+  input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+
+    &::placeholder {
+      color: #bbb;
+    }
+  }
+
+  // 清除按鈕
+  .clear-btn {
+    color: #aaa;
+    cursor: pointer;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #555;
+    }
+  }
+}
+
+// ===== 訪客列表表格 =====
+.table-card {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead tr {
+  background: rgba(63, 81, 181, 0.08);
+}
+
+th {
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+td {
+  padding: 16px 20px;
+  font-size: 15px;
+  color: #333;
+  // 每列之間加分隔線
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background: rgba(63, 81, 181, 0.03);
+}
+
+// ===== 訪客姓名欄位（含頭像）=====
+.visitor-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e8eaf6;
+  color: #3f51b5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+// ===== 狀態標籤 =====
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.status-inside {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.status-left {
+  background: #f5f5f5;
+  color: #999;
+}
+
+// ===== 登記離開按鈕 =====
+.checkout-btn {
+  padding: 6px 16px;
+  background: transparent;
+  color: #e53935;
+  border: 1.5px solid #e53935;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #e53935;
+    color: #ffffff;
+  }
+}
+
+// .form-control {
+//     width: 100% !important;
+//     height: 40px; /* 或者你喜歡的高度 */
+//     display: block;
+//     box-sizing: border-box; /* 確保 padding 不會撐破寬度 */
+// }
+
+/* 針對 select 的微調 */
+.form-control {
+ padding: 10px 14px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.2s;
+
+
+    width: 100%;             /* 確保寬度一致 */
+    display: block;
+    background-color: #fff;
+    box-sizing: border-box;  /* 重要：防止 padding 撐開寬度 */
+
+    /* 移除瀏覽器預設外觀 */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+
+
+}
