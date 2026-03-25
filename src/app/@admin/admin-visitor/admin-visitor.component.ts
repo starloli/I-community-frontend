@@ -1,43 +1,26 @@
 import { Component, ChangeDetectionStrategy, inject,Injectable} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import {  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogModule,
-  MatDialogTitle, } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 
-import { ApiService } from '../../services/api.service';
+import { ApiService } from '../../@service/api.service';
 import { HttpParams } from '@angular/common/http';
-import { VisitorDialogComponent } from '../../dialog/visitor-dialog/visitor-dialog.component';
-import { VisitorServiceService } from '../../@service/visitor-service.service';
 
 import {MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
 import {Subject} from 'rxjs';
-import { RouterLink } from "@angular/router";
 
 import { FormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-admin-visitor',
-  imports: [MatIconModule, MatButtonModule, MatDialogModule, CommonModule, FormsModule, MatPaginatorModule, RouterLink, ],
+  imports: [MatIconModule, MatButtonModule, CommonModule, FormsModule, MatPaginatorModule, ],
   templateUrl: './admin-visitor.component.html',
   styleUrl: './admin-visitor.component.scss'
 })
 export class AdminVisitorComponent {
 
-readonly dialog = inject(MatDialog);
-
-  openDialog() {
-    this.dialog.open(VisitorDialogComponent);
-  }
-
-
-
-  constructor(private http: ApiService ,private service:VisitorServiceService) { }
+  constructor(private http: ApiService) { }
 
   //獲取api
 
@@ -130,7 +113,7 @@ this.step=1;
   checkOut(left: any) {
     console.log(left);
 
-    this.http.putApi("/visitor/checkOut/" + left).subscribe((res: any) => {
+    this.http.putApi("/visitor/checkOut/" + left, {}).subscribe((res: any) => {
       console.log(res);
       this.getAllVisitors();
     })
@@ -139,7 +122,7 @@ this.step=1;
 console.log(inside);
 
 
-    this.http.putApi("/visitor/inside/" + inside).subscribe((res: any) => {
+    this.http.putApi("/visitor/inside/" + inside, {}).subscribe((res: any) => {
       console.log(res);
       this.getAllVisitors();
   })}
@@ -344,9 +327,9 @@ getAllVisitors() {
 //獲取更多訪客資料
 visitorMore(visitorId :any){
   console.log(visitorId);
-this.service.visitorId=visitorId;
-this.service.permissions='admin';
-this.openDialog();
+// this.service.visitorId=visitorId;
+// this.service.permissions='admin';
+// this.openDialog();
 }
 
 
