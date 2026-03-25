@@ -30,13 +30,12 @@ export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   {path:'visitorDialog' ,component:VisitorDialogComponent},
-  {path:'adminVisitor',component:AdminVisitorComponent},
   {
     path: 'admin',
     component: LayoutComponent,
     children: [
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'visitor', component: VisitorComponent },
+      { path: 'visitor', component: AdminVisitorComponent },
       { path: 'announcement', component: AnnouncementComponent },
       { path: 'announcement/view/:id', component: ViewComponent },
       { path: 'announcement/create', component: CreateComponent },
@@ -45,7 +44,7 @@ export const routes: Routes = [
       { path: 'facility', component: FacilityComponent },
       { path: 'package', component: PackageComponent },
       { path: 'repair', component: RepairComponent },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },  { path: 'login', component: LoginComponent },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ]
   },
 
@@ -67,3 +66,4 @@ export const routes: Routes = [
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
+]
