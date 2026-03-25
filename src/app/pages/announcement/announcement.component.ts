@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RouterLink } from '@angular/router';
 import { AuthService } from '../../@service/auth.service';
 import { AnnouncementService } from '../../@service/announcement.service';
 
@@ -22,7 +21,7 @@ interface Announcement {
 @Component({
   selector: 'app-announcement',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, RouterLink],
+  imports: [CommonModule, FormsModule, MatIconModule],
   templateUrl: './announcement.component.html',
   styleUrls: ['./announcement.component.scss']
 })

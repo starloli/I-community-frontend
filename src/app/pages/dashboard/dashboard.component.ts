@@ -2,9 +2,10 @@ import { PackageService } from './../../@service/package.service';
 import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { AnnouncementService } from '../../services/announcement.service';
+import { AnnouncementService } from '../../@service/announcement.service';
 import { StatisticsService } from '../../@service/statistics.service';
 import { PackageStatus } from '../../interface/enum';
+import { Announcement } from '../../interface/interface';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,7 +24,7 @@ export class DashboardComponent {
     { label: '未取包裹',   value: '15',  icon: 'inventory_2', color: '#388e3c', bg: '#e8f5e9' },
   ];
 
-  announcements!: any;
+  announcements: Announcement[] = [];
 
   // ===== 最近訪客資料 =====
   // TODO: 之後改成呼叫 GET /api/v1/visitors?limit=3 取得最新3筆訪客記錄

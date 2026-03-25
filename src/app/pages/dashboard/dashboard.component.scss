@@ -69,7 +69,7 @@
       var(--glow-color, rgba(255, 255, 255, 0.8)) 50%,
       transparent 60%
     );
-    -webkit-mask:
+    mask:
       linear-gradient(#fff 0 0) content-box,
       linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;

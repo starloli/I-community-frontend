@@ -6,7 +6,7 @@ import { ApiService } from '../../@service/api.service';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, FormsModule],
+  imports: [FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -22,13 +22,13 @@ export class LoginComponent {
   password!: string;
   userloginStatus = true;
 
-  signUpUserName!: string;
+  signUpUserName: string = '';
   signUpPassword: string = '';
   confirmPassword: string = '';
   fullName!: string;
-  email!: string;
-  phone!: string;
-  unitNumber!: string;
+  email: string = '';
+  phone: string = '';
+  unitNumber: string = '';
 
   adminAccountn!: string;
   adminPassword!: string;
