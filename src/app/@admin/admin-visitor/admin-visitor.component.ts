@@ -9,24 +9,11 @@ import { HttpParams } from '@angular/common/http';
 import {MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
 import {Subject} from 'rxjs';
 
-import { ApiService } from '../../services/api.service';
-import { HttpParams } from '@angular/common/http';
-import { VisitorDialogComponent } from '../../dialog/visitor-dialog/visitor-dialog.component';
-import { VisitorServiceService } from '../../@service/visitor-service.service';
-
-import {MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
-import {Subject} from 'rxjs';
-import { RouterLink } from "@angular/router";
->>>>>>> Vince
-
 import { FormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-admin-visitor',
-<<<<<<< HEAD
-  imports: [MatIconModule, MatButtonModule, CommonModule, FormsModule, MatPaginatorModule, ],
-=======
   imports: [MatIconModule, MatButtonModule, CommonModule, FormsModule, MatPaginatorModule, ],
   templateUrl: './admin-visitor.component.html',
   styleUrl: './admin-visitor.component.scss'
@@ -126,11 +113,7 @@ this.step=1;
   checkOut(left: any) {
     console.log(left);
 
-<<<<<<< HEAD
     this.http.putApi("/visitor/checkOut/" + left, {}).subscribe((res: any) => {
-=======
-    this.http.putApi("/visitor/checkOut/" + left).subscribe((res: any) => {
->>>>>>> Vince
       console.log(res);
       this.getAllVisitors();
     })
@@ -344,15 +327,9 @@ getAllVisitors() {
 //獲取更多訪客資料
 visitorMore(visitorId :any){
   console.log(visitorId);
-<<<<<<< HEAD
 // this.service.visitorId=visitorId;
 // this.service.permissions='admin';
 // this.openDialog();
-=======
-this.service.visitorId=visitorId;
-this.service.permissions='admin';
-this.openDialog();
->>>>>>> Vince
 }
 
 
