@@ -18,7 +18,7 @@ import { ResidentAnnouncementComponent } from './pages/resident/announcement/ann
 import { BillComponent as ResidentBillComponent } from './pages/resident/bill/bill.component';
 import { ResidentFacilityComponent } from './pages/resident/facility/facility.component';
 import { PackageComponent as ResidentPackageComponent } from './pages/resident/package/package.component';
-// import { ResidentRepairComponent } from './pages/resident/repair/resident-repair.component';
+import { ResidentRepairComponent } from './pages/resident/repair/repair.component';
 
 export const routes: Routes = [
   // ── 登入頁 ──────────────────────────────────────────
@@ -51,7 +51,7 @@ export const routes: Routes = [
       { path: 'bill',         component: ResidentBillComponent },
       { path: 'facility',     component: ResidentFacilityComponent },
       { path: 'package',      component: ResidentPackageComponent },
-      // { path: 'repair',       component: ResidentRepairComponent },
+      { path: 'repair',       component: ResidentRepairComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ]
   },

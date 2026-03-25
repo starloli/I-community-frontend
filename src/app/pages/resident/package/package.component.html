@@ -69,15 +69,16 @@
       <!-- 文字主區 -->
       <div class="pkg-main">
         <div class="pkg-title-row">
-          <span class="pkg-courier">{{ pkg.courier }}</span>
           <!-- 狀態標籤 -->
           <span class="status-badge" [class.waiting]="pkg.status === PackageStatus.WAITING" [class.picked]="pkg.status === PackageStatus.PICKED_UP">
             @if (pkg.status === PackageStatus.WAITING) { 待取貨 } @else { 已取貨 }
           </span>
         </div>
         <div class="pkg-sub">
+          <span>{{ pkg.courier }}</span>
+          <!-- trackingNumber -->
           <span class="tracking">{{ pkg.trackingNumber }}</span>
-          @if (pkg.notes) { <span class="notes">· {{ pkg.notes }}</span> }
+          @if (pkg.notes) { <span>· {{ pkg.notes }}</span> }
         </div>
       </div>
 
