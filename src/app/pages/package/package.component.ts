@@ -374,11 +374,10 @@ export class PackageComponent implements OnInit {
     this.closePickup();
   }
 
-  // ── 通知住戶 ──────────────────────────────────────────
+  // TODO: [後端小夥伴看這裡]
+  // 1. 發送取貨通知：POST /package/{id}/notify
   notifyResident(pkg: any, event: Event): void {
     event.stopPropagation();
-    // TODO: POST /package/{id}/notify
-    // this.apiService.postApi(`/package/${pkg.id}/notify`, {}).subscribe(...);
     const idx = this.packages.findIndex(p => p.id === pkg.id);
     if (idx !== -1) {
       this.packages[idx] = { ...this.packages[idx], isNotified: true };  // ← 更新 isNotified

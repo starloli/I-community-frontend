@@ -191,7 +191,8 @@ export class RepairComponent {
     this.completeForm = { handler: '', note: '' };
   }
 
-  // TODO: 之後改成呼叫 PUT /api/v1/repairs/{id}
+  // TODO: [後端小夥伴看這裡]
+  // 1. 維修完工回報：PUT /admin/repair/{id}/complete
   submitComplete() {
     if (!this.selectedRepair || !this.completeForm.handler) return;
     this.selectedRepair.status = RepairStatus.DONE;
