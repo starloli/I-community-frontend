@@ -4,12 +4,8 @@
   <div class="page-header">
     <div class="header-left">
       <h1>報修申請</h1>
-      <span class="subtitle">提交報修單及追蹤處理進度</span>
+      <span class="subtitle">追蹤社區報修處理進度</span>
     </div>
-    <button class="add-btn" (click)="openForm()">
-      <mat-icon>build</mat-icon>
-      新增報修
-    </button>
   </div>
 
   <!-- 統計卡片 -->
@@ -148,43 +144,6 @@
       <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
         <mat-icon>chevron_right</mat-icon>
       </button>
-    </div>
-  }
-
-  <!-- 新增報修表單 -->
-  @if (showForm) {
-    <div class="form-overlay" (click)="closeForm()">
-      <div class="form-card" (click)="$event.stopPropagation()">
-        <div class="form-header">
-          <h2>新增報修申請</h2>
-          <mat-icon class="close-btn" (click)="closeForm()">close</mat-icon>
-        </div>
-        <div class="form-body">
-          <div class="form-group">
-            <label>報修地點 <span class="required">*</span></label>
-            <input type="text" [(ngModel)]="newRepair.location" placeholder="例如：A棟1樓大廳" />
-          </div>
-          <div class="form-group">
-            <label>問題分類 <span class="required">*</span></label>
-            <select [(ngModel)]="newRepair.category">
-              <option>水電</option>
-              <option>水管</option>
-              <option>電梯</option>
-              <option>門禁</option>
-              <option>照明</option>
-              <option>其他</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>問題描述 <span class="required">*</span></label>
-            <textarea [(ngModel)]="newRepair.description" rows="4" placeholder="請詳細描述問題狀況..."></textarea>
-          </div>
-        </div>
-        <div class="form-footer">
-          <button class="cancel-btn" (click)="closeForm()">取消</button>
-          <button class="submit-btn" (click)="submitRepair()">提交報修</button>
-        </div>
-      </div>
     </div>
   }
 

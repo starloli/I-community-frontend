@@ -89,7 +89,21 @@ export class DashboardComponent {
         console.error('取得使用者數量失敗', error);
         this.stats[0].value = 'N/A'; // API 失敗時顯示 N/A
       }
-    )
+    );
+
+    // 取得維修清單並更新「待處理報修」統計
+    this.apiService.getApi('/repair').subscribe({
+      next: (res: any) => {
+        const repairs = Array.isArray(res) ? res : res?.data ?? [];
+        // 計算狀態不是 COMPLETE 的維修件數
+        const pendingCount = repairs.filter((r: any) => r.status !== 'COMPLETE').length;
+        this.stats[2].value = pendingCount.toString();
+      },
+      error: (error) => {
+        console.error('取得維修資料失敗:', error);
+        this.stats[2].value = 'N/A';
+      }
+    });
   }
 
   private isToday(value?: string): boolean {
