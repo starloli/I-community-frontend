@@ -52,6 +52,7 @@ export interface Package {
   pickupAt: string,
   status: PackageStatus,
   notes: string,
+  unitNumber: string,
   isNotified: boolean
 }
 
@@ -95,6 +96,11 @@ export interface User {
   token?: string
 }
 
+export interface ResidentOption {
+  userId: number,
+  fullName: string
+}
+
 export interface Visitor {
   id: number,
   visitorName: string,
@@ -105,6 +111,21 @@ export interface Visitor {
   checkInTime: string,
   checkOutTime: string,
   status: VisitorStatus
+}
+
+export interface VisitorRecord {
+  visitorId: number,
+  visitorName: string,
+  visitorPhone?: string,
+  licensePlate?: string,
+  residentialAddress?: string,
+  purpose?: string,
+  estimatedTime?: string,
+  checkInTime?: string,
+  checkOutTime?: string,
+  status: string,
+  formattedEstimated?: string,
+  displayAddress?: string
 }
 
 export interface LoginInfo {

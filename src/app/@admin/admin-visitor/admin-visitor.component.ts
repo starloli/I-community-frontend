@@ -1,352 +1,336 @@
-import { Component, ChangeDetectionStrategy, inject, Injectable } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { ApiService } from '../../@service/api.service';
-import { HttpParams } from '@angular/common/http';
-
-import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
-import { Subject } from 'rxjs';
-
-import { FormsModule } from '@angular/forms';
-
+import { VisitorServiceService } from '../../@service/visitor-service.service';
+import { VisitorDialogComponent } from '../../dialog/visitor-dialog/visitor-dialog.component';
 
 @Component({
-  selector: 'app-admin-visitor',
-  imports: [MatIconModule, MatButtonModule, CommonModule, FormsModule, MatPaginatorModule,],
+  selector: 'app-visitor',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatIconModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatPaginatorModule
+  ],
   templateUrl: './admin-visitor.component.html',
   styleUrl: './admin-visitor.component.scss'
 })
-export class AdminVisitorComponent {
+export class VisitorComponent implements OnInit {
+  // ── 注入服務 ──────────────────────────────────────────
+  private http = inject(ApiService);
+  private service = inject(VisitorServiceService);
+  private dialog = inject(MatDialog);
 
-  constructor(private http: ApiService) { }
+  // ── 公開 Math 物件給模板使用 ───────────────────────────
+  readonly Math = Math;
 
-  //獲取api
+  // ── 分頁設定 ──────────────────────────────────────────
+  currentPage = 1;
+  pageSize = 10;
 
-  //管理者
-  allVisitor!: any;
-  // 新增訪客要用的
-  step = 1;
-  address!: string;
+  // ── 訪客資料相關 ──────────────────────────────────────
+  allVisitor: any[] = [];                    // 所有訪客列表
+  addressList: string[] = [];                // 所有門牌地址列表
+  currentResidents: any[] = [];              // 當前選中地址的住戶列表
+  addressMap = new Map<string, any>();      // 地址與住戶的映射緩存
 
+  // ── 表單控制 ──────────────────────────────────────────
+  showForm = false;                          // 是否顯示新增訪客表單
+  step = 1;                                  // 表單步驟（1：選擇住戶，2：輸入訪客資訊）
+  searchKeyword = '';                        // 搜尋關鍵字
+  isComposing = false;                       // 中文輸入法標誌（避免中文輸入時觸發過濾）
 
+  // ── 新增訪客表單欄位 ──────────────────────────────────
+  selectedAddress = '';                      // 選中的地址
+  addressID: number | null = null;           // 選中住戶的 ID
+  newVisitorName = '';                       // 訪客姓名
+  newVisitorPhone = '';                      // 訪客電話
+  newVisitorLicensePlate = '';               // 訪客車牌
+  newVisitorPurpose = '';                    // 訪客來訪目的
 
-  // ===== 控制新增表單是否顯示 =====
-  showForm = false;
-
-  // ===== 新增訪客的表單資料 =====
-  // 訪客名字
-  newVisitorName: string = "";
-  // 訪客電話
-  newVisitorPhone: string = '';
-  //  訪客車牌
-  newVisitorLicensePlate: string = '';
-  //訪客目的
-  newVisitorPurpose: string = '';
-  //被訪問住戶
-  residentsInterviewed: string = '';
-
-  //下拉式選單    //可以刪掉 不需要  因爲是綁定的id
-  selectedAddress!: string;
-  //得到住戶id
-  addressID!: number;
-
-  // 1. 定義時不指定泛型，直接用 any
-  addressMap = new Map<string, any>();
-
-  // 2. 或者在初始化時完全不寫型別 (TypeScript 會推斷它是 Map<any, any>)
-  addressList: any = [];
-  currentResidents: any[] = [];
+  // ── 組件初始化 ────────────────────────────────────────
   ngOnInit(): void {
     this.getAllVisitors();
-    this.getAllAdress();
+    this.getAllAddresses();
   }
 
-
-  // ===== 搜尋關鍵字 =====
-  searchKeyword = '';
-
-  // ===== 過濾後的訪客列表 =====
-  // 根據搜尋關鍵字即時過濾，符合姓名、電話、門牌、車牌、預約時間其中一個就顯示
-  get filteredVisitors() {
-    if (!this.searchKeyword.trim()) {
-      return this.allVisitor; // 沒有關鍵字就顯示全部
-    }
-    const keyword = this.searchKeyword.toLowerCase();
-    return this.allVisitor.filter((v: any) =>
-      (v.visitorName?.toLowerCase().includes(keyword)) ||
-      (v.visitorPhone?.includes(keyword)) ||
-      (v.purpose?.includes(keyword)) ||
-      (v.licensePlate?.toLowerCase().includes(keyword)) ||
-
-      (v.estimatedTime?.includes(keyword))
-      // (v.checkOutTime?.includes(keyword))
-      // || (v.residentName?.includes(keyword))
-    );
+  /**
+   * 取得所有訪客資料
+   * 從後端 API 獲取訪客列表，格式化時間後按倒序排列
+   */
+  getAllVisitors() {
+    this.http.getApi('/visitor/getVisitor').subscribe({
+      next: (res: any) => {
+        const rawData = Array.isArray(res) ? res : (res?.data || []);
+        this.allVisitor = rawData.map((visitor: any) => ({
+          ...visitor,
+          estimatedTime: visitor.estimatedTime ? visitor.estimatedTime.replace('T', ' ').slice(0, 16) : '-',
+          checkInTime: visitor.checkInTime ? visitor.checkInTime.replace('T', ' ').slice(0, 16) : '-',
+          checkOutTime: visitor.checkOutTime ? visitor.checkOutTime.replace('T', ' ').slice(0, 16) : '-',
+        })).reverse();
+      }
+    });
   }
 
+  /**
+   * 取得所有門牌地址
+   * 用於搜尋住戶時的地址列表
+   */
+  getAllAddresses() {
+    this.http.getApi('/visitor/allAddresses').subscribe((res: any) => {
+      this.addressList = Array.isArray(res) ? res.sort() : [];
+    });
+  }
 
-
-  // 開啟新增表單
+  /**
+   * 打開新增訪客表單
+   */
   openForm() {
     this.showForm = true;
   }
 
+  /**
+   * 關閉表單並重置狀態
+   */
   closeForm() {
     this.showForm = false;
-    this.currentResidents = [];
-    this.addressID = 0;
-    //可以刪掉 不需要  因爲是綁定的id
-    this.selectedAddress = '';
     this.step = 1;
-
+    this.clearFormFields();
   }
 
-  // 關閉新增表單並清空欄位
-
-
-
-
-  // ===== 訪客離開（更新狀態）=====
-  // TODO: 之後改成呼叫 PUT /api/v1/visitors/{id}/checkout 更新後端資料
-  checkOut(left: any) {
-    console.log(left);
-
-    this.http.putApi("/visitor/checkOut/" + left, {}).subscribe((res: any) => {
-      console.log(res);
-      this.getAllVisitors();
-    })
-  }
-  Enter(inside: any) {
-    console.log(inside);
-
-
-    this.http.putApi("/visitor/inside/" + inside, {}).subscribe((res: any) => {
-      console.log(res);
-      this.getAllVisitors();
-    })
+  /**
+   * 清空表單所有欄位
+   */
+  clearFormFields() {
+    this.newVisitorName = '';
+    this.newVisitorPhone = '';
+    this.newVisitorLicensePlate = '';
+    this.newVisitorPurpose = '';
+    this.selectedAddress = '';
+    this.addressID = null;
+    this.currentResidents = [];
   }
 
-
-
-
-
-
-
+  /**
+   * 進到下一步（選擇住戶 → 輸入訪客資訊）
+   */
   nextStep() {
-    this.step++;
-
+    if (this.addressID) {
+      this.step++;
+    }
   }
+
+  /**
+   * 返回上一步
+   */
   lastStep() {
     this.step--;
   }
 
-  //得到全部住戶的地址
-  getAllAdress() {
-    this.http.getApi("/visitor/allAddresses").subscribe((res: any) => {
-      this.addressList = res.sort();
-      console.log(this.addressList);
-    })
-  }
+  /**
+   * 地址變更時，取得該地址的住戶列表
+   * @param address - 選中的地址
+   */
+  onAddressChange(address: string) {
+    this.currentResidents = [];
 
-  onAddressChange(addr: any) {
-    this.currentResidents = []; // 先清空，避免畫面殘留舊住戶
-
-    if (!addr) return; // 如果選到空的就直接結束
-
-    if (this.addressMap.has(addr)) {
-      console.log('從 Map 緩存讀取:', addr);
-      this.currentResidents = this.addressMap.get(addr);
-    } else {
-      this.getResidentData(addr);
-    }
-  }
-
-
-  //管理者新增訪客測試
-
-  adminTestapi() {
-
-    const now = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 19);
-    if (!this.newVisitorName || this.newVisitorName.trim() === '') { return; }
-    let userTest = {
-      "visitorName": this.newVisitorName,
-      "visitorPhone": this.newVisitorPhone,
-      "licensePlate": this?.newVisitorLicensePlate,
-      "purpose": this.newVisitorPurpose,
-      "hostUserId": this.addressID,
-      "checkInTime": now,
-      // "checkOutTime": "2026-03-20T17:00:00",
-      // "registeredBy": "張三",
-      "status": "INSIDE"
+    if (!address) {
+      return;
     }
 
+    // 優先從緩存取得，避免重複查詢
+    if (this.addressMap.has(address)) {
+      this.currentResidents = this.addressMap.get(address);
+      return;
+    }
 
+    // 向後端查詢該地址的住戶
+    this.http.getApi(`/visitor/by-address?address=${encodeURIComponent(address)}`).subscribe((data: any) => {
+      this.currentResidents = data;
+      this.addressMap.set(address, data);
+    });
+  }
 
-    this.http.postApi("/visitor/saveVisitor", userTest).subscribe((res: any) => {
-      console.log(res);
-      console.log("成功");
+  /**
+   * 確認登記訪客
+   * 向後端發送新增訪客請求
+   */
+  confirmRegister() {
+    if (!this.newVisitorName.trim()) {
+      return;
+    }
+
+    // 取得當前時間（考慮時區差異）
+    const now = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+      .toISOString()
+      .slice(0, 19);
+
+    const payload = {
+      visitorName: this.newVisitorName,
+      visitorPhone: this.newVisitorPhone,
+      licensePlate: this.newVisitorLicensePlate,
+      purpose: this.newVisitorPurpose,
+      hostUserId: this.addressID,
+      checkInTime: now,
+      status: 'INSIDE'
+    };
+
+    this.http.postApi('/visitor/saveVisitor', payload).subscribe(() => {
       this.getAllVisitors();
       this.closeForm();
-    })
+    });
   }
-  isComposing = false; // 追蹤是否正在選字中
 
+  /**
+   * 記錄訪客離開
+   * @param id - 訪客 ID
+   */
+  checkOut(id: number) {
+    this.http.putApi(`/visitor/checkOut/${id}`).subscribe(() => this.getAllVisitors());
+  }
+
+  /**
+   * 記錄訪客進入
+   * @param id - 訪客 ID
+   */
+  enterInside(id: number) {
+    this.http.putApi(`/visitor/inside/${id}`).subscribe(() => this.getAllVisitors());
+  }
+
+  /**
+   * 打開訪客詳情對話框
+   * @param visitor - 訪客資料
+   */
+  visitorMore(visitor: any) {
+    this.service.visitorId = visitor;
+    this.service.permissions = 'admin';
+
+    const dialogRef = this.dialog.open(VisitorDialogComponent, {
+      data: {
+        visitor,
+        permissions: 'admin'
+      }
+    });
+
+    // 如果需要監聽對話框關閉事件
+    dialogRef.afterClosed().subscribe(result => {
+      // 處理關閉後的邏輯
+    });
+  }
+
+  /**
+   * 搜尋訪客（已淘汰，使用 filteredVisitorsRaw 取代）
+   */
+  get filteredVisitors() {
+    const keyword = this.searchKeyword.toLowerCase().trim();
+
+    if (!keyword) {
+      return this.allVisitor;
+    }
+
+    return this.allVisitor.filter((visitor) =>
+      visitor.visitorName?.toLowerCase().includes(keyword) ||
+      visitor.visitorPhone?.includes(keyword) ||
+      visitor.licensePlate?.toLowerCase().includes(keyword) ||
+      visitor.residentialAddress?.toLowerCase().includes(keyword)
+    );
+  }
+
+  /**
+   * 中文輸入法：開始輸入時觸發
+   * 設定標誌以避免觸發過濾邏輯
+   */
   onCompositionStart() {
     this.isComposing = true;
   }
 
+  /**
+   * 中文輸入法：結束輸入時觸發
+   * 此時才執行過濾邏輯
+   */
   onCompositionEnd(event: any) {
     this.isComposing = false;
-    // 選字完成後，執行一次過濾
     this.filterInput(event);
   }
 
+  /**
+   * 過濾訪客姓名輸入
+   * 只允許英文字母和中文字符，過濾其他特殊字符
+   * @param event - 輸入事件
+   */
   filterInput(event: any) {
-    if (this.isComposing) return; // 如果正在選字，不執行過濾
+    if (this.isComposing) {
+      return;
+    }
 
     const regex = /[^a-zA-Z\u4e00-\u9fa5]/g;
-    const value = event.target.value;
-
-    // 執行過濾並回填
-    this.newVisitorName = value.replace(regex, '');
-    event.target.value = this.newVisitorName;
+    this.newVisitorName = event.target.value.replace(regex, '');
   }
 
-
-
-
-
-
-
-
-  ad: string = "10棟98樓71F";
-
-  getResidentData(address: string) {
-    console.log('開始查詢地址:', address);
-
-
-    const url = `/visitor/by-address?address=${encodeURIComponent(address)}`;
-
-    this.http.getApi(url).subscribe({
-      next: (data: any) => {
-        this.currentResidents = data;
-        this.addressMap.set(address, data);
-        //  console.log('查詢成功並存入 Map:', data);
-
-        if (!data || data.length === 0) {
-          console.log("沒有這個住戶");
-
-        }
-      },
-      error: (err: any) => {
-        console.error('查詢出錯:', err);
-        this.currentResidents = [];
-      }
-    });
+  /**
+   * 計算總頁數陣列
+   * @returns 頁碼陣列 [1, 2, 3, ...]
+   */
+  get totalPagesArray(): number[] {
+    const total = Math.ceil(this.filteredVisitorsRaw.length / this.pageSize);
+    return Array.from({ length: total }, (_, index) => index + 1);
   }
 
+  /**
+   * 搜尋並篩選訪客列表
+   * 支援按姓名、電話、車牌、地址搜尋
+   * @returns 篩選後的訪客列表
+   */
+  get filteredVisitorsRaw(): any[] {
+    const keyword = this.searchKeyword.toLowerCase().trim();
 
+    if (!keyword) {
+      return this.allVisitor;
+    }
 
-
-
-  getAllVisitors() {
-    console.log("---------------");
-
-    console.log(localStorage.getItem('token'));
-
-    this.http.getApi('/visitor/getVisitor').subscribe({
-      next: (res: any) => {
-        //   console.log('後端回傳的原始資料:', res);
-
-        //   if (Array.isArray(res)) {
-        //     this.allVisitor = res;
-
-        //   } else if (res && Array.isArray(res.data)) {
-        //     this.allVisitor = res.data;
-        //   } else {
-        //     this.allVisitor = [];
-        //   }
-        //    this.allVisitor = this.allVisitor.map((v: any) => ({
-        //     ...v,
-        //     // 檢查是否有時間，有的話將 'T' 換成空格並截取前 16 個字元
-        //     estimatedTime: v.estimatedTime ? v.estimatedTime.replace('T', ' ').slice(0, 16) : '-',
-        //     checkInTime: v.checkInTime ? v.checkInTime.replace('T',' ').slice(0,16): '-',
-        //     checkOutTime: v.checkOutTime ? v.checkOutTime.replace('T', ' ').slice(0, 16) : '-',
-        //   }));
-        //           console.log(this.allVisitor)
-        //           this.allVisitor=this.allVisitor.reverse();
-        // },
-        // error: (err :any) => {
-        //   console.error('API 請求失敗:', err);
-        // }
-
-
-        let processedData = Array.isArray(res) ? res : (res?.data || []);
-
-        const nowStr = new Date().toISOString().slice(0, 16).replace('T', ' ');
-
-        this.allVisitor = processedData.map((v: any) => ({
-          ...v,
-          // 保持原始字串格式方便比較，或者先格式化
-          formattedEstimated: v.estimatedTime ? v.estimatedTime.replace('T', ' ').slice(0, 16) : '9999-12-31',
-          estimatedTime: v.estimatedTime ? v.estimatedTime.replace('T', ' ').slice(0, 16) : '-',
-          checkInTime: v.checkInTime ? v.checkInTime.replace('T', ' ').slice(0, 16) : '-',
-          checkOutTime: v.checkOutTime ? v.checkOutTime.replace('T', ' ').slice(0, 16) : '-',
-        }));
-
-        // --- 自定義權重排序開始 ---
-        this.allVisitor.sort((a: any, b: any) => {
-          const getPriority = (visitor: any) => {
-            // 1. 未到且日期還沒過期 (最優先)
-            if (visitor.status === 'NOTYET' && visitor.formattedEstimated >= nowStr) return 1;
-            // 2. 人在裡面 (第二優先)
-            if (visitor.status === 'INSIDE') return 2;
-            // 3. 已完成離開 (第三)
-            if (visitor.status === 'COMPLETED') return 3;
-            // 4. 未到但已經過期 (放最後)
-            if (visitor.status === 'NOTYET' && visitor.formattedEstimated < nowStr) return 4;
-            return 5; // 其他未知狀態
-          };
-
-          const priorityA = getPriority(a);
-          const priorityB = getPriority(b);
-
-          if (priorityA !== priorityB) {
-            return priorityA - priorityB; // 權重小的排前面
-          }
-
-          // 如果權重相同，則按預約日期排序 (最近的日期排前面)
-          return a.formattedEstimated.localeCompare(b.formattedEstimated);
-        });
-        // --- 自定義權重排序結束 ---
-
-        console.log('排序後的訪客清單:', this.allVisitor);
-      }
-    });
-  }
-  //獲取更多訪客資料
-  visitorMore(visitorId: any) {
-    console.log(visitorId);
-    // this.service.visitorId=visitorId;
-    // this.service.permissions='admin';
-    // this.openDialog();
+    return this.allVisitor.filter((visitor) =>
+      visitor.visitorName?.toLowerCase().includes(keyword) ||
+      visitor.visitorPhone?.includes(keyword) ||
+      visitor.licensePlate?.toLowerCase().includes(keyword) ||
+      visitor.residentialAddress?.toLowerCase().includes(keyword)
+    );
   }
 
-
-
-
-
-
-  getVisitorData() {
-    this.http.getApi('/visitor/getVisitor').subscribe((res: any) => {
-      this.allVisitor = res;
-      console.log(this.allVisitor);
-
-
-    })
+  /**
+   * 取得當前頁面的訪客列表
+   * @returns 分頁後的訪客列表
+   */
+  get pagedVisitors(): any[] {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    return this.filteredVisitorsRaw.slice(startIndex, startIndex + this.pageSize);
   }
 
+  /**
+   * 跳轉到指定頁碼
+   * @param page - 頁碼
+   */
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPagesArray.length) {
+      return;
+    }
 
+    this.currentPage = page;
+  }
+
+  /**
+   * 搜尋關鍵字變更時重置頁碼
+   * 確保搜尋結果從第一頁開始顯示
+   */
+  onSearchChange() {
+    this.currentPage = 1;
+  }
 }

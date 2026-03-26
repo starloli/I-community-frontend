@@ -1,204 +1,60 @@
 <div class="visitor-container">
-  <!-- 頁面標題 + 新增按鈕 -->
   <div class="page-header">
     <div class="header-left">
       <h1>訪客登記</h1>
       <span class="subtitle">記錄社區訪客進出資訊</span>
     </div>
-    <!-- 點擊開啟新增表單 -->
-    <button class="add-btn" (click)="openForm()">
-      <mat-icon>person_add</mat-icon>
-      新增訪客
-    </button>
+    <div class="header-actions">
+      <button class="add-btn" (click)="openForm()">
+        <mat-icon>person_add</mat-icon> 新增訪客
+      </button>
+    </div>
   </div>
 
-  <!-- 新增訪客表單：只有 showForm 為 true 時才顯示 -->
-  @if (showForm) {
-    <div class="form-overlay" (click)="closeForm()">
-      <!-- stopPropagation 防止點擊表單內部時關閉 -->
-      <div class="form-card" (click)="$event.stopPropagation()">
-        <div class="form-header">
-          <h2>新增訪客登記</h2>
-          <mat-icon class="close-btn" (click)="closeForm()">close</mat-icon>
-        </div>
-
-
-
-
-
-
-
-
-
-@if(step==1){ <div class="form-body">
-<div class="form-group">
-            <label>被訪住戶地址</label><input
-    type="text"
-
-    [(ngModel)]="selectedAddress"
-    (ngModelChange)="onAddressChange($event)"
-    list="addressOptions"
-    placeholder="輸入關鍵字，例如：10棟...">
-
-  <datalist id="addressOptions">
-    @for (addr of addressList; track addr) {
-      <option [value]="addr"></option>
+  <div class="search-bar">
+    <mat-icon>search</mat-icon>
+    <input type="text" [(ngModel)]="searchKeyword" (ngModelChange)="onSearchChange()" placeholder="搜尋訪客、電話、門牌、車牌..." />
+    @if (searchKeyword) {
+      <mat-icon class="clear-btn" (click)="searchKeyword = ''">close</mat-icon>
     }
-  </datalist>
-@if (currentResidents.length > 0) {
+  </div>
 
-    <label>請選擇住戶</label>
-    <select class="form-control" name="hostUser"  [(ngModel)]="addressID">
-      <option value="">-- 請選擇住戶 --</option>
-      @for (person of currentResidents; track person.userId) {
-        <option [value]="person.userId">
-          {{ person?.fullName }}
-        </option>
-      }
-    </select>
-    {{addressID}}
-  }
-          </div></div><div class="form-footer">
-                    <button class="cancel-btn" (click)="closeForm()">取消</button>
-            @if(addressID){
-
-          <button class="submit-btn" (click)="nextStep()">下一步</button>
-            }@else{
-             <button class="submit-btn1" >下一步</button>}
-        </div>
-
-
-
-
-
-
-
-
-
-        }@else{
-
-        <div class="form-body">
-          <!-- 訪客姓名 -->
-          <div class="form-group">
-            <label>訪客姓名 <span class="required">*</span></label>
-            <input type="text" [(ngModel)]="newVisitorName" placeholder="請輸入訪客姓名" (keydown.space)="$event.preventDefault()" (compositionstart)="onCompositionStart()"
-  (compositionend)="onCompositionEnd($event)"
-  (input)="filterInput($event)">
-          </div>
-
-          <!-- 訪客電話 -->
-          <div class="form-group">
-            <label>訪客電話</label>
-            <input type="text" [(ngModel)]="newVisitorPhone" placeholder="請輸入訪客電話" (keydown.space)="$event.preventDefault()">
-          </div>
-
-
-          <!-- 車牌號碼 -->
-          <div class="form-group">
-            <label>車牌號碼</label>
-            <input type="text" [(ngModel)]="newVisitorLicensePlate" placeholder="無車輛請留空" (keydown.space)="$event.preventDefault()">
-          </div>
-
-           <div class="form-group">
-            <label>來訪目的</label>
-            <input type="text" [(ngModel)]="newVisitorPurpose" placeholder="來訪目的" (keydown.space)="$event.preventDefault()">
-          </div>
-
-        </div>
-        <div class="form-footer">
-
-          <button class="cancel-btn" (click)="lastStep()">上一步</button>
-          @if(newVisitorName){
-          <button class="submit-btn" (click)="adminTestapi()">確認登記</button>}
-          @else { <button class="submit-btn1" >確認登記</button>}
-        </div>
-      }
-
-
-      </div>
-    </div>
-  }
-
-  <!-- 搜尋欄 -->
-<div class="search-bar">
-  <mat-icon>search</mat-icon>
-  <input
-    type="text"
-    [(ngModel)]="searchKeyword"
-    placeholder="搜尋訪客姓名、電話、門牌、車牌、預約時間..."
-  />
-  <!-- 有輸入內容時顯示清除按鈕 -->
-  @if (searchKeyword) {
-    <mat-icon class="clear-btn" (click)="searchKeyword = ''">close</mat-icon>
-  }
-</div>
-
-  <!-- 訪客列表 -->
   <div class="table-card">
     <table>
       <thead>
         <tr>
           <th>姓名</th>
           <th>電話</th>
-<<<<<<< HEAD
-          <th>被訪門牌</th>
-          <th>來訪目的</th>
-          <th>車牌號碼</th>
-          <th>進入時間</th>
-          <th>離開時間</th>
-=======
-          <th>車牌號碼</th>
-                    <th>被訪住戶</th>
-          <th>預約時間</th>
-
->>>>>>> Vince
+          <th>車牌</th>
+          <th>被訪住戶</th>
+          <th>預約/進入時間</th>
           <th>狀態</th>
           <th>操作</th>
         </tr>
       </thead>
       <tbody>
-        @for (visitor of filteredVisitors; track $index) {
+        @for (visitor of pagedVisitors; track visitor.visitorId) {
           <tr>
             <td>
-              <div class="visitor-name-cell"  (click)="visitorMore(visitor)">
-                <!-- 頭像顯示姓名第一個字 -->
+              <div class="visitor-name-cell" (click)="visitorMore(visitor)">
                 <div class="avatar">{{ visitor.visitorName.charAt(0) }}</div>
                 {{ visitor.visitorName }}
               </div>
             </td>
             <td>{{ visitor.visitorPhone || '-' }}</td>
-<<<<<<< HEAD
-            <td>{{ visitor.residentialAddress || '-' }}</td>
-            <td>{{ visitor.purpose || '-' }}</td>
             <td>{{ visitor.licensePlate || '-' }}</td>
-            <td>{{ visitor.checkInTime || '-' }}</td>
-            <td>{{ visitor.checkOutTime || '-' }}</td>
-=======
-            <!-- <td>{{ visitor.residentialAddress }}</td> -->
-            <td>{{ visitor.licensePlate || '-' }}</td>
-
             <td>{{ visitor.residentialAddress || '-' }}</td>
-                        <td>{{ visitor.estimatedTime || '-'}}</td>
->>>>>>> Vince
+            <td>{{ visitor.estimatedTime !== '-' ? visitor.estimatedTime : visitor.checkInTime }}</td>
             <td>
-              <!-- 根據狀態顯示不同顏色的標籤 -->
-               @if(visitor.status =='NOTYET'){<span class="status-badge status-NOTYET">未到</span>}
-              @else if (visitor.status === 'INSIDE') {
-                <span class="status-badge status-inside">在內</span>
-              } @else {
-                <span class="status-badge status-left">已離</span>
-              }
+              @if (visitor.status === 'NOTYET') { <span class="status-badge status-notyet">未到</span> }
+              @else if (visitor.status === 'INSIDE') { <span class="status-badge status-inside">在內</span> }
+              @else { <span class="status-badge status-left">已離</span> }
             </td>
             <td>
-              <!-- 只有狀態為在內才顯示離開按鈕 -->
-
-              @if(visitor.status == 'NOTYET'){         <button class="checkout-btn" (click)="Enter(visitor.visitorId)">
-                    登記入内
-                </button>}
-              @else if (visitor.status === 'INSIDE') {
-                <button class="checkout-btn" (click)="checkOut(visitor.visitorId)">
-            登記離開
-                </button>
+              @if (visitor.status === 'NOTYET') {
+                <button class="checkout-btn arrival-btn" (click)="enterInside(visitor.visitorId)">登記入內</button>
+              } @else if (visitor.status === 'INSIDE') {
+                <button class="checkout-btn" (click)="checkOut(visitor.visitorId)">登記離開</button>
               }
             </td>
           </tr>
@@ -207,10 +63,88 @@
     </table>
   </div>
 
+  <div class="pagination-bar">
+    <div class="pagination-summary">
+      顯示第 {{ (currentPage - 1) * pageSize + 1 }}
+      至 {{ Math.min(currentPage * pageSize, filteredVisitorsRaw.length) }} 筆，
+      共 {{ filteredVisitorsRaw.length }} 筆
+    </div>
+
+    <div class="pagination">
+      <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      @for (p of totalPagesArray; track p) {
+        <button class="page-btn" [class.active]="currentPage === p" (click)="goToPage(p)">
+          {{ p }}
+        </button>
+      }
+
+      <button class="page-btn" [disabled]="currentPage === totalPagesArray.length || totalPagesArray.length === 0" (click)="goToPage(currentPage + 1)">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  @if (showForm) {
+    <div class="form-overlay" (click)="closeForm()">
+      <div class="form-card" (click)="$event.stopPropagation()">
+        <div class="form-header">
+          <h2>新增訪客登記 (第 {{step}} 步)</h2>
+          <mat-icon class="close-btn" (click)="closeForm()">close</mat-icon>
+        </div>
+
+        <div class="form-body">
+          @if (step === 1) {
+            <div class="form-group">
+              <label>搜尋住戶地址</label>
+              <input type="text" [(ngModel)]="selectedAddress" (ngModelChange)="onAddressChange($event)" list="addressOptions" placeholder="輸入關鍵字，例如：10棟...">
+              <datalist id="addressOptions">
+                @for (addr of addressList; track addr) { <option [value]="addr"></option> }
+              </datalist>
+            </div>
+            @if (currentResidents.length > 0) {
+              <div class="form-group">
+                <label>請選擇住戶 <span class="required">*</span></label>
+                <select class="form-control" [(ngModel)]="addressID">
+                  <option [value]="null">-- 請選擇住戶 --</option>
+                  @for (person of currentResidents; track person.userId) {
+                    <option [value]="person.userId">{{ person.fullName }} ({{person.unitNumber}})</option>
+                  }
+                </select>
+              </div>
+            }
+          } @else {
+            <div class="form-group">
+              <label>訪客姓名 <span class="required">*</span></label>
+              <input type="text" [(ngModel)]="newVisitorName" (compositionstart)="onCompositionStart()" (compositionend)="onCompositionEnd($event)" (input)="filterInput($event)" placeholder="請輸入姓名">
+            </div>
+            <div class="form-group">
+              <label>訪客電話</label>
+              <input type="text" [(ngModel)]="newVisitorPhone" placeholder="請輸入電話">
+            </div>
+            <div class="form-group">
+              <label>車牌號碼</label>
+              <input type="text" [(ngModel)]="newVisitorLicensePlate" placeholder="無則留空">
+            </div>
+            <div class="form-group">
+              <label>來訪目的</label>
+              <input type="text" [(ngModel)]="newVisitorPurpose" placeholder="例如：維修、送貨">
+            </div>
+          }
+        </div>
+
+        <div class="form-footer">
+          @if (step === 1) {
+            <button class="cancel-btn" (click)="closeForm()">取消</button>
+            <button class="submit-btn" [disabled]="!addressID" (click)="nextStep()">下一步</button>
+          } @else {
+            <button class="cancel-btn" (click)="lastStep()">上一步</button>
+            <button class="submit-btn" [disabled]="!newVisitorName" (click)="confirmRegister()">確認登記</button>
+          }
+        </div>
+      </div>
+    </div>
+  }
 </div>
-
-<mat-paginator [length]="200" [pageSizeOptions]="[10, 50, 100]" aria-label="Select page">
-</mat-paginator>
-
-
-

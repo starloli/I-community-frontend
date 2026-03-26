@@ -8,18 +8,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
   margin-bottom: 28px;
 
-  h1 {
-    font-size: 36px;
-    font-weight: 700;
-    color: #1a1a2e;
-    margin: 0 0 4px 0;
-  }
+  .header-left {
+    h1 {
+      font-size: 36px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin: 0 0 4px 0;
+    }
 
-  .subtitle {
-    font-size: 15px;
-    color: #888;
+    .subtitle {
+      font-size: 15px;
+      color: #888;
+    }
   }
 }
 
@@ -37,6 +40,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
+  white-space: nowrap;
 
   mat-icon {
     font-size: 20px;
@@ -46,6 +50,87 @@
 
   &:hover {
     background: #303f9f;
+  }
+}
+
+// ===== 工具列 =====
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+// ===== 搜尋欄 =====
+.search-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 14px;
+  padding: 12px 18px;
+  margin-bottom: 16px; // 👈 添加這行，創建與 table-card 的距離
+
+  mat-icon {
+    color: #aaa;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+
+  input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+
+    &::placeholder {
+      color: #bbb;
+    }
+  }
+
+  .clear-btn {
+    color: #aaa;
+    cursor: pointer;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #555;
+    }
+  }
+}
+
+// ===== 每頁筆數 =====
+.page-size-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 14px;
+  padding: 12px 18px;
+  color: #555;
+  white-space: nowrap;
+
+  select {
+    padding: 8px 12px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    background: #ffffff;
   }
 }
 
@@ -68,14 +153,18 @@
   background: #ffffff;
   border-radius: 20px;
   width: 480px;
+  max-width: calc(100vw - 32px);
+  max-height: 90vh;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   overflow: hidden;
+  overflow-y: auto;
 }
 
 .form-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
   padding: 24px 28px;
   border-bottom: 1px solid #f0f0f0;
 
@@ -97,11 +186,53 @@
   }
 }
 
+.form-subtitle {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #888;
+}
+
 .form-body {
   padding: 24px 28px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.step-chip {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #e8eaf6;
+  color: #3f51b5;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.selected-address-card,
+.hint-card {
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.selected-address-card {
+  background: #f5f7ff;
+  color: #333;
+
+  .label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: #888;
+  }
+}
+
+.hint-card {
+  background: #fff3e0;
+  color: #ef6c00;
 }
 
 // ===== 表單欄位 =====
@@ -116,12 +247,12 @@
     color: #555;
   }
 
-  // 必填標示紅色星號
   .required {
     color: #e53935;
   }
 
-  input {
+  input,
+  select {
     padding: 10px 14px;
     border: 1.5px solid #e0e0e0;
     border-radius: 10px;
@@ -129,6 +260,9 @@
     color: #333;
     outline: none;
     transition: border-color 0.2s;
+    box-sizing: border-box;
+    width: 100%;
+    background: #ffffff;
 
     &:focus {
       border-color: #3f51b5;
@@ -140,6 +274,12 @@
   }
 }
 
+.form-control {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
 .form-footer {
   display: flex;
   justify-content: flex-end;
@@ -148,7 +288,7 @@
   border-top: 1px solid #f0f0f0;
 }
 
-// 取消按鈕
+// ===== 按鈕 =====
 .cancel-btn {
   padding: 10px 24px;
   background: #f5f5f5;
@@ -165,7 +305,6 @@
   }
 }
 
-// 確認登記按鈕
 .submit-btn {
   padding: 10px 24px;
   background: #3f51b5;
@@ -175,69 +314,17 @@
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background: #303f9f;
   }
-}
 
-.submit-btn1 {
-  padding: 10px 24px;
-  background: #edebeb;
-  color: #989898;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  transition: background 0.2s;
-
-  }
-// ===== 搜尋欄 =====
-.search-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 14px;
-  padding: 12px 18px;
-  margin-bottom: 16px;
-
-  mat-icon {
-    color: #aaa;
-    font-size: 22px;
-    width: 22px;
-    height: 22px;
-  }
-
-  input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    font-size: 15px;
-    color: #333;
-    outline: none;
-
-    &::placeholder {
-      color: #bbb;
-    }
-  }
-
-  // 清除按鈕
-  .clear-btn {
-    color: #aaa;
-    cursor: pointer;
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    transition: color 0.2s;
-
-    &:hover {
-      color: #555;
-    }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 
@@ -273,8 +360,8 @@ td {
   padding: 16px 20px;
   font-size: 15px;
   color: #333;
-  // 每列之間加分隔線
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  vertical-align: middle;
 }
 
 tbody tr:last-child td {
@@ -285,36 +372,84 @@ tbody tr:hover {
   background: rgba(63, 81, 181, 0.03);
 }
 
-// ===== 訪客姓名欄位（含頭像）=====
-.visitor-name-cell {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+// ===== 點擊提示動畫 (Before Hover) =====
+@keyframes click-hint-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(63, 81, 181, 0.2);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 8px rgba(63, 81, 181, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(63, 81, 181, 0);
+  }
 }
 
-.avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #e8eaf6;
-  color: #3f51b5;
-  display: flex;
+// ===== 訪客姓名欄位（含頭像）=====
+.visitor-name-cell {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 14px;
-  flex-shrink: 0;
+  gap: 12px;
+  cursor: pointer;
+  padding: 6px 12px;
+  margin-left: -12px;
+  border-radius: 10px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #e8eaf6;
+    color: #3f51b5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+    
+    // 👈 加入呼吸動畫，提示使用者可點擊
+    animation: click-hint-pulse 2s infinite ease-in-out;
+  }
+
+  &:hover {
+    background: rgba(63, 81, 181, 0.08);
+    
+    .avatar {
+      animation: none; // 👈 懸停時停止呼吸動畫，改為懸停特效
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 4px 12px rgba(63, 81, 181, 0.2);
+      background: #3f51b5;
+      color: #ffffff;
+    }
+
+    color: #3f51b5;
+  }
+
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.8;
+  }
 }
 
 // ===== 狀態標籤 =====
 .status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
 }
 
-.status-NOTYET {
+.status-notyet {
   background: #fff3e0;
   color: #ef6c00;
 }
@@ -329,7 +464,7 @@ tbody tr:hover {
   color: #999;
 }
 
-// ===== 登記離開按鈕 =====
+// ===== 操作按鈕 =====
 .checkout-btn {
   padding: 6px 16px;
   background: transparent;
@@ -347,34 +482,116 @@ tbody tr:hover {
   }
 }
 
-// .form-control {
-//     width: 100% !important;
-//     height: 40px; /* 或者你喜歡的高度 */
-//     display: block;
-//     box-sizing: border-box; /* 確保 padding 不會撐破寬度 */
-// }
+.arrival-btn {
+  color: #3f51b5;
+  border-color: #3f51b5;
 
-/* 針對 select 的微調 */
-.form-control {
- padding: 10px 14px;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 15px;
-    color: #333;
-    outline: none;
-    transition: border-color 0.2s;
+  &:hover {
+    background: #3f51b5;
+    color: #ffffff;
+  }
+}
 
+.action-placeholder {
+  color: #999;
+}
 
-    width: 100%;             /* 確保寬度一致 */
-    display: block;
-    background-color: #fff;
-    box-sizing: border-box;  /* 重要：防止 padding 撐開寬度 */
-
-    /* 移除瀏覽器預設外觀 */
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
+.empty-cell {
+  padding: 40px 20px;
+  text-align: center;
+  color: #999;
+}
 
 
+// ===== 分頁 =====
+.pagination-bar {
+  display: flex;
+  flex-direction: column;    // 👈 改為垂直排列
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+}
 
+.pagination-summary {
+  font-size: 14px;
+  color: #666;
+  width: 100%;
+  text-align: center;    // 👈 文字置中
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.55);
+  color: #555;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  backdrop-filter: blur(8px);
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover:not(:disabled) {
+    background: #6a9e7f;
+    border-color: #6a9e7f;
+    color: #ffffff;
+  }
+
+  &.active {
+    background: #6a9e7f;
+    border-color: #6a9e7f;
+    color: #ffffff;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}
+
+@media (max-width: 960px) {
+  .table-card {
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header,
+  .toolbar,
+  .pagination-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .add-btn {
+    justify-content: center;
+  }
+
+  .page-size-box,
+  .pagination {
+    justify-content: center;
+  }
+
+  .pagination-summary {
+    text-align: center;
+  }
 }

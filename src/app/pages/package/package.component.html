@@ -138,7 +138,7 @@
 
         <div class="pkg-bell-col" (click)="$event.stopPropagation()">
           @if ((isAdmin || isGuard) && pkg.status === PackageStatus.WAITING && !pkg.isNotified) {
-          <button class="icon-btn notify" (click)="notifyResident(pkg.id!)" title="通知住戶">
+          <button class="icon-btn notify" (click)="notifyResident(pkg, $event)" title="通知住戶">
             <mat-icon>notifications</mat-icon>
           </button>
           }
@@ -163,7 +163,7 @@
 </div>
 
 <!-- ════════════════════════════════════════════
-     包裹詳情 Modal
+    包裹詳情 Modal
 ════════════════════════════════════════════ -->
 @if (showDetailModal && selectedPackage) {
 <div class="form-overlay" (click)="closeDetail()">
@@ -236,7 +236,7 @@
     <div class="form-footer">
       @if (selectedPackage.status === PackageStatus.WAITING) {
       @if ((isAdmin || isGuard) && !selectedPackage.isNotified) {
-      <button class="notify-btn" (click)="notifyResident(selectedPackage.id!); closeDetail()">
+      <button class="notify-btn" (click)="notifyResident(selectedPackage, $event); closeDetail()">
         <mat-icon>notifications</mat-icon> 通知住戶
       </button>
       }

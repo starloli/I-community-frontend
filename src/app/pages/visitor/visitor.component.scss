@@ -286,25 +286,70 @@ tbody tr:hover {
   background: rgba(63, 81, 181, 0.03);
 }
 
-// ===== 訪客姓名欄位（含頭像）=====
-.visitor-name-cell {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+// ===== 點擊提示動畫 (Before Hover) =====
+@keyframes click-hint-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(63, 81, 181, 0.2);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 8px rgba(63, 81, 181, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(63, 81, 181, 0);
+  }
 }
 
-.avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #e8eaf6;
-  color: #3f51b5;
-  display: flex;
+// ===== 訪客姓名欄位（含頭像）=====
+.visitor-name-cell {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 14px;
-  flex-shrink: 0;
+  gap: 12px;
+  cursor: pointer;
+  padding: 6px 12px;
+  margin-left: -12px;
+  border-radius: 10px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #e8eaf6;
+    color: #3f51b5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+    
+    // 👈 加入呼吸動畫，提示使用者可點擊
+    animation: click-hint-pulse 2s infinite ease-in-out;
+  }
+
+  &:hover {
+    background: rgba(63, 81, 181, 0.08);
+    
+    .avatar {
+      animation: none; // 👈 懸停時停止呼吸動畫，改為懸停特效
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 4px 12px rgba(63, 81, 181, 0.2);
+      background: #3f51b5;
+      color: #ffffff;
+    }
+
+    color: #3f51b5;
+  }
+
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.8;
+  }
 }
 
 // ===== 狀態標籤 =====

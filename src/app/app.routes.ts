@@ -23,7 +23,7 @@ import { ResidentRepairComponent } from './pages/resident/repair/repair.componen
 import { VisitorDialogComponent } from './dialog/visitor-dialog/visitor-dialog.component';
 import { ViewComponent } from './pages/announcement/view/view.component';
 import { CreateComponent } from './pages/announcement/create/create.component';
-import { AdminVisitorComponent } from './@admin/admin-visitor/admin-visitor.component';
+import { VisitorComponent as AdminVisitorComponent } from './@admin/admin-visitor/admin-visitor.component';
 
 export const routes: Routes = [
   // ── 登入頁 ──────────────────────────────────────────

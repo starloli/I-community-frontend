@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+import { VisitorServiceService } from '../../@service/visitor-service.service';
 import { VisitorDialogComponent } from './visitor-dialog.component';
 
 describe('VisitorDialogComponent', () => {
@@ -8,7 +10,26 @@ describe('VisitorDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [VisitorDialogComponent]
+      imports: [VisitorDialogComponent],
+      providers: [
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: {
+            visitor: {
+              visitorName: 'Test Visitor',
+              residentialAddress: 'A-101'
+            },
+            permissions: 'admin'
+          }
+        },
+        {
+          provide: VisitorServiceService,
+          useValue: {
+            visitorId: null,
+            permissions: 'admin'
+          }
+        }
+      ]
     })
     .compileComponents();
 

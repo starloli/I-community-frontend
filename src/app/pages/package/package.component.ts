@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ApiService } from '../../@service/api.service';
-import { Package, Res, User } from '../../interface/interface';
+import {  Res, User } from '../../interface/interface';
 import { PackageStatus, UserRole } from '../../interface/enum';
 
 @Component({
@@ -45,8 +45,8 @@ export class PackageComponent implements OnInit {
   showAddModal: boolean = false;
   showPickupModal: boolean = false;
 
-  selectedPackage: Package | null = null;
-  pickupTarget: Package | null = null;
+  selectedPackage: any | null = null;
+  pickupTarget: any | null = null;
 
   // 新增表單（先用 Partial，避免要填完整 User）
   newPackageForm: {
@@ -64,104 +64,133 @@ export class PackageComponent implements OnInit {
 
   // TODO: 之後改為 this.apiService.getApi('/package/list')
   // Package.user 對應 User 物件（含 unitNumber, fullName 等）
-  packages: Package[] = [
-    {
-      id: 1,
-      user: this.makeDummyUser(10, '林家宇', 'A-1201'),
-      trackingNumber: 'SF1234567890',
-      courier: '順豐速運',
-      arrivedAt: '2025-05-20T09:30:00',
-      pickupAt: '',                       // ← 對應 interface.pickupAt（空字串 = 未取貨）
-      status: PackageStatus.WAITING,
-      notes: '一件，中型紙箱',
-      isNotified: true                    // ← 對應 interface.isNotified
-    },
-    {
-      id: 2,
-      user: this.makeDummyUser(11, '王志明', 'A-0805'),
-      trackingNumber: 'EC9876543210TW',
-      courier: '黑貓宅急便',
-      arrivedAt: '2025-05-20T11:00:00',
-      pickupAt: '',
-      status: PackageStatus.WAITING,
-      notes: '兩件，輕型包裹',
-      isNotified: true
-    },
-    {
-      id: 3,
-      user: this.makeDummyUser(12, '陳美玲', 'B-0302'),
-      trackingNumber: 'LP7758421369',
-      courier: '萊爾富包裹',
-      arrivedAt: '2025-05-19T14:20:00',
-      pickupAt: '2025-05-19T18:45:00',   // ← 有值 = 已取貨
-      status: PackageStatus.PICKED_UP,
-      notes: '一件，衣物類',
-      isNotified: true
-    },
-    {
-      id: 4,
-      user: this.makeDummyUser(13, '李大偉', 'C-1501'),
-      trackingNumber: 'PC2468013579',
-      courier: '中華郵政',
-      arrivedAt: '2025-05-18T10:00:00',
-      pickupAt: '2025-05-18T16:30:00',
-      status: PackageStatus.PICKED_UP,
-      notes: '一件，書籍類',
-      isNotified: true
-    },
-    {
-      id: 5,
-      user: this.makeDummyUser(14, '張小芳', 'B-0910'),
-      trackingNumber: 'YT1357924680',
-      courier: '宅配通',
-      arrivedAt: '2025-05-21T08:15:00',
-      pickupAt: '',
-      status: PackageStatus.WAITING,
-      notes: '一件，3C 產品，易碎請小心',
-      isNotified: false
-    },
-    {
-      id: 6,
-      user: this.makeDummyUser(15, '黃建國', 'A-0401'),
-      trackingNumber: 'DHL987654321',
-      courier: 'DHL',
-      arrivedAt: '2025-05-21T13:45:00',
-      pickupAt: '',
-      status: PackageStatus.WAITING,
-      notes: '一件，國際包裹，需本人簽收',
-      isNotified: true
-    },
-    {
-      id: 7,
-      user: this.makeDummyUser(16, '吳淑惠', 'C-0705'),
-      trackingNumber: 'KE5544332211',
-      courier: '統一速達',
-      arrivedAt: '2025-05-17T10:30:00',
-      pickupAt: '2025-05-17T12:00:00',
-      status: PackageStatus.PICKED_UP,
-      notes: '兩件，食品類',
-      isNotified: true
-    },
-    {
-      id: 8,
-      user: this.makeDummyUser(10, '林家宇', 'A-1201'),
-      trackingNumber: 'JD8800990011',
-      courier: '京東物流',
-      arrivedAt: '2025-05-21T15:00:00',
-      pickupAt: '',
-      status: PackageStatus.WAITING,
-      notes: '一件，家電類，約 8 公斤',
-      isNotified: false
-    },
-  ];
+  packages: any[] = [];
 
-  constructor(private apiService: ApiService) {}
+  private mockPackages(): any[] {
+    return [
+      {
+        id: 1,
+        user: this.makeDummyUser(10, '林家宇', 'A-1201'),
+        unitNumber: 'A-1201',
+        trackingNumber: 'SF1234567890',
+        courier: '順豐速運',
+        arrivedAt: '2025-05-20T09:30:00',
+        pickupAt: '',
+        status: PackageStatus.WAITING,
+        notes: '一件，中型紙箱',
+        isNotified: true
+      },
+      {
+        id: 2,
+        user: this.makeDummyUser(11, '王志明', 'A-0805'),
+        unitNumber: 'A-0805',
+        trackingNumber: 'EC9876543210TW',
+        courier: '黑貓宅急便',
+        arrivedAt: '2025-05-20T11:00:00',
+        pickupAt: '',
+        status: PackageStatus.WAITING,
+        notes: '兩件，輕型包裹',
+        isNotified: true
+      },
+      {
+        id: 3,
+        user: this.makeDummyUser(12, '陳美玲', 'B-0302'),
+        unitNumber: 'B-0302',
+        trackingNumber: 'LP7758421369',
+        courier: '萊爾富包裹',
+        arrivedAt: '2025-05-19T14:20:00',
+        pickupAt: '2025-05-19T18:45:00',
+        status: PackageStatus.PICKED_UP,
+        notes: '一件，衣物類',
+        isNotified: true
+      },
+      {
+        id: 4,
+        user: this.makeDummyUser(13, '李大偉', 'C-1501'),
+        unitNumber: 'C-1501',
+        trackingNumber: 'PC2468013579',
+        courier: '中華郵政',
+        arrivedAt: '2025-05-18T10:00:00',
+        pickupAt: '2025-05-18T16:30:00',
+        status: PackageStatus.PICKED_UP,
+        notes: '一件，書籍類',
+        isNotified: true
+      },
+      {
+        id: 5,
+        user: this.makeDummyUser(14, '張小芳', 'B-0910'),
+        unitNumber: 'B-0910',
+        trackingNumber: 'YT1357924680',
+        courier: '宅配通',
+        arrivedAt: '2025-05-21T08:15:00',
+        pickupAt: '',
+        status: PackageStatus.WAITING,
+        notes: '一件，3C 產品，易碎請小心',
+        isNotified: false
+      },
+      {
+        id: 6,
+        user: this.makeDummyUser(15, '黃建國', 'A-0401'),
+        unitNumber: 'A-0401',
+        trackingNumber: 'DHL987654321',
+        courier: 'DHL',
+        arrivedAt: '2025-05-21T13:45:00',
+        pickupAt: '',
+        status: PackageStatus.WAITING,
+        notes: '一件，國際包裹，需本人簽收',
+        isNotified: true
+      },
+      {
+        id: 7,
+        user: this.makeDummyUser(16, '吳淑惠', 'C-0705'),
+        unitNumber: 'C-0705',
+        trackingNumber: 'KE5544332211',
+        courier: '統一速達',
+        arrivedAt: '2025-05-17T10:30:00',
+        pickupAt: '2025-05-17T12:00:00',
+        status: PackageStatus.PICKED_UP,
+        notes: '兩件，食品類',
+        isNotified: true
+      },
+      {
+        id: 8,
+        user: this.makeDummyUser(10, '林家宇', 'A-1201'),
+        unitNumber: 'A-1201',
+        trackingNumber: 'JD8800990011',
+        courier: '京東物流',
+        arrivedAt: '2025-05-21T15:00:00',
+        pickupAt: '',
+        status: PackageStatus.WAITING,
+        notes: '一件，家電類，約 8 公斤',
+        isNotified: false
+      }
+    ];
+  }
+
+  constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
-    // TODO: 串接 API
-    // this.apiService.getApi('/package/list').subscribe((res: Res) => {
-    //   this.packages = res.data;
-    // });
+    this.loadPackages();
+  }
+
+  private loadPackages(): void {
+    this.apiService.getApi('/package/list').subscribe({
+      next: (res: any) => {
+        if (res && Array.isArray(res.data)) {
+          this.packages = res.data.map((p: any) => ({
+            ...p,
+            unitNumber: p.unitNumber || p.user?.unitNumber || ''
+          }));
+        } else {
+          console.warn('package list API 回傳格式異常，使用 mock 資料', res);
+          this.packages = this.mockPackages();
+        }
+      },
+      error: (err: any) => {
+        console.error('取得 package 列表失敗', err);
+        this.packages = this.mockPackages();
+      }
+    });
   }
 
   // ── 輔助：建立假 User（假資料專用）──────────────────
@@ -179,12 +208,12 @@ export class PackageComponent implements OnInit {
   get isResident(): boolean { return this.currentUser.role === UserRole.RESIDENT; }
 
   // ── 是否已取貨（pickupAt 有值且 status 為 PICKED_UP）──
-  isPickedUp(pkg: Package): boolean {
+  isPickedUp(pkg: any): boolean {
     return pkg.status === PackageStatus.PICKED_UP;
   }
 
   // ── 篩選 ──────────────────────────────────────────────
-  get filteredPackages(): Package[] {
+  get filteredPackages(): any[] {
     let list = [...this.packages];
 
     // 住戶只看自己（user.unitNumber 對應登入者的 unitNumber）
@@ -224,7 +253,7 @@ export class PackageComponent implements OnInit {
     return Math.ceil(this.filteredPackages.length / this.pageSize);
   }
 
-  get pagedPackages(): Package[] {
+  get pagedPackages(): any[] {
     const start = (this.currentPage - 1) * this.pageSize;
     return this.filteredPackages.slice(start, start + this.pageSize);
   }
@@ -274,7 +303,7 @@ export class PackageComponent implements OnInit {
   }
 
   // ── 詳情 ──────────────────────────────────────────────
-  openDetail(pkg: Package): void {
+  openDetail(pkg: any): void {
     this.selectedPackage = pkg;
     this.showDetailModal = true;
   }
@@ -301,9 +330,10 @@ export class PackageComponent implements OnInit {
     // this.apiService.postApi('/package/create', payload).subscribe((res: Res) => { ... });
 
     // 假資料：用表單資訊建構一筆 Package
-    const newPkg: Package = {
+    const newPkg: any = {
       id: Date.now(),
       user: this.makeDummyUser(Date.now(), f.recipientName, f.unitNumber),
+      unitNumber: f.unitNumber,
       trackingNumber: f.trackingNumber,
       courier: f.courier || '其他',
       arrivedAt: new Date().toISOString(),
@@ -317,7 +347,7 @@ export class PackageComponent implements OnInit {
   }
 
   // ── 取貨確認 ──────────────────────────────────────────
-  openPickup(pkg: Package, event: Event): void {
+  openPickup(pkg: any, event: Event): void {
     event.stopPropagation();
     this.pickupTarget = pkg;
     this.showPickupModal = true;
@@ -328,7 +358,7 @@ export class PackageComponent implements OnInit {
     this.pickupTarget = null;
   }
 
-  confirmPickup(): void {
+  confirmPickup(id: number): void {
     if (!this.pickupTarget) return;
     // TODO: PUT /package/{id}/pickup
     // this.apiService.putApi(`/package/${this.pickupTarget.id}/pickup`, {})
@@ -345,13 +375,17 @@ export class PackageComponent implements OnInit {
   }
 
   // ── 通知住戶 ──────────────────────────────────────────
-  notifyResident(pkg: Package, event: Event): void {
+  notifyResident(pkg: any, event: Event): void {
     event.stopPropagation();
     // TODO: POST /package/{id}/notify
     // this.apiService.postApi(`/package/${pkg.id}/notify`, {}).subscribe(...);
     const idx = this.packages.findIndex(p => p.id === pkg.id);
     if (idx !== -1) {
       this.packages[idx] = { ...this.packages[idx], isNotified: true };  // ← 更新 isNotified
+
+      if (this.selectedPackage && this.selectedPackage.id === pkg.id) {
+        this.selectedPackage = { ...this.selectedPackage, isNotified: true };
+      }
     }
   }
 

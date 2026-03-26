@@ -2,8 +2,8 @@ import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
-import { AnnouncementService } from '../../../services/announcement.service';
+import { AuthService } from '../../../@service/auth.service';
+import { AnnouncementService } from '../../../@service/announcement.service';
 
 export function tomorrowValidator(control: AbstractControl): ValidationErrors | null {
   if (!control.value) return null;
@@ -124,20 +124,20 @@ export class CreateComponent {
     if (this.id) {
       console.log('更新 API', this.id, payload);
       this.service.updateById(this.id, payload).subscribe({
-        next: (res) => {
+        next: (res: any) => {
           console.log('成功', res);
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('失敗', err.message);
         }
       });
     } else {
       console.log('新增 API', payload);
       this.service.postAnnoun(payload).subscribe({
-        next: (res) => {
+        next: (res: any) => {
           console.log('成功', res);
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('失敗', err.message);
         }
       });

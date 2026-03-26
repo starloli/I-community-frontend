@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { Package } from '../../../interface/interface';
 import { PackageStatus } from '../../../interface/enum';
 
 @Component({
@@ -28,7 +27,7 @@ export class PackageComponent implements OnInit {
 
   // ── 住戶包裹假資料 ────────────────────────────────────
   // TODO: GET /packages/my（帶 token，只回傳自己的包裹）
-  packages: Package[] = [
+  packages: any[] = [
     {
       id: 1,
       user: { userId: 1, userName: '', fullName: '林家宇', email: '', phone: '', unitNumber: 'A-1201', passwordHash: '', role: 'RESIDENT' as any, isActive: true, createdAt: '' },
@@ -108,7 +107,7 @@ export class PackageComponent implements OnInit {
   // ════════════════════════════════════════════════════
   // 住戶包裹篩選
   // ════════════════════════════════════════════════════
-  get filteredPackages(): Package[] {
+  get filteredPackages(): any[] {
     let list = [...this.packages];
 
     if (this.selectedStatus === 'waiting') {
@@ -140,7 +139,7 @@ export class PackageComponent implements OnInit {
     return Math.ceil(this.filteredPackages.length / this.pageSize);
   }
 
-  get pagedPackages(): Package[] {
+  get pagedPackages(): any[] {
     const start = (this.currentPage - 1) * this.pageSize;
     return this.filteredPackages.slice(start, start + this.pageSize);
   }
@@ -167,7 +166,7 @@ export class PackageComponent implements OnInit {
   // ════════════════════════════════════════════════════
   // 操作
   // ════════════════════════════════════════════════════
-  pickupPackage(pkg: Package): void {
+  pickupPackage(pkg: any): void {
     // TODO: POST /packages/{id}/pickup
     pkg.status = PackageStatus.PICKED_UP;
     pkg.pickupAt = new Date().toISOString();
