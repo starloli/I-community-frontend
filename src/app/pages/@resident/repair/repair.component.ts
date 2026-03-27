@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { RepairRequest, User } from '../../../interface/interface';
 import { RepairStatus, UserRole } from '../../../interface/enum';
 import { AuthService } from '../../../@service/auth.service';
+import { RepairService } from '../../../@service/repair.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-resident-repair',
@@ -66,7 +68,7 @@ export class ResidentRepairComponent implements OnInit {
     createdAt: '2026-03-01'
   };
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private repairService: RepairService) {}
 
   ngOnInit() {
     const payload = this.authService.getUser();
@@ -85,16 +87,25 @@ export class ResidentRepairComponent implements OnInit {
       };
       this.fakeResident = this.currentUser;
     }
+    // 先呼叫 API 抓資料
+    this.repairService.getUserAll().subscribe();
+
+    // 訂閱資料流
+    this.repairService.userRepairs$.pipe(takeUntil(this.destroy$)).subscribe(data => {
+      this.repairs = data;
+      console.log(data)
+    });
   }
 
-  repairs: RepairRequest[] = [
-    { id: 1,  user: this.fakeResident, location: 'A棟電梯',    category: '電梯', description: '電梯門無法正常關閉',    status: RepairStatus.PENDING,     submittedAt: '2026-03-16', resolvedAt: '', handler: this.fakeResident, imageUrl: '' },
-    { id: 2,  user: this.fakeResident, location: 'B棟2樓走廊', category: '水電', description: '走廊燈泡損壞，夜間昏暗', status: RepairStatus.IN_PROGRESS,  submittedAt: '2026-03-15', resolvedAt: '', handler: this.fakeResident, imageUrl: '' },
-    { id: 3,  user: this.fakeResident, location: 'C棟地下室',  category: '水管', description: '水管漏水，地面積水',     status: RepairStatus.DONE,        submittedAt: '2026-03-14', resolvedAt: '2026-03-15', handler: this.fakeResident, imageUrl: '' },
-  ];
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  private destroy$ = new Subject<void>();
+  repairs: RepairRequest[] = [];
 
   get filteredRepairs(): RepairRequest[] {
-    const myRepairs = this.repairs.filter(r => r.user.userName === this.currentUser.userName);
+    const myRepairs = this.repairs;
     if (this.selectedFilter === '全部') return myRepairs;
     return myRepairs.filter(r => r.status === this.selectedFilter);
   }
@@ -136,18 +147,17 @@ export class ResidentRepairComponent implements OnInit {
 
   submitRepair() {
     if (!this.newRepair.location || !this.newRepair.description) return;
-    this.repairs.unshift({
-      id: this.repairs.length + 1,
-      user: this.currentUser,
+    const newRep = {
       location: this.newRepair.location,
       category: this.newRepair.category,
       description: this.newRepair.description,
-      status: RepairStatus.PENDING,
-      submittedAt: new Date().toLocaleDateString('zh-TW'),
-      resolvedAt: '',
-      handler: this.currentUser,
-      imageUrl: '',
-    });
+      submittedAt: new Date().toLocaleDateString('zh-TW')
+    }
+    this.repairService.post(newRep)
+        .subscribe(
+          res =>
+          console.log(res)
+        );
     this.closeForm();
   }
 
@@ -177,7 +187,7 @@ export class ResidentRepairComponent implements OnInit {
   }
 
   deleteRepair(repair: RepairRequest) {
-    this.repairs = this.repairs.filter(r => r.id !== repair.id);
+    this.repairs = this.repairs.filter(r => r.repairId !== repair.repairId);
     if (this.pagedRepairs.length === 0 && this.currentPage > 1) {
       this.currentPage--;
     }
@@ -198,10 +208,10 @@ export class ResidentRepairComponent implements OnInit {
     if (!this.selectedRepair || !this.completeForm.handler) return;
     this.selectedRepair.status = RepairStatus.DONE;
     this.selectedRepair.resolvedAt = new Date().toLocaleDateString('zh-TW');
-    this.selectedRepair.handler = {
+    /*this.selectedRepair.handler = {
       ...this.fakeResident,
       fullName: this.completeForm.handler
-    };
+    };*/
     this.closeCompleteForm();
   }
 

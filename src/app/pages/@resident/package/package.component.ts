@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { PackageStatus } from '../../../interface/enum';
+import { PackageService } from '../../../@service/package.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-package',
@@ -96,13 +98,24 @@ export class PackageComponent implements OnInit {
     },
   ];
 
-  constructor(private snackBar: MatSnackBar) {}
+  constructor(private snackBar: MatSnackBar, private packageService: PackageService) {}
 
   ngOnInit(): void {
-    // TODO: 串接 API
-    // this.apiService.getApi('/packages/my')
-    //   .subscribe((res: any) => { this.packages = res.data; });
+   // 先呼叫 API 抓資料
+    this.packageService.getUserAll().subscribe();
+
+    // 訂閱資料流
+    this.packageService.userPackages$.pipe(takeUntil(this.destroy$)).subscribe(data => {
+      this.packages = data;
+      console.log(data)
+    });
   }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  private destroy$ = new Subject<void>();
 
   // ════════════════════════════════════════════════════
   // 住戶包裹篩選
@@ -167,9 +180,9 @@ export class PackageComponent implements OnInit {
   // 操作
   // ════════════════════════════════════════════════════
   pickupPackage(pkg: any): void {
-    // TODO: POST /packages/{id}/pickup
     pkg.status = PackageStatus.PICKED_UP;
     pkg.pickupAt = new Date().toISOString();
+    this.packageService.pickupById(pkg.id, new Date().toISOString())
     this.snackBar.open('✓ 已取貨', '', {
       duration: 2500,
       panelClass: ['snackbar-success']

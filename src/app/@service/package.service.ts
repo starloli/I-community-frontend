@@ -10,14 +10,23 @@ import { PackageStatus } from '../interface/enum';
 export class PackageService {
 
   private apiUrl = 'http://localhost:8083';
+  private userUrl = 'http://localhost:8083/user/package'
   private packagesSubject = new BehaviorSubject<Package[]>([]);
   packages$ = this.packagesSubject.asObservable();
+  private userPackagesSubject = new BehaviorSubject<Package[]>([]);
+  userPackages$ = this.userPackagesSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
   getAll() {
     return this.http.get<Package[]>(this.apiUrl + '/admin/package').pipe(
       tap(data => this.packagesSubject.next(data))
+    );
+  }
+
+  getUserAll() {
+    return this.http.get<Package[]>(this.userUrl).pipe(
+      tap(data => this.userPackagesSubject.next(data))
     );
   }
 
@@ -66,7 +75,7 @@ export class PackageService {
 
           const updated = current.map(pkg =>
             pkg.id === id
-              ? { ...pkg, status: PackageStatus.PICKED_UP, ipickupAt: pickupAt }
+              ? { ...pkg, status: PackageStatus.PICKED_UP, pickupAt: pickupAt }
               : pkg
           );
 
