@@ -98,7 +98,7 @@
             </div>
             <span class="ann-sub">
               <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">person</mat-icon>
-              {{ ann.authorName }} &nbsp;·&nbsp;
+              {{ getAuthorName(ann) }} &nbsp;·&nbsp;
               到期：{{ formatDate(ann.expiresAt) }}
             </span>
           </div>
@@ -135,7 +135,7 @@
 </div>
 
 <!-- ════════════════════════════════════════════
-     詳情 Modal
+    詳情 Modal
 ════════════════════════════════════════════ -->
 @if (showDetailModal && selectedAnnouncement) {
   <div class="form-overlay" (click)="closeDetail()">
@@ -155,7 +155,7 @@
         <div class="detail-meta">
           <span>
             <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">person</mat-icon>
-            {{ selectedAnnouncement.authorName }}
+            {{ getAuthorName(selectedAnnouncement) }}
           </span>
           <span>
             <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">calendar_today</mat-icon>
@@ -192,7 +192,7 @@
 }
 
 <!-- ════════════════════════════════════════════
-     新增 / 編輯 Modal
+    新增 / 編輯 Modal
 ════════════════════════════════════════════ -->
 @if (showFormModal) {
   <div class="form-overlay" (click)="closeForm()">
@@ -220,7 +220,7 @@
           </div>
           <div class="form-group">
             <label>到期日期 <span class="required">*</span></label>
-            <input type="datetime-local" [(ngModel)]="formData['expiresAt']" />
+            <input type="datetime-local" [(ngModel)]="formData['expiresAt']" [min]="minDateTime" />
           </div>
         </div>
 
@@ -248,7 +248,7 @@
 }
 
 <!-- ════════════════════════════════════════════
-     刪除確認 Modal
+    刪除確認 Modal
 ════════════════════════════════════════════ -->
 @if (showDeleteConfirm) {
   <div class="form-overlay" (click)="cancelDelete()">

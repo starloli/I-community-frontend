@@ -32,7 +32,7 @@
     <div>
       <label>結束時間</label>
       <input type="datetime-local" formControlName="expiresAt" [min]="minDateTime"/>
-      @if (form.get('expiresAt')?.hasError('notTomorrowOrLater')) {
+      @if (form.get('expiresAt')?.hasError('beforeNow')) {
         <div class="error">*只能選擇明天之後的時間</div>
       }
     </div>

@@ -127,14 +127,16 @@ export class ResidentAnnouncementComponent implements OnInit {
 
   formatDate(dateStr?: string): string {
     if (!dateStr) return '—';
-    return new Date(dateStr).toLocaleDateString('zh-TW', {
+    const safeDateStr: string = dateStr;
+    return new Date(safeDateStr).toLocaleDateString('zh-TW', {
       year: 'numeric', month: '2-digit', day: '2-digit'
     });
   }
 
   formatDatetime(dateStr?: string): string {
     if (!dateStr) return '—';
-    const d = new Date(dateStr);
+    const safeDateStr: string = dateStr;
+    const d = new Date(safeDateStr);
     return d.toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' })
       + ' ' + d.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
   }
