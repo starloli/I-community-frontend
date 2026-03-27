@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { RepairRequest, User } from '../../interface/interface';
-import { RepairStatus, UserRole } from '../../interface/enum';
+import { RepairRequest, User } from '../../../interface/interface';
+import { RepairStatus, UserRole } from '../../../interface/enum';
 
 @Component({
   selector: 'app-repair',

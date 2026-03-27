@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Bill } from '../../interface/interface';
-import { BillStatus, BillType } from '../../interface/enum';
-import { AuthService } from '../../@service/auth.service';
+import { Bill } from '../../../interface/interface';
+import { BillStatus, BillType } from '../../../interface/enum';
+import { AuthService } from '../../../@service/auth.service';
 
 // ── 管理員繳費歷史用的型別（含住戶資訊）──────────────
 interface AdminBillRecord {

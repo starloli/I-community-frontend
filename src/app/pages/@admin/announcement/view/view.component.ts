@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { AnnouncementService } from '../../../@service/announcement.service';
+import { AnnouncementService } from '../../../../@service/announcement.service';
 import { DatePipe } from '@angular/common';
 
 @Component({

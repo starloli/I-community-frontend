@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject, of } from 'rxjs';
 
-import { ApiService } from '../../@service/api.service';
-import { AnnouncementService } from '../../@service/announcement.service';
-import { PackageService } from '../../@service/package.service';
-import { StatisticsService } from '../../@service/statistics.service';
+import { ApiService } from '../../../@service/api.service';
+import { AnnouncementService } from '../../../@service/announcement.service';
+import { PackageService } from '../../../@service/package.service';
+import { StatisticsService } from '../../../@service/statistics.service';
 import { DashboardComponent } from './dashboard.component';
 
 describe('DashboardComponent', () => {

@@ -2,8 +2,8 @@ import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../../@service/auth.service';
-import { AnnouncementService } from '../../../@service/announcement.service';
+import { AuthService } from '../../../../@service/auth.service';
+import { AnnouncementService } from '../../../../@service/announcement.service';
 
 export function tomorrowValidator(control: AbstractControl): ValidationErrors | null {
   if (!control.value) return null;

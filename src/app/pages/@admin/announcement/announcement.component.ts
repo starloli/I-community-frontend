@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from '../../@service/auth.service';
-import { AnnouncementService } from '../../@service/announcement.service';
+import { AuthService } from '../../../@service/auth.service';
+import { AnnouncementService } from '../../../@service/announcement.service';
 
 // ── 對應後端回傳格式（authorName 是字串，不是 User 物件）──
 interface Announcement {

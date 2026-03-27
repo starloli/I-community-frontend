@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
-import { ApiService } from '../../@service/api.service';
-import {  Res, User } from '../../interface/interface';
-import { PackageStatus, UserRole } from '../../interface/enum';
+import { MatTableModule } from '@angular/material/table';
+import { ApiService } from '../../../@service/api.service';
+import {  Res, User } from '../../../interface/interface';
+import { PackageStatus, UserRole } from '../../../interface/enum';
 
 @Component({
   selector: 'app-package',

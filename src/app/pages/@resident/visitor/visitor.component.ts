@@ -4,8 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Visitor, User } from '../../interface/interface';
-import { VisitorStatus, UserRole } from '../../interface/enum';
+import { Visitor, User } from '../../../interface/interface';
+import { VisitorStatus, UserRole } from '../../../interface/enum';
 
 @Component({
   selector: 'app-visitor',

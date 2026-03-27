@@ -1,13 +1,13 @@
-import { HttpService } from '../../@service/http.service';
+import { HttpService } from '../../../@service/http.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { RegistFacilityComponent } from '../../dialog/regist-facility/regist-facility.component';
+import { RegistFacilityComponent } from '../../../dialog/regist-facility/regist-facility.component';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { Facility } from '../../interface/interface';
+import { Facility } from '../../../interface/interface';
 import { FormsModule } from '@angular/forms';
-import { ReserveFacilityComponent } from '../../dialog/reserve-facility/reserve-facility.component';
+import { ReserveFacilityComponent } from '../../../dialog/reserve-facility/reserve-facility.component';
 
 @Component({
   selector: 'app-facility',

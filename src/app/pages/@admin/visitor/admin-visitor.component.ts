@@ -6,9 +6,9 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
-import { ApiService } from '../../@service/api.service';
-import { VisitorServiceService } from '../../@service/visitor-service.service';
-import { VisitorDialogComponent } from '../../dialog/visitor-dialog/visitor-dialog.component';
+import { ApiService } from '../../../@service/api.service';
+import { VisitorServiceService } from '../../../@service/visitor-service.service';
+import { VisitorDialogComponent } from '../../../dialog/visitor-dialog/visitor-dialog.component';
 
 @Component({
   selector: 'app-visitor',
