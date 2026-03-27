@@ -1,0 +1,18 @@
+<div class="calendar-container">
+  <div>
+    <button (click)="changeWeek(-1)">上周</button>
+    <button (click)="changeWeek(0)">回到現在</button>
+    <button (click)="changeWeek(1)">下周</button>
+  </div>
+  <mwl-calendar-week-view
+    [viewDate]="viewDate"
+    [events]="events"
+    [hourSegments]="1"
+    [dayStartHour]="openTime"
+    [dayEndHour]="closeTime"
+    (beforeViewRender)="beforeWeekViewRender($event)"
+    (hourSegmentClicked)="hourSegmentClicked($event.date)"
+    (eventClicked)="onEventClick($event.event)"
+  >
+  </mwl-calendar-week-view>
+</div>

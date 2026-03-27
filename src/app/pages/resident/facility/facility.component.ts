@@ -1,15 +1,15 @@
-import { User } from './../../../interface/interface';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpService } from '../../../@service/http.service';
-import { Facility, Reservation, ResReservation } from '../../../interface/interface';
+import { Facility, Reservation, ResReservation, User } from '../../../interface/interface';
 import { ReservationStatus } from '../../../interface/enum';
 import { ReserveFacilityComponent } from '../../../dialog/reserve-facility/reserve-facility.component';
 import { Subject, takeUntil } from 'rxjs';
+import { ReservationCalendar } from '../../../dialog/reservation-calendar/reservation-calendar';
 
 @Component({
   selector: 'app-resident-facility',
@@ -23,13 +23,14 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) { }
 
   private destroy$ = new Subject<void>();
 
   getFacilityUrl = "http://localhost:8083/user/facilities";
   getReservationByUserIdUrl = "http://localhost:8083/user/reservationsByUserId";
+  getReservationByFacilityIdUrl = "http://localhost:8083/user/reservationsByFacilityId";
   cancelReservationUrl = "http://localhost:8083/user/cancelReservation";
   getUserUrl = 'http://localhost:8083/user/me'
 
@@ -42,6 +43,8 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
   // ── 我的預約記錄 ──────────────────────────────────
   // TODO: GET /reservations/my（帶 token）
   myReservations: ResReservation[] = [];
+  myRConut: number = 0;
+
 
   // ── 目前顯示的 tab ────────────────────────────────
   activeTab: 'facilities' | 'my-reservations' = 'facilities';
@@ -56,23 +59,44 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
         this.user.push(res);
       },
       error: err => {
-        this.snackBar.open('載入使用者失敗：' + err.status, '關閉', { duration: 2000 });
+        this.snackBar.open('載入使用者失敗：' + err.status, '關閉', {
+          duration: 2000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
+        });
       }
     });
   }
 
   getReservation() {
+    this.myRConut = 0;
     // 獲取預約記錄
+
+    const statusOrder = {
+      [ReservationStatus.CONFIRMED]: 1,
+      [ReservationStatus.CONFIRMING]: 2,
+      [ReservationStatus.CANCELLED]: 3,
+    }
+
     this.http.getApi<Array<ResReservation>>(this.getReservationByUserIdUrl, this.user[0].userId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: res => {
+          res.sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
           if (res) {
             this.myReservations = res;
+            for (let m of this.myReservations) {
+              if (m.status === ReservationStatus.CONFIRMED)
+                this.myRConut++;
+            }
           }
         },
         error: err => {
-          this.snackBar.open('載入預約失敗：' + err.status, '關閉', { duration: 2000 });
+          this.snackBar.open('載入預約失敗：' + err.status, '關閉', {
+            duration: 2000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
         }
       }
       )
@@ -88,7 +112,11 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
           }
         },
         error: err => {
-          this.snackBar.open('載入設施失敗：' + err.status, '關閉', { duration: 2000 });
+          this.snackBar.open('載入設施失敗：' + err.status, '關閉', {
+            duration: 2000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
         }
       });
   }
@@ -104,19 +132,37 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
   }
 
   // ── 開啟預約 Dialog ──────────────────────────────
-  openReserveForm(facility: Facility) {
-    const dialogRef = this.dialog.open(ReserveFacilityComponent, {
-      data: facility,
-      width: '500px',
-      disableClose: false
-    });
-    dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe({
-      next: res => {
-        if (res) {
-          this.snackBar.open('預約成功', '關閉', { duration: 2000 });
+  openRC(facility: Facility) {
+    this.http.getApi<Array<ResReservation>>(this.getReservationByFacilityIdUrl, facility.facilityId)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: res => {
+          const dialogRef = this.dialog.open(ReservationCalendar, {
+            data: {
+              facility: facility,
+              reservations: res
+            },
+            disableClose: false
+          });
+          dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe({
+            next: res => {
+              if (res) {
+                this.snackBar.open('預約成功', '關閉', {
+                  duration: 2000,
+                  horizontalPosition: 'center',
+                  verticalPosition: 'top'
+                });
+              }
+            }
+          });
+        },
+        error: err => {
+          this.snackBar.open('載入預約失敗：' + err.status, '關閉', {
+            duration: 2000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          })
         }
-      }
-    });
+      })
   }
 
   // ── 取消預約 ──────────────────────────────────────
@@ -126,12 +172,20 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
       this.http.putApi(this.cancelReservationUrl, id).pipe(takeUntil(this.destroy$)).subscribe({
         next: res => {
           if (res) {
-            this.snackBar.open('取消預約成功', '關閉', { duration: 2000 });
+            this.snackBar.open('取消預約成功', '關閉', {
+              duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top'
+            });
           }
           this.getReservation();
         },
         error: err => {
-          this.snackBar.open('取消預約失敗：' + err.status, '關閉', { duration: 2000 });
+          this.snackBar.open('取消預約失敗：' + err.status, '關閉', {
+            duration: 2000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
         }
       });
     }
@@ -145,6 +199,7 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
       year: 'numeric', month: '2-digit', day: '2-digit'
     });
   }
+
 
   ngOnDestroy(): void {
     this.destroy$.next();

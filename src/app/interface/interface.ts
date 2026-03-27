@@ -25,15 +25,16 @@ export interface Bill {
 }
 
 export interface Facility {
-  facilityId?: number,
+  facilityId: number,
   name: string,
   description: string,
-  lastCapacity: number,
   capacity: number,
   openTime: string,
   closeTime: string,
   isReservable: boolean,
   isAvailable: boolean,
+
+  [key: string]: any;
 }
 
 export interface Notification {
@@ -72,8 +73,8 @@ export interface RepairRequest {
 }
 
 export interface Reservation {
-  id?: number,
-  userId?: number,
+  reservationId: number,
+  userId: number,
   unitNumber?: string,
   facilityId: number,
   date: string,

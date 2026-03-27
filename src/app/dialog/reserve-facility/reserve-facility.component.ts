@@ -1,21 +1,22 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Facility, Res, Reservation, User } from '../../interface/interface';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatIcon } from '@angular/material/icon';
 import { ReservationStatus } from '../../interface/enum';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideNativeDateAdapter, MatOption } from '@angular/material/core';
+import { Subject, takeUntil } from 'rxjs';
+import { HttpService } from '../../@service/http.service';
+import { addHours, format } from 'date-fns';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { Subject, takeUntil } from 'rxjs';
-import { HttpService } from '../../@service/http.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-reserve-facility',
   standalone: true,
-  imports: [FormsModule, MatIcon, MatFormFieldModule, MatInputModule, MatTimepickerModule, ReactiveFormsModule],
+  imports: [FormsModule, MatFormFieldModule, MatInputModule, MatTimepickerModule, ReactiveFormsModule, MatOption, MatSelectModule],
   templateUrl: './reserve-facility.component.html',
   providers: [provideNativeDateAdapter()],
   styleUrl: './reserve-facility.component.scss'
@@ -26,125 +27,87 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<ReserveFacilityComponent>,
     private http: HttpService,
     private snackBar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) public facility: Facility,
+    @Inject(MAT_DIALOG_DATA) public data: { facility: Facility, time: Date },
   ) { }
 
   private destroy$ = new Subject<void>();
 
-  private readonly token = localStorage.getItem('token');
-
-  postUrl = 'http://localhost:8083/user/reserve'
-  getUrl = 'http://localhost:8083/user/me'
+  postUrl = 'http://localhost:8083/user/reserve';
+  getUrl = 'http://localhost:8083/user/me';
   reservation: Reservation = {
+    reservationId: 0,
+    userId: 0,
     facilityId: 0,
     date: '',
     startTime: '',
     endTime: '',
     attendees: 0,
   };
-  now = new Date();
-  minDay = '';
-  dateControl = new FormControl<Date | null>(null);
-  startTimeControl = new FormControl<Date | null>(null);
-  endTimeControl = new FormControl<Date | null>(null);
-  minTime = new Date();
-  maxTime = new Date();
+  endTime = '';
+  attendeesControl = new FormControl<number | null>(null, [
+    Validators.required
+  ]);
 
   ngOnInit(): void {
-    if (this.now.getMinutes() > 30) {
-      this.now.setHours(this.now.getHours() + 1);
-      this.now.setMinutes(0);
-    } else if (this.now.getMinutes() >= 0) {
-      this.now.setMinutes(30);
-    };
-
-    this.minTime = new Date(Math.max(this.now.getTime(), new Date(`${this.now.toISOString().split('T')[0]}T${this.facility.openTime}`).getTime()));
-    this.maxTime = new Date(this.minTime.getTime() + 60 * 60 * 1000);
-    if (this.now > new Date(`${this.now.toISOString().split('T')[0]}T${this.facility.closeTime}`)) {
-      this.minDay = new Date(this.now.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-    } else {
-      this.minDay = this.now.toISOString().split('T')[0];
-    }
-
-    if (this.facility.facilityId) {
-      this.reservation = {
-        facilityId: this.facility.facilityId,
-        date: this.minDay,
-        startTime: '',
-        endTime: '',
-        attendees: 1,
-      }
-    }
-
-    this.dateControl.valueChanges.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(newDate => {
-      if (newDate && new Date(newDate) >= this.now) {
-        this.minTime = new Date(`${this.now.toISOString().split('T')[0]}T${this.facility.openTime}`)
-      }
-    })
-
-    this.startTimeControl.valueChanges.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(newStartTime => {
-      if (newStartTime) {
-        this.maxTime = new Date(newStartTime.getTime() + 30 * 60 * 1000);
-        if (this.endTimeControl.value) {
-          if (this.maxTime > this.endTimeControl.value) {
-            this.endTimeControl.setValue(this.maxTime);
-          }
+    this.http.getApi<User>(this.getUrl)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: res => {
+          this.reservation = {
+            reservationId: 0,
+            facilityId: this.data.facility.facilityId,
+            userId: res.userId || 0,
+            date: format(this.data.time, 'yyyy-MM-dd'),
+            startTime: format(this.data.time, 'HH:mm:ss'),
+            endTime: format(addHours(this.data.time, 1), 'HH:mm:ss'),
+            attendees: 1,
+          };
+        },
+        error: err => {
+          this.snackBar.open(err.error.message, '關閉', {
+            duration: 2000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          })
+          console.log(err.error.message);
         }
-      }
-    })
+      });
   }
 
   closeReserveForm() {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
   submitReservation() {
     this.reservation = {
       ...this.reservation,
-      date: this.dateControl.value?.toString() || 'date-error',
-      startTime: this.startTimeControl.value?.toISOString().split('T')[1].split('.')[0] || 'start-time-rror',
-      endTime: this.endTimeControl.value?.toISOString().split('T')[1].split('.')[0] || 'end-time-rror',
       status: ReservationStatus.CONFIRMING,
+      attendees: this.attendeesControl.value || 1
     };
-    console.log(this.reservation);
-    this.http.getApi<User>(this.getUrl)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
+    console.log('res:', this.reservation);
+    this.http.postApi<Res>(this.postUrl, this.reservation)
+      .pipe(takeUntil(this.destroy$)).subscribe({
         next: res => {
-          this.reservation.userId = res.userId;
-          this.http.postApi<Res>(this.postUrl, this.reservation)
-            .pipe(takeUntil(this.destroy$)).subscribe({
-              next: res => {
-                this.snackBar.open(res.message, '關閉', {
-                  duration: 2000,
-                })
-                console.log(res);
-                this.dialogRef.close(true);
-              },
-              error: err => {
-                this.snackBar.open(err.error.message, '關閉', {
-                  duration: 2000,
-                })
-                console.log(err.error.message);
-              }
-            })
+          this.dialogRef.close(true);
         },
         error: err => {
           this.snackBar.open(err.error.message, '關閉', {
             duration: 2000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
           })
           console.log(err.error.message);
         }
-      }
-      )
+      })
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  get capacity(): number[] {
+    const MaxCapacity = this.data.facility.capacity;
+    return Array.from({ length: MaxCapacity }, (_, i) => i + 1)
   }
 }

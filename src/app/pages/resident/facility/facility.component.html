@@ -19,7 +19,7 @@
       <mat-icon>event_note</mat-icon>
       我的預約
       @if (myReservations.length > 0) {
-      <span class="tab-badge">{{ myReservations.length }}</span>
+      <span class="tab-badge">{{ myRConut }}</span>
       }
     </button>
   </div>
@@ -29,39 +29,39 @@
   ════════════════════════════ -->
   @if (activeTab === 'facilities') {
   <div class="facility-grid">
-    @for (item of facilities; track item.facilityId) {
-    <div class="facility-card" [class.unavailable]="!item.isAvailable">
+    @for (facility of facilities; track facility.facilityId) {
+    <div class="facility-card" [class.unavailable]="!facility.isAvailable">
 
       <div class="facility-icon">
-        <mat-icon>{{ getFacilityIcon(item.name) }}</mat-icon>
+        <mat-icon>{{ getFacilityIcon(facility.name) }}</mat-icon>
       </div>
 
       <div class="facility-info">
         <div class="facility-header">
-          <h2>{{ item.name }}</h2>
-          @if (item.isAvailable) {
+          <h2>{{ facility.name }}</h2>
+          @if (facility.isAvailable) {
           <span class="available-badge available">可預約</span>
           } @else {
           <span class="available-badge unavailable">暫停開放</span>
           }
         </div>
 
-        <p class="facility-desc">{{ item.description }}</p>
+        <p class="facility-desc">{{ facility.description }}</p>
 
         <div class="facility-details">
           <div class="detail-item">
             <mat-icon>people</mat-icon>
-            <span>{{ item.capacity }}人</span>
+            <span>{{ facility.capacity }}人</span>
           </div>
           <div class="detail-item">
             <mat-icon>schedule</mat-icon>
-            <span>{{ item.openTime }} - {{ item.closeTime }}</span>
+            <span>{{ facility.openTime }} - {{ facility.closeTime }}</span>
           </div>
         </div>
       </div>
 
-      @if (item.isAvailable) {
-      <button class="reserve-btn" (click)="openReserveForm(item)">
+      @if (facility.isAvailable) {
+      <button class="reserve-btn" (click)="openRC(facility)">
         <mat-icon>event_available</mat-icon>
         立即預約
       </button>
@@ -89,7 +89,7 @@
   } @else {
   <div class="reservation-list">
     @for (r of myReservations; track r.reservationId) {
-    <div class="reservation-card" [class.cancelled]="r.status === ReservationStatus.CANCELLED">
+    <div class="reservation-card" [class.cancelLed]="r.status === ReservationStatus.CANCELLED">
 
       <!-- 左側：設施 icon -->
       <div class="res-icon">
