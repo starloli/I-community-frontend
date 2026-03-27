@@ -25,9 +25,9 @@ export enum PackageStatus {
 }
 
 export enum RepairStatus {
-  PENDING = "待處理",
-  IN_PROGRESS = "處理中",
-  DONE = "已完成"
+  PENDING = "PENDING",
+  IN_PROGRESS = "IN_PROGRESS",
+  DONE = "DONE"
 }
 
 export enum ReservationStatus {

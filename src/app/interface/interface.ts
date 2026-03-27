@@ -57,14 +57,14 @@ export interface Package {
 }
 
 export interface RepairRequest {
-  id?: number,
-  user: User,
+  repairId: number,
+  userName: string,
   location: string,
   category: string,
   description: string,
   status: RepairStatus,
   imageUrl: string,
-  handler: User,
+  handlerName: string,
   submittedAt: string,
   resolvedAt: string,
   note?:string

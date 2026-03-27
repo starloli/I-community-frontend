@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { RepairRequest, User } from '../../interface/interface';
 import { RepairStatus, UserRole } from '../../interface/enum';
+import { RepairService } from '../../@service/repair.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-repair',
@@ -62,22 +65,13 @@ export class RepairComponent {
     createdAt: '2026-03-01'
   };
 
-  // ===== 假資料 =====
-  // TODO: 之後改成呼叫 GET /api/v1/repairs 取得真實資料
-  repairs: RepairRequest[] = [
-    { id: 1, user: this.fakeAdmin, location: 'A棟電梯', category: '電梯', description: '電梯門無法正常關閉', status: RepairStatus.PENDING, submittedAt: '2026-03-16', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 2, user: this.fakeAdmin, location: 'B棟2樓走廊', category: '水電', description: '走廊燈泡損壞，夜間昏暗', status: RepairStatus.IN_PROGRESS, submittedAt: '2026-03-15', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 3, user: this.fakeAdmin, location: 'C棟地下室', category: '水管', description: '水管漏水，地面積水', status: RepairStatus.DONE, submittedAt: '2026-03-14', resolvedAt: '2026-03-15', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 4, user: this.fakeAdmin, location: '社區大門', category: '門禁', description: '門禁感應器故障', status: RepairStatus.PENDING, submittedAt: '2026-03-13', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 5, user: this.fakeAdmin, location: 'A棟1樓', category: '水電', description: '插座無法使用', status: RepairStatus.PENDING, submittedAt: '2026-03-12', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 6, user: this.fakeAdmin, location: 'B棟停車場', category: '照明', description: '停車場照明故障', status: RepairStatus.IN_PROGRESS, submittedAt: '2026-03-11', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 7, user: this.fakeAdmin, location: 'C棟頂樓', category: '水管', description: '屋頂漏水', status: RepairStatus.DONE, submittedAt: '2026-03-10', resolvedAt: '2026-03-12', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 8, user: this.fakeAdmin, location: 'A棟2樓', category: '其他', description: '走廊地板破損', status: RepairStatus.PENDING, submittedAt: '2026-03-09', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 9, user: this.fakeAdmin, location: '社區游泳池', category: '其他', description: '游泳池排水孔堵塞', status: RepairStatus.IN_PROGRESS, submittedAt: '2026-03-08', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 10, user: this.fakeAdmin, location: 'B棟大廳', category: '電梯', description: '電梯按鈕故障', status: RepairStatus.DONE, submittedAt: '2026-03-07', resolvedAt: '2026-03-09', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 11, user: this.fakeAdmin, location: 'A棟地下室', category: '水電', description: '配電箱跳電', status: RepairStatus.PENDING, submittedAt: '2026-03-06', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
-    { id: 12, user: this.fakeAdmin, location: 'C棟2樓', category: '門禁', description: '門禁卡片無法感應', status: RepairStatus.PENDING, submittedAt: '2026-03-05', resolvedAt: '', handler: this.fakeAdmin, imageUrl: '' },
-  ];
+  repairs: RepairRequest[] = [];
+  private snackBar = inject(MatSnackBar);
+
+  constructor(
+    private repairService: RepairService
+  ) {}
+
   // ===== 篩選後資料 =====
   get filteredRepairs(): RepairRequest[] {
     if (this.selectedFilter === '全部') return this.repairs;
@@ -99,6 +93,22 @@ export class RepairComponent {
   get pageNumbers(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
+
+  ngOnInit(): void {
+    // 先呼叫 API 抓資料
+    this.repairService.getAll().subscribe();
+
+    // 訂閱資料流
+    this.repairService.repairs$.pipe(takeUntil(this.destroy$)).subscribe(data => {
+      this.repairs = data;
+    });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  private destroy$ = new Subject<void>();
 
   // ===== 切換頁碼 =====
   goToPage(page: number) {
@@ -128,8 +138,8 @@ export class RepairComponent {
   // TODO: 之後改成呼叫 POST /api/v1/repairs
   submitRepair() {
     if (!this.newRepair.location || !this.newRepair.description) return;
-    this.repairs.unshift({
-      id: this.repairs.length + 1,
+    /*this.repairs.unshift({
+      repairId: this.repairs.length + 1,
       user: this.fakeAdmin,  // 加這行
       location: this.newRepair.location,
       category: this.newRepair.category,
@@ -139,7 +149,7 @@ export class RepairComponent {
       resolvedAt: '',
       handler: this.fakeAdmin,
       imageUrl: '',
-    });
+    });*/
     this.closeForm();
   }
 
@@ -160,20 +170,24 @@ export class RepairComponent {
     this.selectedRepair = null;
   }
 
-  // TODO: 之後改成呼叫 PUT /api/v1/repairs/{id}
   submitEdit() {
     if (!this.selectedRepair || !this.editForm.location || !this.editForm.description) return;
-    this.selectedRepair.location = this.editForm.location;
-    this.selectedRepair.category = this.editForm.category;
-    this.selectedRepair.description = this.editForm.description;
-    this.selectedRepair.status = this.editForm.status;
+    const data = {
+      location: this.editForm.location,
+      category: this.editForm.category,
+      description: this.editForm.description,
+      status: this.editForm.status
+    };
+    this.repairService.updateById(this.selectedRepair.repairId, data).subscribe(res => console.log(res))
     this.closeEditForm();
   }
 
-  // ===== 刪除報修 =====
-  // TODO: 之後改成呼叫 DELETE /api/v1/repairs/{id}
   deleteRepair(repair: RepairRequest) {
-    this.repairs = this.repairs.filter(r => r.id !== repair.id);
+    if (confirm(`確定要刪除此維修單嗎？`)) {
+      this.repairService.deleteById(repair.repairId).subscribe(() => {
+        this.snackBar.open('維修單已成功刪除', '關閉', { duration: 2000 });
+      });
+    }
     if (this.pagedRepairs.length === 0 && this.currentPage > 1) {
       this.currentPage--;
     }
@@ -191,16 +205,9 @@ export class RepairComponent {
     this.completeForm = { handler: '', note: '' };
   }
 
-  // TODO: [後端小夥伴看這裡]
-  // 1. 維修完工回報：PUT /admin/repair/{id}/complete
   submitComplete() {
     if (!this.selectedRepair || !this.completeForm.handler) return;
-    this.selectedRepair.status = RepairStatus.DONE;
-    this.selectedRepair.resolvedAt = new Date().toLocaleDateString('zh-TW');
-    this.selectedRepair.handler = {
-      ...this.fakeAdmin,
-      fullName: this.completeForm.handler
-    };
+    this.repairService.completeById(this.selectedRepair.repairId).subscribe(res => console.log(res))
     this.closeCompleteForm();
   }
 

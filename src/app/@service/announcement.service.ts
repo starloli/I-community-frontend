@@ -66,7 +66,7 @@ export class AnnouncementService {
           this.announsSubject.next(updatedList);
         }),
         catchError((error) => {
-          console.error('新增失敗', error);
+          console.error('更新失敗', error);
           return throwError(() => error);
         })
       );
