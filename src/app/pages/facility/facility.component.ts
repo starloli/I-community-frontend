@@ -7,8 +7,8 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Facility } from '../../interface/interface';
 import { FormsModule } from '@angular/forms';
-import { ReserveFacilityComponent } from '../../dialog/reserve-facility/reserve-facility.component';
 import { Subject, takeUntil } from 'rxjs';
+import { ReservationCalendar } from '../../dialog/reservation-calendar/reservation-calendar';
 
 @Component({
   selector: 'app-facility',
@@ -90,7 +90,7 @@ export class FacilityComponent implements OnInit, OnDestroy{
 
   // 開啟預約表單
   openReserveForm(facility: Facility) {
-    const deslogRef = this.dialogRef.open(ReserveFacilityComponent, {
+    const deslogRef = this.dialogRef.open(ReservationCalendar, {
       data: facility
     });
   }

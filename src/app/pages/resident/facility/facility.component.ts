@@ -1,13 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpService } from '../../../@service/http.service';
-import { Facility, Reservation, ResReservation, User } from '../../../interface/interface';
+import { Facility, ResReservation, User } from '../../../interface/interface';
 import { ReservationStatus } from '../../../interface/enum';
-import { ReserveFacilityComponent } from '../../../dialog/reserve-facility/reserve-facility.component';
 import { Subject, takeUntil } from 'rxjs';
 import { ReservationCalendar } from '../../../dialog/reservation-calendar/reservation-calendar';
 
