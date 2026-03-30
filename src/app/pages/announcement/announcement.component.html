@@ -39,7 +39,7 @@
     </div>
   </div>
 
-  <!-- ── 篩選列 ────────────────────────────────── -->
+  <!-- ── 篩選列（pill 按鈕 + 搜尋框）────────────── -->
   <div class="filter-bar">
     @for (cat of categories; track cat.value) {
       <button
@@ -76,33 +76,34 @@
           [class.expired]="isExpired(ann)"
           (click)="openDetail(ann)"
         >
+          <!-- 左側：圖示框 -->
           <div class="ann-icon-box" [ngClass]="getCategoryClass(ann.category)">
             <mat-icon>campaign</mat-icon>
           </div>
 
+          <!-- 中間：標題 + 副文字 -->
           <div class="ann-main">
             <div class="ann-title-row">
               <span class="category-badge" [ngClass]="getCategoryClass(ann.category)">
                 {{ getCategoryLabel(ann.category) }}
               </span>
               @if (ann.isPinned) {
-                <span class="pin-badge">
-                  <mat-icon style="font-size:12px;width:12px;height:12px;vertical-align:middle;">push_pin</mat-icon>
-                  置頂
-                </span>
+                <span class="pin-badge"><mat-icon style="font-size:12px;width:12px;height:12px;vertical-align:middle;">push_pin</mat-icon> 置頂</span>
               }
               @if (isExpired(ann)) {
                 <span class="expired-badge">已到期</span>
               }
               <span class="ann-title">{{ ann.title }}</span>
             </div>
+            <!-- author.fullName -->
             <span class="ann-sub">
               <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">person</mat-icon>
-              {{ ann.authorName }} &nbsp;·&nbsp;
+              {{ ann.author.fullName }} &nbsp;·&nbsp;
               到期：{{ formatDate(ann.expiresAt) }}
             </span>
           </div>
 
+          <!-- 右側：發布日期 + 管理員操作 -->
           <div class="ann-right">
             <span class="ann-date">{{ formatDate(ann.publishedAt) }}</span>
             @if (isAdmin) {
@@ -110,7 +111,7 @@
                 <button class="icon-btn edit" (click)="openEdit(ann, $event)" title="編輯">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button class="icon-btn delete" (click)="openDelete(ann.announcementId, $event)" title="刪除">
+                <button class="icon-btn delete" (click)="openDelete(ann.announcementId!, $event)" title="刪除">
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
@@ -135,7 +136,7 @@
 </div>
 
 <!-- ════════════════════════════════════════════
-     詳情 Modal
+     詳情 Modal（與 facility form-overlay 一致）
 ════════════════════════════════════════════ -->
 @if (showDetailModal && selectedAnnouncement) {
   <div class="form-overlay" (click)="closeDetail()">
@@ -153,27 +154,11 @@
 
       <div class="detail-body">
         <div class="detail-meta">
-          <span>
-            <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">person</mat-icon>
-            {{ selectedAnnouncement.authorName }}
-          </span>
-          <span>
-            <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">calendar_today</mat-icon>
-            發布：{{ formatDatetime(selectedAnnouncement.publishedAt) }}
-          </span>
-          <span>
-            <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">schedule</mat-icon>
-            到期：{{ formatDatetime(selectedAnnouncement.expiresAt) }}
-          </span>
-          @if (selectedAnnouncement.isPinned) {
-            <span class="pin-badge">
-              <mat-icon style="font-size:12px;width:12px;height:12px;vertical-align:middle;">push_pin</mat-icon>
-              置頂
-            </span>
-          }
-          @if (isExpired(selectedAnnouncement)) {
-            <span class="expired-badge">已到期</span>
-          }
+          <span><mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">person</mat-icon> {{ selectedAnnouncement.author.fullName }}</span>
+          <span><mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">calendar_today</mat-icon> 發布：{{ formatDatetime(selectedAnnouncement.publishedAt) }}</span>
+          <span><mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">schedule</mat-icon> 到期：{{ formatDatetime(selectedAnnouncement.expiresAt) }}</span>
+          @if (selectedAnnouncement.isPinned) { <span class="pin-badge"><mat-icon style="font-size:12px;width:12px;height:12px;vertical-align:middle;">push_pin</mat-icon> 置頂</span> }
+          @if (isExpired(selectedAnnouncement)) { <span class="expired-badge">已到期</span> }
         </div>
         <div class="detail-content">{{ selectedAnnouncement.content }}</div>
       </div>
@@ -182,8 +167,7 @@
         <div class="form-footer">
           <button class="cancel-btn" (click)="closeDetail()">關閉</button>
           <button class="submit-btn" (click)="openEdit(selectedAnnouncement, $event); closeDetail()">
-            <mat-icon style="font-size:16px;width:16px;height:16px;vertical-align:middle;">edit</mat-icon>
-            編輯此公告
+            <mat-icon style="font-size:16px;width:16px;height:16px;vertical-align:middle;">edit</mat-icon> 編輯此公告
           </button>
         </div>
       }

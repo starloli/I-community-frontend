@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/ro
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
+import { AuthService } from '../../@service/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -34,7 +35,7 @@ export class SidebarComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // 初始化時根據完整 url 比對 navItems

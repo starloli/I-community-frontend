@@ -2,9 +2,9 @@ import { PackageService } from './../../@service/package.service';
 import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { AnnouncementService } from '../../services/announcement.service';
 import { StatisticsService } from '../../@service/statistics.service';
 import { PackageStatus } from '../../interface/enum';
+import { AnnouncementService } from '../../@service/announcement.service';
 
 @Component({
   selector: 'app-dashboard',
