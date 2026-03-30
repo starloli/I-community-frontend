@@ -1,8 +1,6 @@
 
 
 import { Injectable } from '@angular/core';
-import { VisitorComponent } from '../pages/visitor/visitor.component';
-import { VisitorDialogComponent } from '../dialog/visitor-dialog/visitor-dialog.component';
 
 @Injectable({
   providedIn: 'root'

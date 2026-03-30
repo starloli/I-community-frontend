@@ -1,14 +1,22 @@
 import { BillStatus, BillType, NotificationType, PackageStatus, RepairStatus, ReservationStatus, UserRole, VisitorStatus } from "./enum"
 
 export interface Announcement {
-  announcementId?: number,
-  title: string,
-  content: string,
-  category: string,
-  author: User,
-  isPinned: boolean,
-  publishedAt: string,
-  expiresAt: string
+  announcementId?: number;
+  title: string;
+  content: string;
+  category: string;
+  authorName?: string;
+  isPinned: boolean;
+  publishedAt?: string;
+  expiresAt?: string;
+}
+
+export interface AnnouncementPayload {
+  title: string;
+  content: string;
+  category: string;
+  isPinned: boolean;
+  expiresAt: string | null;
 }
 
 export interface Bill {
@@ -48,14 +56,14 @@ export interface Notification {
 
 export interface Package {
   id?: number,
-  user: string,
-  unitNumber: string,
+  user: User,
   trackingNumber: string,
   courier: string,
   arrivedAt: string,
   pickupAt: string,
   status: PackageStatus,
   notes: string,
+  unitNumber: string,
   isNotified: boolean
 }
 
@@ -110,6 +118,11 @@ export interface User {
   createdAt?: string
 }
 
+export interface ResidentOption {
+  userId: number,
+  fullName: string
+}
+
 export interface Visitor {
   id: number,
   visitorName: string,
@@ -120,6 +133,21 @@ export interface Visitor {
   checkInTime: string,
   checkOutTime: string,
   status: VisitorStatus
+}
+
+export interface VisitorRecord {
+  visitorId: number,
+  visitorName: string,
+  visitorPhone?: string,
+  licensePlate?: string,
+  residentialAddress?: string,
+  purpose?: string,
+  estimatedTime?: string,
+  checkInTime?: string,
+  checkOutTime?: string,
+  status: string,
+  formattedEstimated?: string,
+  displayAddress?: string
 }
 
 export interface LoginInfo {

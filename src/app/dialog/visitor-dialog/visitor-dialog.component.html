@@ -1,35 +1,53 @@
+<div class="form-overlay" (click)="closeDialog()">
+  <div class="form-card" (click)="$event.stopPropagation()">
+    <div class="form-header">
+      <h2>訪客資訊</h2>
+      <mat-icon class="close-btn" (click)="closeDialog()">close</mat-icon>
+    </div>
 
-@if(permissions=='residents'){
-<h2 mat-dialog-title>訪客資訊</h2>
-<mat-dialog-content>
-<p>訪客名字:{{VisitorIdDataId?.visitorName}}</p>
-<p>被訪住戶：{{ VisitorIdDataId?.residentName }}</p>
-<p>進入時間:{{VisitorIdDataId?.checkInTime}}</p>
-<p>離開時間:{{VisitorIdDataId?.checkOutTime}}</p>
-<p>來訪目的:{{VisitorIdDataId?.purpose}}</p>
+    <div class="form-body">
+      <div class="visitor-info-item">
+        <span class="visitor-info-label">訪客姓名</span>
+        <span class="visitor-info-value">{{ visitorData?.visitorName || '-' }}</span>
+      </div>
 
+      @if (permissions === 'residents') {
+        <div class="visitor-info-item">
+          <span class="visitor-info-label">被訪住戶</span>
+          <span class="visitor-info-value">{{ visitorData?.residentName || visitorData?.residentialAddress || '-' }}</span>
+        </div>
+      } @else {
+        <div class="visitor-info-item">
+          <span class="visitor-info-label">被訪住戶</span>
+          <span class="visitor-info-value">{{ visitorData?.residentialAddress || visitorData?.residentName || '-' }}</span>
+        </div>
+      }
 
+      <div class="visitor-info-item">
+        <span class="visitor-info-label">進入時間</span>
+        <span class="visitor-info-value">{{ visitorData?.checkInTime || '-' }}</span>
+      </div>
 
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button mat-dialog-close>關閉</button>
-</mat-dialog-actions>
-}
+      <div class="visitor-info-item">
+        <span class="visitor-info-label">離開時間</span>
+        <span class="visitor-info-value">{{ visitorData?.checkOutTime || '-' }}</span>
+      </div>
 
-@if(permissions == 'admin'){
-<h2 mat-dialog-title>訪客資訊</h2>
-<mat-dialog-content>
-<p>訪客名字:{{VisitorIdDataId?.visitorName}}</p>
-<p>被訪住戶：{{ VisitorIdDataId?.residentialAddress }}</p>
-<p>進入時間:{{VisitorIdDataId?.checkInTime}}</p>
-<p>離開時間:{{VisitorIdDataId?.checkOutTime}}</p>
-<p>來訪目的:{{VisitorIdDataId?.purpose}}</p>
-<p>操作人:{{VisitorIdDataId?.registeredBy}}</p>
+      <div class="visitor-info-item">
+        <span class="visitor-info-label">來訪目的</span>
+        <span class="visitor-info-value">{{ visitorData?.purpose || '-' }}</span>
+      </div>
 
+      @if (permissions === 'admin') {
+        <div class="visitor-info-item">
+          <span class="visitor-info-label">操作人</span>
+          <span class="visitor-info-value">{{ visitorData?.registeredBy || '-' }}</span>
+        </div>
+      }
+    </div>
 
-
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button mat-dialog-close>關閉</button>
-</mat-dialog-actions>
-}
+    <div class="form-footer">
+      <button class="cancel-btn" (click)="closeDialog()">關閉</button>
+    </div>
+  </div>
+</div>
