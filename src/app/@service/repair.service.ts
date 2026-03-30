@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, of, tap, throwError } from 'rxjs';
+import { RepairStatus } from '../interface/enum';
 import { RepairRequest } from '../interface/interface';
 
 @Injectable({
@@ -54,7 +55,7 @@ export class RepairService {
           const current = this.repairsSubject.value;
 
           const updatedList = current.map(item =>
-            item.repairId === id ? { ...item, ...updatedItem } : item
+            item.repairId === id ? { ...item, ...data, ...updatedItem } : item
           );
 
           this.repairsSubject.next(updatedList);
@@ -66,16 +67,26 @@ export class RepairService {
       );
   }
 
-  completeById(id: number) {
+  completeById(id: number, data: any = null) {
     return this.http.put<any>(
         `${this.adminUrl}/${id}/complete`,
-        null
+        data
       ).pipe(
         tap(updatedItem => {
           const current = this.repairsSubject.value;
 
           const updatedList = current.map(item =>
-            item.repairId === id ? { ...item, ...updatedItem } : item
+            item.repairId === id
+              ? {
+                  ...item,
+                  ...data,
+                  ...updatedItem,
+                  status: updatedItem?.status ?? RepairStatus.DONE,
+                  handlerName: updatedItem?.handlerName ?? data?.handler ?? item.handlerName,
+                  note: updatedItem?.note ?? data?.note ?? item.note,
+                  resolvedAt: updatedItem?.resolvedAt ?? item.resolvedAt ?? new Date().toISOString()
+                }
+              : item
           );
 
           this.repairsSubject.next(updatedList);

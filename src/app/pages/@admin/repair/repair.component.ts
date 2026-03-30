@@ -58,13 +58,26 @@ export class RepairComponent implements OnInit, OnDestroy {
     this.repairService.repairs$
       .pipe(takeUntil(this.destroy$))
       .subscribe(data => {
-        this.repairs = data;
+        this.repairs = data.map(repair => this.normalizeRepair(repair));
       });
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private normalizeRepair(repair: any): RepairRequest {
+    return {
+      ...repair,
+      repairId: repair.repairId ?? repair.id,
+      userName: repair.userName || repair.user?.fullName || '',
+      submittedAt: repair.submittedAt || repair.createdAt || '',
+      resolvedAt: repair.resolvedAt || repair.completedAt || '',
+      handlerName: repair.handlerName || repair.handler?.fullName || repair.handler || '',
+      note: repair.note || repair.remark || '',
+      imageUrl: repair.imageUrl || ''
+    };
   }
 
   get filteredRepairs(): RepairRequest[] {
@@ -167,7 +180,12 @@ export class RepairComponent implements OnInit, OnDestroy {
 
   submitComplete() {
     if (!this.selectedRepair || !this.completeForm.handler) return;
-    this.repairService.completeById(this.selectedRepair.repairId).subscribe();
+
+    this.repairService.completeById(this.selectedRepair.repairId, {
+      handler: this.completeForm.handler,
+      note: this.completeForm.note
+    }).subscribe();
+
     this.closeCompleteForm();
   }
 

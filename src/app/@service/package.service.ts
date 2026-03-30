@@ -31,26 +31,42 @@ export class PackageService {
   }
 
   post(data: any) {
-    return this.http.post<any>(
-        this.apiUrl + '/admin/package',
-        {
-          recipientName: data.user,
-          unitNumber: data.unitNumber,
-          trackingNumber: data.trackingNumber,
-          courier: data.courier,
-          arrivedAt: data.arrivedAt,
-          notes: data.notes
+    const adminPayload = {
+      recipientName: data.recipientName ?? data.user,
+      phoneNumber: data.phoneNumber ?? data.phone,
+      unitNumber: data.unitNumber,
+      trackingNumber: data.trackingNumber,
+      courier: data.courier,
+      arrivedAt: data.arrivedAt,
+      notes: data.notes
+    };
+
+    const createPayload = {
+      recipientName: data.recipientName ?? data.user,
+      phoneNumber: data.phoneNumber ?? data.phone,
+      unitNumber: data.unitNumber,
+      trackingNumber: data.trackingNumber,
+      courier: data.courier,
+      notes: data.notes
+    };
+
+    return this.http.post<any>(this.apiUrl + '/admin/package', adminPayload).pipe(
+      catchError((error) => {
+        if (error.status === 404 || error.status === 405) {
+          return this.http.post<any>(this.apiUrl + '/package/create', createPayload);
         }
-      ).pipe(
-        tap(newItem => {
-          const current = this.packagesSubject.value;
-          this.packagesSubject.next([...current, newItem]);
-        }),
-        catchError((error) => {
-          console.error('新增失敗', error);
-          return throwError(() => error);
-        })
-      );
+
+        return throwError(() => error);
+      }),
+      tap(newItem => {
+        const current = this.packagesSubject.value;
+        this.packagesSubject.next([...current, newItem]);
+      }),
+      catchError((error) => {
+        console.error('新增失敗', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   notifyById(id: number) {

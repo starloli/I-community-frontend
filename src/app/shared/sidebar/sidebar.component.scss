@@ -30,12 +30,6 @@ $transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       padding: 12px 0;
     }
 
-    // sliding-pill 收合：左右 padding 對應縮小
-    .sliding-pill {
-      left: 8px;
-      right: 8px;
-    }
-
     // footer 收合：icon 置中
     .sidebar-footer {
       justify-content: center;
@@ -142,28 +136,11 @@ $transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   display: flex;
   flex-direction: column;
   gap: 4px;
-  position: relative;
   overflow: hidden; // 收合時隱藏溢出的文字
 }
 
-// 滑動色塊
-.sliding-pill {
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  height: 44px;
-  border-radius: 10px;
-  transition:
-    top 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    background 0.25s ease,
-    left $transition,
-    right $transition;
-  z-index: 0;
-  pointer-events: none;
-  will-change: top, background;
-}
-
 .nav-item {
+  --nav-item-color: #5b7fa6;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -172,10 +149,15 @@ $transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   text-decoration: none;
   font-size: 16px;
   font-weight: 500;
-  position: relative;
-  z-index: 1;
   color: #555;
-  transition: color 0.25s ease, padding $transition, justify-content $transition;
+  background: transparent;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    padding $transition,
+    justify-content $transition,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   white-space: nowrap;
 
   mat-icon {
@@ -187,14 +169,21 @@ $transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
   &:hover {
+    background: var(--nav-item-color);
     color: #ffffff;
+    transform: translateX(2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+
     mat-icon { color: #ffffff; }
   }
 
   &.active {
-    color: #555;
+    background: var(--nav-item-color);
+    color: #ffffff;
     font-weight: 600;
-    mat-icon { color: #555; }
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.14);
+
+    mat-icon { color: #ffffff; }
   }
 }
 

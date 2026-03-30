@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resident-sidebar',
@@ -25,10 +24,6 @@ export class ResidentSidebarComponent implements OnInit {
     { route: 'resident/repair',       icon: 'build',        label: '我的報修',  color: '#C47A5A' },
   ];
 
-  activeIndex = 0;
-  hoverIndex = -1;
-  private hoverTimer: any;
-
   // ── 住戶資訊（從 JWT token 解析）──────────────────
   userName = '';
   unitNumber = '';
@@ -39,16 +34,6 @@ export class ResidentSidebarComponent implements OnInit {
   ngOnInit() {
     // 從 token 取得住戶資訊
     this.loadUserInfo();
-
-    const initIndex = this.navItems.findIndex(item => this.router.url.includes(item.route));
-    this.activeIndex = initIndex >= 0 ? initIndex : 0;
-
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      const index = this.navItems.findIndex(item => event.url.includes(item.route));
-      this.activeIndex = index >= 0 ? index : 0;
-    });
   }
 
   private loadUserInfo() {
@@ -65,26 +50,6 @@ export class ResidentSidebarComponent implements OnInit {
   }
 
   toggleCollapse() { this.isCollapsed = !this.isCollapsed; }
-
-  onMouseEnter(i: number) {
-    clearTimeout(this.hoverTimer);
-    this.hoverIndex = i;
-  }
-
-  onMouseLeave() {
-    this.hoverTimer = setTimeout(() => { this.hoverIndex = -1; }, 100);
-  }
-
-  get pillTop(): number {
-    const index = this.hoverIndex >= 0 ? this.hoverIndex : this.activeIndex;
-    // header(72px) + user-info(64px) + nav padding(16px) + index * 52px
-    return index * 52 + 16;
-  }
-
-  get pillColor(): string {
-    const index = this.hoverIndex >= 0 ? this.hoverIndex : this.activeIndex;
-    return this.navItems[index]?.color || '#5B7FA6';
-  }
 
   logout() {
     localStorage.removeItem('token');

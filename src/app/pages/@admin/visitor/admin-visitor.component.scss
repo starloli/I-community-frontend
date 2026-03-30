@@ -32,15 +32,19 @@
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  background: #3f51b5;
+  background: #6a9e7f;
   color: #ffffff;
   border: none;
   border-radius: 12px;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition:
+    background 0.2s,
+    transform 0.2s,
+    box-shadow 0.2s;
   white-space: nowrap;
+  box-shadow: 0 10px 24px rgba(106, 158, 127, 0.22);
 
   mat-icon {
     font-size: 20px;
@@ -49,7 +53,9 @@
   }
 
   &:hover {
-    background: #303f9f;
+    background: #5d8c70;
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(106, 158, 127, 0.28);
   }
 }
 
@@ -342,6 +348,8 @@
 table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
+  min-width: 980px;
 }
 
 thead tr {
@@ -354,6 +362,8 @@ th {
   font-size: 14px;
   font-weight: 600;
   color: #555;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
 }
 
 td {
@@ -362,6 +372,38 @@ td {
   color: #333;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   vertical-align: middle;
+}
+
+.col-name {
+  width: 18%;
+}
+
+.col-phone {
+  width: 13%;
+}
+
+.col-plate {
+  width: 12%;
+}
+
+.col-host {
+  width: 19%;
+}
+
+.col-time {
+  width: 18%;
+  white-space: nowrap;
+}
+
+.col-status {
+  width: 10%;
+  text-align: center;
+}
+
+.col-action {
+  width: 10%;
+  text-align: center;
+  white-space: nowrap;
 }
 
 tbody tr:last-child td {
