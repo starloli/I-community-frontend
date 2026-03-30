@@ -1,0 +1,53 @@
+<div class="form-overlay" (click)="closeDialog()">
+  <div class="form-card" (click)="$event.stopPropagation()">
+    <div class="form-header">
+      <h2>訪客資訊</h2>
+      <mat-icon class="close-btn" (click)="closeDialog()">close</mat-icon>
+    </div>
+
+    <div class="form-body">
+      <div class="visitor-info-item">
+        <span class="visitor-info-label">訪客姓名</span>
+        <span class="visitor-info-value">{{ visitorData?.visitorName || '-' }}</span>
+      </div>
+
+      @if (permissions === 'residents') {
+        <div class="visitor-info-item">
+          <span class="visitor-info-label">被訪住戶</span>
+          <span class="visitor-info-value">{{ visitorData?.residentName || visitorData?.residentialAddress || '-' }}</span>
+        </div>
+      } @else {
+        <div class="visitor-info-item">
+          <span class="visitor-info-label">被訪住戶</span>
+          <span class="visitor-info-value">{{ visitorData?.residentialAddress || visitorData?.residentName || '-' }}</span>
+        </div>
+      }
+
+      <div class="visitor-info-item">
+        <span class="visitor-info-label">進入時間</span>
+        <span class="visitor-info-value">{{ visitorData?.checkInTime || '-' }}</span>
+      </div>
+
+      <div class="visitor-info-item">
+        <span class="visitor-info-label">離開時間</span>
+        <span class="visitor-info-value">{{ visitorData?.checkOutTime || '-' }}</span>
+      </div>
+
+      <div class="visitor-info-item">
+        <span class="visitor-info-label">來訪目的</span>
+        <span class="visitor-info-value">{{ visitorData?.purpose || '-' }}</span>
+      </div>
+
+      @if (permissions === 'admin') {
+        <div class="visitor-info-item">
+          <span class="visitor-info-label">操作人</span>
+          <span class="visitor-info-value">{{ visitorData?.registeredBy || '-' }}</span>
+        </div>
+      }
+    </div>
+
+    <div class="form-footer">
+      <button class="cancel-btn" (click)="closeDialog()">關閉</button>
+    </div>
+  </div>
+</div>

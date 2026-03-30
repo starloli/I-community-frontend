@@ -1,14 +1,22 @@
 import { BillStatus, BillType, NotificationType, PackageStatus, RepairStatus, ReservationStatus, UserRole, VisitorStatus } from "./enum"
 
 export interface Announcement {
-  announcementId?: number,
-  title: string,
-  content: string,
-  category: string,
-  author: User,
-  isPinned: boolean,
-  publishedAt: string,
-  expiresAt: string
+  announcementId?: number;
+  title: string;
+  content: string;
+  category: string;
+  authorName?: string;
+  isPinned: boolean;
+  publishedAt?: string;
+  expiresAt?: string;
+}
+
+export interface AnnouncementPayload {
+  title: string;
+  content: string;
+  category: string;
+  isPinned: boolean;
+  expiresAt: string | null;
 }
 
 export interface Bill {
@@ -20,18 +28,21 @@ export interface Bill {
   dueDate: string,
   status: BillStatus,
   paidAt: string,
-  paymendMethod: string,
+  paymentMethod: string,
   createdAt: string
 }
 
 export interface Facility {
-  id?: number,
+  facilityId: number,
   name: string,
   description: string,
   capacity: number,
   openTime: string,
   closeTime: string,
-  isAvailable: boolean
+  isReservable: boolean,
+  isAvailable: boolean,
+
+  [key: string]: any;
 }
 
 export interface Notification {
@@ -45,14 +56,14 @@ export interface Notification {
 
 export interface Package {
   id?: number,
-  user: string,
-  unitNumber: string,
+  user: User,
   trackingNumber: string,
   courier: string,
   arrivedAt: string,
   pickupAt: string,
   status: PackageStatus,
   notes: string,
+  unitNumber: string,
   isNotified: boolean
 }
 
@@ -67,33 +78,49 @@ export interface RepairRequest {
   handler: User,
   submittedAt: string,
   resolvedAt: string,
-  note?:string
+  note?: string
 }
 
 export interface Reservation {
-  id?: number,
-  user?: User,
-  facility: Facility,
+  reservationId: number,
+  userId: number,
+  unitNumber?: string,
+  facilityId: number,
   date: string,
   startTime: string,
   endTime: string,
   attendees: number,
-  status: ReservationStatus,
-  createdAt: string
+  status?: ReservationStatus,
+  createdAt?: string
+}
+
+export interface ResReservation {
+  reservationId: number,
+  userName: string,
+  facilityName: string,
+  date: string,
+  startTime: string,
+  endTime: string,
+  attendees: number,
+  status: ReservationStatus
 }
 
 export interface User {
   userId?: number,
   userName: string,
-  passwordHash: string,
+  passwordHash?: string,
   fullName: string,
   email: string,
   phone: string,
   unitNumber: string,
-  role: UserRole,
-  isActive: boolean,
-  createdAt: string,
-  token?: string
+  role?: UserRole,
+  isActive?: boolean,
+  createdAt?: string
+}
+
+export interface ResidentOption {
+  userId: number,
+  fullName: string
 }
 
 export interface Visitor {
@@ -106,6 +133,21 @@ export interface Visitor {
   checkInTime: string,
   checkOutTime: string,
   status: VisitorStatus
+}
+
+export interface VisitorRecord {
+  visitorId: number,
+  visitorName: string,
+  visitorPhone?: string,
+  licensePlate?: string,
+  residentialAddress?: string,
+  purpose?: string,
+  estimatedTime?: string,
+  checkInTime?: string,
+  checkOutTime?: string,
+  status: string,
+  formattedEstimated?: string,
+  displayAddress?: string
 }
 
 export interface LoginInfo {

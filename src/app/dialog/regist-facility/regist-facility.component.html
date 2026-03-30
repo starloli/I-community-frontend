@@ -9,6 +9,8 @@
   <input type="time" name="open_time" [(ngModel)]="facility.openTime" required>
   <span>結束時間</span>
   <input type="time" name="close_time" [(ngModel)]="facility.closeTime" required>
+  <span>是否可預訂</span>
+  <input type="checkbox" name="is_available" [(ngModel)]="facility.isReservable">
   <span>是否可用</span>
   <input type="checkbox" name="is_available" [(ngModel)]="facility.isAvailable">
   <button type="submit" [disabled]="facilityForm.invalid">送出</button>
