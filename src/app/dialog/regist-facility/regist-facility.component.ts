@@ -14,16 +14,22 @@ import { HttpService } from '../../@service/http.service';
 })
 export class RegistFacilityComponent {
 
-  constructor(private http: HttpService, private snackBar: MatSnackBar, public dialogRef: MatDialogRef<RegistFacilityComponent>) { }
+  constructor(
+    private http: HttpService,
+    private snackBar: MatSnackBar,
+    public dialogRef: MatDialogRef<RegistFacilityComponent>
+  ) { }
 
-  postUrl = "http://localhost:8083/auth/regist-facility";
+  postUrl = "http://localhost:8083/user/regist-facility";
   facility: Facility = {
+    facilityId: 0,
     name: '',
     description: '',
     capacity: 0,
     openTime: '',
     closeTime: '',
-    isAvailable: false
+    isReservable: false,
+    isAvailable: false,
   };
 
   check() {
@@ -31,6 +37,8 @@ export class RegistFacilityComponent {
       if (this.facility.name == '' || this.facility.description == '' || this.facility.capacity == 0 || this.facility.openTime == '' || this.facility.closeTime == '') {
         this.snackBar.open('請輸入完整資訊', '關閉', {
           duration: 2000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
         });
       } else {
         this.facility.closeTime = this.facility.closeTime + ':00';
@@ -41,6 +49,8 @@ export class RegistFacilityComponent {
             console.log(res);
             this.snackBar.open('新增成功', '關閉', {
               duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top'
             });
             this.dialogRef.close(true);
           },
@@ -48,6 +58,8 @@ export class RegistFacilityComponent {
             console.log(err);
             this.snackBar.open('發生錯誤，錯誤代碼：' + err.status, '關閉', {
               duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top'
             });
           }
         })

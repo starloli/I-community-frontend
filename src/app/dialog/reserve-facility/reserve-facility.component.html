@@ -1,64 +1,23 @@
 <form action="">
   <div class="form-card" (click)="$event.stopPropagation()">
     <div class="form-header">
-      <h2>預約 {{ facility.name }}</h2>
-      <mat-icon class="close-btn" (click)="closeReserveForm()">close</mat-icon>
+      <h2>預約 {{ data.facility.name }}</h2>
     </div>
 
-    <div class="form-body">
-      <div class="form-group">
-        <label>預約日期 <span class="required">*</span></label>
-        <input type="date" name="date" [(ngModel)]="today" [min]="minDay" />
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <mat-form-field>
-            <mat-label>開始時間</mat-label>
-            <input matInput [matTimepicker]="pickerStart"
-              [matTimepickerMin]="(reservation.date===minDay?minTime:facility.openTime)"
-              [matTimepickerMax]="facility.closeTime" [formControl]="startTimeControl">
-            <mat-timepicker-toggle matIconSuffix [for]="pickerStart" />
-            <mat-timepicker #pickerStart />
-            @if (startTimeControl.errors?.['matTimepickerMin']) {
-            <mat-error>
-              無法選擇該時間
-            </mat-error>
-            }
-            @if (startTimeControl.errors?.['matTimepickerParse']) {
-            <mat-error>
-              請輸入正確的時間格式
-            </mat-error>
-            }
-          </mat-form-field>
-        </div>
-        <div class="form-group">
-          <mat-form-field>
-            <mat-label>結束時間</mat-label>
-            <input matInput [matTimepicker]="pickerEnd"
-              [matTimepickerMin]="(maxTime)"
-              [matTimepickerMax]="facility.closeTime" [formControl]="endTimeControl">
-            <mat-timepicker-toggle matIconSuffix [for]="pickerEnd" />
-            <mat-timepicker #pickerEnd />
-            @if (endTimeControl.errors?.['matTimepickerMin']) {
-            <mat-error>
-              無法選擇該時間
-            </mat-error>
-            }
-            @if (endTimeControl.errors?.['matTimepickerParse']) {
-            <mat-error>
-              請輸入正確的時間格式
-            </mat-error>
-            }
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>參與人數</label>
-        <input type="number" name="attendees" [(ngModel)]="reservation.attendees" min="1"
-          [max]="facility.capacity" />
-      </div>
+    <div class="form-body a">
+      <label>日期：{{ reservation.date }}</label>
+      <label>開始時間：{{ reservation.startTime }}</label>
+      <label>結束時間：{{ reservation.endTime }}</label>
+      <mat-form-field>
+        <mat-label>參與人數</mat-label>
+        <mat-select [formControl]="attendeesControl" name="attemdees">
+          @for (item of capacity; track item) {
+          <mat-option [value]="item">
+            {{ item }}
+          </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
     </div>
 
     <div class="form-footer">

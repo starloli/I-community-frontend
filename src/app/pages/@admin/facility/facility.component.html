@@ -9,7 +9,7 @@
 
   <!-- 設施卡片列表 -->
   <div class="facility-grid">
-    @for (item of facilities; track item.id) {
+    @for (item of facilities; track item.facilityId) {
     <div class="facility-card" [class.unavailable]="!item.isAvailable">
 
       <!-- 設施 icon -->
@@ -99,3 +99,4 @@
   </div>
 }
 </div>
+<button (click)="registFacility()">註冊設施</button>

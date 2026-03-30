@@ -1,0 +1,13 @@
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  padding: 10px;
+
+  ::ng-deep .cal-week-view .cal-hour-segment.cal-disabled {
+    background-color: #f0f0f0 !important;
+    /* 淺灰色 */
+    cursor: not-allowed !important;
+    /* 滑鼠變禁止符號 */
+  }
+}

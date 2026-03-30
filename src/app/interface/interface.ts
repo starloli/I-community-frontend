@@ -33,13 +33,16 @@ export interface Bill {
 }
 
 export interface Facility {
-  id?: number,
+  facilityId: number,
   name: string,
   description: string,
   capacity: number,
   openTime: string,
   closeTime: string,
-  isAvailable: boolean
+  isReservable: boolean,
+  isAvailable: boolean,
+
+  [key: string]: any;
 }
 
 export interface Notification {
@@ -75,33 +78,44 @@ export interface RepairRequest {
   handlerName: string,
   submittedAt: string,
   resolvedAt: string,
-  note?:string
+  note?: string
 }
 
 export interface Reservation {
-  id?: number,
-  user?: User,
-  facility: Facility,
+  reservationId: number,
+  userId: number,
+  unitNumber?: string,
+  facilityId: number,
   date: string,
   startTime: string,
   endTime: string,
   attendees: number,
-  status: ReservationStatus,
-  createdAt: string
+  status?: ReservationStatus,
+  createdAt?: string
+}
+
+export interface ResReservation {
+  reservationId: number,
+  userName: string,
+  facilityName: string,
+  date: string,
+  startTime: string,
+  endTime: string,
+  attendees: number,
+  status: ReservationStatus
 }
 
 export interface User {
   userId?: number,
   userName: string,
-  passwordHash: string,
+  passwordHash?: string,
   fullName: string,
   email: string,
   phone: string,
   unitNumber: string,
-  role: UserRole,
-  isActive: boolean,
-  createdAt: string,
-  token?: string
+  role?: UserRole,
+  isActive?: boolean,
+  createdAt?: string
 }
 
 export interface ResidentOption {
