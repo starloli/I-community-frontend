@@ -28,7 +28,7 @@ export const routes: Routes = [
   // ── 登入頁 ──────────────────────────────────────────
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  {path:'visitorDialog' ,component:VisitorDialogComponent},
+  { path: 'visitorDialog', component: VisitorDialogComponent },
   {
     path: 'admin',
     component: LayoutComponent,
@@ -55,10 +55,10 @@ export const routes: Routes = [
       // 頁面做好後逐一取消註解
       { path: 'dashboard', component: ResidentDashboardComponent },
       { path: 'announcement', component: ResidentAnnouncementComponent },
-      { path: 'bill',         component: ResidentBillComponent },
-      { path: 'facility',     component: ResidentFacilityComponent },
-      { path: 'package',      component: ResidentPackageComponent },
-      { path: 'repair',       component: ResidentRepairComponent },
+      { path: 'bill', component: ResidentBillComponent },
+      { path: 'facility', component: ResidentFacilityComponent },
+      { path: 'package', component: ResidentPackageComponent },
+      { path: 'repair', component: ResidentRepairComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ]
   },
