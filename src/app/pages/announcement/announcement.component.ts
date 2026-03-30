@@ -1,39 +1,41 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Announcement, Res, User } from '../../interface/interface';
+import { UserRole } from '../../interface/enum';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { RouterLink } from '@angular/router';
-import { AuthService } from '../../@service/auth.service';
 import { AnnouncementService } from '../../@service/announcement.service';
-
-// ── 對應後端回傳格式（authorName 是字串，不是 User 物件）──
-interface Announcement {
-  announcementId: number;
-  title: string;
-  content: string;
-  category: string;
-  authorName: string;   // 後端回傳字串
-  isPinned: boolean;
-  publishedAt: string;
-  expiresAt?: string;
-}
+import { AuthService } from '../../@service/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-announcement',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, RouterLink],
+  imports: [CommonModule, FormsModule, MatIconModule],
   templateUrl: './announcement.component.html',
   styleUrls: ['./announcement.component.scss']
 })
 export class AnnouncementComponent implements OnInit {
 
-  private snackBar = inject(MatSnackBar);
+  // TODO: 從 localStorage 取得當前使用者
+  // const raw = localStorage.getItem('user');
+  // this.currentUser = raw ? JSON.parse(raw) : null;
+  currentUser: User = {
+    userId: 1,
+    userName: 'admin',
+    passwordHash: '',
+    fullName: '管理員',
+    email: 'admin@community.com',
+    phone: '',
+    unitNumber: '',
+    role: UserRole.ADMIN,
+    isActive: true,
+    createdAt: ''
+  };
 
-  // ── 從 AuthService 判斷是否為管理員 ─────────────────
-  isAdmin = false;
+  isAdmin: boolean = false;
 
-  // ── 搜尋與篩選 ────────────────────────────────────────
+  // 搜尋與篩選
   searchKeyword: string = '';
   selectedCategory: string = '';
 
@@ -65,7 +67,8 @@ export class AnnouncementComponent implements OnInit {
 
   constructor(
     private auth: AuthService,
-    private service: AnnouncementService
+    private service: AnnouncementService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {

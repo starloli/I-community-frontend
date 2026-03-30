@@ -6,13 +6,14 @@ import { ApiService } from '../../@service/api.service';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, FormsModule],
+  imports: [FormsModule
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
 
-  constructor(private router: Router, private http: ApiService) {}
+  constructor(private router: Router, private http: ApiService) { }
 
   booleanSignup = false;
   booleanIsManager: boolean = false;
@@ -37,17 +38,25 @@ export class LoginComponent {
   isConfirmTouched = false;
   isClickPhone = false;
   isClickEmail = false;
+
+  //判斷密碼長度
   isPasswordLength = false;
 
+  // icon
+  emailIcon = 'stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=mail';
+
+
+  //判斷email和phone格式
   isValidEmail(email: string): boolean {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   }
 
+  // 驗證電話格式（以台灣 10 位數為例，可依需求調整）
   isValidPhone(phone: any): boolean {
     if (!phone) return false;
     const phoneStr = phone.toString();
-    const phoneRegex = /^09\d{8}$/;
+    const phoneRegex = /^09\d{8}$/; // 檢查是否為 09 開頭的 10 位數字
     return phoneRegex.test(phoneStr);
   }
 
@@ -135,8 +144,8 @@ export class LoginComponent {
   Stepper1() {
     if (this.signUpStep === 1) {
       if (!this.signUpUserName?.trim() || !this.signUpPassword?.trim() ||
-          !this.confirmPassword?.trim() ||
-          this.signUpPassword.length < 6 || this.signUpPassword.length > 12) return;
+        !this.confirmPassword?.trim() ||
+        this.signUpPassword.length < 6 || this.signUpPassword.length > 12) return;
       if (this.signUpPassword !== this.confirmPassword) return;
       this.signUpStep++;
     }

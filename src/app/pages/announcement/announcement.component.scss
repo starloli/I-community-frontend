@@ -67,12 +67,21 @@
     flex-direction: column;
     gap: 2px;
 
-    .stat-value { font-size: 32px; font-weight: 700; line-height: 1; }
-    .stat-label { font-size: 14px; color: #888; font-weight: 500; }
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: #888;
+      font-weight: 500;
+    }
   }
 }
 
-// ===== 篩選列 =====
+// ===== 篩選列（pill 按鈕 + 搜尋框，與 bill/repair 一致）=====
 .filter-bar {
   display: flex;
   align-items: center;
@@ -429,5 +438,9 @@
   h3 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 0 0 8px; }
   p  { font-size: 14px; color: #888; margin: 0 0 24px; }
 
-  .confirm-footer { display: flex; justify-content: center; gap: 12px; }
+  .confirm-footer {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
 }

@@ -1,0 +1,35 @@
+
+@if(permissions=='residents'){
+<h2 mat-dialog-title>訪客資訊</h2>
+<mat-dialog-content>
+<p>訪客名字:{{VisitorIdDataId?.visitorName}}</p>
+<p>被訪住戶：{{ VisitorIdDataId?.residentName }}</p>
+<p>進入時間:{{VisitorIdDataId?.checkInTime}}</p>
+<p>離開時間:{{VisitorIdDataId?.checkOutTime}}</p>
+<p>來訪目的:{{VisitorIdDataId?.purpose}}</p>
+
+
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>關閉</button>
+</mat-dialog-actions>
+}
+
+@if(permissions == 'admin'){
+<h2 mat-dialog-title>訪客資訊</h2>
+<mat-dialog-content>
+<p>訪客名字:{{VisitorIdDataId?.visitorName}}</p>
+<p>被訪住戶：{{ VisitorIdDataId?.residentialAddress }}</p>
+<p>進入時間:{{VisitorIdDataId?.checkInTime}}</p>
+<p>離開時間:{{VisitorIdDataId?.checkOutTime}}</p>
+<p>來訪目的:{{VisitorIdDataId?.purpose}}</p>
+<p>操作人:{{VisitorIdDataId?.registeredBy}}</p>
+
+
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>關閉</button>
+</mat-dialog-actions>
+}

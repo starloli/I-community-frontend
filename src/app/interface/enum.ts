@@ -20,8 +20,8 @@ export enum NotificationType {
 }
 
 export enum PackageStatus {
-  WAITING = '待取貨',
-  PICKED_UP = '已取貨',
+  WAITING = 'WAITING',
+  PICKED_UP = 'PICKED_UP',
 }
 
 export enum RepairStatus {

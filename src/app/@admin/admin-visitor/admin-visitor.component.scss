@@ -193,7 +193,6 @@
   transition: background 0.2s;
 
   }
-
 // ===== 搜尋欄 =====
 .search-bar {
   display: flex;
@@ -314,10 +313,7 @@ tbody tr:hover {
   font-size: 13px;
   font-weight: 600;
 }
-.status-notyet{
-  background: #fff3e0; /* 淺橙背景 */
-  color: #ef6c00;
-}
+
 .status-inside {
   background: #e8f5e9;
   color: #388e3c;
@@ -344,4 +340,36 @@ tbody tr:hover {
     background: #e53935;
     color: #ffffff;
   }
+}
+
+// .form-control {
+//     width: 100% !important;
+//     height: 40px; /* 或者你喜歡的高度 */
+//     display: block;
+//     box-sizing: border-box; /* 確保 padding 不會撐破寬度 */
+// }
+
+/* 針對 select 的微調 */
+.form-control {
+ padding: 10px 14px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.2s;
+
+
+    width: 100%;             /* 確保寬度一致 */
+    display: block;
+    background-color: #fff;
+    box-sizing: border-box;  /* 重要：防止 padding 撐開寬度 */
+
+    /* 移除瀏覽器預設外觀 */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+
+
 }

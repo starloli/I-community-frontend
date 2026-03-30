@@ -13,6 +13,7 @@ import { filter } from 'rxjs/operators';
 })
 export class SidebarComponent implements OnInit {
 
+  isLogin: boolean = false;
   currentRoute = 'dashboard';
   isCollapsed = false; // 收合狀態
 
@@ -30,7 +31,10 @@ export class SidebarComponent implements OnInit {
   hoverIndex = -1;
   private hoverTimer: any;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     // 初始化時根據完整 url 比對 navItems
@@ -43,6 +47,8 @@ export class SidebarComponent implements OnInit {
       const index = this.navItems.findIndex(item => event.url.includes(item.route));
       this.activeIndex = index >= 0 ? index : 0;
     });
+
+    this.isLogin = this.authService.isLoggedIn();
   }
 
   // 切換收合狀態
@@ -71,14 +77,9 @@ export class SidebarComponent implements OnInit {
     return this.navItems[index]?.color || '#5B7FA6';
   }
 
-  get isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
-  }
-
   login() { this.router.navigate(['/login']); }
 
   logout() {
-    localStorage.removeItem('token');
-    this.router.navigate(['/login']);
+    this.authService.logout()
   }
 }
