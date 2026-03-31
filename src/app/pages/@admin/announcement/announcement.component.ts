@@ -1,13 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../@service/auth.service';
 import { AnnouncementService } from '../../../@service/announcement.service';
-
-import { Announcement, AnnouncementPayload, User } from '../../../interface/interface';
-import { UserRole } from '../../../interface/enum';
+import { Announcement, AnnouncementPayload } from '../../../interface/interface';
 
 @Component({
   selector: 'app-announcement',
@@ -17,73 +15,50 @@ import { UserRole } from '../../../interface/enum';
   styleUrls: ['./announcement.component.scss']
 })
 export class AnnouncementComponent implements OnInit {
+  private snackBar = inject(MatSnackBar);
 
-  // TODO: 從 localStorage 取得當前使用者
-  // const raw = localStorage.getItem('user');
-  // this.currentUser = raw ? JSON.parse(raw) : null;
-  currentUser: User = {
-    userId: 1,
-    userName: 'admin',
-    passwordHash: '',
-    fullName: '管理員',
-    email: 'admin@community.com',
-    phone: '',
-    unitNumber: '',
-    role: UserRole.ADMIN,
-    isActive: true,
-    createdAt: ''
-  };
+  isAdmin = false;
+  searchKeyword = '';
+  selectedCategory = '';
+  currentPage = 1;
+  pageSize = 6;
+  minDateTime = '';
 
-  isAdmin: boolean = false;
-
-  // 搜尋與篩選
-  searchKeyword: string = '';
-  selectedCategory: string = '';
-
-  // ── 分頁 ──────────────────────────────────────────────
-  currentPage: number = 1;
-  pageSize: number = 6;
-  minDateTime: string = '';
-
-  // ── Modal 狀態 ────────────────────────────────────────
-  showFormModal: boolean = false;
-  showDetailModal: boolean = false;
-  showDeleteConfirm: boolean = false;
-  isEditMode: boolean = false;
+  showFormModal = false;
+  showDetailModal = false;
+  showDeleteConfirm = false;
+  isEditMode = false;
 
   selectedAnnouncement: Announcement | null = null;
   deleteTargetId: number | null = null;
   formData: Partial<Announcement> = {};
 
-  // ── 分類選項 ──────────────────────────────────────────
   categories = [
-    { value: '',            label: '全部分類' },
-    { value: 'NOTICE',      label: '一般通知' },
+    { value: '', label: '全部分類' },
+    { value: 'NOTICE', label: '一般通知' },
     { value: 'MAINTENANCE', label: '維修公告' },
-    { value: 'EVENT',       label: '活動公告' },
-    { value: 'EMERGENCY',   label: '緊急通知' },
-    { value: 'RULE',        label: '社區規範' },
+    { value: 'EVENT', label: '活動公告' },
+    { value: 'EMERGENCY', label: '緊急通知' },
+    { value: 'RULE', label: '社區規範' }
   ];
 
   announcements: Announcement[] = [];
 
   constructor(
     private auth: AuthService,
-    private service: AnnouncementService,
-    private snackBar: MatSnackBar
+    private service: AnnouncementService
   ) {}
 
   ngOnInit(): void {
     this.isAdmin = this.auth.isAdmin();
     this.refreshMinDateTime();
-    // ── 從後端取得公告列表 ────────────────────────────
+
     this.service.getAll().subscribe();
-    this.service.announs$.subscribe((data: any[]) => {
+    this.service.announs$.subscribe((data: Announcement[]) => {
       this.announcements = data;
     });
   }
 
-  // ── 篩選邏輯 ──────────────────────────────────────────
   get filteredAnnouncements(): Announcement[] {
     let list = [...this.announcements];
 
@@ -99,7 +74,6 @@ export class AnnouncementComponent implements OnInit {
       list = list.filter(a => a.category === this.selectedCategory);
     }
 
-    // 置頂優先，再依發布時間降序
     list.sort((a, b) => {
       if (a.isPinned && !b.isPinned) return -1;
       if (!a.isPinned && b.isPinned) return 1;
@@ -124,15 +98,14 @@ export class AnnouncementComponent implements OnInit {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  // ── 統計 ──────────────────────────────────────────────
   get pinnedCount(): number {
     return this.announcements.filter(a => a.isPinned && !this.isExpired(a)).length;
   }
+
   get activeCount(): number {
     return this.announcements.filter(a => !this.isExpired(a)).length;
   }
 
-  // ── 工具方法 ──────────────────────────────────────────
   isExpired(ann: Announcement): boolean {
     if (!ann.expiresAt) return false;
     return new Date(ann.expiresAt) < new Date();
@@ -144,33 +117,41 @@ export class AnnouncementComponent implements OnInit {
 
   getCategoryClass(category: string): string {
     const map: Record<string, string> = {
-      NOTICE: 'cat-notice', MAINTENANCE: 'cat-maintenance',
-      EVENT: 'cat-event', EMERGENCY: 'cat-emergency', RULE: 'cat-rule',
+      NOTICE: 'cat-notice',
+      MAINTENANCE: 'cat-maintenance',
+      EVENT: 'cat-event',
+      EMERGENCY: 'cat-emergency',
+      RULE: 'cat-rule'
     };
     return map[category] ?? 'cat-notice';
   }
 
   getAuthorName(announcement: Announcement & { authorName?: string }): string {
-    return announcement.authorName ?? '未知作者';
+    return announcement.authorName ?? announcement.author?.fullName ?? '未知作者';
   }
 
   formatDate(dateStr?: string): string {
     if (!dateStr) return '—';
-    const safeDateStr: string = dateStr;
-    return new Date(safeDateStr).toLocaleDateString('zh-TW', {
-      year: 'numeric', month: '2-digit', day: '2-digit'
+    return new Date(dateStr).toLocaleDateString('zh-TW', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
     });
   }
 
   formatDatetime(dateStr?: string): string {
     if (!dateStr) return '—';
-    const safeDateStr: string = dateStr;
-    const d = new Date(safeDateStr);
-    return d.toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' })
-      + ' ' + d.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('zh-TW', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }) + ' ' + d.toLocaleTimeString('zh-TW', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 
-  // ── 詳情 Modal ────────────────────────────────────────
   toDateTimeLocalValue(dateStr?: string | null): string {
     if (!dateStr) return '';
 
@@ -197,7 +178,6 @@ export class AnnouncementComponent implements OnInit {
     this.selectedAnnouncement = null;
   }
 
-  // ── 新增 ──────────────────────────────────────────────
   openAdd(): void {
     this.refreshMinDateTime();
     this.isEditMode = false;
@@ -208,7 +188,6 @@ export class AnnouncementComponent implements OnInit {
     this.showFormModal = true;
   }
 
-  // ── 編輯 ──────────────────────────────────────────────
   openEdit(ann: Announcement, event: Event): void {
     event.stopPropagation();
     this.refreshMinDateTime();
@@ -244,14 +223,10 @@ export class AnnouncementComponent implements OnInit {
       content: this.formData.content.trim(),
       category: this.formData.category ?? 'NOTICE',
       isPinned: this.formData.isPinned ?? false,
-      expiresAt: typeof expiresAtValue === 'string' && expiresAtValue
-        ? expiresAtValue
-        : null
+      expiresAt: typeof expiresAtValue === 'string' && expiresAtValue ? expiresAtValue : null
     };
 
     if (this.isEditMode) {
-      // TODO: 串接 PUT /announcement/{announcementId}
-      // this.service.update(this.formData.announcementId!, this.formData).subscribe(...)
       if (!this.formData.announcementId) {
         this.snackBar.open('找不到要更新的公告 ID', '關閉', { duration: 2000 });
         return;
@@ -266,47 +241,45 @@ export class AnnouncementComponent implements OnInit {
           this.snackBar.open('公告更新失敗，請稍後再試', '關閉', { duration: 2500 });
         }
       });
-    } else {
-      this.service.postAnnoun(payload).subscribe({
-        next: () => {
-          this.snackBar.open('公告發布成功', '關閉', { duration: 2000 });
-          this.closeForm();
-        },
-        error: () => {
-          this.snackBar.open('公告發布失敗，請稍後再試', '關閉', { duration: 2500 });
-        }
-      });
-      // TODO: 串接 POST /announcement/create
+      return;
     }
+
+    this.service.postAnnoun(payload).subscribe({
+      next: () => {
+        this.snackBar.open('公告發布成功', '關閉', { duration: 2000 });
+        this.closeForm();
+      },
+      error: () => {
+        this.snackBar.open('公告發布失敗，請稍後再試', '關閉', { duration: 2500 });
+      }
+    });
   }
 
-  // ── 刪除 ──────────────────────────────────────────────
   openDelete(id: number | undefined, event: Event): void {
     event.stopPropagation();
     if (id === undefined) {
       this.snackBar.open('找不到要刪除的公告 ID', '關閉', { duration: 2000 });
       return;
     }
+
     this.deleteTargetId = id;
     this.showDeleteConfirm = true;
   }
 
   confirmDelete(): void {
-    if (this.deleteTargetId !== null && this.deleteTargetId !== undefined) {
-      const idToDelete: number = this.deleteTargetId; // 確保是 number 類型
-      // ── 串接後端刪除 API ──────────────────────────────
+    if (this.deleteTargetId !== null) {
+      const idToDelete = this.deleteTargetId;
       this.service.deleteById(idToDelete).subscribe({
         next: () => {
           this.snackBar.open('公告已成功刪除', '關閉', { duration: 2000 });
-          this.announcements = this.announcements.filter(
-            a => a.announcementId !== idToDelete
-          );
+          this.announcements = this.announcements.filter(a => a.announcementId !== idToDelete);
         },
         error: () => {
           this.snackBar.open('公告刪除失敗，請稍後再試', '關閉', { duration: 2500 });
         }
       });
     }
+
     this.showDeleteConfirm = false;
     this.deleteTargetId = null;
   }
@@ -316,9 +289,10 @@ export class AnnouncementComponent implements OnInit {
     this.deleteTargetId = null;
   }
 
-  // ── 分頁 ──────────────────────────────────────────────
   goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) this.currentPage = page;
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
   }
 
   onFilterChange(): void {

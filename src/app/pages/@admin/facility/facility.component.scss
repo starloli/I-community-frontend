@@ -5,7 +5,17 @@
 
 // ===== 頁面標題 =====
 .page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
   margin-bottom: 28px;
+
+  .header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
 
   h1 {
     font-size: 36px;
@@ -17,6 +27,38 @@
   .subtitle {
     font-size: 15px;
     color: #888;
+  }
+}
+
+.add-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #3f51b5;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    transform 0.2s,
+    box-shadow 0.2s;
+  white-space: nowrap;
+  box-shadow: 0 10px 24px rgba(106, 158, 127, 0.22);
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    background: #303f9f;
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(106, 158, 127, 0.28);
   }
 }
 
@@ -288,4 +330,32 @@
   font-weight: 600;
   cursor: pointer;
   &:hover { background: #303f9f; }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .add-btn {
+    justify-content: center;
+  }
+
+  .facility-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .facility-details {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-card {
+    width: min(480px, calc(100vw - 24px));
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
 }

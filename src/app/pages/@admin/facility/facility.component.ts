@@ -1,13 +1,14 @@
-import { HttpService } from '../../../@service/http.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { Facility, User } from '../../../interface/interface';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { HttpService } from '../../../@service/http.service';
+import { Facility } from '../../../interface/interface';
 import { RegistFacilityComponent } from '../../../dialog/regist-facility/regist-facility.component';
+import { ReserveFacilityComponent } from '../../../dialog/reserve-facility/reserve-facility.component';
 import { ReservationCalendar } from '../../../dialog/reservation-calendar/reservation-calendar';
 
 @Component({
@@ -23,32 +24,11 @@ export class FacilityComponent implements OnInit, OnDestroy{
 
   private destroy$ = new Subject<void>();
 
-  getFacilityUrl = "http://localhost:8083/user/facilities";
-  getReservationByUserIdUrl = "http://localhost:8083/user/reservationsByUserId";
-  getReservationByFacilityIdUrl = "http://localhost:8083/user/reservationsByFacilityId";
-  cancelReservationUrl = "http://localhost:8083/user/cancelReservation";
-  getUserUrl = 'http://localhost:8083/user/me'
-
-  user: User[] = []
-
-
+  getUrl = "http://localhost:8083/user/facilities";
   facilities: Facility[] = [];
 
   ngOnInit() {
     this.getFacility();
-    // 獲取使用者資訊
-    this.http.getApi<User>(this.getUserUrl).pipe(takeUntil(this.destroy$)).subscribe({
-      next: res => {
-        this.user.push(res);
-      },
-      error: err => {
-        this.snackBar.open('載入使用者失敗：' + err.status, '關閉', {
-          duration: 2000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
-      }
-    });
   }
 
   registFacility() {
@@ -62,22 +42,27 @@ export class FacilityComponent implements OnInit, OnDestroy{
 
   // ===== 設施列表 =====
   getFacility() {
-    this.http.getApi<Array<Facility>>(this.getFacilityUrl)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: res => {
-          if (res) {
-            this.facilities = res;
+    this.facilities = [];
+    this.http.getApi<Array<Facility>>(this.getUrl)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: res => {
+        if (res) {
+          for (let r of res) {
+            this.facilities.push(r);
           }
-        },
-        error: err => {
-          this.snackBar.open('載入設施失敗：' + err.status, '關閉', {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+          console.log(this.facilities);
+        } else {
+          console.log("no data");
         }
-      });
+      },
+      error: err => {
+        this.snackBar.open('發生錯誤，錯誤代碼：' + err.status, '關閉', {
+          duration: 2000,
+        });
+        console.log(err);
+      }
+    })
   }
 
   // ===== 目前選擇的設施 =====
@@ -106,9 +91,11 @@ export class FacilityComponent implements OnInit, OnDestroy{
 
   // 開啟預約表單
   openReserveForm(facility: Facility) {
-    const deslogRef = this.dialogRef.open(ReservationCalendar, {
-      data: facility
-    });
+    console.log(facility);
+
+    // const deslogRef = this.dialogRef.open(ReservationCalendar, {
+    //   data: facility
+    // });
   }
 
   // 關閉預約表單

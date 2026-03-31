@@ -4,24 +4,23 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validatio
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../@service/auth.service';
 import { AnnouncementService } from '../../../../@service/announcement.service';
-import { AnnouncementPayload } from '../../../../interface/interface';
 
-// 驗證公告截止時間至少要從明天 00:00 之後開始
-export function nowOrLaterValidator(control: AbstractControl): ValidationErrors | null {
-  const value = control.value as string | null | undefined;
-  if (!value) return null;
+export function tomorrowValidator(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) return null;
 
-  const safeValue: string = value;
-  const selected = new Date(safeValue);
+  const selected = new Date(control.value);
 
   const now = new Date();
-  now.setSeconds(0, 0);
+  const tomorrow = new Date(now);
+  tomorrow.setDate(now.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
 
-  return selected >= now ? null : { beforeNow: true };
+  return selected >= tomorrow ? null : { notTomorrowOrLater: true };
 }
 
 @Component({
   selector: 'app-create',
+  standalone: true,
   imports: [
     ReactiveFormsModule,
     DatePipe,
@@ -34,10 +33,8 @@ export class CreateComponent {
 
   private router = inject(Router);
   form!: FormGroup;
-  // mode 用來控制目前畫面是在新增、編輯或預覽狀態
   mode: 'create' | 'edit' | 'preview' = 'create';
   id: number | null = null;
-  // datetime-local input 的最小可選時間
   minDateTime!: string;
 
   constructor(
@@ -47,23 +44,24 @@ export class CreateComponent {
   ) {}
 
   ngOnInit() {
-    this.refreshMinDateTime();
+    const now = new Date();
 
     // 明天 00:00
-    // 將最小截止時間設定為明天 00:00
-    
+    const tomorrow = new Date(now);
+    tomorrow.setDate(now.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
 
-    // 建立公告表單與驗證規則
+    this.minDateTime = this.formatDate(tomorrow);
+
     this.form = this.fb.group({
       title: ['', Validators.required],
       content: ['', Validators.required],
       category: ['', Validators.required],
-      expiresAt: ['', [nowOrLaterValidator]],
+      expiresAt: ['', [tomorrowValidator]],
       isPinned: [false]
     });
 
     // 判斷是不是 edit
-    // 路由帶有 id 時代表進入編輯模式，先載入既有資料
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
@@ -80,33 +78,20 @@ export class CreateComponent {
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
   }
 
-  refreshMinDateTime(): void {
-    const now = new Date();
-    now.setSeconds(0, 0);
-    this.minDateTime = this.formatDate(now);
-  }
-
-  toDateTimeLocalValue(dateStr?: string | null): string {
-    if (!dateStr) return '';
-
-    const date = new Date(dateStr);
-    if (Number.isNaN(date.getTime())) {
-      return '';
-    }
-
-    return this.formatDate(date);
-  }
-
   loadData(id: number) {
-    // 將後端日期格式轉成 datetime-local 可綁定的字串
-    
+    function toDatetimeLocal(date: Date) {
+      const pad = (n: number) => n.toString().padStart(2, '0');
+
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
     this.service.getById(id).subscribe((res: any) =>
       {
+        const date = res.expiresAt ? new Date(res.expiresAt + 'Z') : null;
         const data = {
           title: res.title,
           content: res.content,
           category: res.category,
-          expiresAt: this.toDateTimeLocalValue(res.expiresAt),
+          expiresAt: date ? toDatetimeLocal(date) : '',
           isPinned: res.isPinned
         };
         this.form.patchValue(data);
@@ -114,9 +99,6 @@ export class CreateComponent {
   }
 
   goPreview() {
-    this.refreshMinDateTime();
-    this.form.get('expiresAt')?.updateValueAndValidity();
-    // 表單未通過驗證時，先顯示錯誤再阻止切到預覽
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -129,40 +111,38 @@ export class CreateComponent {
   }
 
   submit() {
-    this.refreshMinDateTime();
-    this.form.get('expiresAt')?.updateValueAndValidity();
     if (this.form.invalid) return;
 
     const formValue = this.form.value;
-    const expiresAtValue = formValue.expiresAt;
 
-    // 將表單資料整理成 API 需要的格式
-    const payload: AnnouncementPayload = {
+    const payload = {
       ...formValue,
-      expiresAt: typeof expiresAtValue === 'string' && expiresAtValue
-        ? expiresAtValue
+      expiresAt: formValue.expiresAt
+        ? new Date(formValue.expiresAt)
         : null
     };
 
-    // 有 id 代表更新公告，否則為新增公告
     if (this.id) {
+      console.log('更新 API', this.id, payload);
       this.service.updateById(this.id, payload).subscribe({
         next: (res: any) => {
-          this.router.navigate(['/admin/announcement']);
+          console.log('成功', res);
         },
         error: (err: any) => {
-          console.error('更新失敗', err.message);
+          console.error('失敗', err.message);
         }
       });
     } else {
+      console.log('新增 API', payload);
       this.service.postAnnoun(payload).subscribe({
         next: (res: any) => {
-          this.router.navigate(['/admin/announcement']);
+          console.log('成功', res);
         },
         error: (err: any) => {
-          console.error('新增失敗', err.message);
+          console.error('失敗', err.message);
         }
       });
     }
+    this.router.navigate(['/admin/announcement']);
   }
 }

@@ -24,16 +24,12 @@
   </div>
 
   <nav class="sidebar-nav">
-    <!-- 滑動色塊 -->
-    <div class="sliding-pill" [style.top.px]="pillTop" [style.background]="pillColor"></div>
-
-    @for (item of navItems; track item.route; let i = $index) {
+    @for (item of navItems; track item.route) {
       <a
         class="nav-item"
         [routerLink]="'/' + item.route"
         routerLinkActive="active"
-        (mouseenter)="onMouseEnter(i)"
-        (mouseleave)="onMouseLeave()"
+        [style.--nav-item-color]="item.color"
         [title]="isCollapsed ? item.label : ''"
       >
         <mat-icon>{{ item.icon }}</mat-icon>
