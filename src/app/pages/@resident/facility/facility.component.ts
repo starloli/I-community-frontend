@@ -9,6 +9,7 @@ import { Facility, ResReservation, User } from '../../../interface/interface';
 import { ReservationStatus } from '../../../interface/enum';
 import { Subject, takeUntil } from 'rxjs';
 import { ReservationCalendar } from '../../../dialog/reservation-calendar/reservation-calendar';
+import { RegistFacilityComponent } from '../../../dialog/regist-facility/regist-facility.component';
 
 @Component({
   selector: 'app-resident-facility',
@@ -22,7 +23,7 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog,
+    private dialogRef: MatDialog,
   ) { }
 
   private destroy$ = new Subject<void>();
@@ -135,7 +136,7 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
     this.http.getApi<Array<ResReservation>>(this.getReservationByFacilityIdUrl, facility.facilityId)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: res => {
-          const dialogRef = this.dialog.open(ReservationCalendar, {
+          const dialogRef = this.dialogRef.open(ReservationCalendar, {
             data: {
               facility: facility,
               reservations: res
@@ -198,7 +199,6 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
       year: 'numeric', month: '2-digit', day: '2-digit'
     });
   }
-
 
   ngOnDestroy(): void {
     this.destroy$.next();
