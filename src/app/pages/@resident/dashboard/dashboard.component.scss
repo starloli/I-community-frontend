@@ -60,7 +60,7 @@
 // ── 下方兩欄 ──────────────────────────────────────────
 .bottom-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
@@ -154,4 +154,74 @@
 
   mat-icon { font-size: 40px !important; width: 40px !important; height: 40px !important; color: #ddd; }
   span { font-size: 14px; }
+}
+
+.visitor-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.visitor-copy {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #666;
+}
+
+.visitor-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.visitor-highlight {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+
+  mat-icon {
+    color: #6a9e7f;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+  }
+}
+
+.visitor-action {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 12px;
+  background: #6a9e7f;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    background: #58886b;
+    transform: translateY(-1px);
+  }
+}
+
+@media (max-width: 1180px) {
+  .bottom-grid {
+    grid-template-columns: 1fr;
+  }
 }

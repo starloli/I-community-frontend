@@ -1,6 +1,4 @@
 <div class="announcement-container">
-
-  <!-- ── 頁面標題 ─────────────────────────────── -->
   <div class="page-header">
     <div class="header-left">
       <h1>社區公告</h1>
@@ -14,7 +12,6 @@
     }
   </div>
 
-  <!-- ── 統計卡片 ───────────────────────────────── -->
   <div class="stats-grid">
     <div class="stat-card">
       <mat-icon class="stat-icon-wrap" style="color: #B07A8A; font-size: 32px; width: 32px; height: 32px;">push_pin</mat-icon>
@@ -39,7 +36,6 @@
     </div>
   </div>
 
-  <!-- ── 篩選列 ────────────────────────────────── -->
   <div class="filter-bar">
     @for (cat of categories; track cat.value) {
       <button
@@ -59,7 +55,6 @@
     </div>
   </div>
 
-  <!-- ── 公告列表 ──────────────────────────────── -->
   @if (pagedAnnouncements.length === 0) {
     <div class="list-card">
       <div class="empty-state">
@@ -121,7 +116,6 @@
     </div>
   }
 
-  <!-- ── 分頁 ──────────────────────────────────── -->
   @if (totalPages > 1) {
     <div class="pagination">
       <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">‹</button>
@@ -131,16 +125,11 @@
       <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">›</button>
     </div>
   }
-
 </div>
 
-<!-- ════════════════════════════════════════════
-    詳情 Modal
-════════════════════════════════════════════ -->
 @if (showDetailModal && selectedAnnouncement) {
   <div class="form-overlay" (click)="closeDetail()">
     <div class="form-card" (click)="$event.stopPropagation()">
-
       <div class="form-header">
         <h2>
           <span class="category-badge" [ngClass]="getCategoryClass(selectedAnnouncement.category)" style="margin-right:8px">
@@ -191,13 +180,9 @@
   </div>
 }
 
-<!-- ════════════════════════════════════════════
-    新增 / 編輯 Modal
-════════════════════════════════════════════ -->
 @if (showFormModal) {
   <div class="form-overlay" (click)="closeForm()">
     <div class="form-card" (click)="$event.stopPropagation()">
-
       <div class="form-header">
         <h2>{{ isEditMode ? '編輯公告' : '發布新公告' }}</h2>
         <mat-icon class="close-btn" (click)="closeForm()">close</mat-icon>
@@ -247,9 +232,6 @@
   </div>
 }
 
-<!-- ════════════════════════════════════════════
-    刪除確認 Modal
-════════════════════════════════════════════ -->
 @if (showDeleteConfirm) {
   <div class="form-overlay" (click)="cancelDelete()">
     <div class="confirm-card" (click)="$event.stopPropagation()">

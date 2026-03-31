@@ -5,8 +5,8 @@ import { ResidentLayoutComponent } from './shared/resident-layout/resident-layou
 
 // ── 管理員頁面 ────────────────────────────────────────
 import { DashboardComponent } from './pages/@admin/dashboard/dashboard.component';
-import { AnnouncementComponent } from './pages/@admin/announcement/announcement.component';
 import { BillComponent } from './pages/@admin/bill/bill.component';
+import { AnnouncementComponent } from './pages/@admin/announcement/announcement.component';
 import { FacilityComponent } from './pages/@admin/facility/facility.component';
 import { PackageComponent } from './pages/@admin/package/package.component';
 import { RepairComponent } from './pages/@admin/repair/repair.component';
@@ -18,17 +18,16 @@ import { BillComponent as ResidentBillComponent } from './pages/@resident/bill/b
 import { ResidentFacilityComponent } from './pages/@resident/facility/facility.component';
 import { PackageComponent as ResidentPackageComponent } from './pages/@resident/package/package.component';
 import { ResidentRepairComponent } from './pages/@resident/repair/repair.component';
+import { VisitorComponent as ResidentVisitorComponent } from './pages/@resident/visitor/visitor.component';
 
 import { VisitorDialogComponent } from './dialog/visitor-dialog/visitor-dialog.component';
-import { ViewComponent } from './pages/@admin/announcement/view/view.component';
-import { CreateComponent } from './pages/@admin/announcement/create/create.component';
 import { VisitorComponent as AdminVisitorComponent } from './pages/@admin/visitor/admin-visitor.component';
 
 export const routes: Routes = [
   // ── 登入頁 ──────────────────────────────────────────
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  {path:'visitorDialog' ,component:VisitorDialogComponent},
+  { path: 'visitorDialog', component: VisitorDialogComponent },
   {
     path: 'admin',
     component: LayoutComponent,
@@ -52,10 +51,11 @@ export const routes: Routes = [
       // 頁面做好後逐一取消註解
       { path: 'dashboard', component: ResidentDashboardComponent },
       { path: 'announcement', component: ResidentAnnouncementComponent },
-      { path: 'bill',         component: ResidentBillComponent },
-      { path: 'facility',     component: ResidentFacilityComponent },
-      { path: 'package',      component: ResidentPackageComponent },
-      { path: 'repair',       component: ResidentRepairComponent },
+      { path: 'bill', component: ResidentBillComponent },
+      { path: 'facility', component: ResidentFacilityComponent },
+      { path: 'package', component: ResidentPackageComponent },
+      { path: 'repair', component: ResidentRepairComponent },
+      { path: 'visitor', component: ResidentVisitorComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ]
   },

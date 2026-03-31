@@ -32,7 +32,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  background: #6a9e7f;
+  background: #3f51b5;
   color: #ffffff;
   border: none;
   border-radius: 12px;
@@ -53,7 +53,7 @@
   }
 
   &:hover {
-    background: #5d8c70;
+    background: #303f9f;
     transform: translateY(-1px);
     box-shadow: 0 14px 28px rgba(106, 158, 127, 0.28);
   }
@@ -455,14 +455,14 @@ tbody tr:hover {
     font-size: 14px;
     flex-shrink: 0;
     transition: all 0.25s ease;
-    
+
     // 👈 加入呼吸動畫，提示使用者可點擊
     animation: click-hint-pulse 2s infinite ease-in-out;
   }
 
   &:hover {
     background: rgba(63, 81, 181, 0.08);
-    
+
     .avatar {
       animation: none; // 👈 懸停時停止呼吸動畫，改為懸停特效
       transform: scale(1.1) rotate(5deg);

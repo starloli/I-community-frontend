@@ -1,14 +1,15 @@
-import { HttpService } from '../../@service/http.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { RegistFacilityComponent } from '../../dialog/regist-facility/regist-facility.component';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { Facility } from '../../interface/interface';
 import { FormsModule } from '@angular/forms';
-import { ReserveFacilityComponent } from '../../dialog/reserve-facility/reserve-facility.component';
 import { Subject, takeUntil } from 'rxjs';
+import { HttpService } from '../../../@service/http.service';
+import { Facility } from '../../../interface/interface';
+import { RegistFacilityComponent } from '../../../dialog/regist-facility/regist-facility.component';
+import { ReserveFacilityComponent } from '../../../dialog/reserve-facility/reserve-facility.component';
+import { ReservationCalendar } from '../../../dialog/reservation-calendar/reservation-calendar';
 
 @Component({
   selector: 'app-facility',
@@ -90,9 +91,11 @@ export class FacilityComponent implements OnInit, OnDestroy{
 
   // 開啟預約表單
   openReserveForm(facility: Facility) {
-    const deslogRef = this.dialogRef.open(ReserveFacilityComponent, {
-      data: facility
-    });
+    console.log(facility);
+
+    // const deslogRef = this.dialogRef.open(ReservationCalendar, {
+    //   data: facility
+    // });
   }
 
   // 關閉預約表單

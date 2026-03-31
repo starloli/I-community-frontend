@@ -33,7 +33,6 @@ export class PackageService {
   post(data: any) {
     const adminPayload = {
       recipientName: data.recipientName ?? data.user,
-      phoneNumber: data.phoneNumber ?? data.phone,
       unitNumber: data.unitNumber,
       trackingNumber: data.trackingNumber,
       courier: data.courier,
@@ -43,12 +42,12 @@ export class PackageService {
 
     const createPayload = {
       recipientName: data.recipientName ?? data.user,
-      phoneNumber: data.phoneNumber ?? data.phone,
       unitNumber: data.unitNumber,
       trackingNumber: data.trackingNumber,
       courier: data.courier,
       notes: data.notes
     };
+
 
     return this.http.post<any>(this.apiUrl + '/admin/package', adminPayload).pipe(
       catchError((error) => {

@@ -1,61 +1,28 @@
-import { Component } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Visitor, User } from '../../../interface/interface';
-import { VisitorStatus, UserRole } from '../../../interface/enum';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+
+import { ApiService } from '../../../@service/api.service';
+import { AuthService } from '../../../@service/auth.service';
+import { VisitorStatus } from '../../../interface/enum';
+import { VisitorRecord } from '../../../interface/interface';
 
 @Component({
   selector: 'app-visitor',
   standalone: true,
   imports: [MatIconModule, MatButtonModule, MatDialogModule, CommonModule, FormsModule],
   templateUrl: './visitor.component.html',
-  styleUrl: './visitor.component.scss'
+  styleUrls: ['./visitor.component.scss']
 })
-export class VisitorComponent {
+export class VisitorComponent implements OnInit {
+  private http = inject(ApiService);
+  private auth = inject(AuthService);
 
-  // ===== 假資料用的 User =====
-  fakeHost: User = {
-    userId: 1,
-    userName: 'resident1',
-    passwordHash: '',
-    fullName: '假住戶',
-    email: 'fake@email.com',
-    phone: '0912345678',
-    unitNumber: 'A101',
-    role: UserRole.RESIDENT,
-    isActive: true,
-    createdAt: '2026-03-01'
-  };
-
-  // ===== 訪客列表假資料 =====
-  // TODO: 之後改成呼叫 GET /api/v1/visitors 取得真實資料
-  visitors: Visitor[] = [
-    { id: 1, visitorName: '王小明', visitorPhone: '0912345678', licensePlate: 'ABC-1234', hostUser: this.fakeHost, purpose: '拜訪', checkInTime: '10:30', checkOutTime: '',      status: VisitorStatus.INSIDE },
-    { id: 2, visitorName: '李美華', visitorPhone: '0923456789', licensePlate: '',          hostUser: this.fakeHost, purpose: '送貨', checkInTime: '09:15', checkOutTime: '11:00', status: VisitorStatus.LEFT },
-    { id: 3, visitorName: '陳大文', visitorPhone: '0934567890', licensePlate: 'XYZ-5678', hostUser: this.fakeHost, purpose: '維修', checkInTime: '08:45', checkOutTime: '10:30', status: VisitorStatus.LEFT },
-  ];
-
-  // ===== 搜尋關鍵字 =====
+  visitors: VisitorRecord[] = [];
   searchKeyword = '';
-
-  // ===== 過濾後的訪客列表 =====
-  get filteredVisitors(): Visitor[] {
-    if (!this.searchKeyword.trim()) return this.visitors;
-    const keyword = this.searchKeyword.toLowerCase();
-    return this.visitors.filter(v =>
-      v.visitorName.toLowerCase().includes(keyword) ||
-      v.visitorPhone.includes(keyword) ||
-      v.hostUser.unitNumber.toLowerCase().includes(keyword) ||
-      v.licensePlate.toLowerCase().includes(keyword) ||
-      v.checkInTime.includes(keyword) ||
-      v.checkOutTime.includes(keyword)
-    );
-  }
-
-  // ===== 控制新增表單 =====
   showForm = false;
 
   newVisitor = {
@@ -63,44 +30,147 @@ export class VisitorComponent {
     visitorPhone: '',
     unitNumber: '',
     licensePlate: '',
-    purpose: '',
+    purpose: ''
   };
 
-  openForm() { this.showForm = true; }
+  readonly VisitorStatus = VisitorStatus;
 
-  closeForm() {
-    this.showForm = false;
-    this.newVisitor = { visitorName: '', visitorPhone: '', unitNumber: '', licensePlate: '', purpose: '' };
+  ngOnInit(): void {
+    this.getVisitors();
   }
 
-  // ===== 新增訪客 =====
-  // TODO: 之後改成呼叫 POST /api/v1/visitors
-  addVisitor() {
-    const now = new Date();
-    const time = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
-    this.visitors.unshift({
-      id: this.visitors.length + 1,
-      visitorName: this.newVisitor.visitorName,
-      visitorPhone: this.newVisitor.visitorPhone,
-      licensePlate: this.newVisitor.licensePlate,
-      hostUser: { ...this.fakeHost, unitNumber: this.newVisitor.unitNumber },
-      purpose: this.newVisitor.purpose,
-      checkInTime: time,
-      checkOutTime: '',
-      status: VisitorStatus.INSIDE,
+  getVisitors(): void {
+    const currentUser = this.auth.getUser();
+    const currentUnitNumber = this.cleanText(currentUser?.unitNumber);
+
+    this.http.getApi('/visitor/getVisitor').subscribe({
+      next: (res: any) => {
+        const rawData = Array.isArray(res) ? res : (res?.data || []);
+
+        this.visitors = rawData
+          .map((visitor: any) => this.normalizeVisitor(visitor))
+          .filter((visitor: VisitorRecord) => this.hasVisibleContent(visitor))
+          .filter((visitor: VisitorRecord) => {
+            if (!currentUnitNumber) {
+              return true;
+            }
+
+            return visitor.residentialAddress === currentUnitNumber;
+          })
+          .reverse();
+      }
     });
-    this.closeForm();
   }
 
-  // ===== 訪客離開 =====
-  // TODO: 之後改成呼叫 PUT /api/v1/visitors/{id}/checkout
-  checkOut(visitor: Visitor) {
-    const now = new Date();
-    const time = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
-    visitor.checkOutTime = time;
-    visitor.status = VisitorStatus.LEFT;
+  get filteredVisitors(): VisitorRecord[] {
+    const keyword = this.searchKeyword.trim().toLowerCase();
+
+    if (!keyword) {
+      return this.visitors;
+    }
+
+    return this.visitors.filter(visitor =>
+      visitor.visitorName.toLowerCase().includes(keyword) ||
+      (visitor.visitorPhone || '').includes(keyword) ||
+      (visitor.residentialAddress || '').toLowerCase().includes(keyword) ||
+      (visitor.licensePlate || '').toLowerCase().includes(keyword) ||
+      (visitor.purpose || '').toLowerCase().includes(keyword)
+    );
   }
 
-  // 讓 HTML 可以使用 enum
-  VisitorStatus = VisitorStatus;
+  openForm(): void {
+    this.showForm = true;
+
+    const user = this.auth.getUser();
+    if (user) {
+      this.newVisitor.unitNumber = this.cleanText(user.unitNumber);
+    }
+  }
+
+  closeForm(): void {
+    this.showForm = false;
+    this.newVisitor = {
+      visitorName: '',
+      visitorPhone: '',
+      unitNumber: '',
+      licensePlate: '',
+      purpose: ''
+    };
+  }
+
+  addVisitor(): void {
+    if (!this.newVisitor.visitorName.trim()) {
+      return;
+    }
+
+    const now = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+      .toISOString()
+      .slice(0, 19);
+
+    const payload = {
+      visitorName: this.newVisitor.visitorName.trim(),
+      visitorPhone: this.newVisitor.visitorPhone.trim(),
+      licensePlate: this.newVisitor.licensePlate.trim(),
+      purpose: this.newVisitor.purpose.trim(),
+      status: 'NOTYET',
+      checkInTime: now
+    };
+
+    this.http.postApi('/visitor/saveVisitor', payload).subscribe(() => {
+      this.getVisitors();
+      this.closeForm();
+    });
+  }
+
+  checkOut(visitor: VisitorRecord): void {
+    if (!visitor.visitorId) {
+      return;
+    }
+
+    this.http.putApi(`/visitor/checkOut/${visitor.visitorId}`).subscribe(() => {
+      this.getVisitors();
+    });
+  }
+
+  private normalizeVisitor(visitor: any): VisitorRecord {
+    return {
+      visitorId: Number(visitor.visitorId ?? visitor.id ?? 0),
+      visitorName: this.cleanText(visitor.visitorName),
+      visitorPhone: this.cleanText(visitor.visitorPhone),
+      licensePlate: this.cleanText(visitor.licensePlate),
+      residentialAddress: this.cleanText(
+        visitor.residentialAddress ??
+        visitor.displayAddress ??
+        visitor.hostUser?.unitNumber
+      ),
+      purpose: this.cleanText(visitor.purpose),
+      estimatedTime: this.formatDateTime(visitor.estimatedTime),
+      checkInTime: this.formatDateTime(visitor.checkInTime),
+      checkOutTime: this.formatDateTime(visitor.checkOutTime),
+      status: visitor.status ?? 'NOTYET'
+    };
+  }
+
+  private hasVisibleContent(visitor: VisitorRecord): boolean {
+    return Boolean(
+      visitor.visitorName ||
+      visitor.visitorPhone ||
+      visitor.licensePlate ||
+      visitor.residentialAddress ||
+      visitor.purpose ||
+      visitor.estimatedTime ||
+      visitor.checkInTime ||
+      visitor.checkOutTime
+    );
+  }
+
+  private cleanText(value?: string | null): string {
+    return typeof value === 'string' ? value.trim() : '';
+  }
+
+  private formatDateTime(value?: string | null): string {
+    return typeof value === 'string' && value.trim()
+      ? value.replace('T', ' ').slice(0, 16)
+      : '';
+  }
 }
