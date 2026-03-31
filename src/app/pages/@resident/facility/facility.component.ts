@@ -57,6 +57,7 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
     this.http.getApi<User>(this.getUserUrl).pipe(takeUntil(this.destroy$)).subscribe({
       next: res => {
         this.user.push(res);
+        this.getReservation();
       },
       error: err => {
         this.snackBar.open('載入使用者失敗：' + err.status, '關閉', {
@@ -152,6 +153,7 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
                   verticalPosition: 'top'
                 });
               }
+              this.getReservation();
             }
           });
         },
@@ -177,8 +179,8 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
               horizontalPosition: 'center',
               verticalPosition: 'top'
             });
+            this.getReservation();
           }
-          this.getReservation();
         },
         error: err => {
           this.snackBar.open('取消預約失敗：' + err.status, '關閉', {
