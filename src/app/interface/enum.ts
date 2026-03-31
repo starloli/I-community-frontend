@@ -31,8 +31,9 @@ export enum RepairStatus {
 }
 
 export enum ReservationStatus {
-  CONFIRMED = '已確認',
-  CANCELLED = '已取消'
+  CONFIRMED = 'CONFIRMED',
+  CONFIRMING = 'CONFIRMING',
+  CANCELLED = 'CANCELLED'
 }
 
 export enum UserRole {

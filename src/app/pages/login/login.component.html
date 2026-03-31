@@ -149,7 +149,7 @@
         isConfirmTouched&&signUpPassword!==confirmPassword){<span style="color: red;">密碼不一致</span>}</span>
       <input type="password" placeholder="請確認密碼" [(ngModel)]="confirmPassword" (keydown.space)="$event.preventDefault()"
         (focus)="isConfirmTouched = true" [class.input-error]="isConfirmTouched && signUpPassword !== confirmPassword">
-    </div>@if(this.signUpUserName?.trim() && this.signUpPassword?.trim() && this.confirmPassword?.trim() &&
+    </div>@if(this.signUpUserName.trim() && this.signUpPassword.trim() && this.confirmPassword.trim() &&
     this.signUpPassword == this.confirmPassword &&(signUpPassword.length<=12 && signUpPassword.length>=6)){
       <button class="logtb" (click)="Stepper1()">下一步</button>
       }
@@ -178,7 +178,7 @@
         <input type="text" placeholder="請輸入您的門牌號（如 A棟3F-1）" [(ngModel)]="unitNumber">
         <div class="button-container">
           <button class="lastStep" (click)="lastStep()">上一步</button>
-          @if(this.email?.trim() && this.phone && this.unitNumber?.trim() && isValidEmail(email) &&
+          @if(this.email.trim() && this.phone && this.unitNumber.trim() && isValidEmail(email) &&
           isValidPhone(phone)){<button class="nextStep" (click)="stepper2()">下一步</button>}
           @else{<button class="errornext2">下一步</button>}
         </div>

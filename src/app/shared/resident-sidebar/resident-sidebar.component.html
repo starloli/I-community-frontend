@@ -1,0 +1,50 @@
+<div class="sidebar" [class.collapsed]="isCollapsed">
+
+  <!-- 收合/展開按鈕 -->
+  <button class="collapse-btn" (click)="toggleCollapse()">
+    <mat-icon>{{ isCollapsed ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+  </button>
+
+  <!-- Header -->
+  <div class="sidebar-header">
+    <mat-icon class="logo-icon">home_work</mat-icon>
+    <div class="logo-text">
+      <span class="logo-title">Community</span>
+      <span class="logo-subtitle">住戶服務</span>
+    </div>
+  </div>
+
+  <!-- 住戶資訊 -->
+  <div class="user-info" [class.collapsed]="isCollapsed">
+    <div class="user-avatar">{{ userInitial }}</div>
+    <div class="user-detail">
+      <span class="user-name">{{ userName }}</span>
+      <span class="user-unit">{{ unitNumber }}</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <!-- 滑動色塊 -->
+    <div class="sliding-pill" [style.top.px]="pillTop" [style.background]="pillColor"></div>
+
+    @for (item of navItems; track item.route; let i = $index) {
+      <a
+        class="nav-item"
+        [routerLink]="'/' + item.route"
+        routerLinkActive="active"
+        (mouseenter)="onMouseEnter(i)"
+        (mouseleave)="onMouseLeave()"
+        [title]="isCollapsed ? item.label : ''"
+      >
+        <mat-icon>{{ item.icon }}</mat-icon>
+        <span class="nav-label">{{ item.label }}</span>
+      </a>
+    }
+  </nav>
+
+  <div class="sidebar-footer" (click)="logout()" [title]="isCollapsed ? '登出' : ''">
+    <mat-icon>logout</mat-icon>
+    <span class="nav-label">登出</span>
+  </div>
+
+</div>

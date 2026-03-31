@@ -1,0 +1,117 @@
+<div class="bill-container">
+
+  <!-- 頁面標題 -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1>帳單繳費</h1>
+      <span class="subtitle">查詢及繳納水電雜費帳單</span>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════
+       統計卡片
+  ════════════════════════════ -->
+  <div class="stats-row">
+    <div class="stat-card pending" (click)="selectedFilter = '待繳'">
+      <mat-icon>pending_actions</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">{{ pendingCount }}</span>
+        <span class="stat-label">待繳帳單</span>
+      </div>
+    </div>
+    <div class="stat-card paid" (click)="selectedFilter = '已繳'">
+      <mat-icon>check_circle</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">{{ paidCount }}</span>
+        <span class="stat-label">已繳帳單</span>
+      </div>
+    </div>
+    <div class="stat-card overdue" (click)="selectedFilter = '逾期'">
+      <mat-icon>warning</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">{{ overdueCount }}</span>
+        <span class="stat-label">逾期帳單</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════
+       篩選按鈕
+  ════════════════════════════ -->
+  <div class="filter-row">
+    <button class="filter-btn" [class.active]="selectedFilter === '全部'" (click)="selectedFilter = '全部'; onFilterChange()">全部</button>
+    <button class="filter-btn" [class.active]="selectedFilter === '待繳'" (click)="selectedFilter = '待繳'; onFilterChange()">待繳</button>
+    <button class="filter-btn" [class.active]="selectedFilter === '已繳'" (click)="selectedFilter = '已繳'; onFilterChange()">已繳</button>
+    <button class="filter-btn" [class.active]="selectedFilter === '逾期'" (click)="selectedFilter = '逾期'; onFilterChange()">逾期</button>
+  </div>
+
+  <!-- ════════════════════════════
+       帳單列表
+  ════════════════════════════ -->
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>帳單月份</th>
+          <th>類型</th>
+          <th>金額</th>
+          <th>截止日期</th>
+          <th>狀態</th>
+          <th>繳費時間</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (filteredBills.length === 0) {
+        <tr>
+          <td colspan="7" class="empty-row">目前沒有符合條件的帳單</td>
+        </tr>
+        }
+        @for (bill of pagedBills; track bill.id) {
+        <tr [class.row-overdue]="bill.status === '逾期'">
+          <td><strong>{{ bill.billingMonth }}</strong></td>
+          <td>
+            <div class="bill-type-cell">
+              <mat-icon [style.color]="getBillColor(bill.billType)">{{ getBillIcon(bill.billType) }}</mat-icon>
+              {{ bill.billType }}
+            </div>
+          </td>
+          <td class="amount">{{ formatAmount(bill.amount) }}</td>
+          <td>{{ bill.dueDate }}</td>
+          <td>
+            @if (bill.status === '待繳') {
+            <span class="status-badge status-pending">待繳</span>
+            } @else if (bill.status === '已繳') {
+            <span class="status-badge status-paid">已繳</span>
+            } @else {
+            <span class="status-badge status-overdue">逾期</span>
+            }
+          </td>
+          <td>{{ bill.paidAt || '-' }}</td>
+          <td>
+            @if (bill.status !== '已繳') {
+            <button class="pay-btn" (click)="payBill(bill)">立即繳費</button>
+            } @else {
+            <span class="paid-text">已繳納</span>
+            }
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ════════════════════════════
+       分頁
+  ════════════════════════════ -->
+  @if (totalPages > 1) {
+    <div class="pagination">
+      <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">‹</button>
+      @for (page of pageNumbers; track page) {
+        <button class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">{{ page }}</button>
+      }
+      <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">›</button>
+    </div>
+  }
+
+</div>

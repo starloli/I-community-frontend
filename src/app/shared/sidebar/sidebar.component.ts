@@ -1,4 +1,3 @@
-import { AuthService } from './../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,44 +13,36 @@ import { filter } from 'rxjs/operators';
 })
 export class SidebarComponent implements OnInit {
 
-  isLogin: boolean = false;
   currentRoute = 'dashboard';
   isCollapsed = false; // 收合狀態
 
   navItems = [
-    { route: 'dashboard',    icon: 'home_work',    label: '社區總覽', color: '#5B7FA6' },
-    { route: 'visitor',      icon: 'person_add',   label: '訪客登記', color: '#6A9E7F' },
-    { route: 'announcement', icon: 'campaign',     label: '社區公告', color: '#B07A8A' },
-    { route: 'bill',         icon: 'receipt_long', label: '帳單繳費', color: '#B8935A' },
-    { route: 'facility',     icon: 'meeting_room', label: '設施預約', color: '#7B7FBA' },
-    { route: 'package',      icon: 'inventory_2',  label: '包裹查詢', color: '#7BA89E' },
-    { route: 'repair',       icon: 'build',        label: '報修申請', color: '#C47A5A' },
+    { route: 'admin/dashboard', icon: 'home_work', label: '社區總覽', color: '#5B7FA6' },
+    { route: 'admin/visitor', icon: 'person_add', label: '訪客登記', color: '#6A9E7F' },
+    { route: 'admin/announcement', icon: 'campaign', label: '社區公告', color: '#B07A8A' },
+    { route: 'admin/bill', icon: 'receipt_long', label: '帳單繳費', color: '#B8935A' },
+    { route: 'admin/facility', icon: 'meeting_room', label: '設施預約', color: '#7B7FBA' },
+    { route: 'admin/package', icon: 'inventory_2', label: '包裹查詢', color: '#7BA89E' },
+    { route: 'admin/repair', icon: 'build', label: '報修申請', color: '#C47A5A' },
   ];
 
   activeIndex = 0;
   hoverIndex = -1;
   private hoverTimer: any;
 
-  constructor(
-    private router: Router,
-    private authService: AuthService
-  ) {}
+  constructor(private router: Router) { }
 
   ngOnInit() {
-    // 初始化時設定當前 route
-    const current = this.router.url.replace('/', '').split('/')[0] || 'dashboard';
-    this.currentRoute = current;
-    this.activeIndex = this.navItems.findIndex(item => item.route === current);
+    // 初始化時根據完整 url 比對 navItems
+    const initIndex = this.navItems.findIndex(item => this.router.url.includes(item.route));
+    this.activeIndex = initIndex >= 0 ? initIndex : 0;
 
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      const route = event.url.replace('/', '').split('/')[0] || 'dashboard';
-      this.currentRoute = route;
-      this.activeIndex = this.navItems.findIndex(item => item.route === route);
+      const index = this.navItems.findIndex(item => event.url.includes(item.route));
+      this.activeIndex = index >= 0 ? index : 0;
     });
-
-    this.isLogin = this.authService.isLoggedIn();
   }
 
   // 切換收合狀態
@@ -80,9 +71,14 @@ export class SidebarComponent implements OnInit {
     return this.navItems[index]?.color || '#5B7FA6';
   }
 
+  get isLoggedIn(): boolean {
+    return !!localStorage.getItem('token');
+  }
+
   login() { this.router.navigate(['/login']); }
 
   logout() {
-    this.authService.logout()
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
   }
 }
