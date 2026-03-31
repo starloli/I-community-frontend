@@ -2,12 +2,12 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 
 import { ApiService } from '../../../@service/api.service';
-import { AuthService } from '../../../@service/auth.service';
-import { VisitorStatus } from '../../../interface/enum';
+import { VisitorServiceService } from '../../../@service/visitor-service.service';
+import { VisitorDialogComponent } from '../../../dialog/visitor-dialog/visitor-dialog.component';
 import { VisitorRecord } from '../../../interface/interface';
 
 @Component({
@@ -19,47 +19,32 @@ import { VisitorRecord } from '../../../interface/interface';
 })
 export class VisitorComponent implements OnInit {
   private http = inject(ApiService);
-  private auth = inject(AuthService);
+  private dialog = inject(MatDialog);
+  private visitorService = inject(VisitorServiceService);
 
+  // Current resident's visitor records shown in the table.
   visitors: VisitorRecord[] = [];
   searchKeyword = '';
   showForm = false;
 
+  // Estimated arrival time for the new visitor form.
+  estimatedTime = '';
+  minDateTime = '';
+
+  // Used to avoid filtering text while Chinese input composition is still in progress.
+  isComposing = false;
+
+  // Form model for resident-side visitor registration.
   newVisitor = {
     visitorName: '',
     visitorPhone: '',
-    unitNumber: '',
     licensePlate: '',
     purpose: ''
   };
 
-  readonly VisitorStatus = VisitorStatus;
-
   ngOnInit(): void {
-    this.getVisitors();
-  }
-
-  getVisitors(): void {
-    const currentUser = this.auth.getUser();
-    const currentUnitNumber = this.cleanText(currentUser?.unitNumber);
-
-    this.http.getApi('/visitor/getVisitor').subscribe({
-      next: (res: any) => {
-        const rawData = Array.isArray(res) ? res : (res?.data || []);
-
-        this.visitors = rawData
-          .map((visitor: any) => this.normalizeVisitor(visitor))
-          .filter((visitor: VisitorRecord) => this.hasVisibleContent(visitor))
-          .filter((visitor: VisitorRecord) => {
-            if (!currentUnitNumber) {
-              return true;
-            }
-
-            return visitor.residentialAddress === currentUnitNumber;
-          })
-          .reverse();
-      }
-    });
+    this.updateMinDateTime();
+    this.getMyVisitors();
   }
 
   get filteredVisitors(): VisitorRecord[] {
@@ -74,61 +59,126 @@ export class VisitorComponent implements OnInit {
       (visitor.visitorPhone || '').includes(keyword) ||
       (visitor.residentialAddress || '').toLowerCase().includes(keyword) ||
       (visitor.licensePlate || '').toLowerCase().includes(keyword) ||
-      (visitor.purpose || '').toLowerCase().includes(keyword)
+      (visitor.purpose || '').toLowerCase().includes(keyword) ||
+      (visitor.estimatedTime || '').toLowerCase().includes(keyword)
     );
   }
 
   openForm(): void {
     this.showForm = true;
-
-    const user = this.auth.getUser();
-    if (user) {
-      this.newVisitor.unitNumber = this.cleanText(user.unitNumber);
-    }
+    this.updateMinDateTime();
+    // Default the datetime picker to "now" so the resident can submit immediately.
+    this.estimatedTime = this.minDateTime;
   }
 
   closeForm(): void {
     this.showForm = false;
+    this.estimatedTime = '';
     this.newVisitor = {
       visitorName: '',
       visitorPhone: '',
-      unitNumber: '',
       licensePlate: '',
       purpose: ''
     };
   }
 
-  addVisitor(): void {
-    if (!this.newVisitor.visitorName.trim()) {
+  updateMinDateTime(): void {
+    const now = new Date();
+    const timezoneOffset = now.getTimezoneOffset() * 60000;
+    this.minDateTime = new Date(now.getTime() - timezoneOffset).toISOString().slice(0, 16);
+  }
+
+  onTimeChange(event: Event): void {
+    this.updateMinDateTime();
+    const input = event.target as HTMLInputElement;
+    const selectedValue = input.value;
+
+    if (selectedValue && selectedValue < this.minDateTime) {
+      // Clamp invalid past times back to the earliest allowed value.
+      input.value = this.minDateTime;
+      this.estimatedTime = this.minDateTime;
       return;
     }
 
-    const now = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-      .toISOString()
-      .slice(0, 19);
+    this.estimatedTime = selectedValue;
+  }
+
+  addVisitor(): void {
+    if (!this.newVisitor.visitorName.trim() || !this.estimatedTime) {
+      return;
+    }
 
     const payload = {
       visitorName: this.newVisitor.visitorName.trim(),
       visitorPhone: this.newVisitor.visitorPhone.trim(),
       licensePlate: this.newVisitor.licensePlate.trim(),
       purpose: this.newVisitor.purpose.trim(),
-      status: 'NOTYET',
-      checkInTime: now
+      estimatedTime: this.estimatedTime,
+      status: 'NOTYET'
     };
 
-    this.http.postApi('/visitor/saveVisitor', payload).subscribe(() => {
-      this.getVisitors();
+    this.http.postApi('/visitor/user/save', payload).subscribe(() => {
+      this.getMyVisitors();
       this.closeForm();
     });
   }
 
-  checkOut(visitor: VisitorRecord): void {
-    if (!visitor.visitorId) {
+  checkOut(visitorId: number): void {
+    if (!visitorId) {
       return;
     }
 
-    this.http.putApi(`/visitor/checkOut/${visitor.visitorId}`).subscribe(() => {
-      this.getVisitors();
+    this.http.putApi(`/visitor/checkOut/${visitorId}`).subscribe(() => {
+      this.getMyVisitors();
+    });
+  }
+
+  visitorMore(visitor: VisitorRecord): void {
+    // Keep compatibility with the existing dialog service state and also pass data directly.
+    this.visitorService.visitorId = visitor;
+    this.visitorService.permissions = 'residents';
+
+    this.dialog.open(VisitorDialogComponent, {
+      data: {
+        visitor,
+        permissions: 'residents'
+      }
+    });
+  }
+
+  onCompositionStart(): void {
+    this.isComposing = true;
+  }
+
+  onCompositionEnd(event: Event): void {
+    this.isComposing = false;
+    this.filterInput(event);
+  }
+
+  filterInput(event: Event): void {
+    if (this.isComposing) {
+      return;
+    }
+
+    const input = event.target as HTMLInputElement;
+    // Only allow Chinese characters and English letters in the visitor name field.
+    const regex = /[^a-zA-Z\u4e00-\u9fa5]/g;
+    this.newVisitor.visitorName = input.value.replace(regex, '');
+    input.value = this.newVisitor.visitorName;
+  }
+
+  private getMyVisitors(): void {
+    this.http.getApi('/visitor/my-visitors').subscribe({
+      next: (res: any) => {
+        const rawData = Array.isArray(res) ? res : (res?.data || []);
+
+        this.visitors = rawData
+          .map((visitor: any) => this.normalizeVisitor(visitor))
+          // Drop placeholder or malformed rows so the table does not render empty records.
+          .filter((visitor: VisitorRecord) => this.hasVisibleContent(visitor))
+          // Match the original resident page behavior: upcoming pending visitors first.
+          .sort((a: VisitorRecord, b: VisitorRecord) => this.compareVisitors(a, b));
+      }
     });
   }
 
@@ -147,8 +197,56 @@ export class VisitorComponent implements OnInit {
       estimatedTime: this.formatDateTime(visitor.estimatedTime),
       checkInTime: this.formatDateTime(visitor.checkInTime),
       checkOutTime: this.formatDateTime(visitor.checkOutTime),
-      status: visitor.status ?? 'NOTYET'
+      status: this.cleanText(visitor.status) || 'NOTYET',
+      formattedEstimated: this.getSortTime(visitor.estimatedTime)
     };
+  }
+
+  private compareVisitors(a: VisitorRecord, b: VisitorRecord): number {
+    const priorityA = this.getPriority(a);
+    const priorityB = this.getPriority(b);
+
+    if (priorityA !== priorityB) {
+      return priorityA - priorityB;
+    }
+
+    return (a.formattedEstimated || '').localeCompare(b.formattedEstimated || '');
+  }
+
+  private getPriority(visitor: VisitorRecord): number {
+    const now = this.getCurrentSortTime();
+    const estimated = visitor.formattedEstimated || '9999-12-31 23:59';
+
+    // Pending future visits appear first, then current visitors, then finished visits,
+    // and finally expired "not yet arrived" reservations.
+    if (visitor.status === 'NOTYET' && estimated >= now) {
+      return 1;
+    }
+
+    if (visitor.status === 'INSIDE') {
+      return 2;
+    }
+
+    if (visitor.status === 'COMPLETED' || visitor.status === 'LEFT') {
+      return 3;
+    }
+
+    if (visitor.status === 'NOTYET' && estimated < now) {
+      return 4;
+    }
+
+    return 5;
+  }
+
+  private getCurrentSortTime(): string {
+    return new Date().toISOString().slice(0, 16).replace('T', ' ');
+  }
+
+  private getSortTime(value?: string | null): string {
+    // Use a far-future fallback so missing reservation times sink to the bottom.
+    return typeof value === 'string' && value.trim()
+      ? value.replace('T', ' ').slice(0, 16)
+      : '9999-12-31 23:59';
   }
 
   private hasVisibleContent(visitor: VisitorRecord): boolean {

@@ -2,7 +2,7 @@
   <div class="page-header">
     <div class="header-left">
       <h1>訪客登記</h1>
-      <span class="subtitle">記錄住戶訪客預約與進出狀態</span>
+      <span class="subtitle">管理住戶預約中的訪客與來訪紀錄</span>
     </div>
     <button class="add-btn" (click)="openForm()">
       <mat-icon>person_add</mat-icon>
@@ -17,31 +17,68 @@
           <h2>新增訪客登記</h2>
           <mat-icon class="close-btn" (click)="closeForm()">close</mat-icon>
         </div>
+
         <div class="form-body">
           <div class="form-group">
             <label>訪客姓名 <span class="required">*</span></label>
-            <input type="text" [(ngModel)]="newVisitor.visitorName" placeholder="請輸入訪客姓名" />
+            <input
+              type="text"
+              [(ngModel)]="newVisitor.visitorName"
+              (compositionstart)="onCompositionStart()"
+              (compositionend)="onCompositionEnd($event)"
+              (input)="filterInput($event)"
+              placeholder="請輸入訪客姓名"
+            />
           </div>
+
           <div class="form-group">
-            <label>訪客電話</label>
-            <input type="text" [(ngModel)]="newVisitor.visitorPhone" placeholder="請輸入訪客電話" />
+            <label>聯絡電話</label>
+            <input
+              type="text"
+              [(ngModel)]="newVisitor.visitorPhone"
+              placeholder="請輸入訪客電話"
+            />
           </div>
-          <div class="form-group">
-            <label>住戶門牌</label>
-            <input type="text" [(ngModel)]="newVisitor.unitNumber" placeholder="例如 A101" readonly />
-          </div>
+
           <div class="form-group">
             <label>來訪目的</label>
-            <input type="text" [(ngModel)]="newVisitor.purpose" placeholder="例如 探訪、送件" />
+            <input
+              type="text"
+              [(ngModel)]="newVisitor.purpose"
+              placeholder="例如 探訪、送件、維修"
+            />
           </div>
+
           <div class="form-group">
             <label>車牌號碼</label>
-            <input type="text" [(ngModel)]="newVisitor.licensePlate" placeholder="選填" />
+            <input
+              type="text"
+              [(ngModel)]="newVisitor.licensePlate"
+              placeholder="選填"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>預計到訪時間 <span class="required">*</span></label>
+            <input
+              type="datetime-local"
+              [min]="minDateTime"
+              [ngModel]="estimatedTime"
+              (ngModelChange)="estimatedTime = $event"
+              (change)="onTimeChange($event)"
+            />
           </div>
         </div>
+
         <div class="form-footer">
           <button class="cancel-btn" (click)="closeForm()">取消</button>
-          <button class="submit-btn" (click)="addVisitor()">確認送出</button>
+          <button
+            class="submit-btn"
+            [disabled]="!newVisitor.visitorName.trim() || !estimatedTime"
+            (click)="addVisitor()"
+          >
+            送出登記
+          </button>
         </div>
       </div>
     </div>
@@ -52,7 +89,7 @@
     <input
       type="text"
       [(ngModel)]="searchKeyword"
-      placeholder="搜尋訪客姓名、電話、門牌、車牌、目的..."
+      placeholder="搜尋訪客姓名、電話、門牌、車牌或時間"
     />
     @if (searchKeyword) {
       <mat-icon class="clear-btn" (click)="searchKeyword = ''">close</mat-icon>
@@ -78,7 +115,7 @@
         @for (visitor of filteredVisitors; track visitor.visitorId) {
           <tr>
             <td>
-              <div class="visitor-name-cell">
+              <div class="visitor-name-cell" (click)="visitorMore(visitor)">
                 <div class="avatar">{{ (visitor.visitorName || '?').charAt(0) }}</div>
                 {{ visitor.visitorName || '-' }}
               </div>
@@ -91,16 +128,16 @@
             <td>{{ visitor.checkOutTime || '-' }}</td>
             <td>
               @if (visitor.status === 'NOTYET') {
-                <span class="status-badge status-notyet">未到</span>
-              } @else if (visitor.status === VisitorStatus.INSIDE) {
-                <span class="status-badge status-inside">在內</span>
+                <span class="status-badge status-notyet">未到訪</span>
+              } @else if (visitor.status === 'INSIDE') {
+                <span class="status-badge status-inside">在社區</span>
               } @else {
-                <span class="status-badge status-left">已離</span>
+                <span class="status-badge status-left">已離開</span>
               }
             </td>
             <td>
-              @if (visitor.status === VisitorStatus.INSIDE) {
-                <button class="checkout-btn" (click)="checkOut(visitor)">
+              @if (visitor.status === 'INSIDE') {
+                <button class="checkout-btn" (click)="checkOut(visitor.visitorId)">
                   登記離開
                 </button>
               }
