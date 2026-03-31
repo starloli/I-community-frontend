@@ -73,17 +73,10 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
     this.myRConut = 0;
     // 獲取預約記錄
 
-    const statusOrder = {
-      [ReservationStatus.CONFIRMED]: 1,
-      [ReservationStatus.CONFIRMING]: 2,
-      [ReservationStatus.CANCELLED]: 3,
-    }
-
     this.http.getApi<Array<ResReservation>>(this.getReservationByUserIdUrl, this.user[0].userId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: res => {
-          res.sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
           if (res) {
             this.myReservations = res;
             for (let m of this.myReservations) {
