@@ -12,12 +12,14 @@ import { VisitorDialogComponent } from './dialog/visitor-dialog/visitor-dialog.c
 import { ViewComponent } from './pages/announcement/view/view.component';
 import { CreateComponent } from './pages/announcement/create/create.component';
 import { AdminVisitorComponent } from './@admin/admin-visitor/admin-visitor.component';
+import { AdminBillComponent } from './@admin/admin-bill/admin-bill.component';
 
 export const routes: Routes = [
 { path: '', redirectTo: 'login', pathMatch: 'full' },
 { path: 'login', component: LoginComponent },
 {path:'visitorDialog' ,component:VisitorDialogComponent},
 {path:'adminVisitor',component:AdminVisitorComponent},
+{path:'adminBill',component:AdminBillComponent},
   {
     path: '',
     component: LayoutComponent,
@@ -32,7 +34,7 @@ export const routes: Routes = [
       { path: 'facility', component: FacilityComponent },
       { path: 'package', component: PackageComponent },
       { path: 'repair', component: RepairComponent },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },  { path: 'login', component: LoginComponent },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ]
   },
 
