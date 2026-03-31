@@ -50,6 +50,7 @@ export class FacilityComponent implements OnInit, OnDestroy{
       }
     });
   }
+
   registFacility() {
     const dialogRef = this.dialogRef.open(RegistFacilityComponent);
     dialogRef.afterClosed().subscribe(result => {
