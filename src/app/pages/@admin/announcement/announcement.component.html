@@ -1,6 +1,4 @@
 <div class="announcement-container">
-
-  <!-- ── 頁面標題 ─────────────────────────────── -->
   <div class="page-header">
     <div class="header-left">
       <h1>社區公告</h1>
@@ -14,7 +12,6 @@
     }
   </div>
 
-  <!-- ── 統計卡片（三欄，與 bill/repair 一致）───── -->
   <div class="stats-grid">
     <div class="stat-card">
       <mat-icon class="stat-icon-wrap" style="color: #B07A8A; font-size: 32px; width: 32px; height: 32px;">push_pin</mat-icon>
@@ -39,7 +36,6 @@
     </div>
   </div>
 
-  <!-- ── 篩選列（pill 按鈕 + 搜尋框）────────────── -->
   <div class="filter-bar">
     @for (cat of categories; track cat.value) {
       <button
@@ -59,7 +55,6 @@
     </div>
   </div>
 
-  <!-- ── 公告列表 ──────────────────────────────── -->
   @if (pagedAnnouncements.length === 0) {
     <div class="list-card">
       <div class="empty-state">
@@ -76,26 +71,26 @@
           [class.expired]="isExpired(ann)"
           (click)="openDetail(ann)"
         >
-          <!-- 左側：圖示框 -->
           <div class="ann-icon-box" [ngClass]="getCategoryClass(ann.category)">
             <mat-icon>campaign</mat-icon>
           </div>
 
-          <!-- 中間：標題 + 副文字 -->
           <div class="ann-main">
             <div class="ann-title-row">
               <span class="category-badge" [ngClass]="getCategoryClass(ann.category)">
                 {{ getCategoryLabel(ann.category) }}
               </span>
               @if (ann.isPinned) {
-                <span class="pin-badge"><mat-icon style="font-size:12px;width:12px;height:12px;vertical-align:middle;">push_pin</mat-icon> 置頂</span>
+                <span class="pin-badge">
+                  <mat-icon style="font-size:12px;width:12px;height:12px;vertical-align:middle;">push_pin</mat-icon>
+                  置頂
+                </span>
               }
               @if (isExpired(ann)) {
                 <span class="expired-badge">已到期</span>
               }
               <span class="ann-title">{{ ann.title }}</span>
             </div>
-            <!-- author.fullName -->
             <span class="ann-sub">
               <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">person</mat-icon>
               {{ getAuthorName(ann) }} &nbsp;·&nbsp;
@@ -103,7 +98,6 @@
             </span>
           </div>
 
-          <!-- 右側：發布日期 + 管理員操作 -->
           <div class="ann-right">
             <span class="ann-date">{{ formatDate(ann.publishedAt) }}</span>
             @if (isAdmin) {
@@ -111,7 +105,7 @@
                 <button class="icon-btn edit" (click)="openEdit(ann, $event)" title="編輯">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button class="icon-btn delete" (click)="openDelete(ann.announcementId!, $event)" title="刪除">
+                <button class="icon-btn delete" (click)="openDelete(ann.announcementId, $event)" title="刪除">
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
@@ -122,7 +116,6 @@
     </div>
   }
 
-  <!-- ── 分頁 ──────────────────────────────────── -->
   @if (totalPages > 1) {
     <div class="pagination">
       <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">‹</button>
@@ -132,16 +125,11 @@
       <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">›</button>
     </div>
   }
-
 </div>
 
-<!-- ════════════════════════════════════════════
-    詳情 Modal
-════════════════════════════════════════════ -->
 @if (showDetailModal && selectedAnnouncement) {
   <div class="form-overlay" (click)="closeDetail()">
     <div class="form-card" (click)="$event.stopPropagation()">
-
       <div class="form-header">
         <h2>
           <span class="category-badge" [ngClass]="getCategoryClass(selectedAnnouncement.category)" style="margin-right:8px">
@@ -183,7 +171,8 @@
         <div class="form-footer">
           <button class="cancel-btn" (click)="closeDetail()">關閉</button>
           <button class="submit-btn" (click)="openEdit(selectedAnnouncement, $event); closeDetail()">
-            <mat-icon style="font-size:16px;width:16px;height:16px;vertical-align:middle;">edit</mat-icon> 編輯此公告
+            <mat-icon style="font-size:16px;width:16px;height:16px;vertical-align:middle;">edit</mat-icon>
+            編輯此公告
           </button>
         </div>
       }
@@ -191,13 +180,9 @@
   </div>
 }
 
-<!-- ════════════════════════════════════════════
-    新增 / 編輯 Modal
-════════════════════════════════════════════ -->
 @if (showFormModal) {
   <div class="form-overlay" (click)="closeForm()">
     <div class="form-card" (click)="$event.stopPropagation()">
-
       <div class="form-header">
         <h2>{{ isEditMode ? '編輯公告' : '發布新公告' }}</h2>
         <mat-icon class="close-btn" (click)="closeForm()">close</mat-icon>
@@ -247,9 +232,6 @@
   </div>
 }
 
-<!-- ════════════════════════════════════════════
-    刪除確認 Modal
-════════════════════════════════════════════ -->
 @if (showDeleteConfirm) {
   <div class="form-overlay" (click)="cancelDelete()">
     <div class="confirm-card" (click)="$event.stopPropagation()">

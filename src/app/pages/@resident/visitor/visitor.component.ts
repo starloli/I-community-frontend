@@ -1,106 +1,274 @@
-import { Component } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Visitor, User } from '../../../interface/interface';
-import { VisitorStatus, UserRole } from '../../../interface/enum';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+
+import { ApiService } from '../../../@service/api.service';
+import { VisitorServiceService } from '../../../@service/visitor-service.service';
+import { VisitorDialogComponent } from '../../../dialog/visitor-dialog/visitor-dialog.component';
+import { VisitorRecord } from '../../../interface/interface';
 
 @Component({
   selector: 'app-visitor',
   standalone: true,
   imports: [MatIconModule, MatButtonModule, MatDialogModule, CommonModule, FormsModule],
   templateUrl: './visitor.component.html',
-  styleUrl: './visitor.component.scss'
+  styleUrls: ['./visitor.component.scss']
 })
-export class VisitorComponent {
+export class VisitorComponent implements OnInit {
+  private http = inject(ApiService);
+  private dialog = inject(MatDialog);
+  private visitorService = inject(VisitorServiceService);
 
-  // ===== 假資料用的 User =====
-  fakeHost: User = {
-    userId: 1,
-    userName: 'resident1',
-    passwordHash: '',
-    fullName: '假住戶',
-    email: 'fake@email.com',
-    phone: '0912345678',
-    unitNumber: 'A101',
-    role: UserRole.RESIDENT,
-    isActive: true,
-    createdAt: '2026-03-01'
-  };
-
-  // ===== 訪客列表假資料 =====
-  // TODO: 之後改成呼叫 GET /api/v1/visitors 取得真實資料
-  visitors: Visitor[] = [
-    { id: 1, visitorName: '王小明', visitorPhone: '0912345678', licensePlate: 'ABC-1234', hostUser: this.fakeHost, purpose: '拜訪', checkInTime: '10:30', checkOutTime: '',      status: VisitorStatus.INSIDE },
-    { id: 2, visitorName: '李美華', visitorPhone: '0923456789', licensePlate: '',          hostUser: this.fakeHost, purpose: '送貨', checkInTime: '09:15', checkOutTime: '11:00', status: VisitorStatus.LEFT },
-    { id: 3, visitorName: '陳大文', visitorPhone: '0934567890', licensePlate: 'XYZ-5678', hostUser: this.fakeHost, purpose: '維修', checkInTime: '08:45', checkOutTime: '10:30', status: VisitorStatus.LEFT },
-  ];
-
-  // ===== 搜尋關鍵字 =====
+  // Current resident's visitor records shown in the table.
+  visitors: VisitorRecord[] = [];
   searchKeyword = '';
-
-  // ===== 過濾後的訪客列表 =====
-  get filteredVisitors(): Visitor[] {
-    if (!this.searchKeyword.trim()) return this.visitors;
-    const keyword = this.searchKeyword.toLowerCase();
-    return this.visitors.filter(v =>
-      v.visitorName.toLowerCase().includes(keyword) ||
-      v.visitorPhone.includes(keyword) ||
-      v.hostUser.unitNumber.toLowerCase().includes(keyword) ||
-      v.licensePlate.toLowerCase().includes(keyword) ||
-      v.checkInTime.includes(keyword) ||
-      v.checkOutTime.includes(keyword)
-    );
-  }
-
-  // ===== 控制新增表單 =====
   showForm = false;
 
+  // Estimated arrival time for the new visitor form.
+  estimatedTime = '';
+  minDateTime = '';
+
+  // Used to avoid filtering text while Chinese input composition is still in progress.
+  isComposing = false;
+
+  // Form model for resident-side visitor registration.
   newVisitor = {
     visitorName: '',
     visitorPhone: '',
-    unitNumber: '',
     licensePlate: '',
-    purpose: '',
+    purpose: ''
   };
 
-  openForm() { this.showForm = true; }
+  ngOnInit(): void {
+    this.updateMinDateTime();
+    this.getMyVisitors();
+  }
 
-  closeForm() {
+  get filteredVisitors(): VisitorRecord[] {
+    const keyword = this.searchKeyword.trim().toLowerCase();
+
+    if (!keyword) {
+      return this.visitors;
+    }
+
+    return this.visitors.filter(visitor =>
+      visitor.visitorName.toLowerCase().includes(keyword) ||
+      (visitor.visitorPhone || '').includes(keyword) ||
+      (visitor.residentialAddress || '').toLowerCase().includes(keyword) ||
+      (visitor.licensePlate || '').toLowerCase().includes(keyword) ||
+      (visitor.purpose || '').toLowerCase().includes(keyword) ||
+      (visitor.estimatedTime || '').toLowerCase().includes(keyword)
+    );
+  }
+
+  openForm(): void {
+    this.showForm = true;
+    this.updateMinDateTime();
+    // Default the datetime picker to "now" so the resident can submit immediately.
+    this.estimatedTime = this.minDateTime;
+  }
+
+  closeForm(): void {
     this.showForm = false;
-    this.newVisitor = { visitorName: '', visitorPhone: '', unitNumber: '', licensePlate: '', purpose: '' };
+    this.estimatedTime = '';
+    this.newVisitor = {
+      visitorName: '',
+      visitorPhone: '',
+      licensePlate: '',
+      purpose: ''
+    };
   }
 
-  // ===== 新增訪客 =====
-  // TODO: 之後改成呼叫 POST /api/v1/visitors
-  addVisitor() {
+  updateMinDateTime(): void {
     const now = new Date();
-    const time = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
-    this.visitors.unshift({
-      id: this.visitors.length + 1,
-      visitorName: this.newVisitor.visitorName,
-      visitorPhone: this.newVisitor.visitorPhone,
-      licensePlate: this.newVisitor.licensePlate,
-      hostUser: { ...this.fakeHost, unitNumber: this.newVisitor.unitNumber },
-      purpose: this.newVisitor.purpose,
-      checkInTime: time,
-      checkOutTime: '',
-      status: VisitorStatus.INSIDE,
+    const timezoneOffset = now.getTimezoneOffset() * 60000;
+    this.minDateTime = new Date(now.getTime() - timezoneOffset).toISOString().slice(0, 16);
+  }
+
+  onTimeChange(event: Event): void {
+    this.updateMinDateTime();
+    const input = event.target as HTMLInputElement;
+    const selectedValue = input.value;
+
+    if (selectedValue && selectedValue < this.minDateTime) {
+      // Clamp invalid past times back to the earliest allowed value.
+      input.value = this.minDateTime;
+      this.estimatedTime = this.minDateTime;
+      return;
+    }
+
+    this.estimatedTime = selectedValue;
+  }
+
+  addVisitor(): void {
+    if (!this.newVisitor.visitorName.trim() || !this.estimatedTime) {
+      return;
+    }
+
+    const payload = {
+      visitorName: this.newVisitor.visitorName.trim(),
+      visitorPhone: this.newVisitor.visitorPhone.trim(),
+      licensePlate: this.newVisitor.licensePlate.trim(),
+      purpose: this.newVisitor.purpose.trim(),
+      estimatedTime: this.estimatedTime,
+      status: 'NOTYET'
+    };
+
+    this.http.postApi('/visitor/user/save', payload).subscribe(() => {
+      this.getMyVisitors();
+      this.closeForm();
     });
-    this.closeForm();
   }
 
-  // ===== 訪客離開 =====
-  // TODO: 之後改成呼叫 PUT /api/v1/visitors/{id}/checkout
-  checkOut(visitor: Visitor) {
-    const now = new Date();
-    const time = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
-    visitor.checkOutTime = time;
-    visitor.status = VisitorStatus.LEFT;
+  checkOut(visitorId: number): void {
+    if (!visitorId) {
+      return;
+    }
+
+    this.http.putApi(`/visitor/checkOut/${visitorId}`).subscribe(() => {
+      this.getMyVisitors();
+    });
   }
 
-  // 讓 HTML 可以使用 enum
-  VisitorStatus = VisitorStatus;
+  visitorMore(visitor: VisitorRecord): void {
+    // Keep compatibility with the existing dialog service state and also pass data directly.
+    this.visitorService.visitorId = visitor;
+    this.visitorService.permissions = 'residents';
+
+    this.dialog.open(VisitorDialogComponent, {
+      data: {
+        visitor,
+        permissions: 'residents'
+      }
+    });
+  }
+
+  onCompositionStart(): void {
+    this.isComposing = true;
+  }
+
+  onCompositionEnd(event: Event): void {
+    this.isComposing = false;
+    this.filterInput(event);
+  }
+
+  filterInput(event: Event): void {
+    if (this.isComposing) {
+      return;
+    }
+
+    const input = event.target as HTMLInputElement;
+    // Only allow Chinese characters and English letters in the visitor name field.
+    const regex = /[^a-zA-Z\u4e00-\u9fa5]/g;
+    this.newVisitor.visitorName = input.value.replace(regex, '');
+    input.value = this.newVisitor.visitorName;
+  }
+
+  private getMyVisitors(): void {
+    this.http.getApi('/visitor/my-visitors').subscribe({
+      next: (res: any) => {
+        const rawData = Array.isArray(res) ? res : (res?.data || []);
+
+        this.visitors = rawData
+          .map((visitor: any) => this.normalizeVisitor(visitor))
+          // Drop placeholder or malformed rows so the table does not render empty records.
+          .filter((visitor: VisitorRecord) => this.hasVisibleContent(visitor))
+          // Match the original resident page behavior: upcoming pending visitors first.
+          .sort((a: VisitorRecord, b: VisitorRecord) => this.compareVisitors(a, b));
+      }
+    });
+  }
+
+  private normalizeVisitor(visitor: any): VisitorRecord {
+    return {
+      visitorId: Number(visitor.visitorId ?? visitor.id ?? 0),
+      visitorName: this.cleanText(visitor.visitorName),
+      visitorPhone: this.cleanText(visitor.visitorPhone),
+      licensePlate: this.cleanText(visitor.licensePlate),
+      residentialAddress: this.cleanText(
+        visitor.residentialAddress ??
+        visitor.displayAddress ??
+        visitor.hostUser?.unitNumber
+      ),
+      purpose: this.cleanText(visitor.purpose),
+      estimatedTime: this.formatDateTime(visitor.estimatedTime),
+      checkInTime: this.formatDateTime(visitor.checkInTime),
+      checkOutTime: this.formatDateTime(visitor.checkOutTime),
+      status: this.cleanText(visitor.status) || 'NOTYET',
+      formattedEstimated: this.getSortTime(visitor.estimatedTime)
+    };
+  }
+
+  private compareVisitors(a: VisitorRecord, b: VisitorRecord): number {
+    const priorityA = this.getPriority(a);
+    const priorityB = this.getPriority(b);
+
+    if (priorityA !== priorityB) {
+      return priorityA - priorityB;
+    }
+
+    return (a.formattedEstimated || '').localeCompare(b.formattedEstimated || '');
+  }
+
+  private getPriority(visitor: VisitorRecord): number {
+    const now = this.getCurrentSortTime();
+    const estimated = visitor.formattedEstimated || '9999-12-31 23:59';
+
+    // Pending future visits appear first, then current visitors, then finished visits,
+    // and finally expired "not yet arrived" reservations.
+    if (visitor.status === 'NOTYET' && estimated >= now) {
+      return 1;
+    }
+
+    if (visitor.status === 'INSIDE') {
+      return 2;
+    }
+
+    if (visitor.status === 'COMPLETED' || visitor.status === 'LEFT') {
+      return 3;
+    }
+
+    if (visitor.status === 'NOTYET' && estimated < now) {
+      return 4;
+    }
+
+    return 5;
+  }
+
+  private getCurrentSortTime(): string {
+    return new Date().toISOString().slice(0, 16).replace('T', ' ');
+  }
+
+  private getSortTime(value?: string | null): string {
+    // Use a far-future fallback so missing reservation times sink to the bottom.
+    return typeof value === 'string' && value.trim()
+      ? value.replace('T', ' ').slice(0, 16)
+      : '9999-12-31 23:59';
+  }
+
+  private hasVisibleContent(visitor: VisitorRecord): boolean {
+    return Boolean(
+      visitor.visitorName ||
+      visitor.visitorPhone ||
+      visitor.licensePlate ||
+      visitor.residentialAddress ||
+      visitor.purpose ||
+      visitor.estimatedTime ||
+      visitor.checkInTime ||
+      visitor.checkOutTime
+    );
+  }
+
+  private cleanText(value?: string | null): string {
+    return typeof value === 'string' ? value.trim() : '';
+  }
+
+  private formatDateTime(value?: string | null): string {
+    return typeof value === 'string' && value.trim()
+      ? value.replace('T', ' ').slice(0, 16)
+      : '';
+  }
 }

@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,9 +10,7 @@ import { filter } from 'rxjs/operators';
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent implements OnInit {
-
-  currentRoute = 'dashboard';
+export class SidebarComponent {
   isCollapsed = false; // 收合狀態
 
   navItems = [
@@ -26,49 +23,11 @@ export class SidebarComponent implements OnInit {
     { route: 'admin/repair', icon: 'build', label: '報修申請', color: '#C47A5A' },
   ];
 
-  activeIndex = 0;
-  hoverIndex = -1;
-  private hoverTimer: any;
-
   constructor(private router: Router) { }
-
-  ngOnInit() {
-    // 初始化時根據完整 url 比對 navItems
-    const initIndex = this.navItems.findIndex(item => this.router.url.includes(item.route));
-    this.activeIndex = initIndex >= 0 ? initIndex : 0;
-
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      const index = this.navItems.findIndex(item => event.url.includes(item.route));
-      this.activeIndex = index >= 0 ? index : 0;
-    });
-  }
 
   // 切換收合狀態
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
-  }
-
-  onMouseEnter(i: number) {
-    clearTimeout(this.hoverTimer);
-    this.hoverIndex = i;
-  }
-
-  onMouseLeave() {
-    this.hoverTimer = setTimeout(() => {
-      this.hoverIndex = -1;
-    }, 100);
-  }
-
-  get pillTop(): number {
-    const index = this.hoverIndex >= 0 ? this.hoverIndex : this.activeIndex;
-    return index * 52 + 16;
-  }
-
-  get pillColor(): string {
-    const index = this.hoverIndex >= 0 ? this.hoverIndex : this.activeIndex;
-    return this.navItems[index]?.color || '#5B7FA6';
   }
 
   get isLoggedIn(): boolean {

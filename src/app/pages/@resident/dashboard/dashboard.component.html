@@ -1,19 +1,16 @@
 <div class="dashboard-container">
-
-  <!-- 頁面標題 -->
   <div class="page-header">
     <div>
       <h1>歡迎回來，{{ userName }}</h1>
       <span class="subtitle">
-        @if (unitNumber) { {{ unitNumber }} · } 住戶服務總覽
+        @if (unitNumber) { {{ unitNumber }} · } 住戶首頁總覽
       </span>
     </div>
   </div>
 
-  <!-- 統計卡片：點擊可跳轉到對應頁面 -->
   <div class="stats-grid">
     @for (stat of stats; track stat.label) {
-      <div class="stat-card" (click)="navigateTo(stat.route)" style="cursor:pointer">
+      <div class="stat-card" (click)="navigateTo(stat.route)" style="cursor: pointer">
         <div class="stat-top">
           <div class="stat-icon" [style.background]="stat.bg">
             <mat-icon [style.color]="stat.color">{{ stat.icon }}</mat-icon>
@@ -28,14 +25,11 @@
     }
   </div>
 
-  <!-- 下方兩欄：最新公告 + 我的包裹 -->
   <div class="bottom-grid">
-
-    <!-- 最新公告 -->
     <div class="card">
       <div class="card-header">
         <mat-icon>campaign</mat-icon>
-        <h2>最新公告</h2>
+        <h2>社區公告</h2>
         <a class="card-more" (click)="navigateTo('/resident/announcement')">查看全部</a>
       </div>
       @for (item of announcements; track item.title) {
@@ -49,17 +43,16 @@
       }
     </div>
 
-    <!-- 我的待取包裹 -->
     <div class="card">
       <div class="card-header">
         <mat-icon>inventory_2</mat-icon>
-        <h2>待取包裹</h2>
+        <h2>待領包裹</h2>
         <a class="card-more" (click)="navigateTo('/resident/package')">查看全部</a>
       </div>
       @if (myPackages.length === 0) {
         <div class="empty-packages">
           <mat-icon>check_circle</mat-icon>
-          <span>目前沒有待取包裹</span>
+          <span>目前沒有待領包裹</span>
         </div>
       } @else {
         @for (pkg of myPackages; track pkg.trackingNumber) {
@@ -77,5 +70,28 @@
       }
     </div>
 
+    <div class="card visitor-card">
+      <div class="card-header">
+        <mat-icon>person_add</mat-icon>
+        <h2>訪客登記</h2>
+        <a class="card-more" (click)="navigateTo('/resident/visitor')">前往頁面</a>
+      </div>
+
+      <p class="visitor-copy">提前為來訪親友完成登記，方便社區櫃台快速確認資料。</p>
+
+      <div class="visitor-highlights">
+        @for (item of visitorHighlights; track item) {
+          <div class="visitor-highlight">
+            <mat-icon>check_circle</mat-icon>
+            <span>{{ item }}</span>
+          </div>
+        }
+      </div>
+
+      <button class="visitor-action" (click)="navigateTo('/resident/visitor')">
+        <mat-icon>arrow_forward</mat-icon>
+        前往訪客登記
+      </button>
+    </div>
   </div>
 </div>

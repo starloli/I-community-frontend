@@ -1,24 +1,40 @@
-.facility-container { padding: 0; }
-
-// ── 頁面標題 ──────────────────────────────────────────
-.page-header {
-  margin-bottom: 24px;
-  h1 { font-size: 36px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px 0; }
-  .subtitle { font-size: 15px; color: #888; }
+.facility-container {
+  padding: 0;
 }
 
-// ── Tab 切換 ──────────────────────────────────────────
+.page-header {
+  margin-bottom: 24px;
+
+  h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 4px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: #888;
+  }
+}
+
 .tab-bar {
   display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 24px;
 }
 
 .tab-btn {
+  flex: 0 0 168px;
+  max-width: 168px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 10px 20px;
+  padding: 10px 14px;
+  padding-right: 24px;
   border-radius: 10px;
   border: 1.5px solid #e0e0e0;
   background: #fff;
@@ -29,29 +45,44 @@
   transition: all 0.2s;
   position: relative;
 
-  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
 
-  &:hover { border-color: #7B7FBA; color: #7B7FBA; }
+  &:hover {
+    border-color: #7b7fba;
+    color: #7b7fba;
+  }
 
   &.active {
-    background: #7B7FBA;
-    border-color: #7B7FBA;
+    background: #7b7fba;
+    border-color: #7b7fba;
     color: #fff;
   }
 
   .tab-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
     background: #e53935;
     color: #fff;
-    font-size: 11px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 3px;
+    border-radius: 999px;
+    font-size: 10px;
     font-weight: 700;
-    padding: 1px 6px;
-    border-radius: 10px;
-    min-width: 18px;
+    line-height: 16px;
     text-align: center;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
-// ── 設施卡片 ──────────────────────────────────────────
 .facility-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -71,52 +102,250 @@
   gap: 16px;
   transition: transform 0.2s, box-shadow 0.2s;
 
-  &:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
-  &.unavailable { opacity: 0.7; }
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  }
+
+  &.unavailable {
+    opacity: 0.7;
+  }
 }
 
 .facility-icon {
-  width: 56px; height: 56px; border-radius: 16px;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
   background: rgba(123, 127, 186, 0.12);
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  mat-icon { font-size: 28px; width: 28px; height: 28px; color: #7B7FBA; }
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    color: #7b7fba;
+  }
 }
 
-.facility-info { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.facility-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
 .facility-header {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  h2 { font-size: 20px; font-weight: 700; color: #1a1a2e; margin: 0; }
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0;
+  }
 }
 
 .available-badge {
-  padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap;
-  &.available   { background: #e8f5e9; color: #388e3c; }
-  &.unavailable { background: #f5f5f5; color: #999; }
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+
+  &.available {
+    background: #e8f5e9;
+    color: #388e3c;
+  }
+
+  &.unavailable {
+    background: #f5f5f5;
+    color: #999;
+  }
 }
 
-.facility-desc { font-size: 15px; color: #666; margin: 0; line-height: 1.5; }
+.facility-desc {
+  font-size: 15px;
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+}
 
-.facility-details { display: flex; gap: 20px; }
+.facility-details {
+  display: flex;
+  gap: 20px;
+}
 
 .detail-item {
-  display: flex; align-items: center; gap: 6px; color: #888; font-size: 14px;
-  mat-icon { font-size: 18px; width: 18px; height: 18px; color: #aaa; }
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #888;
+  font-size: 14px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #aaa;
+  }
 }
 
 .reserve-btn {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 12px; background: #7B7FBA; color: #ffffff;
-  border: none; border-radius: 12px; font-size: 15px; font-weight: 600;
-  cursor: pointer; transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: #7b7fba;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
 
-  mat-icon { font-size: 20px; width: 20px; height: 20px; }
-  &:hover { background: #5c60a0; }
-  &.disabled { background: #e0e0e0; color: #999; cursor: not-allowed; }
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    background: #5c60a0;
+  }
+
+  &.disabled {
+    background: #e0e0e0;
+    color: #999;
+    cursor: not-allowed;
+  }
 }
 
-// ── 我的預約列表 ──────────────────────────────────────
+.reservation-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 20px;
+  align-items: start;
+}
+
+.reservation-main {
+  min-width: 0;
+}
+
+.reservation-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.summary-card {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 18px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.summary-label {
+  font-size: 13px;
+  color: #7a7f91;
+}
+
+.summary-value {
+  font-size: 32px;
+  line-height: 1;
+  color: #1a1a2e;
+}
+
+.summary-sub {
+  font-size: 13px;
+  color: #8b90a1;
+  line-height: 1.5;
+}
+
+.danger-card .summary-value {
+  color: #d32f2f;
+}
+
+.sidebar-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #7b7fba;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 15px;
+    color: #1a1a2e;
+  }
+}
+
+.next-name {
+  font-size: 17px;
+  color: #1a1a2e;
+}
+
+.next-meta,
+.sidebar-empty {
+  font-size: 13px;
+  color: #7d8394;
+  line-height: 1.5;
+}
+
+.sidebar-empty {
+  margin: 0;
+}
+
+.legend-card {
+  gap: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &.confirmed {
+    background: #388e3c;
+  }
+
+  &.pending {
+    background: #4f5db8;
+  }
+
+  &.cancelled {
+    background: #9e9e9e;
+  }
+
+  &.expired {
+    background: #d32f2f;
+  }
+}
+
 .reservation-list {
   display: flex;
   flex-direction: column;
@@ -128,57 +357,127 @@
   border-radius: 16px;
   border: 1px solid #f0f0f0;
   padding: 18px 24px;
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 16px;
   transition: box-shadow 0.2s;
 
-  &:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-  &.cancelled { opacity: 0.6; }
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  &.history-card {
+    background: #fcfcfc;
+    border-color: #ececec;
+  }
 }
 
 .res-icon {
-  width: 48px; height: 48px; border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   background: rgba(123, 127, 186, 0.12);
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 
-  mat-icon { font-size: 24px; width: 24px; height: 24px; color: #7B7FBA; }
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    color: #7b7fba;
+  }
 }
 
-.res-info { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.res-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
 
 .res-title-row {
-  display: flex; align-items: center; gap: 10px;
-  .res-name { font-size: 16px; font-weight: 700; color: #1a1a2e; }
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  .res-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
 }
 
 .res-status {
-  padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;
-  &.status-confirmed { background: #e8f5e9; color: #388e3c; }
-  &.status-cancelled { background: #f5f5f5; color: #999; }
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+
+  &.status-confirmed {
+    background: #e8f5e9;
+    color: #388e3c;
+  }
+
+  &.status-pending {
+    background: #eef2ff;
+    color: #4f5db8;
+  }
+
+  &.status-cancelled {
+    background: #f5f5f5;
+    color: #999;
+  }
+
+  &.status-expired {
+    background: #ffebee;
+    color: #d32f2f;
+  }
 }
 
 .res-details {
-  display: flex; flex-wrap: wrap; gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 
   span {
-    display: flex; align-items: center; gap: 4px;
-    font-size: 13px; color: #888;
-    mat-icon { font-size: 15px; width: 15px; height: 15px; }
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: #888;
+
+    mat-icon {
+      font-size: 15px;
+      width: 15px;
+      height: 15px;
+    }
   }
 }
 
 .cancel-res-btn {
   padding: 8px 16px;
-  background: #ffebee; color: #e53935;
-  border: 1.5px solid #e53935; border-radius: 8px;
-  font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
+  background: #ffebee;
+  color: #e53935;
+  border: 1.5px solid #e53935;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
 
-  &:hover { background: #e53935; color: #fff; }
+  &:hover {
+    background: #e53935;
+    color: #fff;
+  }
 }
 
-// ── 空狀態 ────────────────────────────────────────────
 .empty-state {
   padding: 64px;
   text-align: center;
@@ -187,97 +486,91 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
+  background: rgba(255, 255, 255, 0.68);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
 
   .empty-icon {
-    font-size: 56px !important; width: 56px !important; height: 56px !important;
+    font-size: 56px !important;
+    width: 56px !important;
+    height: 56px !important;
     color: #ddd;
   }
-  p { font-size: 15px; margin: 0; }
+
+  p {
+    font-size: 15px;
+    margin: 0;
+  }
 }
 
 .reserve-btn-sm {
-  display: flex; align-items: center; gap: 6px;
-  padding: 10px 20px; background: #7B7FBA; color: #fff;
-  border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
-  cursor: pointer; transition: background 0.2s;
-  mat-icon { font-size: 18px; width: 18px; height: 18px; }
-  &:hover { background: #5c60a0; }
-}
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: #7b7fba;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
 
-// ── Modal ──────────────────────────────────────────────
-.form-overlay {
-  position: fixed; inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 1000;
-}
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
 
-.form-card {
-  background: #ffffff; border-radius: 20px; width: 480px;
-  max-width: calc(100vw - 32px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); overflow: hidden;
-}
-
-.form-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 24px 28px; border-bottom: 1px solid #f0f0f0;
-
-  h2 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 0; }
-  .close-btn { color: #aaa; cursor: pointer; &:hover { color: #333; } }
-}
-
-.form-body { padding: 24px 28px; display: flex; flex-direction: column; gap: 16px; }
-.form-row  { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-.form-group {
-  display: flex; flex-direction: column; gap: 6px;
-
-  label { font-size: 14px; font-weight: 600; color: #555; }
-  .required { color: #e53935; }
-
-  input {
-    padding: 10px 14px; border: 1.5px solid #e0e0e0; border-radius: 10px;
-    font-size: 15px; color: #333; outline: none; transition: border-color 0.2s;
-    &:focus { border-color: #7B7FBA; }
+  &:hover {
+    background: #5c60a0;
   }
 }
 
-.form-footer {
-  display: flex; justify-content: flex-end; gap: 12px;
-  padding: 20px 28px; border-top: 1px solid #f0f0f0;
-}
-
-.cancel-btn {
-  padding: 10px 24px; background: #f5f5f5; color: #555;
-  border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
-  cursor: pointer; &:hover { background: #eeeeee; }
-}
-
-.submit-btn {
-  padding: 10px 24px; background: #7B7FBA; color: #ffffff;
-  border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
-  cursor: pointer; &:hover { background: #5c60a0; }
-}
-
-.delete-btn {
-  padding: 10px 24px; background: #e53935; color: #fff;
-  border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
-  cursor: pointer; &:hover { background: #c62828; }
-}
-
-// ── 取消確認 Modal ────────────────────────────────────
-.confirm-card {
-  background: #ffffff; border-radius: 20px;
-  width: 380px; max-width: calc(100vw - 32px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-  text-align: center; padding: 40px 28px 28px;
-
-  .confirm-icon {
-    font-size: 48px !important; width: 48px !important; height: 48px !important;
-    display: block; margin: 0 auto 16px; color: #e53935;
+@media (max-width: 1080px) {
+  .reservation-layout {
+    grid-template-columns: 1fr;
   }
-  h3 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 0 0 8px; }
-  p  { font-size: 14px; color: #888; margin: 0 0 24px; }
 
-  .confirm-footer { display: flex; justify-content: center; gap: 12px; }
+  .reservation-sidebar {
+    order: -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .legend-card,
+  .next-card {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .facility-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tab-btn {
+    flex: 1 1 calc(50% - 4px);
+    max-width: none;
+  }
+
+  .reservation-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cancel-res-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .reservation-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .legend-card,
+  .next-card {
+    grid-column: auto;
+  }
 }

@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { RepairRequest, User } from '../../../interface/interface';
-import { RepairStatus, UserRole } from '../../../interface/enum';
+import { Subject, takeUntil } from 'rxjs';
+
 import { AuthService } from '../../../@service/auth.service';
+import { RepairService } from '../../../@service/repair.service';
+import { RepairStatus, UserRole } from '../../../interface/enum';
+import { RepairRequest, User } from '../../../interface/interface';
 
 @Component({
   selector: 'app-resident-repair',
@@ -13,7 +16,7 @@ import { AuthService } from '../../../@service/auth.service';
   templateUrl: './repair.component.html',
   styleUrl: './repair.component.scss'
 })
-export class ResidentRepairComponent implements OnInit {
+export class ResidentRepairComponent implements OnInit, OnDestroy {
   selectedFilter: '全部' | RepairStatus = '全部';
   currentPage = 1;
   pageSize = 5;
@@ -53,22 +56,16 @@ export class ResidentRepairComponent implements OnInit {
     note: '',
   };
 
-  fakeResident: User = {
-    userId: 0,
-    userName: '住戶小王',
-    passwordHash: '',
-    fullName: '住戶小王',
-    email: 'resident@email.com',
-    phone: '0912345678',
-    unitNumber: 'A101',
-    role: UserRole.RESIDENT,
-    isActive: true,
-    createdAt: '2026-03-01'
-  };
+  repairs: RepairRequest[] = [];
 
-  constructor(private authService: AuthService) {}
+  private destroy$ = new Subject<void>();
 
-  ngOnInit() {
+  constructor(
+    private authService: AuthService,
+    private repairService: RepairService
+  ) {}
+
+  ngOnInit(): void {
     const payload = this.authService.getUser();
     if (payload) {
       this.currentUser = {
@@ -79,24 +76,42 @@ export class ResidentRepairComponent implements OnInit {
         email: payload.email || '',
         phone: payload.phone || '',
         unitNumber: payload.unitNumber || '',
-        role: payload.role === 'ADMIN' ? UserRole.ADMIN : UserRole.RESIDENT,
+        role: UserRole.RESIDENT,
         isActive: true,
         createdAt: payload.createdAt || new Date().toISOString(),
       };
-      this.fakeResident = this.currentUser;
     }
+
+    this.repairService.getUserAll().subscribe();
+
+    this.repairService.userRepairs$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(data => {
+        this.repairs = data.map(repair => this.normalizeRepair(repair));
+      });
   }
 
-  repairs: RepairRequest[] = [
-    { id: 1,  user: this.fakeResident, location: 'A棟電梯',    category: '電梯', description: '電梯門無法正常關閉',    status: RepairStatus.PENDING,     submittedAt: '2026-03-16', resolvedAt: '', handler: this.fakeResident, imageUrl: '' },
-    { id: 2,  user: this.fakeResident, location: 'B棟2樓走廊', category: '水電', description: '走廊燈泡損壞，夜間昏暗', status: RepairStatus.IN_PROGRESS,  submittedAt: '2026-03-15', resolvedAt: '', handler: this.fakeResident, imageUrl: '' },
-    { id: 3,  user: this.fakeResident, location: 'C棟地下室',  category: '水管', description: '水管漏水，地面積水',     status: RepairStatus.DONE,        submittedAt: '2026-03-14', resolvedAt: '2026-03-15', handler: this.fakeResident, imageUrl: '' },
-  ];
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private normalizeRepair(repair: any): RepairRequest {
+    return {
+      ...repair,
+      repairId: repair.repairId ?? repair.id,
+      userName: repair.userName || repair.user?.fullName || this.currentUser.fullName,
+      submittedAt: repair.submittedAt || repair.createdAt || '',
+      resolvedAt: repair.resolvedAt || repair.completedAt || '',
+      handlerName: repair.handlerName || repair.handler?.fullName || repair.handler || '',
+      note: repair.note || repair.remark || '',
+      imageUrl: repair.imageUrl || ''
+    };
+  }
 
   get filteredRepairs(): RepairRequest[] {
-    const myRepairs = this.repairs.filter(r => r.user.userName === this.currentUser.userName);
-    if (this.selectedFilter === '全部') return myRepairs;
-    return myRepairs.filter(r => r.status === this.selectedFilter);
+    if (this.selectedFilter === '全部') return this.repairs;
+    return this.repairs.filter(r => r.status === this.selectedFilter);
   }
 
   get pagedRepairs(): RepairRequest[] {
@@ -136,18 +151,14 @@ export class ResidentRepairComponent implements OnInit {
 
   submitRepair() {
     if (!this.newRepair.location || !this.newRepair.description) return;
-    this.repairs.unshift({
-      id: this.repairs.length + 1,
-      user: this.currentUser,
+
+    this.repairService.post({
       location: this.newRepair.location,
       category: this.newRepair.category,
       description: this.newRepair.description,
-      status: RepairStatus.PENDING,
-      submittedAt: new Date().toLocaleDateString('zh-TW'),
-      resolvedAt: '',
-      handler: this.currentUser,
-      imageUrl: '',
-    });
+      submittedAt: new Date().toISOString()
+    }).subscribe();
+
     this.closeForm();
   }
 
@@ -169,15 +180,24 @@ export class ResidentRepairComponent implements OnInit {
 
   submitEdit() {
     if (!this.selectedRepair || !this.editForm.location || !this.editForm.description) return;
-    this.selectedRepair.location = this.editForm.location;
-    this.selectedRepair.category = this.editForm.category;
-    this.selectedRepair.description = this.editForm.description;
-    this.selectedRepair.status = this.editForm.status;
+
+    this.selectedRepair = this.normalizeRepair({
+      ...this.selectedRepair,
+      location: this.editForm.location,
+      category: this.editForm.category,
+      description: this.editForm.description,
+      status: this.editForm.status
+    });
+
+    this.repairs = this.repairs.map(repair =>
+      repair.repairId === this.selectedRepair?.repairId ? this.selectedRepair! : repair
+    );
+
     this.closeEditForm();
   }
 
   deleteRepair(repair: RepairRequest) {
-    this.repairs = this.repairs.filter(r => r.id !== repair.id);
+    this.repairs = this.repairs.filter(r => r.repairId !== repair.repairId);
     if (this.pagedRepairs.length === 0 && this.currentPage > 1) {
       this.currentPage--;
     }
@@ -196,12 +216,19 @@ export class ResidentRepairComponent implements OnInit {
 
   submitComplete() {
     if (!this.selectedRepair || !this.completeForm.handler) return;
-    this.selectedRepair.status = RepairStatus.DONE;
-    this.selectedRepair.resolvedAt = new Date().toLocaleDateString('zh-TW');
-    this.selectedRepair.handler = {
-      ...this.fakeResident,
-      fullName: this.completeForm.handler
-    };
+
+    this.selectedRepair = this.normalizeRepair({
+      ...this.selectedRepair,
+      status: RepairStatus.DONE,
+      resolvedAt: new Date().toISOString(),
+      handlerName: this.completeForm.handler,
+      note: this.completeForm.note
+    });
+
+    this.repairs = this.repairs.map(repair =>
+      repair.repairId === this.selectedRepair?.repairId ? this.selectedRepair! : repair
+    );
+
     this.closeCompleteForm();
   }
 

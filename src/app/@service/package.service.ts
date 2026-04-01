@@ -10,8 +10,11 @@ import { PackageStatus } from '../interface/enum';
 export class PackageService {
 
   private apiUrl = 'http://localhost:8083';
+  private userUrl = 'http://localhost:8083/user/package'
   private packagesSubject = new BehaviorSubject<Package[]>([]);
   packages$ = this.packagesSubject.asObservable();
+  private userPackagesSubject = new BehaviorSubject<Package[]>([]);
+  userPackages$ = this.userPackagesSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -21,27 +24,48 @@ export class PackageService {
     );
   }
 
+  getUserAll() {
+    return this.http.get<Package[]>(this.userUrl).pipe(
+      tap(data => this.userPackagesSubject.next(data))
+    );
+  }
+
   post(data: any) {
-    return this.http.post<any>(
-        this.apiUrl + '/admin/package',
-        {
-          recipientName: data.user,
-          unitNumber: data.unitNumber,
-          trackingNumber: data.trackingNumber,
-          courier: data.courier,
-          arrivedAt: data.arrivedAt,
-          notes: data.notes
+    const adminPayload = {
+      recipientName: data.recipientName ?? data.user,
+      unitNumber: data.unitNumber,
+      trackingNumber: data.trackingNumber,
+      courier: data.courier,
+      arrivedAt: data.arrivedAt,
+      notes: data.notes
+    };
+
+    const createPayload = {
+      recipientName: data.recipientName ?? data.user,
+      unitNumber: data.unitNumber,
+      trackingNumber: data.trackingNumber,
+      courier: data.courier,
+      notes: data.notes
+    };
+
+
+    return this.http.post<any>(this.apiUrl + '/admin/package', adminPayload).pipe(
+      catchError((error) => {
+        if (error.status === 404 || error.status === 405) {
+          return this.http.post<any>(this.apiUrl + '/package/create', createPayload);
         }
-      ).pipe(
-        tap(newItem => {
-          const current = this.packagesSubject.value;
-          this.packagesSubject.next([...current, newItem]);
-        }),
-        catchError((error) => {
-          console.error('新增失敗', error);
-          return throwError(() => error);
-        })
-      );
+
+        return throwError(() => error);
+      }),
+      tap(newItem => {
+        const current = this.packagesSubject.value;
+        this.packagesSubject.next([...current, newItem]);
+      }),
+      catchError((error) => {
+        console.error('新增失敗', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   notifyById(id: number) {
@@ -66,7 +90,7 @@ export class PackageService {
 
           const updated = current.map(pkg =>
             pkg.id === id
-              ? { ...pkg, status: PackageStatus.PICKED_UP, ipickupAt: pickupAt }
+              ? { ...pkg, status: PackageStatus.PICKED_UP, pickupAt: pickupAt }
               : pkg
           );
 
