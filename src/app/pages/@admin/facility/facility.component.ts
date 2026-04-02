@@ -9,7 +9,7 @@ import { HttpService } from '../../../@service/http.service';
 import { Facility } from '../../../interface/interface';
 import { RegistFacilityComponent } from '../../../dialog/regist-facility/regist-facility.component';
 import { ReserveFacilityComponent } from '../../../dialog/reserve-facility/reserve-facility.component';
-import { ReservationCalendar } from '../../../dialog/reservation-calendar/reservation-calendar';
+import { ReservationCalendar } from '../../../dialog/reservation-calendar/reservation-calendar.component';
 
 @Component({
   selector: 'app-facility',
