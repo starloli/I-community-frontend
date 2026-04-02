@@ -1,3 +1,4 @@
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
 * {
   margin: 0;
   padding: 0;
@@ -71,6 +72,44 @@ body {
     &:disabled {
       opacity: 0.3;
       cursor: not-allowed;
+    }
+  }
+}
+.reservation-calendar-dialog .mat-mdc-dialog-container {
+  --mdc-dialog-container-shape: 24px !important;
+}
+// ===== 修正 Angular Material 透明度問題 =====
+::ng-deep {
+  // 1. 修正輸入框本身的底色（未展開時）
+  .mat-mdc-form-field-flex {
+    background-color: background !important;
+    border-radius: 8px !important;
+  }
+
+  // 2. 修正彈出的下拉面板底色（展開時）
+  // 注意：因為 Overlay 在組件外，如果寫在組件的 scss 必須加 ::ng-deep 甚至 !important
+  .mat-mdc-select-panel,
+  .mat-select-panel {
+    background-color: background !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+    border-radius: 8px !important;
+
+    // 調整選項的 hover 顏色
+    .mat-mdc-option,
+    .mat-option {
+      transition: background 0.2s;
+
+      &:hover:not(.mat-mdc-option-disabled),
+      &:focus:not(.mat-mdc-option-disabled) {
+        background-color: rgba(63, 81, 181, 0.08) !important; // 使用你的 $primary-color 的透明版
+      }
+
+      // 被選中時的顏色
+      &.mdc-list-item--selected,
+      &.mat-selected {
+        background-color: rgba(63, 81, 181, 0.15) !important;
+        color: primary-color !important;
+      }
     }
   }
 }
