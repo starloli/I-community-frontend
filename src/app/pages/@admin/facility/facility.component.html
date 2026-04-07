@@ -1,12 +1,12 @@
 <div class="facility-container">
   <div class="page-header">
     <div class="header-left">
-      <h1>設施管理</h1>
-      <span class="subtitle">管理社區公共設施與開放狀態</span>
+      <h1>設備管理</h1>
+      <span class="subtitle">管理社區設備資訊與開放狀態</span>
     </div>
     <button class="add-btn" (click)="registFacility()">
       <mat-icon>add</mat-icon>
-      註冊設施
+      新增設備
     </button>
   </div>
 
@@ -41,16 +41,16 @@
         </div>
       </div>
 
-      @if (item.openTime) {
-      <button class="reserve-btn" (click)="openReserveForm(item)">
-        <mat-icon>event_available</mat-icon>
-        立即預約
-      </button>
-      } @else {
-      <button class="reserve-btn disabled" disabled>
-        暫停開放
-      </button>
-      }
+      <div class="action-row">
+        <button class="action-btn edit-btn" type="button">
+          <mat-icon>edit</mat-icon>
+          編輯
+        </button>
+        <button class="action-btn delete-btn" type="button">
+          <mat-icon>delete</mat-icon>
+          刪除
+        </button>
+      </div>
     </div>
     }
   </div>

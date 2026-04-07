@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReservationCalendar } from './reservation-calendar';
+import { ReservationCalendar } from './reservation-calendar.component';
 
 describe('ReservationCalendar', () => {
   let component: ReservationCalendar;

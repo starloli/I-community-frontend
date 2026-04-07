@@ -12,8 +12,8 @@ import { parse } from 'date-fns';
   selector: 'app-reservation-calendar',
   standalone: true,
   imports: [CalendarModule],
-  templateUrl: './reservation-calendar.html',
-  styleUrl: './reservation-calendar.scss',
+  templateUrl: './reservation-calendar.component.html',
+  styleUrls: ['./reservation-calendar.component.scss'],
 })
 export class ReservationCalendar implements OnInit {
   constructor(

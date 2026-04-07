@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -18,6 +18,7 @@ import { PackageService } from './../../../@service/package.service';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
+  // 卡片順序有固定意義，因為各個載入方法會依索引更新對應數值。
   stats = [
     { label: '社區住戶總數', value: '載入中...', icon: 'people', color: '#3f51b5', bg: '#e8eaf6' },
     { label: '今日訪客登記', value: '載入中...', icon: 'person_add', color: '#0288d1', bg: '#e1f5fe' },
@@ -37,6 +38,7 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // 各區塊分開載入，避免單一請求失敗時影響整個儀表板顯示。
     this.loadVisitors();
     this.loadAnnouncements();
     this.loadPackages();
@@ -52,6 +54,7 @@ export class DashboardComponent implements OnInit {
         const todayCount = visitors.filter((visitor: any) => this.isToday(visitor?.checkInTime)).length;
         this.stats[1].value = todayCount.toString();
 
+        // 訪客區塊只顯示最近的進場紀錄，避免資訊過多。
         this.recentVisitors = visitors
           .filter((visitor: any) => visitor.checkInTime)
           .sort((a: any, b: any) => this.getDateTimestamp(b?.checkInTime) - this.getDateTimestamp(a?.checkInTime))
@@ -72,6 +75,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private loadAnnouncements(): void {
+    // 先觸發資料更新，再透過 service 提供的共用串流同步畫面。
     this.announcementService.getAll().subscribe();
     this.announcementService.announs$.subscribe(data => {
       this.announcements = data
@@ -146,6 +150,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private getDateTimestamp(value?: string): number {
+    // 統一處理日期字串轉換，遇到無效值時一律回傳 0，避免各處重複判斷。
     if (!value) {
       return 0;
     }
