@@ -51,7 +51,14 @@ export class UpdateFacility implements OnInit {
   }
 
   onOpenTimeChange() {
-    throw new Error('Method not implemented.');
+      if (this.facility.openTime >= this.facility.closeTime) {
+        const hour = this.facility.openTime.split(':')[0];
+        const nextHour = (parseInt(hour) + 1).toString().padStart(2, '0');
+        this.facility.closeTime = nextHour + ':00';
+
+        if (parseInt(hour) >= 23)
+          this.facility.closeTime = '';
+      }
   }
 
   check() {

@@ -58,8 +58,6 @@ export class RegistFacilityComponent {
           this.facility.closeTime = '';
       }
     }
-    console.log(this.facility.openTime);
-    console.log(this.facility.closeTime);
   }
 
   check() {
