@@ -22,12 +22,16 @@ import { VisitorComponent as ResidentVisitorComponent } from './pages/@resident/
 
 import { VisitorDialogComponent } from './dialog/visitor-dialog/visitor-dialog.component';
 import { VisitorComponent as AdminVisitorComponent } from './pages/@admin/visitor/admin-visitor.component';
+import { ResetPassword } from './pages/reset-password/reset-password';
+import { ForgetPassword } from './pages/forget-password/forget-password';
 
 export const routes: Routes = [
   // ── 登入頁 ──────────────────────────────────────────
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'visitorDialog', component: VisitorDialogComponent },
+  { path: 'reset-password', component: ResetPassword },
+  { path: 'forget-password', component: ForgetPassword },
   {
     path: 'admin',
     component: LayoutComponent,
