@@ -1,0 +1,31 @@
+<form #facilityForm="ngForm" (ngSubmit)="check()" class="a">
+  <span>設備名稱</span>
+  <input type="text" name="name" [(ngModel)]="facility.name" required>
+  <span>設備描述</span>
+  <input type="text" name="description" [(ngModel)]="facility.description" required>
+  <span>可容納人數</span>
+  <input type="number" name="capacity" [(ngModel)]="facility.capacity" required>
+  <span>開始時間</span>
+  <select name="open_time" [(ngModel)]="facility.openTime" (change)="onOpenTimeChange()" required>
+    <option value="" disabled selected>請選擇時間</option>
+    @for (hour of getAvailableOpenTimes(); track $index) {
+    <option [value]="hour">
+      {{ hour }}
+    </option>
+    }
+  </select>
+  <span>結束時間</span>
+  <select name="end_time" [(ngModel)]="facility.closeTime" required>
+    <option value="" disabled selected>請選擇時間</option>
+    @for (hour of getAvailableCloseTimes(); track $index) {
+    <option [value]="hour">
+      {{ hour }}
+    </option>
+    }
+  </select>
+  <span>是否可預訂</span>
+  <input type="checkbox" name="is_available" [(ngModel)]="facility.isReservable">
+  <span>是否可用</span>
+  <input type="checkbox" name="is_available" [(ngModel)]="facility.isAvailable">
+  <button type="submit" [disabled]="facilityForm.invalid">送出</button>
+</form>

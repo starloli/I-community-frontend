@@ -17,10 +17,11 @@ export class RegistFacilityComponent {
   constructor(
     private http: HttpService,
     private snackBar: MatSnackBar,
-    public dialogRef: MatDialogRef<RegistFacilityComponent>
+    public dialogRef: MatDialogRef<RegistFacilityComponent>,
   ) { }
 
-  postUrl = "http://localhost:8083/user/regist-facility";
+  postUrl = "http://localhost:8083/admin/regist-facility";
+  update = false;
   facility: Facility = {
     facilityId: 0,
     name: '',
