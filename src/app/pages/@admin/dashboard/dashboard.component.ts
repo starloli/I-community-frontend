@@ -1,6 +1,7 @@
 ﻿import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
 
 import { AnnouncementService } from '../../../@service/announcement.service';
 import { ApiService } from '../../../@service/api.service';
@@ -20,10 +21,17 @@ import { PackageService } from './../../../@service/package.service';
 export class DashboardComponent implements OnInit {
   // 卡片順序有固定意義，因為各個載入方法會依索引更新對應數值。
   stats = [
-    { label: '社區住戶總數', value: '載入中...', icon: 'people', color: '#3f51b5', bg: '#e8eaf6' },
-    { label: '今日訪客登記', value: '載入中...', icon: 'person_add', color: '#0288d1', bg: '#e1f5fe' },
-    { label: '待處理報修', value: '載入中...', icon: 'build', color: '#f57c00', bg: '#fff3e0' },
-    { label: '待領取包裹', value: '載入中...', icon: 'inventory_2', color: '#388e3c', bg: '#e8f5e9' },
+    {
+      label: '社區住戶總數',
+      value: '載入中...',
+      icon: 'people',
+      color: '#3f51b5',
+      bg: '#e8eaf6',
+      // route: '/admin/resident-management'
+    },
+    { label: '今日訪客登記', value: '載入中...', icon: 'person_add', color: '#0288d1', bg: '#e1f5fe', route: '/admin/visitor' },
+    { label: '待處理報修', value: '載入中...', icon: 'build', color: '#f57c00', bg: '#fff3e0', route: '/admin/repair' },
+    { label: '待領取包裹', value: '載入中...', icon: 'inventory_2', color: '#388e3c', bg: '#e8f5e9', route: '/admin/package' },
   ];
 
   announcements: Announcement[] = [];
@@ -34,7 +42,8 @@ export class DashboardComponent implements OnInit {
     private announcementService: AnnouncementService,
     private statisticsService: StatisticsService,
     private packageService: PackageService,
-    private repairService: RepairService
+    private repairService: RepairService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -157,5 +166,13 @@ export class DashboardComponent implements OnInit {
 
     const date = new Date(value);
     return Number.isNaN(date.getTime()) ? 0 : date.getTime();
+  }
+
+  navigateTo(route?: string): void {
+    if (!route) {
+      return;
+    }
+
+    this.router.navigate([route]);
   }
 }

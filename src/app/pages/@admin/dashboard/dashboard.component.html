@@ -6,7 +6,7 @@
 
   <div class="stats-grid">
     @for (stat of stats; track stat.label) {
-      <div class="stat-card">
+      <div class="stat-card" [class.clickable]="!!stat.route" (click)="navigateTo(stat.route)">
         <div class="stat-top">
           <div class="stat-icon" [style.background]="stat.bg">
             <mat-icon [style.color]="stat.color">{{ stat.icon }}</mat-icon>
