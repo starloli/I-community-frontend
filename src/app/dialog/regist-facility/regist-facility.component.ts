@@ -61,37 +61,33 @@ export class RegistFacilityComponent {
   }
 
   check() {
-    if (this.facility) {
-      if (this.facility.name == '' || this.facility.description == '' || this.facility.capacity == 0 || this.facility.openTime == '' || this.facility.closeTime == '') {
-        this.snackBar.open('請輸入完整資訊', '關閉', {
-          duration: 2000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
-      } else {
-        this.facility.closeTime = this.facility.closeTime + ':00';
-        this.facility.openTime = this.facility.openTime + ':00';
-        console.log(this.facility);
-        this.http.postApi<Facility>(this.postUrl, this.facility).subscribe({
-          next: res => {
-            console.log(res);
-            this.snackBar.open('新增成功', '關閉', {
-              duration: 2000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top'
-            });
-            this.dialogRef.close(true);
-          },
-          error: err => {
-            console.log(err);
-            this.snackBar.open('發生錯誤，錯誤代碼：' + err.status, '關閉', {
-              duration: 2000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top'
-            });
-          }
-        })
-      }
+    if (this.facility.name == '' || this.facility.description == '' || this.facility.capacity == 0 || this.facility.openTime == '' || this.facility.closeTime == '') {
+      this.snackBar.open('請輸入完整資訊', '關閉', {
+        duration: 2000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top'
+      });
+    } else {
+      this.facility.closeTime = this.facility.closeTime + ':00';
+      this.facility.openTime = this.facility.openTime + ':00';
+      this.http.postApi<Facility>(this.postUrl, this.facility).subscribe({
+        next: res => {
+          this.snackBar.open('新增成功', '關閉', {
+            duration: 2000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
+          this.dialogRef.close(true);
+        },
+        error: err => {
+          console.log(err);
+          this.snackBar.open('發生錯誤，錯誤代碼：' + err.status, '關閉', {
+            duration: 2000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
+        }
+      })
     }
   }
 }

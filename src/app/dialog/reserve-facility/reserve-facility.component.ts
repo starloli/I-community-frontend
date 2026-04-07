@@ -84,6 +84,11 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
       status: ReservationStatus.CONFIRMING,
       attendees: this.attendeesControl.value || 1
     };
+    this.snackBar.open('正在提交預約...', '關閉', {
+      duration: 2000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top'
+    });
     console.log('res:', this.reservation);
     this.http.postApi<Res>(this.postUrl, this.reservation)
       .pipe(takeUntil(this.destroy$)).subscribe({
