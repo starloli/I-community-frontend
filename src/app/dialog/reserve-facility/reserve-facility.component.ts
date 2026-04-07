@@ -44,7 +44,7 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
     attendees: 0,
   };
   endTime = '';
-  attendeesControl = new FormControl<number | null>(null, [
+  attendeesControl = new FormControl<number | null>(1, [
     Validators.required
   ]);
 

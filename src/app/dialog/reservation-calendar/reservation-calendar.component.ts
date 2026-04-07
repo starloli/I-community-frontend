@@ -100,29 +100,40 @@ export class ReservationCalendar implements OnInit {
     if (hour >= Number(this.data.facility.closeTime.split(':')[0]) || hour < Number(this.data.facility.openTime.split(':')[0]) || time < new Date()) {
       console.log('NO');
     } else {
-      const dialogRef = this.dialog.open(ReserveFacilityComponent, {
-        data: { facility:
-          {
-            ...this.data.facility,
-            capacity: event.meta.data.attendees
+      if (this.events.some(event => event.start.getTime() === time.getTime() && event.meta.full)) {
+        this.snackBar.open('這個時段已經額滿了喔', '關閉', {
+          duration: 2000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
+        })
+        return;
+      } else {
+        const dialogRef = this.dialog.open(ReserveFacilityComponent, {
+          data: {
+            facility:
+            {
+              ...this.data.facility,
+              capacity: event.meta.data.attendees
+            }
+            , time: time
+          },
+        });
+        dialogRef.afterClosed().pipe(takeUntil(this.dialogRefSelf.afterClosed())).subscribe({
+          next: res => {
+            if (res) {
+              this.dialogRefSelf.close(true);
+            }
+          },
+          error: err => {
+            this.snackBar.open(err.error.message, '關閉', {
+              duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top'
+            });
+            console.log(err.error.message);
           }
-          , time: time },
-      });
-      dialogRef.afterClosed().pipe(takeUntil(this.dialogRefSelf.afterClosed())).subscribe({
-        next: res => {
-          if (res) {
-            this.dialogRefSelf.close(true);
-          }
-        },
-        error: err => {
-          this.snackBar.open(err.error.message, '關閉', {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
-          console.log(err.error.message);
-        }
-      })
+        })
+      }
     }
   }
 

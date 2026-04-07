@@ -23,7 +23,7 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
     private http: HttpService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   // 統一管理訂閱生命週期，避免頁面離開後還殘留 API 訂閱。
   private destroy$ = new Subject<void>();
@@ -128,8 +128,6 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
   // 切換到「我的預約」分頁，並重新抓資料讓列表與 badge 保持同步。
   openMyReservations(): void {
     this.activeTab = 'my-reservations';
-
-    // 切到「我的預約」時重新抓一次，確保 badge 和列表都是最新資料。
     this.getReservation();
   }
 
@@ -269,6 +267,7 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
                 });
                 this.getReservation();
               }
+              this.getReservation();
             }
           });
         },
