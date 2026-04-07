@@ -8,8 +8,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { HttpService } from '../../../@service/http.service';
 import { Facility } from '../../../interface/interface';
 import { RegistFacilityComponent } from '../../../dialog/regist-facility/regist-facility.component';
-import { ReserveFacilityComponent } from '../../../dialog/reserve-facility/reserve-facility.component';
-import { ReservationCalendar } from '../../../dialog/reservation-calendar/reservation-calendar';
 
 @Component({
   selector: 'app-facility',

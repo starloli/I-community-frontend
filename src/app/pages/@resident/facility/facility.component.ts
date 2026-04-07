@@ -117,22 +117,9 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
 
   openMyReservations(): void {
     this.activeTab = 'my-reservations';
-
-    this.http.getApi<Array<ResReservation>>(this.getReservationByUserIdUrl, this.user[0].userId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: res => {
-          if (res) {
-            this.myReservations = res;
-            for (let m of this.myReservations) {
-              if (m.status === ReservationStatus.CONFIRMED)
-                this.myRConut++;
-            }
-            this.getReservation();
-          }
-        }
-      });
+    this.getReservation();
   }
+
   openHistoryReservations(): void {
     this.activeTab = 'history';
     this.getReservation();

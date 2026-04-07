@@ -6,9 +6,23 @@
   <span>可容納人數</span>
   <input type="number" name="capacity" [(ngModel)]="facility.capacity" required>
   <span>開始時間</span>
-  <input type="time" name="open_time" [(ngModel)]="facility.openTime" required>
+  <select name="open_time" [(ngModel)]="facility.openTime" (change)="onOpenTimeChange()" required>
+    <option value="" disabled selected>請選擇時間</option>
+    @for (hour of getAvailableOpenTimes(); track $index) {
+    <option [value]="hour">
+      {{ hour }}
+    </option>
+    }
+  </select>
   <span>結束時間</span>
-  <input type="time" name="close_time" [(ngModel)]="facility.closeTime" required>
+  <select name="end_time" [(ngModel)]="facility.closeTime" required>
+    <option value="" disabled selected>請選擇時間</option>
+    @for (hour of getAvailableCloseTimes(); track $index) {
+    <option [value]="hour">
+      {{ hour }}
+    </option>
+    }
+  </select>
   <span>是否可預訂</span>
   <input type="checkbox" name="is_available" [(ngModel)]="facility.isReservable">
   <span>是否可用</span>

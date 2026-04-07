@@ -32,6 +32,35 @@ export class RegistFacilityComponent {
     isAvailable: false,
   };
 
+  openTimeIndex: number = 0;
+  hoursList: string[] = Array.from({ length: 24 }, (_, i) =>
+    `${i.toString().padStart(2, '0')}:00`
+  );
+
+  getAvailableOpenTimes(): string[] {
+    return this.hoursList.filter(hour => hour < '23:00');
+  }
+
+  getAvailableCloseTimes(): string[] {
+    if (!this.facility.openTime) return this.hoursList;
+    return this.hoursList.filter(hour => hour > this.facility.openTime);
+  }
+
+  onOpenTimeChange() {
+    if (this.facility.openTime && this.facility.closeTime) {
+      if (this.facility.openTime >= this.facility.closeTime) {
+        const hour = this.facility.openTime.split(':')[0];
+        const nextHour = (parseInt(hour) + 1).toString().padStart(2, '0');
+        this.facility.closeTime = nextHour + ':00';
+
+        if (parseInt(hour) >= 23)
+          this.facility.closeTime = '';
+      }
+    }
+    console.log(this.facility.openTime);
+    console.log(this.facility.closeTime);
+  }
+
   check() {
     if (this.facility) {
       if (this.facility.name == '' || this.facility.description == '' || this.facility.capacity == 0 || this.facility.openTime == '' || this.facility.closeTime == '') {
