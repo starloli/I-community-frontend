@@ -1,13 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
-
+import { RepairRequest, User } from '../../../interface/interface';
+import { RepairStatus, UserRole } from '../../../interface/enum';
 import { AuthService } from '../../../@service/auth.service';
 import { RepairService } from '../../../@service/repair.service';
-import { RepairStatus, UserRole } from '../../../interface/enum';
-import { RepairRequest, User } from '../../../interface/interface';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-resident-repair',
@@ -16,7 +15,8 @@ import { RepairRequest, User } from '../../../interface/interface';
   templateUrl: './repair.component.html',
   styleUrl: './repair.component.scss'
 })
-export class ResidentRepairComponent implements OnInit, OnDestroy {
+export class ResidentRepairComponent implements OnInit {
+  // 目前列表的篩選條件，預設顯示全部資料。
   selectedFilter: '全部' | RepairStatus = '全部';
   currentPage = 1;
   pageSize = 5;
@@ -56,16 +56,28 @@ export class ResidentRepairComponent implements OnInit, OnDestroy {
     note: '',
   };
 
+  // 目前僅作為前端暫存使用的住戶資料。
+  fakeResident: User = {
+    userId: 0,
+    userName: '住戶帳號',
+    passwordHash: '',
+    fullName: '住戶帳號',
+    email: 'resident@email.com',
+    phone: '0912345678',
+    unitNumber: 'A101',
+    role: UserRole.RESIDENT,
+    isActive: true,
+    createdAt: '2026-03-01'
+  };
+
+  // 元件銷毀時用來停止訂閱。
+  private destroy$ = new Subject<void>();
   repairs: RepairRequest[] = [];
 
-  private destroy$ = new Subject<void>();
+  constructor(private authService: AuthService, private repairService: RepairService) {}
 
-  constructor(
-    private authService: AuthService,
-    private repairService: RepairService
-  ) {}
-
-  ngOnInit(): void {
+  ngOnInit() {
+    // 從登入資訊取得目前住戶資料，供畫面顯示與後續流程使用。
     const payload = this.authService.getUser();
     if (payload) {
       this.currentUser = {
@@ -76,45 +88,39 @@ export class ResidentRepairComponent implements OnInit, OnDestroy {
         email: payload.email || '',
         phone: payload.phone || '',
         unitNumber: payload.unitNumber || '',
-        role: UserRole.RESIDENT,
+        role: payload.role === 'ADMIN' ? UserRole.ADMIN : UserRole.RESIDENT,
         isActive: true,
         createdAt: payload.createdAt || new Date().toISOString(),
       };
+      this.fakeResident = this.currentUser;
     }
 
+    // 載入住戶自己的報修列表。
     this.repairService.getUserAll().subscribe();
 
+    // 訂閱報修資料流，讓畫面能隨資料更新同步刷新。
     this.repairService.userRepairs$
       .pipe(takeUntil(this.destroy$))
       .subscribe(data => {
-        this.repairs = data.map(repair => this.normalizeRepair(repair));
+        this.repairs = data;
+        console.log(data);
       });
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  private normalizeRepair(repair: any): RepairRequest {
-    return {
-      ...repair,
-      repairId: repair.repairId ?? repair.id,
-      userName: repair.userName || repair.user?.fullName || this.currentUser.fullName,
-      submittedAt: repair.submittedAt || repair.createdAt || '',
-      resolvedAt: repair.resolvedAt || repair.completedAt || '',
-      handlerName: repair.handlerName || repair.handler?.fullName || repair.handler || '',
-      note: repair.note || repair.remark || '',
-      imageUrl: repair.imageUrl || ''
-    };
-  }
-
   get filteredRepairs(): RepairRequest[] {
-    if (this.selectedFilter === '全部') return this.repairs;
-    return this.repairs.filter(r => r.status === this.selectedFilter);
+    // 依照目前篩選條件過濾報修資料。
+    const myRepairs = this.repairs;
+    if (this.selectedFilter === '全部') return myRepairs;
+    return myRepairs.filter(r => r.status === this.selectedFilter);
   }
 
   get pagedRepairs(): RepairRequest[] {
+    // 從篩選後的資料中切出當前頁要顯示的筆數。
     const start = (this.currentPage - 1) * this.pageSize;
     return this.filteredRepairs.slice(start, start + this.pageSize);
   }
@@ -135,6 +141,7 @@ export class ResidentRepairComponent implements OnInit, OnDestroy {
 
   setFilter(filter: '全部' | RepairStatus) {
     this.selectedFilter = filter;
+    // 切換篩選時回到第一頁，避免出現空白頁面。
     this.currentPage = 1;
   }
 
@@ -146,24 +153,32 @@ export class ResidentRepairComponent implements OnInit, OnDestroy {
 
   closeForm() {
     this.showForm = false;
+    // 關閉新增表單時一併重設欄位內容。
     this.newRepair = { location: '', category: '水電', description: '' };
   }
 
   submitRepair() {
+    // 地點與描述為必填，缺少任一欄位就不送出。
     if (!this.newRepair.location || !this.newRepair.description) return;
 
-    this.repairService.post({
+    // 組出新增報修要送往後端的資料。
+    const newRep = {
       location: this.newRepair.location,
       category: this.newRepair.category,
       description: this.newRepair.description,
-      submittedAt: new Date().toISOString()
-    }).subscribe();
+      submittedAt: new Date().toLocaleDateString('zh-TW')
+    };
+
+    this.repairService.post(newRep)
+      .subscribe(res => console.log(res));
 
     this.closeForm();
   }
 
   openEditForm(repair: RepairRequest) {
     this.selectedRepair = repair;
+
+    // 將選中的報修資料帶入編輯表單。
     this.editForm = {
       location: repair.location,
       category: repair.category,
@@ -181,23 +196,19 @@ export class ResidentRepairComponent implements OnInit, OnDestroy {
   submitEdit() {
     if (!this.selectedRepair || !this.editForm.location || !this.editForm.description) return;
 
-    this.selectedRepair = this.normalizeRepair({
-      ...this.selectedRepair,
-      location: this.editForm.location,
-      category: this.editForm.category,
-      description: this.editForm.description,
-      status: this.editForm.status
-    });
-
-    this.repairs = this.repairs.map(repair =>
-      repair.repairId === this.selectedRepair?.repairId ? this.selectedRepair! : repair
-    );
-
+    // 目前先直接更新前端畫面中的資料。
+    this.selectedRepair.location = this.editForm.location;
+    this.selectedRepair.category = this.editForm.category;
+    this.selectedRepair.description = this.editForm.description;
+    this.selectedRepair.status = this.editForm.status;
     this.closeEditForm();
   }
 
   deleteRepair(repair: RepairRequest) {
+    // 先從前端列表移除指定報修單。
     this.repairs = this.repairs.filter(r => r.repairId !== repair.repairId);
+
+    // 若刪除後本頁沒有資料，則自動退回前一頁。
     if (this.pagedRepairs.length === 0 && this.currentPage > 1) {
       this.currentPage--;
     }
@@ -217,22 +228,18 @@ export class ResidentRepairComponent implements OnInit, OnDestroy {
   submitComplete() {
     if (!this.selectedRepair || !this.completeForm.handler) return;
 
-    this.selectedRepair = this.normalizeRepair({
-      ...this.selectedRepair,
-      status: RepairStatus.DONE,
-      resolvedAt: new Date().toISOString(),
-      handlerName: this.completeForm.handler,
-      note: this.completeForm.note
-    });
-
-    this.repairs = this.repairs.map(repair =>
-      repair.repairId === this.selectedRepair?.repairId ? this.selectedRepair! : repair
-    );
-
+    // 目前先在前端將報修狀態改為完工。
+    this.selectedRepair.status = RepairStatus.DONE;
+    this.selectedRepair.resolvedAt = new Date().toLocaleDateString('zh-TW');
+    /*this.selectedRepair.handler = {
+      ...this.fakeResident,
+      fullName: this.completeForm.handler
+    };*/
     this.closeCompleteForm();
   }
 
   getCategoryIcon(category: string): string {
+    // 依報修分類回傳對應的 Material icon 名稱。
     switch (category) {
       case '水電': return 'bolt';
       case '水管': return 'water_drop';

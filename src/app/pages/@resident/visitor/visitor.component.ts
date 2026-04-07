@@ -26,6 +26,8 @@ export class VisitorComponent implements OnInit {
   visitors: VisitorRecord[] = [];
   searchKeyword = '';
   showForm = false;
+  currentPage = 1;
+  pageSize = 5;
 
   // Estimated arrival time for the new visitor form.
   estimatedTime = '';
@@ -62,6 +64,19 @@ export class VisitorComponent implements OnInit {
       (visitor.purpose || '').toLowerCase().includes(keyword) ||
       (visitor.estimatedTime || '').toLowerCase().includes(keyword)
     );
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredVisitors.length / this.pageSize);
+  }
+
+  get pagedVisitors(): VisitorRecord[] {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    return this.filteredVisitors.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  get pageNumbers(): number[] {
+    return Array.from({ length: this.totalPages }, (_, index) => index + 1);
   }
 
   openForm(): void {
@@ -146,6 +161,16 @@ export class VisitorComponent implements OnInit {
     });
   }
 
+  onFilterChange(): void {
+    this.currentPage = 1;
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
   onCompositionStart(): void {
     this.isComposing = true;
   }
@@ -178,8 +203,21 @@ export class VisitorComponent implements OnInit {
           .filter((visitor: VisitorRecord) => this.hasVisibleContent(visitor))
           // Match the original resident page behavior: upcoming pending visitors first.
           .sort((a: VisitorRecord, b: VisitorRecord) => this.compareVisitors(a, b));
+
+        this.syncCurrentPage();
       }
     });
+  }
+
+  private syncCurrentPage(): void {
+    if (this.totalPages === 0) {
+      this.currentPage = 1;
+      return;
+    }
+
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
   }
 
   private normalizeVisitor(visitor: any): VisitorRecord {

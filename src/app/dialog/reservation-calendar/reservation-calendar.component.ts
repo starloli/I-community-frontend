@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { takeUntil } from 'rxjs';
 import { parse } from 'date-fns';
 
+
 @Component({
   selector: 'app-reservation-calendar',
   standalone: true,
@@ -138,6 +139,7 @@ export class ReservationCalendar implements OnInit {
   }
 
   beforeWeekViewRender(renderEvent: CalendarWeekViewBeforeRenderEvent) {
+    const now = new Date();
     renderEvent.hourColumns.forEach((column) => {
       column.hours.forEach((hour) => {
         // 如果時間已經過了，就幫它加上一個叫 'cal-disabled' 的標籤

@@ -11,7 +11,7 @@ import { FacilityComponent } from './pages/@admin/facility/facility.component';
 import { PackageComponent } from './pages/@admin/package/package.component';
 import { RepairComponent } from './pages/@admin/repair/repair.component';
 
-// ── 住戶頁面（之後陸續新增）──────────────────────────
+// ── 住戶頁面 ──────────────────────────
 import { ResidentDashboardComponent } from './pages/@resident/dashboard/dashboard.component';
 import { ResidentAnnouncementComponent } from './pages/@resident/announcement/announcement.component';
 import { BillComponent as ResidentBillComponent } from './pages/@resident/bill/bill.component';
