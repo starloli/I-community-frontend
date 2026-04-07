@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -18,6 +18,7 @@ import { User } from '../../../interface/interface';
   styleUrls: ['./package.component.scss']
 })
 export class PackageComponent implements OnInit, OnDestroy {
+  // 目前登入者資訊會影響可見資料與可操作權限。
   currentUser: User = {
     userId: 1,
     userName: 'admin',
@@ -35,9 +36,11 @@ export class PackageComponent implements OnInit, OnDestroy {
   selectedStatus = '';
   selectedUnit = '';
 
+  // 包裹列表採前端分頁，避免單頁資料過多。
   currentPage = 1;
   pageSize = 5;
 
+  // 控制詳細、新增與領取確認視窗的開關狀態。
   showDetailModal = false;
   showAddModal = false;
   showPickupModal = false;
@@ -56,7 +59,7 @@ export class PackageComponent implements OnInit, OnDestroy {
 
   PackageStatus = PackageStatus;
 
-  couriers = ['順豐速運', '黑貓宅急便', '萊爾富包裹', '中華郵政', '宅配通', 'DHL', '統一速達', '京東物流', '其他'];
+  couriers = ['黑貓宅急便', '新竹物流', '郵局', '宅配通', '順豐速運', 'DHL', 'Lalamove', 'FedEx', '其他'];
 
   packages: any[] = [];
 
@@ -66,7 +69,7 @@ export class PackageComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private packageService: PackageService,
     private snackBar: MatSnackBar
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadCurrentUser();
@@ -79,8 +82,11 @@ export class PackageComponent implements OnInit, OnDestroy {
   }
 
   private loadCurrentUser(): void {
+    // 從登入資訊還原目前使用者，供角色與戶別篩選使用。
     const payload = this.authService.getUser();
-    if (!payload) return;
+    if (!payload) {
+      return;
+    }
 
     this.currentUser = {
       userId: payload.userId || 0,
@@ -108,6 +114,7 @@ export class PackageComponent implements OnInit, OnDestroy {
   }
 
   private loadPackages(): void {
+    // 先向後端取資料，再透過 service 串流同步畫面。
     this.packageService.getAll().subscribe();
 
     this.packageService.packages$
@@ -115,19 +122,25 @@ export class PackageComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this.packages = data.map(pkg => this.normalizePackage(pkg));
 
+        // 若彈窗已開啟，保持彈窗中的資料與最新列表同步。
         if (this.selectedPackage) {
           const synced = this.packages.find(pkg => pkg.id === this.selectedPackage.id);
-          if (synced) this.selectedPackage = synced;
+          if (synced) {
+            this.selectedPackage = synced;
+          }
         }
 
         if (this.pickupTarget) {
           const synced = this.packages.find(pkg => pkg.id === this.pickupTarget.id);
-          if (synced) this.pickupTarget = synced;
+          if (synced) {
+            this.pickupTarget = synced;
+          }
         }
       });
   }
 
   private normalizePackage(pkg: any): any {
+    // 統一整理後端欄位名稱，避免不同來源格式不一致。
     const userRef = pkg.user;
     const userName =
       typeof userRef === 'string'
@@ -147,42 +160,38 @@ export class PackageComponent implements OnInit, OnDestroy {
       arrivedAt: pkg.arrivedAt || pkg.createdAt || '',
       pickupAt: pkg.pickupAt || pkg.pickedUpAt || '',
       notes: pkg.notes || pkg.note || '',
-      status,
-      isNotified: Boolean(pkg.isNotified ?? pkg.notified ?? pkg.notificationSent)
+      status
     };
   }
 
-  get isAdmin(): boolean { return this.currentUser.role === UserRole.ADMIN; }
-  get isGuard(): boolean { return this.currentUser.role === UserRole.GUARD; }
-  get isResident(): boolean { return this.currentUser.role === UserRole.RESIDENT; }
+  get isAdmin(): boolean {
+    return this.currentUser.role === UserRole.ADMIN;
+  }
 
-  isPickedUp(pkg: any): boolean {
-    return pkg.status === PackageStatus.PICKED_UP;
+  get isGuard(): boolean {
+    return this.currentUser.role === UserRole.GUARD;
   }
 
   get filteredPackages(): any[] {
+    // 集中處理搜尋、篩選與排序，讓畫面資料來源一致。
     let list = [...this.packages];
 
-    if (this.isResident) {
-      list = list.filter(p => p.unitNumber === this.currentUser.unitNumber);
-    }
-
     if (this.searchKeyword.trim()) {
-      const kw = this.searchKeyword.trim().toLowerCase();
-      list = list.filter(p =>
-        (p.user || '').toLowerCase().includes(kw) ||
-        (p.unitNumber || '').toLowerCase().includes(kw) ||
-        (p.trackingNumber || '').toLowerCase().includes(kw) ||
-        (p.courier || '').toLowerCase().includes(kw)
+      const keyword = this.searchKeyword.trim().toLowerCase();
+      list = list.filter(pkg =>
+        (pkg.user || '').toLowerCase().includes(keyword) ||
+        (pkg.unitNumber || '').toLowerCase().includes(keyword) ||
+        (pkg.trackingNumber || '').toLowerCase().includes(keyword) ||
+        (pkg.courier || '').toLowerCase().includes(keyword)
       );
     }
 
     if (this.selectedStatus) {
-      list = list.filter(p => p.status === this.selectedStatus);
+      list = list.filter(pkg => pkg.status === this.selectedStatus);
     }
 
     if (this.selectedUnit) {
-      list = list.filter(p => p.unitNumber === this.selectedUnit);
+      list = list.filter(pkg => pkg.unitNumber === this.selectedUnit);
     }
 
     list.sort((a, b) => {
@@ -204,28 +213,24 @@ export class PackageComponent implements OnInit, OnDestroy {
   }
 
   get pageNumbers(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    return Array.from({ length: this.totalPages }, (_, index) => index + 1);
   }
 
   get waitingCount(): number {
-    return this.packages.filter(p => p.status === PackageStatus.WAITING).length;
+    return this.packages.filter(pkg => pkg.status === PackageStatus.WAITING).length;
   }
 
   get pickedUpCount(): number {
-    return this.packages.filter(p => p.status === PackageStatus.PICKED_UP).length;
-  }
-
-  get notNotifiedCount(): number {
-    return this.packages.filter(p => p.status === PackageStatus.WAITING && !p.isNotified).length;
+    return this.packages.filter(pkg => pkg.status === PackageStatus.PICKED_UP).length;
   }
 
   get todayCount(): number {
     const today = new Date().toDateString();
-    return this.packages.filter(p => new Date(p.arrivedAt).toDateString() === today).length;
+    return this.packages.filter(pkg => new Date(pkg.arrivedAt).toDateString() === today).length;
   }
 
   get uniqueUnits(): string[] {
-    return [...new Set(this.packages.map(p => p.unitNumber).filter(Boolean))].sort();
+    return [...new Set(this.packages.map(pkg => pkg.unitNumber).filter(Boolean))].sort();
   }
 
   waitingDays(arrivedAt: string): number {
@@ -233,17 +238,25 @@ export class PackageComponent implements OnInit, OnDestroy {
   }
 
   formatDate(dateStr: string): string {
-    if (!dateStr) return '—';
-    const d = new Date(dateStr);
-    return d.toLocaleDateString('zh-TW', { month: '2-digit', day: '2-digit' })
-      + ' ' + d.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+    if (!dateStr) {
+      return '--';
+    }
+
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('zh-TW', { month: '2-digit', day: '2-digit' })
+      + ' '
+      + date.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
   }
 
   formatDateFull(dateStr: string): string {
-    if (!dateStr) return '—';
-    const d = new Date(dateStr);
-    return d.toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' })
-      + ' ' + d.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+    if (!dateStr) {
+      return '--';
+    }
+
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' })
+      + ' '
+      + date.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
   }
 
   openDetail(pkg: any): void {
@@ -257,7 +270,14 @@ export class PackageComponent implements OnInit, OnDestroy {
   }
 
   openAdd(): void {
-    this.newPackageForm = { recipientName: '', phoneNumber: '', unitNumber: '', trackingNumber: '', courier: '', notes: '' };
+    this.newPackageForm = {
+      recipientName: '',
+      phoneNumber: '',
+      unitNumber: '',
+      trackingNumber: '',
+      courier: '',
+      notes: ''
+    };
     this.showAddModal = true;
   }
 
@@ -266,33 +286,42 @@ export class PackageComponent implements OnInit, OnDestroy {
   }
 
   submitAdd(): void {
-    const f = this.newPackageForm;
-    if (!f.recipientName.trim() || !f.phoneNumber.trim() || !f.unitNumber.trim() || !f.trackingNumber.trim()) return;
+    // 送出前先檢查必要欄位，避免建立空白包裹資料。
+    const form = this.newPackageForm;
+    if (
+      !form.recipientName.trim() ||
+      !form.phoneNumber.trim() ||
+      !form.unitNumber.trim() ||
+      !form.trackingNumber.trim()
+    ) {
+      return;
+    }
 
     this.packageService.post({
-      recipientName: f.recipientName,
-      phoneNumber: f.phoneNumber.trim(),
-      unitNumber: f.unitNumber,
-      trackingNumber: f.trackingNumber,
-      courier: f.courier || '其他',
+      recipientName: form.recipientName.trim(),
+      phoneNumber: form.phoneNumber.trim(),
+      unitNumber: form.unitNumber.trim(),
+      trackingNumber: form.trackingNumber.trim(),
+      courier: form.courier || '其他',
       arrivedAt: new Date().toISOString(),
-      notes: f.notes
+      notes: form.notes.trim()
     }).subscribe({
       next: () => {
-        this.snackBar.open('包裹登記成功', '關閉', { duration: 2500 });
+        this.snackBar.open('包裹新增成功', '關閉', { duration: 2500 });
         this.closeAdd();
       },
       error: (error) => {
-        console.error('包裹登記失敗:', error);
+        console.error('包裹新增失敗:', error);
         const message =
           error?.error?.message ||
-          (error?.status ? `登記失敗（${error.status}）` : '登記失敗，請檢查 API 路徑與欄位');
+          (error?.status ? `新增失敗（${error.status}）` : '新增失敗，請稍後再試');
         this.snackBar.open(message, '關閉', { duration: 4000 });
       }
     });
   }
 
   openPickup(pkg: any, event: Event): void {
+    // 按鈕位在可點擊列內，先阻止冒泡避免同時開啟詳情。
     event.stopPropagation();
     this.pickupTarget = pkg;
     this.showPickupModal = true;
@@ -304,14 +333,12 @@ export class PackageComponent implements OnInit, OnDestroy {
   }
 
   confirmPickup(id: number): void {
-    if (!this.pickupTarget) return;
+    if (!this.pickupTarget) {
+      return;
+    }
+
     this.packageService.pickupById(id, new Date().toISOString());
     this.closePickup();
-  }
-
-  notifyResident(pkg: any, event: Event): void {
-    event.stopPropagation();
-    this.packageService.notifyById(pkg.id);
   }
 
   goToPage(page: number): void {
@@ -321,6 +348,7 @@ export class PackageComponent implements OnInit, OnDestroy {
   }
 
   onFilterChange(): void {
+    // 篩選條件改變後回到第一頁，避免停留在無資料頁碼。
     this.currentPage = 1;
   }
 }
