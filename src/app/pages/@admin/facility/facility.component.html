@@ -42,11 +42,11 @@
       </div>
 
       <div class="action-row">
-        <button class="action-btn edit-btn" type="button">
+        <button class="action-btn edit-btn" type="button" (click)="updateFacility(item)">
           <mat-icon>edit</mat-icon>
           編輯
         </button>
-        <button class="action-btn delete-btn" type="button">
+        <button class="action-btn delete-btn" type="button" (click)="deleteFacility(item.facilityId)">
           <mat-icon>delete</mat-icon>
           刪除
         </button>

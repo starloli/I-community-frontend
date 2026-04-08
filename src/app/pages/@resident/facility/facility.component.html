@@ -35,10 +35,12 @@
       <div class="facility-info">
         <div class="facility-header">
           <h2>{{ facility.name }}</h2>
-          @if (facility.isAvailable) {
+          @if (facility.isAvailable && facility.isReservable) {
           <span class="available-badge available">可使用</span>
-          } @else {
+          } @else if(!facility.isAvailable) {
           <span class="available-badge unavailable">暫停開放</span>
+          } @else {
+          <span class="available-badge unavailable">不可預約</span>
           }
         </div>
 
@@ -56,13 +58,15 @@
         </div>
       </div>
 
-      @if (facility.isAvailable) {
+      @if (facility.isAvailable && facility.isReservable) {
       <button class="reserve-btn" (click)="openRC(facility)">
         <mat-icon>event_available</mat-icon>
         立即預約
       </button>
-      } @else {
+      } @else if(!facility.isAvailable) {
       <button class="reserve-btn disabled" disabled>暫停開放</button>
+      } @else{
+      <button class="reserve-btn disabled" disabled>此設施不可預約</button>
       }
     </div>
     }

@@ -1,3 +1,4 @@
+import { ResetPassword } from './../pages/reset-password/reset-password';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -31,6 +32,31 @@ export class AuthService {
           localStorage.setItem('token', res.body.accessToken);
         })
       );
+  }
+
+  forgetPassword(email: string) {
+    return this.http.post(
+      this.apiUrl + '/auth/forgot-password',
+      {
+        "email": email
+      },
+      {
+        responseType: 'text'
+      }
+    )
+  }
+
+  resetPassword(token: string, npw: string) {
+    return this.http.post(
+      this.apiUrl + '/auth/reset-password',
+      {
+        "token": token,
+        "newPassword": npw
+      },
+      {
+        responseType: 'text'
+      }
+    )
   }
 
   getToken(): string | null {
