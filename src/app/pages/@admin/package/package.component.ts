@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Subject, takeUntil } from 'rxjs';
 
+import { ApiService } from '../../../@service/api.service';
 import { AuthService } from '../../../@service/auth.service';
 import { PackageService } from '../../../@service/package.service';
 import { PackageStatus, UserRole } from '../../../interface/enum';
@@ -61,11 +62,13 @@ export class PackageComponent implements OnInit, OnDestroy {
 
   couriers = ['黑貓宅急便', '新竹物流', '郵局', '宅配通', '順豐速運', 'DHL', 'Lalamove', 'FedEx', '其他'];
 
+  addressList: string[] = [];
   packages: any[] = [];
 
   private destroy$ = new Subject<void>();
 
   constructor(
+    private apiService: ApiService,
     private authService: AuthService,
     private packageService: PackageService,
     private snackBar: MatSnackBar
@@ -73,6 +76,7 @@ export class PackageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadCurrentUser();
+    this.loadAddresses();
     this.loadPackages();
   }
 
@@ -137,6 +141,12 @@ export class PackageComponent implements OnInit, OnDestroy {
           }
         }
       });
+  }
+
+  private loadAddresses(): void {
+    this.apiService.getApi('/visitor/allAddresses').subscribe((res: any) => {
+      this.addressList = Array.isArray(res) ? res.sort() : [];
+    });
   }
 
   private normalizePackage(pkg: any): any {

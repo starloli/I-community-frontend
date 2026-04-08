@@ -237,7 +237,17 @@
 
           <div class="form-group">
             <label>戶別 <span class="required">*</span></label>
-            <input type="text" [(ngModel)]="newPackageForm.unitNumber" placeholder="例如 A-1201" />
+            <input
+              type="text"
+              [(ngModel)]="newPackageForm.unitNumber"
+              list="packageAddressOptions"
+              placeholder="請輸入或選擇戶別"
+            />
+            <datalist id="packageAddressOptions">
+              @for (address of addressList; track address) {
+                <option [value]="address"></option>
+              }
+            </datalist>
           </div>
         </div>
 
