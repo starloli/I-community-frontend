@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../@service/auth.service';
 
-export const adminGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = (route, state) => {
   // 取得驗證服務與路由器，供後續權限判斷與導頁使用
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -13,12 +13,6 @@ export const adminGuard: CanActivateFn = (route, state) => {
     return false;
   }
 
-  // 已登入但不是管理員時，禁止進入管理頁並導回首頁
-  if (!authService.isAdmin()) {
-    router.navigate(['/resident']);
-    return false;
-  }
-
-  // 通過登入與管理員身分檢查後，允許進入目標路由
+  // 通過登入檢查後，允許進入目標路由
   return true;
 };
