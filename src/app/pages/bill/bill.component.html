@@ -1,4 +1,5 @@
-
+<button routerLink="/adminBill"> 路由到管理者</button>
+11111
 <div class="bill-container">
 
   <!-- 頁面標題 -->
@@ -58,20 +59,20 @@
         </tr>
       </thead>
       <tbody>
-        @for (bill of pagedBills; track $index) {
+        @for (bill of filteredBills; track $index) {
           <tr>
             <td>{{ bill.billingMonth }}</td>
             <td>
               <!-- 帳單類型加上 icon 和顏色 -->
-              <div class="bill-type-cell" (click)="billsDialog(bill)" >
+              <div class="bill-type-cell" (click)="billsDialog(bill)">
 
               <!-- <mat-icon [style.color]="getBillColor(bill.billType)">
                   {{ getBillIcon(bill.billType) }}
-                </mat-icon> --><strong class="unitNumberCss">
-                {{ bill.title }}</strong >
+                </mat-icon> -->
+                {{ bill.title }}
               </div>
             </td>
-            <td class="amount"> {{ bill.totalAmount | currency:'TWD':'symbol':'1.0-0' }}</td>
+            <td class="amount">NT$ {{ bill.totalAmount }}</td>
             <td>{{ bill.dueDate }}</td>
             <td>{{ (bill.paidAtDate | date: 'yyyy-MM-dd') || '-' }}</td>
             <td>
@@ -99,23 +100,3 @@
   </div>
 
 </div>
-@if (totalPages > 1) {
-  <div class="pagination">
-    <button class="page-btn"
-            [disabled]="currentPage === 1"
-            (click)="goToPage(currentPage - 1)">‹</button>
-
-    @for (page of pageNumbers; track page) {
-      <button class="page-btn"
-              [class.active]="page === currentPage"
-              (click)="goToPage(page)">
-        {{ page }}
-      </button>
-    }
-
-    <button class="page-btn"
-            [disabled]="currentPage === totalPages"
-            (click)="goToPage(currentPage + 1)">›</button>
-  </div>
-}
-

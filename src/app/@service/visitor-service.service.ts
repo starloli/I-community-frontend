@@ -14,4 +14,13 @@ export class VisitorServiceService {
 
   //得到是哪裏裏來的
   permissions!:string;
+
+
+
+
+  //下面是賬單的service
+  myBillId!:any;
+
+booleanOpenDialog!:string;
+
 }
