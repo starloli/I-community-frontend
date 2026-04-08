@@ -8,7 +8,10 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [RouterLink, RouterLinkActive, MatIconModule, CommonModule],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss'
+  styleUrl: './sidebar.component.scss',
+  host: {
+    '[class.sidebar-collapsed-host]': 'isCollapsed'
+  }
 })
 export class SidebarComponent {
   isCollapsed = false; // 收合狀態

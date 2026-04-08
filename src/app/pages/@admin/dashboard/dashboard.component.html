@@ -28,6 +28,7 @@
       <div class="card-header">
         <mat-icon>campaign</mat-icon>
         <h2>社區公告</h2>
+        <a class="card-more" (click)="navigateTo('/admin/announcement')">查看更多</a>
       </div>
 
       @for (item of announcements; track item.title) {
@@ -45,6 +46,7 @@
       <div class="card-header">
         <mat-icon>person_add</mat-icon>
         <h2>最近訪客</h2>
+        <a class="card-more" (click)="navigateTo('/admin/visitor')">查看更多</a>
       </div>
 
       @for (visitor of recentVisitors; track visitor.name + visitor.time) {

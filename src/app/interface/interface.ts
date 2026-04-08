@@ -90,6 +90,7 @@ export interface Reservation {
   startTime: string,
   endTime: string,
   attendees: number,
+  isAvailable?: boolean,
   status?: ReservationStatus,
   createdAt?: string
 }

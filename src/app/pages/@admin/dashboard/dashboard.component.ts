@@ -27,7 +27,7 @@ export class DashboardComponent implements OnInit {
       icon: 'people',
       color: '#3f51b5',
       bg: '#e8eaf6',
-      // route: '/admin/resident-management'
+      // route:
     },
     { label: '今日訪客登記', value: '載入中...', icon: 'person_add', color: '#0288d1', bg: '#e1f5fe', route: '/admin/visitor' },
     { label: '待處理報修', value: '載入中...', icon: 'build', color: '#f57c00', bg: '#fff3e0', route: '/admin/repair' },

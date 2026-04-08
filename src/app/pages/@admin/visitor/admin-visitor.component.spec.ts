@@ -1,16 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { of } from 'rxjs';
 
 import { ApiService } from '../../../@service/api.service';
-import { AdminVisitorComponent } from './admin-visitor.component';
+import { VisitorServiceService } from '../../../@service/visitor-service.service';
+import { VisitorComponent } from './admin-visitor.component';
 
-describe('AdminVisitorComponent', () => {
-  let component: AdminVisitorComponent;
-  let fixture: ComponentFixture<AdminVisitorComponent>;
+describe('VisitorComponent', () => {
+  let component: VisitorComponent;
+  let fixture: ComponentFixture<VisitorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminVisitorComponent],
+      imports: [VisitorComponent],
       providers: [
         {
           provide: ApiService,
@@ -19,12 +21,24 @@ describe('AdminVisitorComponent', () => {
             postApi: () => of({}),
             putApi: () => of({})
           }
+        },
+        {
+          provide: VisitorServiceService,
+          useValue: {}
+        },
+        {
+          provide: MatDialog,
+          useValue: {
+            open: () => ({
+              afterClosed: () => of(null)
+            })
+          }
         }
       ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AdminVisitorComponent);
+    fixture = TestBed.createComponent(VisitorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

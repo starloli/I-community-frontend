@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -74,17 +74,17 @@ export class PackageComponent implements OnInit, OnDestroy {
     let list = [...this.packages];
 
     if (this.selectedStatus === 'waiting') {
-      list = list.filter(p => p.status === PackageStatus.WAITING);
+      list = list.filter(pkg => pkg.status === PackageStatus.WAITING);
     } else if (this.selectedStatus === 'pickedup') {
-      list = list.filter(p => p.status === PackageStatus.PICKED_UP);
+      list = list.filter(pkg => pkg.status === PackageStatus.PICKED_UP);
     }
 
     if (this.searchKeyword.trim()) {
-      const kw = this.searchKeyword.trim().toLowerCase();
-      list = list.filter(p =>
-        (p.trackingNumber || '').toLowerCase().includes(kw) ||
-        (p.courier || '').toLowerCase().includes(kw) ||
-        (p.notes || '').toLowerCase().includes(kw)
+      const keyword = this.searchKeyword.trim().toLowerCase();
+      list = list.filter(pkg =>
+        (pkg.trackingNumber || '').toLowerCase().includes(keyword) ||
+        (pkg.courier || '').toLowerCase().includes(keyword) ||
+        (pkg.notes || '').toLowerCase().includes(keyword)
       );
     }
 
@@ -107,15 +107,15 @@ export class PackageComponent implements OnInit, OnDestroy {
   }
 
   get pageNumbers(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    return Array.from({ length: this.totalPages }, (_, index) => index + 1);
   }
 
   get waitingCount(): number {
-    return this.packages.filter(p => p.status === PackageStatus.WAITING).length;
+    return this.packages.filter(pkg => pkg.status === PackageStatus.WAITING).length;
   }
 
   get pickedUpCount(): number {
-    return this.packages.filter(p => p.status === PackageStatus.PICKED_UP).length;
+    return this.packages.filter(pkg => pkg.status === PackageStatus.PICKED_UP).length;
   }
 
   get totalCount(): number {
@@ -126,7 +126,7 @@ export class PackageComponent implements OnInit, OnDestroy {
     pkg.status = PackageStatus.PICKED_UP;
     pkg.pickupAt = new Date().toISOString();
     this.packageService.pickupById(pkg.id, new Date().toISOString());
-    this.snackBar.open('✓ 已取貨', '', {
+    this.snackBar.open('包裹已標記為已領取', '', {
       duration: 2500,
       panelClass: ['snackbar-success']
     });
@@ -148,9 +148,17 @@ export class PackageComponent implements OnInit, OnDestroy {
   }
 
   formatDate(dateStr: string): string {
-    if (!dateStr) return '—';
+    if (!dateStr) {
+      return '--';
+    }
+
     const date = new Date(dateStr);
-    return date.toLocaleDateString('zh-TW', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleDateString('zh-TW', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 
   waitingDays(arrivedAt: string): number {
