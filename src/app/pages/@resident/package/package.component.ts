@@ -132,6 +132,11 @@ export class PackageComponent implements OnInit, OnDestroy {
     });
   }
 
+  setStatusFilter(status: 'all' | 'waiting' | 'pickedup'): void {
+    this.selectedStatus = status;
+    this.onFilterChange();
+  }
+
   onFilterChange(): void {
     this.currentPage = 1;
   }
