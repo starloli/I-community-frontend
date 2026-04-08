@@ -93,13 +93,6 @@
                 </span>
               }
             </div>
-
-            @if (pkg.status === PackageStatus.WAITING) {
-              <button class="pickup-btn" (click)="pickupPackage(pkg)">
-                <mat-icon>check</mat-icon>
-                取貨
-              </button>
-            }
           </div>
         </div>
       }

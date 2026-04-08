@@ -21,7 +21,7 @@ export class SidebarComponent {
     { route: 'admin/visitor', icon: 'person_add', label: '訪客登記', color: '#6A9E7F' },
     { route: 'admin/announcement', icon: 'campaign', label: '社區公告', color: '#B07A8A' },
     { route: 'admin/bill', icon: 'receipt_long', label: '帳單繳費', color: '#B8935A' },
-    { route: 'admin/facility', icon: 'meeting_room', label: '設施預約', color: '#7B7FBA' },
+    { route: 'admin/facility', icon: 'meeting_room', label: '設施管理', color: '#7B7FBA' },
     { route: 'admin/package', icon: 'inventory_2', label: '包裹查詢', color: '#7BA89E' },
     { route: 'admin/repair', icon: 'build', label: '報修申請', color: '#C47A5A' },
   ];

@@ -110,7 +110,7 @@ h1 {
   transition: 0.5s;
   border-radius: 25px;
   font-size: 16px;
-  margin-top: 65px;
+  margin-top: 40px;
 }
 
 .logtb:hover {
@@ -118,8 +118,24 @@ h1 {
 }
 
 /* 底部文字與鏈接 */
+.forgot-password-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 16px;
+  color: #666;
+  font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: 20px; // Adjusted for better spacing
+  &:hover {
+    color: #3498db; // Example hover color
+  }
+}
+
+/* 底部文字與鏈接 */
 .bottom-text {
-  margin-top: 40px;
+  margin-top: 20px; // Adjusted for better spacing
   font-size: 16px;
   color: #666;
 }
@@ -320,7 +336,7 @@ h1 {
   transition: 0.5s;
   border-radius: 25px;
   font-size: 16px;
-  margin-top: 65px;
+  margin-top: 40px;
   background: #ccc; /* 灰色底色 */
   color: #666; /* 深灰色文字，增加易讀性 */
 
