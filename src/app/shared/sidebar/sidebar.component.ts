@@ -24,6 +24,7 @@ export class SidebarComponent implements OnInit {
     { route: 'admin/facility', icon: 'meeting_room', label: '設施預約', color: '#7B7FBA' },
     { route: 'admin/package', icon: 'inventory_2', label: '包裹查詢', color: '#7BA89E' },
     { route: 'admin/repair', icon: 'build', label: '報修申請', color: '#C47A5A' },
+    {route:'admin/ModifyResident' ,label:'住戶管理',color:'#5B7FA6',icon:'manage_accounts'},
   ];
 
   activeIndex = 0;

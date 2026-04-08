@@ -1,0 +1,153 @@
+
+@if(page==1){
+<div class="bill-form-content">
+
+  <div class="header-minimal">
+    <h3 class="section-label main-label">賬單基本設定</h3>
+
+    <div class="field title-field">
+      <label>帳單名稱</label>
+      <input type="text" placeholder="例如：2026年4月份綜合管理費單" class="standard-input" [(ngModel)]="title">
+    </div>
+
+    <div class="date-flex">
+      <div class="input-item">
+        <label>賬單月份</label>
+        <input type="month"  class="standard-input" [(ngModel)]="billingMonth" [max]="dueDate ? dueDate.substring(0, 7) : null">
+      </div>
+      <div class="input-item">
+        <label>繳費截止日期</label>
+        <input type="date"  class="standard-input" [(ngModel)]="dueDate" [min]="billingMonth ? (billingMonth + '-01') : null">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-body-flat">
+    <h3 class="section-label">社區公設總費設定</h3>
+    <div class="input-grid">
+      <div class="field">
+        <label>社區總水費 </label>
+        <input type="number" placeholder="0.00" class="standard-input" [(ngModel)]="TOTAL_WATER">
+      </div>
+      <div class="field">
+        <label>社區總電費 </label>
+        <input type="number" placeholder="0.00" class="standard-input" [(ngModel)]="TOTAL_ELECTRICITY">
+      </div>
+    </div>
+
+    <h3 class="section-label">個人資產單價設定</h3>
+    <p class="hint">系統將依據「每戶資產」自動計算</p>
+    <div class="input-grid">
+      <div class="field">
+        <label>管理費單價 (元/坪)</label>
+        <input type="number" placeholder="60" class="standard-input" [(ngModel)]="PING_PRICE">
+      </div>
+      <div class="field">
+        <label>汽車位單價 (元/個)</label>
+        <input type="number" placeholder="500" class="standard-input" [(ngModel)]="CAR_SPACE_PRICE">
+      </div>
+    </div>
+
+    <div class="input-grid">
+      <div class="field">
+        <label>機車位單價 (元/個)</label>
+        <input type="number" placeholder="100" class="standard-input" [(ngModel)]="MOTO_SPACE_PRICE">
+      </div>
+      <div class="field">
+        <label>其他</label>
+        <input type="number" placeholder="0" class="standard-input" [(ngModel)]="OTHERFEE">
+      </div>
+    </div>
+
+    <div class="field full">
+      <label>備註事項</label>
+      <textarea rows="2" placeholder="備註內容..." class="standard-input" [(ngModel)]="remark"></textarea>
+    </div>
+  </div>
+
+  <div class="action-bar">
+    <button class="btn-plain" (click)="cancel()">取消</button>
+    @if(!title?.trim() || !billingMonth?.trim() || !dueDate?.trim()|| TOTAL_WATER== null ||
+     PING_PRICE== null || CAR_SPACE_PRICE== null ||MOTO_SPACE_PRICE== null || billingMonth > dueDate){
+      <button class="btn-send btn-disabled" >下一步</button>}
+      @else{
+    <button class="btn-send" (click)="next()">下一步</button>
+      }</div>
+</div>
+}
+@if(page ==2){
+
+<div class="bill-form-content">
+
+  <div class="header-minimal">
+    <h3 class="section-label main-label">賬單基本設定</h3>
+
+    <div class="field title-field">
+      <label>帳單名稱</label>
+     <b>{{title}}</b>
+    </div>
+
+    <div class="date-flex">
+      <div class="input-item">
+        <label>賬單月份</label>
+       <b>{{billingMonth}}-01</b>
+      </div>
+      <div class="input-item">
+        <label>繳費截止日期</label>
+       <b>{{dueDate}}</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-body-flat">
+    <h3 class="section-label">社區公設總費設定</h3>
+    <div class="input-grid">
+      <div class="field">
+        <label>社區總水費</label>
+ <b>{{TOTAL_WATER}}</b>
+      </div>
+      <div class="field">
+        <label>社區總電費</label>
+       <b>{{TOTAL_ELECTRICITY}}</b>
+      </div>
+    </div>
+
+    <h3 class="section-label">個人資產單價設定</h3>
+
+    <div class="input-grid">
+      <div class="field">
+        <label>管理費單價 (元/坪)</label>
+  <b>{{PING_PRICE}}</b>
+      </div>
+      <div class="field">
+        <label>汽車位單價 (元/個)</label>
+   <b>{{CAR_SPACE_PRICE}}</b>
+      </div>
+    </div>
+
+    <div class="input-grid">
+      <div class="field">
+        <label>機車位單價 (元/個)</label>
+ <b>{{MOTO_SPACE_PRICE}}</b>
+      </div>
+      <div class="field">
+        <label>其他</label>
+ <b>{{OTHERFEE}}</b>
+      </div>
+    </div>
+
+    <div class="field full">
+      <label>備註事項</label>
+ <b>{{remark}}</b>
+    </div>
+  </div>
+
+  <div class="action-bar">
+    <button class="btn-plain" (click)="last()">返回修改</button>
+    <button class="btn-send" (click)="sendBillToUnit()">發送賬單</button>
+  </div>
+</div>
+}
+
+
+

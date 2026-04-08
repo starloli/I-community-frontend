@@ -2,11 +2,11 @@
 .bill-container { padding: 0; }
 
 // ===== 頁面標題 =====
-.page-header {
-  margin-bottom: 28px;
-  h1 { font-size: 36px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px 0; }
-  .subtitle { font-size: 15px; color: #888; }
-}
+// .page-header {
+//   margin-bottom: 28px;
+//   h1 { font-size: 36px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px 0; }
+//   .subtitle { font-size: 15px; color: #888; }
+// }
 
 // ===== 統計卡片列 =====
 .stats-row {
@@ -146,10 +146,12 @@ tbody tr:hover { background: rgba(63, 81, 181, 0.03); }
 .empty-row { text-align: center; padding: 48px !important; color: #bbb; font-size: 15px; }
 
 .unit-tag {
+    cursor: pointer;
   display: inline-block;
   background: #e8eaf6; color: #3f51b5;
   padding: 2px 8px; border-radius: 8px;
   font-size: 13px; font-weight: 600;
+  border: none;
 }
 
 .bill-type-cell {
@@ -220,4 +222,65 @@ tbody tr:hover { background: rgba(63, 81, 181, 0.03); }
 
   mat-icon { font-size: 18px; width: 18px; height: 18px; }
   &:hover { background: #2e7d32; }
+}
+
+
+
+
+
+.add-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #3f51b5;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    background: #303f9f;
+  }
+}
+
+// ===== 頁面標題列 =====
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+
+  .header-left {
+    h1 {
+      font-size: 36px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin: 0 0 4px 0;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: #888;
+    }
+  }
+}
+
+
+
+
+.unitNumberCss{
+  cursor: pointer;
+  color: rgb(69, 92, 174);
 }

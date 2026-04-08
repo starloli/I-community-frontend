@@ -1,41 +1,223 @@
-.bill-detail-card {
-  max-width: 600px;
-width: 90%;
-  min-width: 350px;
+// .bill-detail-card {
+
+//   max-width: 600px;
+
+// width: 90%;
+
+
+
+
+
+//   min-width: 350px;
+
 // margin-bottom: 5px;
-line-height: 1.4;
-letter-spacing: 1px;
-  min-height: 400px;     // 設定最小高度
-  padding: 40px 50px;
-  border: 1px solid #eee;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  background: #fff;
-box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  .info-grid {
-    display: grid;
 
-    grid-template-columns: 1fr;
-    gap: 5px;
-    margin-bottom: 15px;
-    p { margin: 2px 0; font-size: 15px; }
+// line-height: 1.4;
+
+// letter-spacing: 1px;
+
+//   min-height: 400px;     // 設定最小高度
+
+//   padding: 40px 50px;
+
+
+//   border: 1px solid #eee;
+
+//   border-radius: 10px;
+
+//   overflow: hidden;
+
+//   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+//   border: none; // 移除邊框
+
+//   background: #fff;
+
+// box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+
+
+
+//   .info-grid {
+
+//     display: grid;
+
+
+
+//     grid-template-columns: 1fr;
+
+//     gap: 5px;
+
+//     margin-bottom: 15px;
+
+//     p { margin: 2px 0; font-size: 15px; }
+
+//   }
+
+// h3{margin-bottom: 3px;}
+
+
+
+
+
+//   .detail-table {
+
+//     width: 100%;
+
+//     border-collapse: collapse;
+
+//     th, td { padding: 8px; text-align: left; border-bottom: 1px solid #f5f5f5; }
+
+//     .total-row td { border-top: 2px solid #333; font-size: 16px; color: #d32f2f; }
+
+//     .remark-row td { font-size: 12px; color: #666; background: #fafafa; }
+
+//   }
+
+
+
+//   .status-paid { color: #2e7d32; font-weight: bold; }
+
+//   .status-unpaid { color: #d32f2f; font-weight: bold; }
+
+//   .status-OVERDUE{ color: #ff0000; font-weight: bold; }
+
+
+
+// .info-grid p {
+
+//     margin-top: 15px;   // 住戶編號、月份等每一行之間的距離
+
+//   }
+
+
+
+// }
+
+
+
+
+
+
+
+
+
+.bill-detail-card {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+
+  /* 關鍵調整：保留背景色，但移除強烈的邊框與重陰影 */
+  background: #ffffff;
+  border-radius: 0; // 如果是在彈窗內，讓它跟隨彈窗形狀
+  padding: 10px 20px; // 留一點適當的呼吸空間，不要貼邊
+
+  /* 移除重複與強烈的陰影，讓外層彈窗去處理陰影即可 */
+  border: none;
+  box-shadow: none;
+
+  h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: 600;
   }
-h3{margin-bottom: 3px;}
 
+  hr {
+    border: none;
+    border-top: 1px solid #eeeeee;
+    margin-bottom: 20px;
+  }
+
+  .info-grid {
+    margin-bottom: 25px;
+    p {
+      margin: 12px 0; // 控制每一行（住戶編號等）的距離
+      font-size: 15px;
+      color: #555;
+      strong { color: #000; }
+    }
+  }
 
   .detail-table {
     width: 100%;
     border-collapse: collapse;
-    th, td { padding: 8px; text-align: left; border-bottom: 1px solid #f5f5f5; }
-    .total-row td { border-top: 2px solid #333; font-size: 16px; color: #d32f2f; }
-    .remark-row td { font-size: 12px; color: #666; background: #fafafa; }
+
+    th, td {
+      padding: 12px 8px;
+      text-align: left;
+      border-bottom: 1px solid #f9f9f9;
+    }
+
+    th { color: #888; font-weight: normal; font-size: 14px; }
+    td { color: #333; }
+
+    /* 總計行：用明顯的頂部線條區隔 */
+    .total-row td {
+      border-top: 2px solid #444;
+      border-bottom: none;
+      font-size: 18px;
+      color: #d32f2f;
+      padding-top: 15px;
+    }
+
+    /* 備註行：像圖片一樣有個灰色底 */
+    .remark-row td {
+      font-size: 14px;
+      color: #777;
+      background: #f8f8f8;
+      padding: 15px;
+      border-radius: 4px;
+      line-height: 1.5;
+    }
   }
 
+  /* 狀態顏色標籤 */
   .status-paid { color: #2e7d32; font-weight: bold; }
   .status-unpaid { color: #d32f2f; font-weight: bold; }
+  .status-OVERDUE { color: #ff0000; font-weight: bold; }
+}
 
-.info-grid p {
-    margin-top: 15px;   // 住戶編號、月份等每一行之間的距離
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end; // 按鈕靠右對齊
+  padding: 20px;
+  background: #fcfcfc; // 微灰底色，區隔內容區與按鈕區
+  border-top: 1px solid #eee;
+  gap: 12px; // 按鈕之間的間距
+
+  button {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+  }
+
+  // 「取消」按鈕：低調、灰色調
+  .btn-cancel {
+    background: #f5f5f5;
+    color: #666;
+    &:hover {
+      background: #e0e0e0;
+    }
+  }
+
+  // 「付款」按鈕：醒目、品牌色（例如藍色或綠色）
+  .btn-confirm {
+    background: #1976d2; // 或者用 #2e7d32 (綠色)
+    color: white;
+    box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
+
+    &:hover {
+      background: #1565c0;
+      box-shadow: 0 4px 8px rgba(25, 118, 210, 0.3);
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
   }
 }

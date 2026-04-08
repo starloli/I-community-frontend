@@ -20,17 +20,18 @@ import { PackageComponent as ResidentPackageComponent } from './pages/@resident/
 import { ResidentRepairComponent } from './pages/@resident/repair/repair.component';
 
 import { VisitorDialogComponent } from './dialog/visitor-dialog/visitor-dialog.component';
-import { AdminBillComponent } from './pages/@admin/admin-bill/admin-bill.component';
+
 import { ViewComponent } from './pages/@admin/announcement/view/view.component';
 import { CreateComponent } from './pages/@admin/announcement/create/create.component';
 import { VisitorComponent } from './pages/@admin/visitor/admin-visitor.component';
+import { ModifyResident } from './pages/@admin/modify-resident/modify-resident';
 
 export const routes: Routes = [
 { path: '', redirectTo: 'login', pathMatch: 'full' },
 { path: 'login', component: LoginComponent },
 {path:'visitorDialog' ,component:VisitorDialogComponent},
 {path:'adminVisitor',component:VisitorComponent},
-{path:'adminBill',component:AdminBillComponent},
+
   {
     path: 'admin',
     component: LayoutComponent,
@@ -45,6 +46,7 @@ export const routes: Routes = [
       { path: 'facility', component: FacilityComponent },
       { path: 'package', component: PackageComponent },
       { path: 'repair', component: RepairComponent },
+      {path:'ModifyResident',component:ModifyResident},
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ]
   },

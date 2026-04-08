@@ -73,7 +73,8 @@ export class LoginComponent {
 
           if (payload.role === 'ADMIN') {
             this.router.navigate(['/admin/dashboard']);
-          } else {
+          }else if(payload.role === 'SUPER_ADMIN'){ this.router.navigate(['/admin/dashboard'])}
+           else {
             // RESIDENT 或 GUARD
             this.router.navigate(['/resident/dashboard']);
           }
