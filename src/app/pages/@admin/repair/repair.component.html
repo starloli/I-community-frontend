@@ -46,7 +46,7 @@
 
   <!-- 報修列表 -->
   <div class="repair-list">
-    @for (repair of pagedRepairs; track repair.id) {
+    @for (repair of pagedRepairs; track repair.repairId) {
       <div class="repair-card">
 
         <!-- 左側：icon + 資訊 -->
@@ -72,13 +72,13 @@
                 </span>
                 <span>
                   <mat-icon>person</mat-icon>
-                  處理：{{ repair.handler.fullName }}
+                  處理：{{ repair.handlerName }}
                 </span>
               }
               @if (repair.status === RepairStatus.IN_PROGRESS) {
                 <span>
                   <mat-icon>person</mat-icon>
-                  負責：{{ repair.handler.fullName }}
+                  負責：{{ repair.handlerName }}
                 </span>
               }
             </div>

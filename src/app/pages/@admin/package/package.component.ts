@@ -1,24 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
-import { ApiService } from '../../../@service/api.service';
-import { Res, User } from '../../../interface/interface';
-import { PackageStatus, UserRole } from '../../../interface/enum';
-import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Subject, takeUntil } from 'rxjs';
+
+import { AuthService } from '../../../@service/auth.service';
+import { PackageService } from '../../../@service/package.service';
+import { PackageStatus, UserRole } from '../../../interface/enum';
+import { User } from '../../../interface/interface';
 
 @Component({
   selector: 'app-package',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatSnackBarModule],
   templateUrl: './package.component.html',
   styleUrls: ['./package.component.scss']
 })
-export class PackageComponent implements OnInit {
-
-  // TODO: 從 localStorage 取得當前使用者
-  // const raw = localStorage.getItem('user');
-  // this.currentUser = raw ? JSON.parse(raw) : null;
+export class PackageComponent implements OnInit, OnDestroy {
   currentUser: User = {
     userId: 1,
     userName: 'admin',
@@ -32,203 +31,149 @@ export class PackageComponent implements OnInit {
     createdAt: ''
   };
 
-  // 搜尋篩選
-  searchKeyword: string = '';
-  selectedStatus: string = '';
-  selectedUnit: string = '';   // 給 ADMIN/GUARD 篩選用
+  searchKeyword = '';
+  selectedStatus = '';
+  selectedUnit = '';
 
-  // 分頁
-  currentPage: number = 1;
-  pageSize: number = 5;
+  currentPage = 1;
+  pageSize = 5;
 
-  // Modal
-  showDetailModal: boolean = false;
-  showAddModal: boolean = false;
-  showPickupModal: boolean = false;
+  showDetailModal = false;
+  showAddModal = false;
+  showPickupModal = false;
 
   selectedPackage: any | null = null;
   pickupTarget: any | null = null;
 
-  // 新增表單（先用 Partial，避免要填完整 User）
-  newPackageForm: {
-    recipientName: string;
-    unitNumber: string;
-    trackingNumber: string;
-    courier: string;
-    notes: string;
-  } = { recipientName: '', unitNumber: '', trackingNumber: '', courier: '', notes: '' };
+  newPackageForm = {
+    recipientName: '',
+    phoneNumber: '',
+    unitNumber: '',
+    trackingNumber: '',
+    courier: '',
+    notes: ''
+  };
 
-  // 暴露給 template 使用，讓 HTML 可以直接寫 PackageStatus.WAITING
   PackageStatus = PackageStatus;
 
   couriers = ['順豐速運', '黑貓宅急便', '萊爾富包裹', '中華郵政', '宅配通', 'DHL', '統一速達', '京東物流', '其他'];
 
-  // TODO: 之後改為 this.apiService.getApi('/package/list')
-  // Package.user 對應 User 物件（含 unitNumber, fullName 等）
   packages: any[] = [];
 
-  private mockPackages(): any[] {
-    return [
-      {
-        id: 1,
-        user: this.makeDummyUser(10, '林家宇', 'A-1201'),
-        unitNumber: 'A-1201',
-        trackingNumber: 'SF1234567890',
-        courier: '順豐速運',
-        arrivedAt: '2025-05-20T09:30:00',
-        pickupAt: '',
-        status: PackageStatus.WAITING,
-        notes: '一件，中型紙箱',
-        isNotified: true
-      },
-      {
-        id: 2,
-        user: this.makeDummyUser(11, '王志明', 'A-0805'),
-        unitNumber: 'A-0805',
-        trackingNumber: 'EC9876543210TW',
-        courier: '黑貓宅急便',
-        arrivedAt: '2025-05-20T11:00:00',
-        pickupAt: '',
-        status: PackageStatus.WAITING,
-        notes: '兩件，輕型包裹',
-        isNotified: true
-      },
-      {
-        id: 3,
-        user: this.makeDummyUser(12, '陳美玲', 'B-0302'),
-        unitNumber: 'B-0302',
-        trackingNumber: 'LP7758421369',
-        courier: '萊爾富包裹',
-        arrivedAt: '2025-05-19T14:20:00',
-        pickupAt: '2025-05-19T18:45:00',
-        status: PackageStatus.PICKED_UP,
-        notes: '一件，衣物類',
-        isNotified: true
-      },
-      {
-        id: 4,
-        user: this.makeDummyUser(13, '李大偉', 'C-1501'),
-        unitNumber: 'C-1501',
-        trackingNumber: 'PC2468013579',
-        courier: '中華郵政',
-        arrivedAt: '2025-05-18T10:00:00',
-        pickupAt: '2025-05-18T16:30:00',
-        status: PackageStatus.PICKED_UP,
-        notes: '一件，書籍類',
-        isNotified: true
-      },
-      {
-        id: 5,
-        user: this.makeDummyUser(14, '張小芳', 'B-0910'),
-        unitNumber: 'B-0910',
-        trackingNumber: 'YT1357924680',
-        courier: '宅配通',
-        arrivedAt: '2025-05-21T08:15:00',
-        pickupAt: '',
-        status: PackageStatus.WAITING,
-        notes: '一件，3C 產品，易碎請小心',
-        isNotified: false
-      },
-      {
-        id: 6,
-        user: this.makeDummyUser(15, '黃建國', 'A-0401'),
-        unitNumber: 'A-0401',
-        trackingNumber: 'DHL987654321',
-        courier: 'DHL',
-        arrivedAt: '2025-05-21T13:45:00',
-        pickupAt: '',
-        status: PackageStatus.WAITING,
-        notes: '一件，國際包裹，需本人簽收',
-        isNotified: true
-      },
-      {
-        id: 7,
-        user: this.makeDummyUser(16, '吳淑惠', 'C-0705'),
-        unitNumber: 'C-0705',
-        trackingNumber: 'KE5544332211',
-        courier: '統一速達',
-        arrivedAt: '2025-05-17T10:30:00',
-        pickupAt: '2025-05-17T12:00:00',
-        status: PackageStatus.PICKED_UP,
-        notes: '兩件，食品類',
-        isNotified: true
-      },
-      {
-        id: 8,
-        user: this.makeDummyUser(10, '林家宇', 'A-1201'),
-        unitNumber: 'A-1201',
-        trackingNumber: 'JD8800990011',
-        courier: '京東物流',
-        arrivedAt: '2025-05-21T15:00:00',
-        pickupAt: '',
-        status: PackageStatus.WAITING,
-        notes: '一件，家電類，約 8 公斤',
-        isNotified: false
-      }
-    ];
-  }
+  private destroy$ = new Subject<void>();
 
-  constructor(private apiService: ApiService) { }
+  constructor(
+    private authService: AuthService,
+    private packageService: PackageService,
+    private snackBar: MatSnackBar
+  ) { }
 
   ngOnInit(): void {
+    this.loadCurrentUser();
     this.loadPackages();
   }
 
-  private loadPackages(): void {
-    this.apiService.getApi('/package/list').subscribe({
-      next: (res: any) => {
-        if (res && Array.isArray(res.data)) {
-          this.packages = res.data.map((p: any) => ({
-            ...p,
-            unitNumber: p.unitNumber || p.user?.unitNumber || ''
-          }));
-        } else {
-          console.warn('package list API 回傳格式異常，使用 mock 資料', res);
-          this.packages = this.mockPackages();
-        }
-      },
-      error: (err: any) => {
-        console.error('取得 package 列表失敗', err);
-        this.packages = this.mockPackages();
-      }
-    });
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  // ── 輔助：建立假 User（假資料專用）──────────────────
-  private makeDummyUser(id: number, fullName: string, unitNumber: string): User {
-    return {
-      userId: id, userName: fullName, passwordHash: '',
-      fullName, email: '', phone: '', unitNumber,
-      role: UserRole.RESIDENT, isActive: true, createdAt: ''
+  private loadCurrentUser(): void {
+    const payload = this.authService.getUser();
+    if (!payload) return;
+
+    this.currentUser = {
+      userId: payload.userId || 0,
+      userName: payload.userName || payload.sub || 'user',
+      passwordHash: '',
+      fullName: payload.fullName || payload.name || '使用者',
+      email: payload.email || '',
+      phone: payload.phone || '',
+      unitNumber: payload.unitNumber || '',
+      role: this.mapRole(payload.role),
+      isActive: true,
+      createdAt: payload.createdAt || ''
     };
   }
 
-  // ── 權限 ──────────────────────────────────────────────
+  private mapRole(role: string | undefined): UserRole {
+    switch (role) {
+      case 'ADMIN':
+        return UserRole.ADMIN;
+      case 'GUARD':
+        return UserRole.GUARD;
+      default:
+        return UserRole.RESIDENT;
+    }
+  }
+
+  private loadPackages(): void {
+    this.packageService.getAll().subscribe();
+
+    this.packageService.packages$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(data => {
+        this.packages = data.map(pkg => this.normalizePackage(pkg));
+
+        if (this.selectedPackage) {
+          const synced = this.packages.find(pkg => pkg.id === this.selectedPackage.id);
+          if (synced) this.selectedPackage = synced;
+        }
+
+        if (this.pickupTarget) {
+          const synced = this.packages.find(pkg => pkg.id === this.pickupTarget.id);
+          if (synced) this.pickupTarget = synced;
+        }
+      });
+  }
+
+  private normalizePackage(pkg: any): any {
+    const userRef = pkg.user;
+    const userName =
+      typeof userRef === 'string'
+        ? userRef
+        : userRef?.fullName || pkg.recipientName || pkg.userName || pkg.fullName || '';
+
+    const rawStatus = pkg.status || PackageStatus.WAITING;
+    const status = rawStatus === 'PICKED' ? PackageStatus.PICKED_UP : rawStatus;
+
+    return {
+      ...pkg,
+      id: pkg.id ?? pkg.packageId,
+      user: userName,
+      unitNumber: pkg.unitNumber || userRef?.unitNumber || '',
+      trackingNumber: pkg.trackingNumber || pkg.trackingNo || '',
+      courier: pkg.courier || pkg.deliveryCompany || '其他',
+      arrivedAt: pkg.arrivedAt || pkg.createdAt || '',
+      pickupAt: pkg.pickupAt || pkg.pickedUpAt || '',
+      notes: pkg.notes || pkg.note || '',
+      status,
+      isNotified: Boolean(pkg.isNotified ?? pkg.notified ?? pkg.notificationSent)
+    };
+  }
+
   get isAdmin(): boolean { return this.currentUser.role === UserRole.ADMIN; }
   get isGuard(): boolean { return this.currentUser.role === UserRole.GUARD; }
   get isResident(): boolean { return this.currentUser.role === UserRole.RESIDENT; }
 
-  // ── 是否已取貨（pickupAt 有值且 status 為 PICKED_UP）──
   isPickedUp(pkg: any): boolean {
     return pkg.status === PackageStatus.PICKED_UP;
   }
 
-  // ── 篩選 ──────────────────────────────────────────────
   get filteredPackages(): any[] {
     let list = [...this.packages];
 
-    // 住戶只看自己（user.unitNumber 對應登入者的 unitNumber）
     if (this.isResident) {
-      list = list.filter(p => p.user.unitNumber === this.currentUser.unitNumber);
+      list = list.filter(p => p.unitNumber === this.currentUser.unitNumber);
     }
 
     if (this.searchKeyword.trim()) {
       const kw = this.searchKeyword.trim().toLowerCase();
       list = list.filter(p =>
-        p.user.fullName.toLowerCase().includes(kw) ||       // 收件人姓名
-        p.user.unitNumber.toLowerCase().includes(kw) ||    // 房號
-        p.trackingNumber.toLowerCase().includes(kw) ||     // 追蹤號碼
-        p.courier.toLowerCase().includes(kw)               // 快遞業者
+        (p.user || '').toLowerCase().includes(kw) ||
+        (p.unitNumber || '').toLowerCase().includes(kw) ||
+        (p.trackingNumber || '').toLowerCase().includes(kw) ||
+        (p.courier || '').toLowerCase().includes(kw)
       );
     }
 
@@ -237,10 +182,9 @@ export class PackageComponent implements OnInit {
     }
 
     if (this.selectedUnit) {
-      list = list.filter(p => p.user.unitNumber === this.selectedUnit);
+      list = list.filter(p => p.unitNumber === this.selectedUnit);
     }
 
-    // 待取貨優先，再依到達時間降序
     list.sort((a, b) => {
       if (a.status === PackageStatus.WAITING && b.status !== PackageStatus.WAITING) return -1;
       if (a.status !== PackageStatus.WAITING && b.status === PackageStatus.WAITING) return 1;
@@ -263,32 +207,31 @@ export class PackageComponent implements OnInit {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  // ── 統計 ──────────────────────────────────────────────
   get waitingCount(): number {
     return this.packages.filter(p => p.status === PackageStatus.WAITING).length;
   }
+
   get pickedUpCount(): number {
     return this.packages.filter(p => p.status === PackageStatus.PICKED_UP).length;
   }
+
   get notNotifiedCount(): number {
     return this.packages.filter(p => p.status === PackageStatus.WAITING && !p.isNotified).length;
   }
+
   get todayCount(): number {
     const today = new Date().toDateString();
     return this.packages.filter(p => new Date(p.arrivedAt).toDateString() === today).length;
   }
 
-  // ── 唯一房號（ADMIN/GUARD 篩選用）───────────────────
   get uniqueUnits(): string[] {
-    return [...new Set(this.packages.map(p => p.user.unitNumber))].sort();
+    return [...new Set(this.packages.map(p => p.unitNumber).filter(Boolean))].sort();
   }
 
-  // ── 等待天數 ──────────────────────────────────────────
   waitingDays(arrivedAt: string): number {
     return Math.floor((Date.now() - new Date(arrivedAt).getTime()) / (1000 * 60 * 60 * 24));
   }
 
-  // ── 格式化 ────────────────────────────────────────────
   formatDate(dateStr: string): string {
     if (!dateStr) return '—';
     const d = new Date(dateStr);
@@ -303,7 +246,6 @@ export class PackageComponent implements OnInit {
       + ' ' + d.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
   }
 
-  // ── 詳情 ──────────────────────────────────────────────
   openDetail(pkg: any): void {
     this.selectedPackage = pkg;
     this.showDetailModal = true;
@@ -314,40 +256,42 @@ export class PackageComponent implements OnInit {
     this.selectedPackage = null;
   }
 
-  // ── 新增包裹 ──────────────────────────────────────────
   openAdd(): void {
-    this.newPackageForm = { recipientName: '', unitNumber: '', trackingNumber: '', courier: '', notes: '' };
+    this.newPackageForm = { recipientName: '', phoneNumber: '', unitNumber: '', trackingNumber: '', courier: '', notes: '' };
     this.showAddModal = true;
   }
 
-  closeAdd(): void { this.showAddModal = false; }
+  closeAdd(): void {
+    this.showAddModal = false;
+  }
 
   submitAdd(): void {
     const f = this.newPackageForm;
-    if (!f.recipientName.trim() || !f.unitNumber.trim() || !f.trackingNumber.trim()) return;
+    if (!f.recipientName.trim() || !f.phoneNumber.trim() || !f.unitNumber.trim() || !f.trackingNumber.trim()) return;
 
-    // TODO: POST /package/create（後端會自動關聯 user）
-    // const payload = { trackingNumber: f.trackingNumber, courier: f.courier, notes: f.notes, unitNumber: f.unitNumber };
-    // this.apiService.postApi('/package/create', payload).subscribe((res: Res) => { ... });
-
-    // 假資料：用表單資訊建構一筆 Package
-    const newPkg: any = {
-      id: Date.now(),
-      user: this.makeDummyUser(Date.now(), f.recipientName, f.unitNumber),
+    this.packageService.post({
+      recipientName: f.recipientName,
+      phoneNumber: f.phoneNumber.trim(),
       unitNumber: f.unitNumber,
       trackingNumber: f.trackingNumber,
       courier: f.courier || '其他',
       arrivedAt: new Date().toISOString(),
-      pickupAt: '',
-      status: PackageStatus.WAITING,
-      notes: f.notes,
-      isNotified: false
-    };
-    this.packages.unshift(newPkg);
-    this.closeAdd();
+      notes: f.notes
+    }).subscribe({
+      next: () => {
+        this.snackBar.open('包裹登記成功', '關閉', { duration: 2500 });
+        this.closeAdd();
+      },
+      error: (error) => {
+        console.error('包裹登記失敗:', error);
+        const message =
+          error?.error?.message ||
+          (error?.status ? `登記失敗（${error.status}）` : '登記失敗，請檢查 API 路徑與欄位');
+        this.snackBar.open(message, '關閉', { duration: 4000 });
+      }
+    });
   }
 
-  // ── 取貨確認 ──────────────────────────────────────────
   openPickup(pkg: any, event: Event): void {
     event.stopPropagation();
     this.pickupTarget = pkg;
@@ -361,38 +305,22 @@ export class PackageComponent implements OnInit {
 
   confirmPickup(id: number): void {
     if (!this.pickupTarget) return;
-    // TODO: PUT /package/{id}/pickup
-    // this.apiService.putApi(`/package/${this.pickupTarget.id}/pickup`, {})
-    //   .subscribe((res: Res) => { /* 更新列表 */ });
-    const idx = this.packages.findIndex(p => p.id === this.pickupTarget!.id);
-    if (idx !== -1) {
-      this.packages[idx] = {
-        ...this.packages[idx],
-        status: PackageStatus.PICKED_UP,
-        pickupAt: new Date().toISOString()   // ← 寫入 pickupAt
-      };
-    }
+    this.packageService.pickupById(id, new Date().toISOString());
     this.closePickup();
   }
 
-  // TODO: [後端小夥伴看這裡]
-  // 1. 發送取貨通知：POST /package/{id}/notify
   notifyResident(pkg: any, event: Event): void {
     event.stopPropagation();
-    const idx = this.packages.findIndex(p => p.id === pkg.id);
-    if (idx !== -1) {
-      this.packages[idx] = { ...this.packages[idx], isNotified: true };  // ← 更新 isNotified
+    this.packageService.notifyById(pkg.id);
+  }
 
-      if (this.selectedPackage && this.selectedPackage.id === pkg.id) {
-        this.selectedPackage = { ...this.selectedPackage, isNotified: true };
-      }
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
     }
   }
 
-  // ── 分頁 ──────────────────────────────────────────────
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) this.currentPage = page;
+  onFilterChange(): void {
+    this.currentPage = 1;
   }
-
-  onFilterChange(): void { this.currentPage = 1; }
 }

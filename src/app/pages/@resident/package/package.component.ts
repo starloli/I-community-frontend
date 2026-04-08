@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Subject, takeUntil } from 'rxjs';
+
+import { PackageService } from '../../../@service/package.service';
 import { PackageStatus } from '../../../interface/enum';
 
 @Component({
@@ -12,101 +15,61 @@ import { PackageStatus } from '../../../interface/enum';
   templateUrl: './package.component.html',
   styleUrl: './package.component.scss'
 })
-export class PackageComponent implements OnInit {
-
-  // ── 暴露給 template 使用 ────────────────────────────
+export class PackageComponent implements OnInit, OnDestroy {
   PackageStatus = PackageStatus;
 
-  // ── 住戶包裹篩選 ──────────────────────────────────────
   selectedStatus: 'all' | 'waiting' | 'pickedup' = 'all';
-  searchKeyword: string = '';
+  searchKeyword = '';
 
-  // ── 分頁 ──────────────────────────────────────────────
-  currentPage: number = 1;
-  pageSize: number = 5;
+  currentPage = 1;
+  pageSize = 5;
 
-  // ── 住戶包裹假資料 ────────────────────────────────────
-  // TODO: GET /packages/my（帶 token，只回傳自己的包裹）
-  packages: any[] = [
-    {
-      id: 1,
-      user: { userId: 1, userName: '', fullName: '林家宇', email: '', phone: '', unitNumber: 'A-1201', passwordHash: '', role: 'RESIDENT' as any, isActive: true, createdAt: '' },
-      trackingNumber: 'SF1234567890',
-      courier: '順豐速運',
-      arrivedAt: '2026-03-20T09:30:00',
-      pickupAt: '',
-      status: PackageStatus.WAITING,
-      notes: '一件，中型紙箱',
-      isNotified: true
-    },
-    {
-      id: 2,
-      user: { userId: 1, userName: '', fullName: '林家宇', email: '', phone: '', unitNumber: 'A-1201', passwordHash: '', role: 'RESIDENT' as any, isActive: true, createdAt: '' },
-      trackingNumber: 'EC9876543210TW',
-      courier: '黑貓宅急便',
-      arrivedAt: '2026-03-19T11:00:00',
-      pickupAt: '',
-      status: PackageStatus.WAITING,
-      notes: '兩件，輕型包裹',
-      isNotified: true
-    },
-    {
-      id: 3,
-      user: { userId: 1, userName: '', fullName: '林家宇', email: '', phone: '', unitNumber: 'A-1201', passwordHash: '', role: 'RESIDENT' as any, isActive: true, createdAt: '' },
-      trackingNumber: 'LP7758421369',
-      courier: '萊爾富包裹',
-      arrivedAt: '2026-03-15T14:20:00',
-      pickupAt: '2026-03-15T18:45:00',
-      status: PackageStatus.PICKED_UP,
-      notes: '一件，衣物類',
-      isNotified: true
-    },
-    {
-      id: 4,
-      user: { userId: 1, userName: '', fullName: '林家宇', email: '', phone: '', unitNumber: 'A-1201', passwordHash: '', role: 'RESIDENT' as any, isActive: true, createdAt: '' },
-      trackingNumber: 'PC2468013579',
-      courier: '中華郵政',
-      arrivedAt: '2026-03-10T10:00:00',
-      pickupAt: '2026-03-10T16:30:00',
-      status: PackageStatus.PICKED_UP,
-      notes: '一件，書籍類',
-      isNotified: true
-    },
-    {
-      id: 5,
-      user: { userId: 1, userName: '', fullName: '林家宇', email: '', phone: '', unitNumber: 'A-1201', passwordHash: '', role: 'RESIDENT' as any, isActive: true, createdAt: '' },
-      trackingNumber: 'YT1357924680',
-      courier: '宅配通',
-      arrivedAt: '2026-03-05T08:15:00',
-      pickupAt: '2026-03-05T14:00:00',
-      status: PackageStatus.PICKED_UP,
-      notes: '一件，3C 產品，易碎請小心',
-      isNotified: false
-    },
-    {
-      id: 6,
-      user: { userId: 1, userName: '', fullName: '林家宇', email: '', phone: '', unitNumber: 'A-1201', passwordHash: '', role: 'RESIDENT' as any, isActive: true, createdAt: '' },
-      trackingNumber: 'DHL987654321',
-      courier: 'DHL',
-      arrivedAt: '2026-02-28T13:45:00',
-      pickupAt: '2026-02-28T17:00:00',
-      status: PackageStatus.PICKED_UP,
-      notes: '一件，國際包裹',
-      isNotified: true
-    },
-  ];
+  packages: any[] = [];
 
-  constructor(private snackBar: MatSnackBar) {}
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private snackBar: MatSnackBar,
+    private packageService: PackageService
+  ) {}
 
   ngOnInit(): void {
-    // TODO: 串接 API
-    // this.apiService.getApi('/packages/my')
-    //   .subscribe((res: any) => { this.packages = res.data; });
+    this.packageService.getUserAll().subscribe();
+
+    this.packageService.userPackages$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(data => {
+        this.packages = data.map(pkg => this.normalizePackage(pkg));
+      });
   }
 
-  // ════════════════════════════════════════════════════
-  // 住戶包裹篩選
-  // ════════════════════════════════════════════════════
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private normalizePackage(pkg: any): any {
+    const userRef = pkg.user;
+    const rawStatus = pkg.status || PackageStatus.WAITING;
+    const status = rawStatus === 'PICKED' ? PackageStatus.PICKED_UP : rawStatus;
+
+    return {
+      ...pkg,
+      id: pkg.id ?? pkg.packageId,
+      userName:
+        typeof userRef === 'string'
+          ? userRef
+          : userRef?.fullName || pkg.recipientName || pkg.userName || '',
+      trackingNumber: pkg.trackingNumber || pkg.trackingNo || '',
+      courier: pkg.courier || pkg.deliveryCompany || '其他',
+      arrivedAt: pkg.arrivedAt || pkg.createdAt || '',
+      pickupAt: pkg.pickupAt || pkg.pickedUpAt || '',
+      notes: pkg.notes || pkg.note || '',
+      status,
+      isNotified: Boolean(pkg.isNotified ?? pkg.notified ?? pkg.notificationSent)
+    };
+  }
+
   get filteredPackages(): any[] {
     let list = [...this.packages];
 
@@ -119,13 +82,12 @@ export class PackageComponent implements OnInit {
     if (this.searchKeyword.trim()) {
       const kw = this.searchKeyword.trim().toLowerCase();
       list = list.filter(p =>
-        p.trackingNumber.toLowerCase().includes(kw) ||
-        p.courier.toLowerCase().includes(kw) ||
-        p.notes.toLowerCase().includes(kw)
+        (p.trackingNumber || '').toLowerCase().includes(kw) ||
+        (p.courier || '').toLowerCase().includes(kw) ||
+        (p.notes || '').toLowerCase().includes(kw)
       );
     }
 
-    // 待取貨優先，再依到達時間降序
     list.sort((a, b) => {
       if (a.status === PackageStatus.WAITING && b.status !== PackageStatus.WAITING) return -1;
       if (a.status !== PackageStatus.WAITING && b.status === PackageStatus.WAITING) return 1;
@@ -148,9 +110,6 @@ export class PackageComponent implements OnInit {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  // ════════════════════════════════════════════════════
-  // 統計
-  // ════════════════════════════════════════════════════
   get waitingCount(): number {
     return this.packages.filter(p => p.status === PackageStatus.WAITING).length;
   }
@@ -163,13 +122,10 @@ export class PackageComponent implements OnInit {
     return this.packages.length;
   }
 
-  // ════════════════════════════════════════════════════
-  // 操作
-  // ════════════════════════════════════════════════════
   pickupPackage(pkg: any): void {
-    // TODO: POST /packages/{id}/pickup
     pkg.status = PackageStatus.PICKED_UP;
     pkg.pickupAt = new Date().toISOString();
+    this.packageService.pickupById(pkg.id, new Date().toISOString());
     this.snackBar.open('✓ 已取貨', '', {
       duration: 2500,
       panelClass: ['snackbar-success']
@@ -186,10 +142,8 @@ export class PackageComponent implements OnInit {
     }
   }
 
-  // ════════════════════════════════════════════════════
-  // 共用工具
-  // ════════════════════════════════════════════════════
   formatDate(dateStr: string): string {
+    if (!dateStr) return '—';
     const date = new Date(dateStr);
     return date.toLocaleDateString('zh-TW', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
   }

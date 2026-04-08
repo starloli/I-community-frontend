@@ -1,10 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+﻿import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { AnnouncementService } from '../../../@service/announcement.service';
 import { ApiService } from '../../../@service/api.service';
+import { RepairService } from '../../../@service/repair.service';
 import { StatisticsService } from '../../../@service/statistics.service';
-import { PackageStatus } from '../../../interface/enum';
+import { PackageStatus, RepairStatus } from '../../../interface/enum';
 import { Announcement } from '../../../interface/interface';
 import { PackageService } from './../../../@service/package.service';
 
@@ -15,48 +16,53 @@ import { PackageService } from './../../../@service/package.service';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
-
-  // ===== 統計卡片資料 =====
+export class DashboardComponent implements OnInit {
+  // 卡片順序有固定意義，因為各個載入方法會依索引更新對應數值。
   stats = [
-    { label: '總住戶人數', value: '載入中...', icon: 'people', color: '#3f51b5', bg: '#e8eaf6' },
-    { label: '今日訪客', value: '載入中...', icon: 'person_add', color: '#0288d1', bg: '#e1f5fe' },
+    { label: '社區住戶總數', value: '載入中...', icon: 'people', color: '#3f51b5', bg: '#e8eaf6' },
+    { label: '今日訪客登記', value: '載入中...', icon: 'person_add', color: '#0288d1', bg: '#e1f5fe' },
     { label: '待處理報修', value: '載入中...', icon: 'build', color: '#f57c00', bg: '#fff3e0' },
-    { label: '未取包裹', value: '載入中...', icon: 'inventory_2', color: '#388e3c', bg: '#e8f5e9' },
+    { label: '待領取包裹', value: '載入中...', icon: 'inventory_2', color: '#388e3c', bg: '#e8f5e9' },
   ];
 
   announcements: Announcement[] = [];
-
-  // ===== 最近訪客資料 =====
-  recentVisitors: any[] = [];
+  recentVisitors: Array<{ name: string; unit: string; time: string; status: string }> = [];
 
   constructor(
     private apiService: ApiService,
     private announcementService: AnnouncementService,
     private statisticsService: StatisticsService,
-    private packageService: PackageService
-  ) { }
+    private packageService: PackageService,
+    private repairService: RepairService
+  ) {}
 
   ngOnInit(): void {
-    // 取得訪客資料並更新統計與最近訪客列表
+    // 各區塊分開載入，避免單一請求失敗時影響整個儀表板顯示。
+    this.loadVisitors();
+    this.loadAnnouncements();
+    this.loadPackages();
+    this.loadUserCount();
+    this.loadPendingRepairs();
+  }
+
+  private loadVisitors(): void {
     this.apiService.getApi('/visitor/getVisitor').subscribe({
       next: (res: any) => {
         const visitors = Array.isArray(res) ? res : res?.data ?? [];
 
-        // 1. 更新今日訪客統計
-        const todayCount = visitors.filter((v: any) => this.isToday(v?.checkInTime)).length;
+        const todayCount = visitors.filter((visitor: any) => this.isToday(visitor?.checkInTime)).length;
         this.stats[1].value = todayCount.toString();
 
-        // 2. 處理最近 3 筆訪客
+        // 訪客區塊只顯示最近的進場紀錄，避免資訊過多。
         this.recentVisitors = visitors
-          .filter((v: any) => v.checkInTime) // 確保有進入時間
+          .filter((visitor: any) => visitor.checkInTime)
           .sort((a: any, b: any) => this.getDateTimestamp(b?.checkInTime) - this.getDateTimestamp(a?.checkInTime))
           .slice(0, 3)
-          .map((v: any) => ({
-            name: v.visitorName || '未知',
-            unit: v.residentialAddress || '未註記',
-            time: this.formatTime(v.checkInTime),
-            status: v.status === 'INSIDE' ? '在內' : '已離'
+          .map((visitor: any) => ({
+            name: visitor.visitorName || '未命名',
+            unit: visitor.residentialAddress || '未註記',
+            time: this.formatTime(visitor.checkInTime),
+            status: visitor.status === 'INSIDE' ? '在社區' : '已離開'
           }));
       },
       error: (error) => {
@@ -65,50 +71,60 @@ export class DashboardComponent {
         this.recentVisitors = [];
       }
     });
+  }
 
+  private loadAnnouncements(): void {
+    // 先觸發資料更新，再透過 service 提供的共用串流同步畫面。
     this.announcementService.getAll().subscribe();
     this.announcementService.announs$.subscribe(data => {
       this.announcements = data
-        .slice() // 先複製，避免改動原陣列
+        .slice()
         .sort((a, b) => this.getDateTimestamp(b?.publishedAt) - this.getDateTimestamp(a?.publishedAt))
         .slice(0, 3);
     });
+  }
 
+  private loadPackages(): void {
     this.packageService.getAll().subscribe();
     this.packageService.packages$.subscribe(data => {
-      this.stats[3].value = data.filter(
-        item => item.status === PackageStatus.WAITING
-      ).length.toString();
+      this.stats[3].value = data
+        .filter(item => item.status === PackageStatus.WAITING)
+        .length
+        .toString();
     });
+  }
 
+  private loadUserCount(): void {
     this.statisticsService.getUserNum().subscribe(
       (res: number) => {
         this.stats[0].value = res.toString();
       },
       (error) => {
-        console.error('取得使用者數量失敗', error);
-        this.stats[0].value = 'N/A'; // API 失敗時顯示 N/A
+        console.error('取得住戶總數失敗:', error);
+        this.stats[0].value = 'N/A';
       }
     );
+  }
 
-    // 取得維修清單並更新「待處理報修」統計
-    this.apiService.getApi('/repair').subscribe({
-      next: (res: any) => {
-        const repairs = Array.isArray(res) ? res : res?.data ?? [];
-        // 計算狀態不是 COMPLETE 的維修件數
-        const pendingCount = repairs.filter((r: any) => r.status !== 'COMPLETE').length;
-        this.stats[2].value = pendingCount.toString();
-      },
+  private loadPendingRepairs(): void {
+    // Use the same source as the admin repair page so the "待處理報修" count stays consistent.
+    this.repairService.getAll().subscribe({
       error: (error) => {
-        console.error('取得維修資料失敗:', error);
+        console.error('取得報修資料失敗:', error);
         this.stats[2].value = 'N/A';
       }
+    });
+
+    this.repairService.repairs$.subscribe(data => {
+      this.stats[2].value = data
+        .filter(item => item.status === RepairStatus.PENDING)
+        .length
+        .toString();
     });
   }
 
   private isToday(value?: string): boolean {
     const timestamp = this.getDateTimestamp(value);
-
     if (!timestamp) {
       return false;
     }
@@ -123,21 +139,22 @@ export class DashboardComponent {
 
   private formatTime(value?: string): string {
     const timestamp = this.getDateTimestamp(value);
-    if (!timestamp) return '-';
+    if (!timestamp) {
+      return '-';
+    }
 
     const date = new Date(timestamp);
-    // 格式化為 HH:mm
     return date.getHours().toString().padStart(2, '0') + ':' +
       date.getMinutes().toString().padStart(2, '0');
   }
 
   private getDateTimestamp(value?: string): number {
+    // 統一處理日期字串轉換，遇到無效值時一律回傳 0，避免各處重複判斷。
     if (!value) {
       return 0;
     }
 
-    const safeValue: string = value;
-    const date = new Date(safeValue);
+    const date = new Date(value);
     return Number.isNaN(date.getTime()) ? 0 : date.getTime();
   }
 }

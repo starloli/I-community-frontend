@@ -1,29 +1,27 @@
 <div class="facility-container">
-  <!-- 頁面標題 -->
   <div class="page-header">
     <div class="header-left">
-      <h1>公共設施預約</h1>
-      <span class="subtitle">查詢社區公共設施及預約時段</span>
+      <h1>設備管理</h1>
+      <span class="subtitle">管理社區設備資訊與開放狀態</span>
     </div>
+    <button class="add-btn" (click)="registFacility()">
+      <mat-icon>add</mat-icon>
+      新增設備
+    </button>
   </div>
 
-  <!-- 設施卡片列表 -->
   <div class="facility-grid">
     @for (item of facilities; track item.facilityId) {
     <div class="facility-card" [class.unavailable]="!item.isAvailable">
-
-      <!-- 設施 icon -->
       <div class="facility-icon">
         <mat-icon>{{ getFacilityIcon(item.name) }}</mat-icon>
       </div>
 
-      <!-- 設施資訊 -->
       <div class="facility-info">
         <div class="facility-header">
           <h2>{{ item.name }}</h2>
-          <!-- 是否可預約標籤 -->
           @if (item.isAvailable) {
-          <span class="available-badge available">可預約</span>
+          <span class="available-badge available">可使用</span>
           } @else {
           <span class="available-badge unavailable">暫停開放</span>
           }
@@ -34,7 +32,7 @@
         <div class="facility-details">
           <div class="detail-item">
             <mat-icon>people</mat-icon>
-            <span>最多 {{ item.capacity }} 人</span>
+            <span>容量 {{ item.capacity }} 人</span>
           </div>
           <div class="detail-item">
             <mat-icon>schedule</mat-icon>
@@ -43,23 +41,21 @@
         </div>
       </div>
 
-      <!-- 預約按鈕 -->
-      @if (item.openTime) {
-      <button class="reserve-btn" (click)="openReserveForm(item)">
-        <mat-icon>event_available</mat-icon>
-        立即預約
-      </button>
-      } @else {
-      <button class="reserve-btn disabled" disabled>
-        暫停開放
-      </button>
-      }
-
+      <div class="action-row">
+        <button class="action-btn edit-btn" type="button" (click)="updateFacility(item)">
+          <mat-icon>edit</mat-icon>
+          編輯
+        </button>
+        <button class="action-btn delete-btn" type="button" (click)="deleteFacility(item.facilityId)">
+          <mat-icon>delete</mat-icon>
+          刪除
+        </button>
+      </div>
     </div>
     }
   </div>
-<!-- 預約表單 -->
-@if (showReserveForm) {
+
+  @if (showReserveForm) {
   <div class="form-overlay" (click)="closeReserveForm()">
     <div class="form-card" (click)="$event.stopPropagation()">
       <div class="form-header">
@@ -86,8 +82,7 @@
 
         <div class="form-group">
           <label>參與人數</label>
-          <input type="number" [(ngModel)]="reserveForm.attendees"
-            min="1" [max]="selectedFacility?.capacity || 0" />
+          <input type="number" [(ngModel)]="reserveForm.attendees" min="1" [max]="selectedFacility?.capacity || 0" />
         </div>
       </div>
 
@@ -97,6 +92,5 @@
       </div>
     </div>
   </div>
-}
+  }
 </div>
-<button (click)="registFacility()">註冊設施</button>

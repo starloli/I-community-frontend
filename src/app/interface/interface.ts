@@ -1,14 +1,14 @@
 import { BillStatus, BillType, NotificationType, PackageStatus, RepairStatus, ReservationStatus, UserRole, VisitorStatus } from "./enum"
 
 export interface Announcement {
-  announcementId?: number;
-  title: string;
-  content: string;
-  category: string;
-  authorName?: string;
-  isPinned: boolean;
-  publishedAt?: string;
-  expiresAt?: string;
+  announcementId?: number,
+  title: string,
+  content: string,
+  category: string,
+  author: User,
+  isPinned: boolean,
+  publishedAt: string,
+  expiresAt: string
 }
 
 export interface AnnouncementPayload {
@@ -68,14 +68,14 @@ export interface Package {
 }
 
 export interface RepairRequest {
-  id?: number,
-  user: User,
+  repairId: number,
+  userName: string,
   location: string,
   category: string,
   description: string,
   status: RepairStatus,
   imageUrl: string,
-  handler: User,
+  handlerName: string,
   submittedAt: string,
   resolvedAt: string,
   note?: string

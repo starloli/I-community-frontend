@@ -5,8 +5,8 @@ import { ResidentLayoutComponent } from './shared/resident-layout/resident-layou
 
 // ── 管理員頁面 ────────────────────────────────────────
 import { DashboardComponent } from './pages/@admin/dashboard/dashboard.component';
-import { AnnouncementComponent } from './pages/@admin/announcement/announcement.component';
 import { BillComponent } from './pages/@admin/bill/bill.component';
+import { AnnouncementComponent } from './pages/@admin/announcement/announcement.component';
 import { FacilityComponent } from './pages/@admin/facility/facility.component';
 import { PackageComponent } from './pages/@admin/package/package.component';
 import { RepairComponent } from './pages/@admin/repair/repair.component';
@@ -18,20 +18,21 @@ import { BillComponent as ResidentBillComponent } from './pages/@resident/bill/b
 import { ResidentFacilityComponent } from './pages/@resident/facility/facility.component';
 import { PackageComponent as ResidentPackageComponent } from './pages/@resident/package/package.component';
 import { ResidentRepairComponent } from './pages/@resident/repair/repair.component';
+import { VisitorComponent as ResidentVisitorComponent, VisitorComponent } from './pages/@resident/visitor/visitor.component';
 
 import { VisitorDialogComponent } from './dialog/visitor-dialog/visitor-dialog.component';
-
-import { ViewComponent } from './pages/@admin/announcement/view/view.component';
-import { CreateComponent } from './pages/@admin/announcement/create/create.component';
-import { VisitorComponent } from './pages/@admin/visitor/admin-visitor.component';
+import { VisitorComponent as AdminVisitorComponent } from './pages/@admin/visitor/admin-visitor.component';
+import { ResetPassword } from './pages/reset-password/reset-password';
+import { ForgetPassword } from './pages/forget-password/forget-password';
 import { ModifyResident } from './pages/@admin/modify-resident/modify-resident';
 
 export const routes: Routes = [
-{ path: '', redirectTo: 'login', pathMatch: 'full' },
-{ path: 'login', component: LoginComponent },
-{path:'visitorDialog' ,component:VisitorDialogComponent},
-{path:'adminVisitor',component:VisitorComponent},
-
+  // ── 登入頁 ──────────────────────────────────────────
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'visitorDialog', component: VisitorDialogComponent },
+  { path: 'reset-password', component: ResetPassword },
+  { path: 'forget-password', component: ForgetPassword },
   {
     path: 'admin',
     component: LayoutComponent,
@@ -39,14 +40,11 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'visitor', component: VisitorComponent },
       { path: 'announcement', component: AnnouncementComponent },
-      { path: 'announcement/view/:id', component: ViewComponent },
-      { path: 'announcement/create', component: CreateComponent },
-      { path: 'announcement/edit/:id', component: CreateComponent },
       { path: 'bill', component: BillComponent },
       { path: 'facility', component: FacilityComponent },
       { path: 'package', component: PackageComponent },
       { path: 'repair', component: RepairComponent },
-      {path:'ModifyResident',component:ModifyResident},
+      { path: 'ModifyResident', component: ModifyResident },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ]
   },
@@ -63,6 +61,7 @@ export const routes: Routes = [
       { path: 'facility', component: ResidentFacilityComponent },
       { path: 'package', component: ResidentPackageComponent },
       { path: 'repair', component: ResidentRepairComponent },
+      { path: 'visitor', component: ResidentVisitorComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ]
   },

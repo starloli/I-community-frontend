@@ -1,0 +1,120 @@
+<form #facilityForm="ngForm" (ngSubmit)="check()" class="facility-form">
+  <div class="form-hero">
+    <div class="hero-copy">
+      <span class="hero-kicker">設備管理</span>
+      <h2>編輯設備資訊</h2>
+      <p>設定設備名稱、容納人數與開放時段，<br>讓住戶能清楚看到可預約的空間資訊。</p>
+    </div>
+
+    <div class="hero-preview">
+      <span class="preview-chip">{{ facility.name || '尚未命名' }}</span>
+      <span class="preview-chip soft">{{ facility.capacity || 0 }} 人容量</span>
+      <span class="preview-chip soft">
+        {{ facility.openTime || '--:--' }} - {{ facility.closeTime || '--:--' }}
+      </span>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="section-heading">
+      <h3>基本資訊</h3>
+      <p>先建立住戶會看到的設備名稱與描述。</p>
+    </div>
+
+    <div class="field-grid">
+      <label class="field-card field-wide">
+        <span class="field-label">設備名稱</span>
+        <span class="field-hint">顯示於設備列表與預約畫面</span>
+        <input
+          type="text"
+          name="name"
+          [(ngModel)]="facility.name"
+          placeholder="例如：健身房、多功能教室"
+          required
+        >
+      </label>
+
+      <label class="field-card field-wide">
+        <span class="field-label">設備描述</span>
+        <span class="field-hint">簡短說明設備用途或限制</span>
+        <input
+          type="text"
+          name="description"
+          [(ngModel)]="facility.description"
+          placeholder="例如：需穿著運動鞋，禁止攜帶飲食"
+          required
+        >
+      </label>
+
+      <label class="field-card">
+        <span class="field-label">容納人數</span>
+        <span class="field-hint">建議填入安全可容納的上限</span>
+        <input
+          type="number"
+          name="capacity"
+          [(ngModel)]="facility.capacity"
+          min="1"
+          placeholder="例如：20"
+          required
+        >
+      </label>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="section-heading">
+      <h3>開放設定</h3>
+      <p>設定設備可預約的每日時段與系統開放狀態。</p>
+    </div>
+
+    <div class="field-grid schedule-grid">
+      <label class="field-card">
+        <span class="field-label">開始時間</span>
+        <span class="field-hint">住戶最早可使用的時間</span>
+        <select name="open_time" [(ngModel)]="facility.openTime" (change)="onOpenTimeChange()" required>
+          <option value="" disabled selected>請選擇開始時間</option>
+          @for (hour of getAvailableOpenTimes(); track $index) {
+          <option [value]="hour">
+            {{ hour }}
+          </option>
+          }
+        </select>
+      </label>
+
+      <label class="field-card">
+        <span class="field-label">結束時間</span>
+        <span class="field-hint">住戶最晚可使用的時間</span>
+        <select name="end_time" [(ngModel)]="facility.closeTime" required>
+          <option value="" disabled selected>請選擇結束時間</option>
+          @for (hour of getAvailableCloseTimes(); track $index) {
+          <option [value]="hour">
+            {{ hour }}
+          </option>
+          }
+        </select>
+      </label>
+    </div>
+
+    <div class="toggle-grid">
+      <label class="toggle-card">
+        <div class="toggle-copy">
+          <span class="field-label">開放預約</span>
+          <span class="field-hint">住戶可在前台看到並進行預約</span>
+        </div>
+        <input type="checkbox" name="is_reservable" [(ngModel)]="facility.isReservable">
+      </label>
+
+      <label class="toggle-card">
+        <div class="toggle-copy">
+          <span class="field-label">目前啟用</span>
+          <span class="field-hint">控制設備是否顯示為可使用狀態</span>
+        </div>
+        <input type="checkbox" name="is_available" [(ngModel)]="facility.isAvailable">
+      </label>
+    </div>
+  </div>
+
+  <div class="form-footer">
+    <button type="submit" [disabled]="facilityForm.invalid">完成編輯</button>
+  </div>
+</form>

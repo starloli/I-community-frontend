@@ -180,6 +180,11 @@
   &:hover {
     background: #303f9f;
   }
+
+  &:disabled {
+    background: #c5cae9;
+    cursor: not-allowed;
+  }
 }
 
 .submit-btn1 {

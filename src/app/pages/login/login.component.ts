@@ -1,6 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+
+
 import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../@service/api.service';
 
@@ -73,8 +75,9 @@ export class LoginComponent {
 
           if (payload.role === 'ADMIN') {
             this.router.navigate(['/admin/dashboard']);
-          }else if(payload.role === 'SUPER_ADMIN'){ this.router.navigate(['/admin/dashboard'])}
-           else {
+          } else if (payload.role === 'SUPER_ADMIN') {
+            this.router.navigate(['/admin/dashboard']);
+          } else {
             // RESIDENT 或 GUARD
             this.router.navigate(['/resident/dashboard']);
           }
@@ -207,5 +210,9 @@ export class LoginComponent {
     const cleanValue = input.value.replace(/[^a-zA-Z0-9@.]/g, '');
     input.value = cleanValue;
     this.adminAccountn = cleanValue;
+  }
+
+  toForgetPage() {
+    this.router.navigate(['/forget-password']);
   }
 }

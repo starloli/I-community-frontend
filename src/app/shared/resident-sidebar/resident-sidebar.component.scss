@@ -22,7 +22,6 @@ $transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     .nav-label       { opacity: 0; width: 0; }
 
     .nav-item        { justify-content: center; padding: 12px 0; }
-    .sliding-pill    { left: 8px; right: 8px; }
     .sidebar-footer  { justify-content: center; padding: 12px 0; margin: 16px 8px; }
     .user-info       { justify-content: center; padding: 12px 8px; }
   }
@@ -140,27 +139,11 @@ $transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   display: flex;
   flex-direction: column;
   gap: 4px;
-  position: relative;
   overflow: hidden;
 }
 
-.sliding-pill {
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  height: 44px;
-  border-radius: 10px;
-  transition:
-    top 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    background 0.25s ease,
-    left $transition,
-    right $transition;
-  z-index: 0;
-  pointer-events: none;
-  will-change: top, background;
-}
-
 .nav-item {
+  --nav-item-color: #5b7fa6;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -169,16 +152,36 @@ $transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   text-decoration: none;
   font-size: 16px;
   font-weight: 500;
-  position: relative;
-  z-index: 1;
   color: #555;
-  transition: color 0.25s ease, padding $transition;
+  background: transparent;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    padding $transition,
+    justify-content $transition,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   white-space: nowrap;
 
   mat-icon { font-size: 22px; width: 22px; height: 22px; flex-shrink: 0; transition: color 0.25s ease; }
 
-  &:hover      { color: #ffffff; mat-icon { color: #ffffff; } }
-  &.active     { color: #555; font-weight: 600; mat-icon { color: #555; } }
+  &:hover {
+    background: var(--nav-item-color);
+    color: #ffffff;
+    transform: translateX(2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+
+    mat-icon { color: #ffffff; }
+  }
+
+  &.active {
+    background: var(--nav-item-color);
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.14);
+
+    mat-icon { color: #ffffff; }
+  }
 }
 
 .nav-label {
