@@ -209,4 +209,8 @@ export class LoginComponent {
     input.value = cleanValue;
     this.adminAccountn = cleanValue;
   }
+
+  toForgetPage() {
+    this.router.navigate(['/forget-password']);
+  }
 }
