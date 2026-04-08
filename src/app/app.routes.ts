@@ -18,12 +18,13 @@ import { BillComponent as ResidentBillComponent } from './pages/@resident/bill/b
 import { ResidentFacilityComponent } from './pages/@resident/facility/facility.component';
 import { PackageComponent as ResidentPackageComponent } from './pages/@resident/package/package.component';
 import { ResidentRepairComponent } from './pages/@resident/repair/repair.component';
-import { VisitorComponent as ResidentVisitorComponent } from './pages/@resident/visitor/visitor.component';
+import { VisitorComponent as ResidentVisitorComponent, VisitorComponent } from './pages/@resident/visitor/visitor.component';
 
 import { VisitorDialogComponent } from './dialog/visitor-dialog/visitor-dialog.component';
 import { VisitorComponent as AdminVisitorComponent } from './pages/@admin/visitor/admin-visitor.component';
 import { ResetPassword } from './pages/reset-password/reset-password';
 import { ForgetPassword } from './pages/forget-password/forget-password';
+import { ModifyResident } from './pages/@admin/modify-resident/modify-resident';
 
 export const routes: Routes = [
   // ── 登入頁 ──────────────────────────────────────────
@@ -37,12 +38,13 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'visitor', component: AdminVisitorComponent },
+      { path: 'visitor', component: VisitorComponent },
       { path: 'announcement', component: AnnouncementComponent },
       { path: 'bill', component: BillComponent },
       { path: 'facility', component: FacilityComponent },
       { path: 'package', component: PackageComponent },
       { path: 'repair', component: RepairComponent },
+      { path: 'ModifyResident', component: ModifyResident },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ]
   },

@@ -20,4 +20,7 @@ export class VisitorServiceService {
 
   //下面是賬單的service
   myBillId!:any;
+
+booleanOpenDialog!:string;
+
 }

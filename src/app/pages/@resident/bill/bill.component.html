@@ -1,3 +1,4 @@
+
 <div class="bill-container">
 
   <!-- 頁面標題 -->
@@ -8,9 +9,7 @@
     </div>
   </div>
 
-  <!-- ════════════════════════════
-       統計卡片
-  ════════════════════════════ -->
+  <!-- 統計卡片 -->
   <div class="stats-row">
     <div class="stat-card pending" (click)="selectedFilter = '待繳'">
       <mat-icon>pending_actions</mat-icon>
@@ -35,19 +34,16 @@
     </div>
   </div>
 
-  <!-- ════════════════════════════
-       篩選按鈕
-  ════════════════════════════ -->
+  <!-- 篩選按鈕 -->
   <div class="filter-row">
-    <button class="filter-btn" [class.active]="selectedFilter === '全部'" (click)="selectedFilter = '全部'; onFilterChange()">全部</button>
-    <button class="filter-btn" [class.active]="selectedFilter === '待繳'" (click)="selectedFilter = '待繳'; onFilterChange()">待繳</button>
-    <button class="filter-btn" [class.active]="selectedFilter === '已繳'" (click)="selectedFilter = '已繳'; onFilterChange()">已繳</button>
-    <button class="filter-btn" [class.active]="selectedFilter === '逾期'" (click)="selectedFilter = '逾期'; onFilterChange()">逾期</button>
+    <!-- [class.active] 根據目前篩選狀態動態加上 active 樣式 -->
+    <button class="filter-btn" [class.active]="selectedFilter === '全部'"    (click)="selectedFilter = '全部'">全部</button>
+    <button class="filter-btn" [class.active]="selectedFilter === '待繳'"    (click)="selectedFilter = '待繳'">待繳</button>
+    <button class="filter-btn" [class.active]="selectedFilter === '已繳'"    (click)="selectedFilter = '已繳'">已繳</button>
+    <button class="filter-btn" [class.active]="selectedFilter === '逾期'"    (click)="selectedFilter = '逾期'">逾期</button>
   </div>
 
-  <!-- ════════════════════════════
-       帳單列表
-  ════════════════════════════ -->
+  <!-- 帳單列表 -->
   <div class="table-card">
     <table>
       <thead>
@@ -56,62 +52,70 @@
           <th>類型</th>
           <th>金額</th>
           <th>截止日期</th>
-          <th>狀態</th>
           <th>繳費時間</th>
+          <th>狀態</th>
           <th>操作</th>
         </tr>
       </thead>
       <tbody>
-        @if (filteredBills.length === 0) {
-        <tr>
-          <td colspan="7" class="empty-row">目前沒有符合條件的帳單</td>
-        </tr>
-        }
-        @for (bill of pagedBills; track bill.id) {
-        <tr [class.row-overdue]="bill.status === '逾期'">
-          <td><strong>{{ bill.billingMonth }}</strong></td>
-          <td>
-            <div class="bill-type-cell">
-              <mat-icon [style.color]="getBillColor(bill.billType)">{{ getBillIcon(bill.billType) }}</mat-icon>
-              {{ bill.billType }}
-            </div>
-          </td>
-          <td class="amount">{{ formatAmount(bill.amount) }}</td>
-          <td>{{ bill.dueDate }}</td>
-          <td>
-            @if (bill.status === '待繳') {
-            <span class="status-badge status-pending">待繳</span>
-            } @else if (bill.status === '已繳') {
-            <span class="status-badge status-paid">已繳</span>
-            } @else {
-            <span class="status-badge status-overdue">逾期</span>
-            }
-          </td>
-          <td>{{ bill.paidAt || '-' }}</td>
-          <td>
-            @if (bill.status !== '已繳') {
-            <button class="pay-btn" (click)="payBill(bill)">立即繳費</button>
-            } @else {
-            <span class="paid-text">已繳納</span>
-            }
-          </td>
-        </tr>
+        @for (bill of pagedBills; track $index) {
+          <tr>
+            <td>{{ bill.billingMonth }}</td>
+            <td>
+              <!-- 帳單類型加上 icon 和顏色 -->
+              <div class="bill-type-cell" (click)="billsDialog(bill)" >
+
+              <!-- <mat-icon [style.color]="getBillColor(bill.billType)">
+                  {{ getBillIcon(bill.billType) }}
+                </mat-icon> --><strong class="unitNumberCss">
+                {{ bill.title }}</strong >
+              </div>
+            </td>
+            <td class="amount"> {{ bill.totalAmount | currency:'TWD':'symbol':'1.0-0' }}</td>
+            <td>{{ bill.dueDate }}</td>
+            <td>{{ (bill.paidAtDate | date: 'yyyy-MM-dd') || '-' }}</td>
+            <td>
+              <!-- 根據狀態顯示不同顏色標籤 -->
+              @if (bill.status === '待繳') {
+                <span class="status-badge status-pending">待繳</span>
+              } @else if (bill.status === '已繳') {
+                <span class="status-badge status-paid">已繳</span>
+              } @else {
+                <span class="status-badge status-overdue">逾期</span>
+              }
+            </td>
+            <td>
+              <!-- 只有待繳和逾期才顯示繳費按鈕 -->
+              @if (bill.status !== '已繳') {
+                <button class="pay-btn" (click)="payBill(bill.id)">
+                  立即繳費
+                </button>
+              }
+            </td>
+          </tr>
         }
       </tbody>
     </table>
   </div>
 
-  <!-- ════════════════════════════
-       分頁
-  ════════════════════════════ -->
-  @if (totalPages > 1) {
-    <div class="pagination">
-      <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">‹</button>
-      @for (page of pageNumbers; track page) {
-        <button class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">{{ page }}</button>
-      }
-      <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">›</button>
-    </div>
-  }
-
 </div>
+@if (totalPages > 1) {
+  <div class="pagination">
+    <button class="page-btn"
+            [disabled]="currentPage === 1"
+            (click)="goToPage(currentPage - 1)">‹</button>
+
+    @for (page of pageNumbers; track page) {
+      <button class="page-btn"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+        {{ page }}
+      </button>
+    }
+
+    <button class="page-btn"
+            [disabled]="currentPage === totalPages"
+            (click)="goToPage(currentPage + 1)">›</button>
+  </div>
+}
+
