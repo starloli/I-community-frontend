@@ -1,0 +1,153 @@
+
+
+<button (click)="sendBill()">我是管理者,向住戶發送賬單</button>
+
+<p></p>
+@if(booleanSendBill){
+ 請選擇住戶: <input [(ngModel)]="unitNumber">
+   備注<input [(ngModel)]="remark">
+    <br>
+其他費用<input [(ngModel)]="otherexpenses" type="number">
+ <br>
+管理費:<input [(ngModel)]="managementfee" disabled >
+使用者汽車位清潔費<input [(ngModel)]="car_parkkingcleaningfee" disabled>
+ <br>
+使用者機車位清潔費<input [(ngModel)]="locomotive_parkkingcleaningfee"  disabled>
+<br>
+使用者水費<input [(ngModel)]="myWater" disabled>
+<br>
+使用者電費 <input  [(ngModel)]="myElectricity" disabled>
+ <br>
+  <label>請選擇住戶</label>
+    <select  name="hostUser"  [(ngModel)]="unitNumber" (change)="getAdressData()">
+      <option value="">-- 請選擇住戶 --</option>
+@for(data of addressList;track $index){
+   <option>{{data}}</option>
+}
+
+    </select>
+ {{unitNumber}}
+
+@if(booleanThisUnitnumberSendBill){
+  <p>該住戶本期已發送過賬單</p>}
+@else {
+ <button (click)="sendBillToUnitNumber()" [disabled]="!unitNumber || unitNumber === ''">發送賬單</button><br>}
+<button (click)="getAdressData()">得到住戶詳細資料</button><br>
+<button (click)="getMyBill()">得到我自己的賬單資料</button>
+
+
+ <br>
+ 賬單開始日期:<input  type="date" [(ngModel)]="billingMonth">
+  <br>
+  賬單截止日期<input type="date" [(ngModel)]="dueDate">{{dueDate}}
+  請輸入標題<input [(ngModel)]="title">
+   <br>
+
+ 公共水費分攤:<input type="number" [(ngModel)]="water"  (input)="calculateFee()">
+  <br>
+ 公共電費分攤 :<input type="number" [(ngModel)]="electricity"  (input)="calculateFee()">
+<br>
+管理者制定機車清潔費 <input type="number" [(ngModel)]="adminLocomotive_parkkingcleaningfee" (input)="calculateFee()">
+ <br>
+管理者制定汽車車位清潔費 <input type="number" [(ngModel)]="adminCar_parkkingcleaningfee" (input)="calculateFee()">
+
+
+
+ 每平方管理費<input type="number" [(ngModel)]="managementFeePerSquareMeter" (input)="calculateFee()">
+}
+
+
+
+
+
+
+
+<div class="admin-container">
+  <button (click)="sendBill()" class="toggle-btn">
+    {{ booleanSendBill ? '隱藏發送面板' : '開啟管理者發送功能' }}
+  </button>
+
+  @if(booleanSendBill) {
+    <div class="global-settings">
+      <h4>📍 第一步：設定本月公用費率與日期</h4>
+      <div class="row">
+        <div class="field">
+          <label>帳單月份</label><br>
+          <input type="date" [(ngModel)]="billingMonth" (change)="getAdressData()">
+        </div>
+        <div class="field">
+          <label>截止日期</label><br>
+          <input type="date" [(ngModel)]="dueDate">
+        </div>
+        <div class="field">
+          <label>標題</label><br>
+          <input [(ngModel)]="title" placeholder="2026年3月管理費">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>公共水費</label><br>
+          <input type="number" [(ngModel)]="water" (input)="calculateFee()">
+        </div>
+        <div class="field">
+          <label>公共電費</label><br>
+          <input type="number" [(ngModel)]="electricity" (input)="calculateFee()">
+        </div>
+        <div class="field">
+          <label>每坪管理費</label><br>
+          <input type="number" [(ngModel)]="managementFeePerSquareMeter" (input)="calculateFee()">
+        </div>
+      </div>
+    </div>
+
+    <div class="unit-detail-card">
+      <h4>🏠 第二步：選擇住戶並發送</h4>
+      <div class="unit-selector">
+        <select [(ngModel)]="unitNumber" (change)="getAdressData()">
+          <option value="">-- 請選擇住戶 --</option>
+          @for(data of addressList; track data) {
+            <option [value]="data">{{data}}</option>
+          }
+        </select>
+        <span style="margin-left: 15px;">社區總戶數：{{getAllAdressNumber}}</span>
+      </div>
+
+      @if(unitNumber) {
+        <div class="result-grid">
+          <div class="field-group">
+            <label>管理費 (坪數: {{squareFootage}})</label>
+            <input [value]="managementfee" disabled>
+          </div>
+          <div class="field-group">
+            <label>其他費用 (可手動輸入)</label>
+            <input type="number" [(ngModel)]="otherexpenses" (input)="calculateFee()">
+          </div>
+          <div class="field-group">
+            <label>分攤水費</label>
+            <input [value]="myWater " disabled>
+          </div>
+          <div class="field-group">
+            <label>分攤電費</label>
+            <input [value]="myElectricity" disabled>
+          </div>
+          <div class="field-group">
+            <label>機車清潔費 (車位: {{userLocomotiveNumber}})</label>
+            <input [value]="locomotive_parkkingcleaningfee" disabled>
+          </div>
+          <div class="field-group">
+            <label>汽車清潔費 (車位: {{userCarNumber}})</label>
+            <input [value]="car_parkkingcleaningfee" disabled>
+          </div>
+        </div>
+
+        @if(booleanThisUnitnumberSendBill) {
+          <div style="background: #fff3cd; padding: 10px; margin-top: 20px; text-align: center;">
+            ⚠️ 此住戶本月已發送過帳單，請勿重複發送。
+          </div>
+        } @else {
+          <button class="btn-send" (click)="sendBillToUnitNumber()">確認發送帳單</button>
+        }
+      }
+    </div>
+  }
+</div>
