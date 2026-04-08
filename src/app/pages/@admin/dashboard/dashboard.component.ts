@@ -1,7 +1,6 @@
 ﻿import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-
 import { AnnouncementService } from '../../../@service/announcement.service';
 import { ApiService } from '../../../@service/api.service';
 import { RepairService } from '../../../@service/repair.service';
