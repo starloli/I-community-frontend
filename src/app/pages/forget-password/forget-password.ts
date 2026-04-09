@@ -15,6 +15,7 @@ export class ForgetPassword {
 
   email: string | null = null;
   bo: boolean = true;
+  hasEmailError: boolean = false;
 
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email]]
@@ -31,10 +32,15 @@ export class ForgetPassword {
 
     const email = this.form.value.email!;
 
-    this.auth.forgetPassword(email).subscribe(
-      res => console.log(res)
-    )
-    this.bo = false
+    this.auth.forgetPassword(email).subscribe({
+      next: () => {
+        this.bo = false
+      },
+      error: (err) => {
+        this.hasEmailError = true;
+        console.log(err);
+      }
+    })
   }
 
   toLoginPage() {

@@ -3,7 +3,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { catchError, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -39,11 +39,18 @@ export class AuthService {
       this.apiUrl + '/auth/forgot-password',
       {
         "email": email
-      },
-      {
-        responseType: 'text'
       }
-    )
+    ).pipe(
+    catchError((error) => {
+      console.error('API error:', error);
+
+      let message = '信箱錯誤';
+      if (error.error?.message) {
+        message = error.error.message;
+      }
+
+      return throwError(() => new Error(message));
+    }))
   }
 
   resetPassword(token: string, npw: string) {
@@ -52,11 +59,18 @@ export class AuthService {
       {
         "token": token,
         "newPassword": npw
-      },
-      {
-        responseType: 'text'
       }
-    )
+    ).pipe(
+    catchError((error) => {
+      console.error('API error:', error);
+
+      let message = '重置密碼錯誤';
+      if (error.error?.message) {
+        message = error.error.message;
+      }
+
+      return throwError(() => new Error(message));
+    }))
   }
 
   getToken(): string | null {
