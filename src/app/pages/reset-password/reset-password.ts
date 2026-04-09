@@ -45,9 +45,13 @@ export class ResetPassword {
 
     const npw = this.form.value.npw!;
 
-    this.auth.resetPassword(this.token, npw).subscribe(res => {
-      console.log(res)
-      this.router.navigate(['/login']);
+    this.auth.resetPassword(this.token, npw).subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        console.log(err);
+      }
     });
   }
 }
