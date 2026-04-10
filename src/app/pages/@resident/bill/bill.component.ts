@@ -18,6 +18,7 @@ import { BillsdialogComponent } from '../../../dialog/billsdialog/billsdialog.co
 export class BillComponent implements OnInit {
   constructor(private http: ApiService, private service: VisitorServiceService) { }
   readonly dialog = inject(MatDialog);
+
   openDialog() {
     const ref = this.dialog.open(BillsdialogComponent, {
       width: '500px',

@@ -3,25 +3,27 @@
     <div>
       <h1>歡迎回來，{{ userName }}</h1>
       <span class="subtitle">
-        @if (unitNumber) { {{ unitNumber }} · } 住戶首頁總覽
+        @if (unitNumber) {
+        {{ unitNumber }} ·
+        } 住戶首頁總覽
       </span>
     </div>
   </div>
 
   <div class="stats-grid">
     @for (stat of stats; track stat.label) {
-      <div class="stat-card" (click)="navigateTo(stat.route)" style="cursor: pointer">
-        <div class="stat-top">
-          <div class="stat-icon" [style.background]="stat.bg">
-            <mat-icon [style.color]="stat.color">{{ stat.icon }}</mat-icon>
-          </div>
+    <div class="stat-card" (click)="navigateTo(stat.route)" style="cursor: pointer">
+      <div class="stat-top">
+        <div class="stat-icon" [style.background]="stat.bg">
+          <mat-icon [style.color]="stat.color">{{ stat.icon }}</mat-icon>
         </div>
-        <div class="stat-info">
-          <span class="stat-value">{{ stat.value }}</span>
-          <span class="stat-label">{{ stat.label }}</span>
-        </div>
-        <div class="stat-extra"></div>
       </div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stat.value }}</span>
+        <span class="stat-label">{{ stat.label }}</span>
+      </div>
+      <div class="stat-extra"></div>
+    </div>
     }
   </div>
 
@@ -33,13 +35,13 @@
         <a class="card-more" (click)="navigateTo('/resident/announcement')">查看全部</a>
       </div>
       @for (item of announcements; track item.title) {
-        <div class="announcements-item">
-          <div class="announcements-left">
-            <span class="category-badge">{{ item.category }}</span>
-            <span class="announcements-title">{{ item.title }}</span>
-          </div>
-          <span class="announcements-date">{{ item.date }}</span>
+      <div class="announcements-item">
+        <div class="announcements-left">
+          <span class="category-badge">{{ item.category }}</span>
+          <span class="announcements-title">{{ item.title }}</span>
         </div>
+        <span class="announcements-date">{{ item.date }}</span>
+      </div>
       }
     </div>
 
@@ -50,23 +52,23 @@
         <a class="card-more" (click)="navigateTo('/resident/package')">查看全部</a>
       </div>
       @if (myPackages.length === 0) {
-        <div class="empty-packages">
-          <mat-icon>check_circle</mat-icon>
-          <span>目前沒有待領包裹</span>
-        </div>
+      <div class="empty-packages">
+        <mat-icon>check_circle</mat-icon>
+        <span>目前沒有待領包裹</span>
+      </div>
       } @else {
-        @for (pkg of myPackages; track pkg.trackingNumber) {
-          <div class="package-item">
-            <div class="package-icon">
-              <mat-icon>inventory_2</mat-icon>
-            </div>
-            <div class="package-info">
-              <span class="package-courier">{{ pkg.courier }}</span>
-              <span class="package-tracking">{{ pkg.trackingNumber }}</span>
-            </div>
-            <span class="package-time">{{ pkg.arrivedAt }}</span>
-          </div>
-        }
+      @for (pkg of myPackages; track pkg.trackingNumber) {
+      <div class="package-item">
+        <div class="package-icon">
+          <mat-icon>inventory_2</mat-icon>
+        </div>
+        <div class="package-info">
+          <span class="package-courier">{{ pkg.courier }}</span>
+          <span class="package-tracking">{{ pkg.trackingNumber }}</span>
+        </div>
+        <span class="package-time">{{ pkg.arrivedAt }}</span>
+      </div>
+      }
       }
     </div>
 
@@ -81,10 +83,10 @@
 
       <div class="visitor-highlights">
         @for (item of visitorHighlights; track item) {
-          <div class="visitor-highlight">
-            <mat-icon>check_circle</mat-icon>
-            <span>{{ item }}</span>
-          </div>
+        <div class="visitor-highlight">
+          <mat-icon>check_circle</mat-icon>
+          <span>{{ item }}</span>
+        </div>
         }
       </div>
 

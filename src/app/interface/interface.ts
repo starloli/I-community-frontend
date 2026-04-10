@@ -157,10 +157,16 @@ export interface LoginInfo {
 
 export interface UserResponse {
   userId: number,
+  role: UserRole,
   userName: string,
   fullName: string,
   email: string,
-  unitNumber: string
+  phone: string,
+  unitNumber: string,
+  squareFootage: number,
+  motorParkingSpace: string,
+  carParkingSpace: string,
+  isActive: boolean,
 }
 
 export interface Res {
