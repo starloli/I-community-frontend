@@ -1,3 +1,4 @@
+import { Res } from './interface/interface';
 import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { LayoutComponent } from './shared/layout/layout.component';
@@ -12,19 +13,21 @@ import { PackageComponent } from './pages/@admin/package/package.component';
 import { RepairComponent } from './pages/@admin/repair/repair.component';
 
 // ── 住戶頁面（之後陸續新增）──────────────────────────
+import { UserInfo as ResidentUserInfo } from './pages/@resident/user-info/user-info';
 import { ResidentDashboardComponent } from './pages/@resident/dashboard/dashboard.component';
 import { ResidentAnnouncementComponent } from './pages/@resident/announcement/announcement.component';
 import { BillComponent as ResidentBillComponent } from './pages/@resident/bill/bill.component';
 import { ResidentFacilityComponent } from './pages/@resident/facility/facility.component';
 import { PackageComponent as ResidentPackageComponent } from './pages/@resident/package/package.component';
 import { ResidentRepairComponent } from './pages/@resident/repair/repair.component';
-import { VisitorComponent as ResidentVisitorComponent, VisitorComponent } from './pages/@resident/visitor/visitor.component';
+import { VisitorComponent as ResidentVisitorComponent } from './pages/@resident/visitor/visitor.component';
 
 import { VisitorDialogComponent } from './dialog/visitor-dialog/visitor-dialog.component';
-import { VisitorComponent as AdminVisitorComponent } from './pages/@admin/visitor/admin-visitor.component';
 import { ResetPassword } from './pages/reset-password/reset-password';
 import { ForgetPassword } from './pages/forget-password/forget-password';
 import { ModifyResident } from './pages/@admin/modify-resident/modify-resident';
+import { UserInfo } from './pages/@admin/user-info/user-info';
+import { VisitorComponent } from './pages/@admin/visitor/admin-visitor.component';
 
 export const routes: Routes = [
   // ── 登入頁 ──────────────────────────────────────────
@@ -37,6 +40,7 @@ export const routes: Routes = [
     path: 'admin',
     component: LayoutComponent,
     children: [
+      { path: 'userInfo', component: UserInfo },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'visitor', component: VisitorComponent },
       { path: 'announcement', component: AnnouncementComponent },
@@ -54,7 +58,7 @@ export const routes: Routes = [
     path: 'resident',
     component: ResidentLayoutComponent,
     children: [
-      // 頁面做好後逐一取消註解
+      { path: 'userInfo', component: ResidentUserInfo },
       { path: 'dashboard', component: ResidentDashboardComponent },
       { path: 'announcement', component: ResidentAnnouncementComponent },
       { path: 'bill', component: ResidentBillComponent },

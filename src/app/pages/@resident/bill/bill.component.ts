@@ -18,8 +18,17 @@ import { BillsdialogComponent } from '../../../dialog/billsdialog/billsdialog.co
 export class BillComponent implements OnInit {
   constructor(private http: ApiService, private service: VisitorServiceService) { }
   readonly dialog = inject(MatDialog);
+
   openDialog() {
-    this.dialog.open(BillsdialogComponent);
+    const ref = this.dialog.open(BillsdialogComponent, {
+      width: '500px',
+      disableClose: false // 點擊背景是否可以關閉
+    });
+    ref.afterClosed().subscribe(result => {
+      if (result === 'refresh') {
+        console.log('收到刷新指令，重新獲取數據...');
+      }
+    });
   }
   bills: any[] = [];
 

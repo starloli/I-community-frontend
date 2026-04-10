@@ -14,6 +14,15 @@
     </div>
   </div>
 
+  <div class="user-info" [class.collapsed]="isCollapsed" routerLink="/admin/userInfo">
+    <div class="user-avatar">{{ userInitial }}</div>
+    <div class="user-detail">
+      <span class="user-name">{{ userName }}</span>
+      <span class="user-unit">{{ unitNumber }}</span>
+    </div>
+  </div>
+
+
   <nav class="sidebar-nav">
     @for (item of navItems; track item.route) {
       <a

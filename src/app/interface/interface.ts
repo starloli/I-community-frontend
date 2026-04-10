@@ -160,7 +160,12 @@ export interface UserResponse {
   userName: string,
   fullName: string,
   email: string,
-  unitNumber: string
+  phone: string,
+  unitNumber: string,
+  squareFootage: string,
+  motorParkingSpace: string,
+  carParkingSpace: string,
+  isActive: boolean,
 }
 
 export interface Res {

@@ -1,0 +1,37 @@
+@if (user) {
+<p>使用者名稱：{{user.userName}}</p>
+<p>姓名：{{user.fullName}}</p>
+<p>電子信箱：{{user.email}}</p>
+<p>電話：{{user.phone}}</p>
+<p>住址：{{user.unitNumber}}</p>
+<p>坪數：{{user.squareFootage}}</p>
+<p>機車位數量：{{user.motorParkingSpace}}</p>
+<p>小客車位數量：{{user.carParkingSpace}}</p>
+<br>
+<p>管理者可編輯電子信箱、電話、房號、坪數、機車位數量、小客車位數量</p>
+<div class="a">
+  <span class="">Email
+    @if(!isValidEmail(updateUser.email))
+    {
+    <span style="color: red;">Email格式不正確</span>
+    }
+  </span>
+  <input type="text" placeholder="請輸入您的Email" [(ngModel)]="updateUser.email" (keydown.space)="$event.preventDefault()"
+    [class.input-error]="!isValidEmail(updateUser.email)" pattern="[0-9]*">
+  <span class="">電話
+    @if(!isValidPhone(updateUser.phone))
+    {
+    <span style="color: red;">電話格式不正確 </span>
+    }
+  </span>
+  <input type="tel" inputmode="numeric" placeholder="請輸入您的電話" [(ngModel)]="updateUser.phone"
+    (keydown.space)="$event.preventDefault()" [class.input-error]="!isValidPhone(updateUser.phone)">
+  @if(isValid(updateUser))
+  {
+  <button class="" (click)="ModifyResident()">提交</button>
+  }
+  @else{
+  <button class="" (click)="No()">提交</button>
+  }
+</div>
+}

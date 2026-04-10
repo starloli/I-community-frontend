@@ -1,5 +1,5 @@
 ﻿import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { AnnouncementService } from '../../../@service/announcement.service';
 import { ApiService } from '../../../@service/api.service';
@@ -8,6 +8,7 @@ import { StatisticsService } from '../../../@service/statistics.service';
 import { PackageStatus, RepairStatus } from '../../../interface/enum';
 import { Announcement } from '../../../interface/interface';
 import { PackageService } from './../../../@service/package.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,7 +17,7 @@ import { PackageService } from './../../../@service/package.service';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   // 卡片順序有固定意義，因為各個載入方法會依索引更新對應數值。
   stats = [
     { label: '社區住戶總數', value: '載入中...', icon: 'people', color: '#3f51b5', bg: '#e8eaf6' },
@@ -27,6 +28,7 @@ export class DashboardComponent implements OnInit {
 
   announcements: Announcement[] = [];
   recentVisitors: Array<{ name: string; unit: string; time: string; status: string }> = [];
+  private $destroy = new Subject<void>();
 
   constructor(
     private apiService: ApiService,
@@ -34,7 +36,7 @@ export class DashboardComponent implements OnInit {
     private statisticsService: StatisticsService,
     private packageService: PackageService,
     private repairService: RepairService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // 各區塊分開載入，避免單一請求失敗時影響整個儀表板顯示。
@@ -46,7 +48,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private loadVisitors(): void {
-    this.apiService.getApi('/visitor/getVisitor').subscribe({
+    this.apiService.getApi('/visitor/getVisitor').pipe(takeUntil(this.$destroy)).subscribe({
       next: (res: any) => {
         const visitors = Array.isArray(res) ? res : res?.data ?? [];
 
@@ -75,8 +77,8 @@ export class DashboardComponent implements OnInit {
 
   private loadAnnouncements(): void {
     // 先觸發資料更新，再透過 service 提供的共用串流同步畫面。
-    this.announcementService.getAll().subscribe();
-    this.announcementService.announs$.subscribe(data => {
+    this.announcementService.getAll().pipe(takeUntil(this.$destroy)).subscribe();
+    this.announcementService.announs$.pipe(takeUntil(this.$destroy)).subscribe(data => {
       this.announcements = data
         .slice()
         .sort((a, b) => this.getDateTimestamp(b?.publishedAt) - this.getDateTimestamp(a?.publishedAt))
@@ -85,8 +87,8 @@ export class DashboardComponent implements OnInit {
   }
 
   private loadPackages(): void {
-    this.packageService.getAll().subscribe();
-    this.packageService.packages$.subscribe(data => {
+    this.packageService.getAll().pipe(takeUntil(this.$destroy)).subscribe();
+    this.packageService.packages$.pipe(takeUntil(this.$destroy)).subscribe(data => {
       this.stats[3].value = data
         .filter(item => item.status === PackageStatus.WAITING)
         .length
@@ -95,7 +97,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private loadUserCount(): void {
-    this.statisticsService.getUserNum().subscribe(
+    this.statisticsService.getUserNum().pipe(takeUntil(this.$destroy)).subscribe(
       (res: number) => {
         this.stats[0].value = res.toString();
       },
@@ -108,14 +110,14 @@ export class DashboardComponent implements OnInit {
 
   private loadPendingRepairs(): void {
     // Use the same source as the admin repair page so the "待處理報修" count stays consistent.
-    this.repairService.getAll().subscribe({
+    this.repairService.getAll().pipe(takeUntil(this.$destroy)).subscribe({
       error: (error) => {
         console.error('取得報修資料失敗:', error);
         this.stats[2].value = 'N/A';
       }
     });
 
-    this.repairService.repairs$.subscribe(data => {
+    this.repairService.repairs$.pipe(takeUntil(this.$destroy)).subscribe(data => {
       this.stats[2].value = data
         .filter(item => item.status === RepairStatus.PENDING)
         .length
@@ -156,5 +158,10 @@ export class DashboardComponent implements OnInit {
 
     const date = new Date(value);
     return Number.isNaN(date.getTime()) ? 0 : date.getTime();
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 }

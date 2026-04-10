@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { HttpService } from '../../../@service/http.service';
+import { User } from '../../../interface/interface';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-resident-dashboard',
@@ -10,9 +13,13 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class ResidentDashboardComponent implements OnInit {
+export class ResidentDashboardComponent implements OnInit, OnDestroy {
+
+  constructor(private http: HttpService, private router: Router) { }
+
   userName = '住戶';
   unitNumber = '';
+  private $destroy = new Subject<void>();
 
   // TODO: 接後端統計 API 後，這裡可以改成動態資料。
   stats = [
@@ -42,26 +49,29 @@ export class ResidentDashboardComponent implements OnInit {
     '支援住戶自行新增與管理訪客資料'
   ];
 
-  constructor(private router: Router) {}
-
   ngOnInit(): void {
     this.loadUserInfo();
   }
 
   private loadUserInfo(): void {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      this.userName = payload.fullName || payload.sub || '住戶';
-      this.unitNumber = payload.unitNumber || '';
-    } catch {
-      this.userName = '住戶';
-    }
+    const getUrl = "http://localhost:8083/user/me";
+    this.http.getApi<User>(getUrl).pipe(takeUntil(this.$destroy)).subscribe({
+      next: (res) => {
+        this.userName = res.fullName || '住戶';
+        this.unitNumber = res.unitNumber || '';
+      },
+      error: (error) => {
+        console.error('取得住戶資訊失敗:', error);
+      }
+    });
   }
 
   navigateTo(route: string): void {
     this.router.navigate([route]);
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 }

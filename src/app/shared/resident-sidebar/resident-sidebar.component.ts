@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { HttpService } from '../../@service/http.service';
+import { User } from '../../interface/interface';
 
 @Component({
   selector: 'app-resident-sidebar',
@@ -11,6 +13,9 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./resident-sidebar.component.scss']
 })
 export class ResidentSidebarComponent implements OnInit {
+
+  constructor(private router: Router, private http: HttpService) {}
+
   isCollapsed = false;
 
   navItems = [
@@ -25,26 +30,24 @@ export class ResidentSidebarComponent implements OnInit {
 
   userName = '';
   unitNumber = '';
-  userInitial = '住';
-
-  constructor(private router: Router) {}
+  userInitial = '';
 
   ngOnInit(): void {
     this.loadUserInfo();
   }
 
   private loadUserInfo(): void {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      this.userName = payload.fullName || payload.sub || '住戶';
-      this.unitNumber = payload.unitNumber || '';
-      this.userInitial = this.userName.charAt(0) || '住';
-    } catch {
-      this.userName = '住戶';
-    }
+    const getUrl = "http://localhost:8083/user/me";
+    this.http.getApi<User>(getUrl).subscribe({
+      next: (res) => {
+        this.userName = res.fullName || '住戶';
+        this.unitNumber = res.unitNumber || '';
+        this.userInitial = this.userName.charAt(0) || '';
+      },
+      error: (error) => {
+        console.error('取得住戶資訊失敗:', error);
+      }
+    });
   }
 
   toggleCollapse(): void {
