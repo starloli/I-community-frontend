@@ -20,7 +20,7 @@ import { SendBill } from '../../../dialog/send-bill/send-bill';
 @Component({
   selector: 'app-bill',
   standalone: true,
-  imports: [MatIconModule, CommonModule, RouterLink, MatDialogModule, CommonModule, FormsModule, MatPaginatorModule, MatButtonModule,],
+  imports: [MatIconModule, CommonModule, MatDialogModule, CommonModule, FormsModule, MatPaginatorModule, MatButtonModule,],
   templateUrl: './bill.component.html',
   styleUrl: './bill.component.scss'
 })
@@ -42,8 +42,9 @@ export class BillComponent implements OnInit {
       }
     });
   }
-  openSendAllBillsDialog(){
-     const ref =this.dialog.open(SendBill, {
+
+  openSendAllBillsDialog() {
+    const ref = this.dialog.open(SendBill, {
       width: '500px',
       disableClose: false // 點擊背景是否可以關閉
     });
@@ -53,7 +54,7 @@ export class BillComponent implements OnInit {
         this.getAllBills();
       }
     });
-}
+  }
 
   // ── 住戶帳單篩選 ──────────────────────────────────────
   selectedFilter: '全部' | '待繳' | '已繳' | '逾期' = '全部';
@@ -78,11 +79,8 @@ export class BillComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllBills();
-
-
-
-
   }
+
   getAllBills() {
     this.http.getApi("/bills/getAllBills").subscribe((res: any) => {
       this.adminBills = res;
@@ -91,9 +89,10 @@ export class BillComponent implements OnInit {
 
     })
   }
+
   billsDialog(bill: any) {
     this.service.myBillId = bill;
-this.service.booleanOpenDialog='';
+    this.service.booleanOpenDialog = '';
     this.openDialog();
   }
 
@@ -114,25 +113,25 @@ this.service.booleanOpenDialog='';
 
 
     const statusPriority: { [key: string]: number } = {
-    'UNPAID': 0,   // 未繳費最優先
-    'OVERDUE': 1,  // 逾期第二
-    'PAID': 2      // 已繳費最後
-  };
+      'UNPAID': 0,   // 未繳費最優先
+      'OVERDUE': 1,  // 逾期第二
+      'PAID': 2      // 已繳費最後
+    };
 
-  list.sort((a, b) => {
-    // 1. 先按狀態權重排序
-    const priorityA = statusPriority[a.status] ?? 99; // 若有未知狀態放最後
-    const priorityB = statusPriority[b.status] ?? 99;
+    list.sort((a, b) => {
+      // 1. 先按狀態權重排序
+      const priorityA = statusPriority[a.status] ?? 99; // 若有未知狀態放最後
+      const priorityB = statusPriority[b.status] ?? 99;
 
-    if (priorityA !== priorityB) {
-      return priorityA - priorityB;
-    }
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB;
+      }
 
-    // 2. 如果狀態相同，再按日期排序 (可選：讓最新的日期在該狀態內排前面)
-    return b.billingMonth.localeCompare(a.billingMonth);
-  });
+      // 2. 如果狀態相同，再按日期排序 (可選：讓最新的日期在該狀態內排前面)
+      return b.billingMonth.localeCompare(a.billingMonth);
+    });
 
-  return list;
+    return list;
   }
 
   get adminTotalPages(): number {
@@ -182,7 +181,7 @@ this.service.booleanOpenDialog='';
 
   //用戶綫下付款
   userCashPay(bill: any) {
-  this.service.myBillId=bill;
+    this.service.myBillId = bill;
     this.service.booleanOpenDialog = "userCashPay";
 
     this.openDialog();
@@ -191,8 +190,8 @@ this.service.booleanOpenDialog='';
 
 
   //發送賬單給全部住戶
-  sendBills(){
-this.openSendAllBillsDialog();
+  sendBills() {
+    this.openSendAllBillsDialog();
   }
 
 

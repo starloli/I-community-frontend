@@ -4,8 +4,8 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
-  align-items: center;
-  justify-content: center;
+  // align-items: center;
+  // justify-content: center;
 }
 .ManagerIcon svg {
   width: 28px; /*icon 寬度 */
@@ -132,6 +132,13 @@ h1 {
   text-decoration: underline;
   font-size: 1em;
   padding: 0;
+}
+
+.forgot-container {
+    width: 100%;
+  display: flex;
+   justify-content: flex-end !important;
+  margin-top: 5px;
 }
 
 //注冊界面

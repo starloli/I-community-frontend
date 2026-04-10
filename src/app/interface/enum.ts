@@ -37,9 +37,10 @@ export enum ReservationStatus {
 }
 
 export enum UserRole {
-  ADMIN = '管理員',
-  GUARD = '保全',
-  RESIDENT = '住戶'
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  ADMIN = 'ADMIN',
+  GUARD = 'GUARD',
+  RESIDENT = 'RESIDENT'
 }
 
 export enum VisitorStatus {

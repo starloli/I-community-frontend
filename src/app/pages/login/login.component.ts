@@ -42,16 +42,19 @@ export class LoginComponent {
   isClickEmail = false;
   isPasswordLength = false;
 
+
+
+
+
   isValidEmail(email: string): boolean {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   }
 
-  isValidPhone(phone: any): boolean {
+  isValidPhone(phone: string): boolean {
     if (!phone) return false;
-    const phoneStr = phone.toString();
     const phoneRegex = /^09\d{8}$/;
-    return phoneRegex.test(phoneStr);
+    return phoneRegex.test(phone);
   }
 
   // ── 登入 API ──────────────────────────────────────────
@@ -102,7 +105,7 @@ export class LoginComponent {
       password: this.signUpPassword,
       fullName: this.fullName,
       email: this.email,
-      phone: parseInt(this.phone),
+      phone: this.phone,
       unitNumber: this.unitNumber,
     };
     this.http.postApi('/auth/register', signupData).subscribe((res: any) => {
