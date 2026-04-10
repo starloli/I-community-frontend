@@ -202,7 +202,7 @@
 
       @if(signUpStep==3) {
         <h1>已傳送驗證碼至信箱，請在15分鐘內輸入</h1>
-        <div class="otp-container">
+        <div class="otp-container" style="align-items: center; justify-content: center;">
           @for (ctrl of otpControls; track $index; let i = $index) {
             <input
               maxlength="1"
@@ -214,7 +214,7 @@
           }
         </div>
         @if(codeError) {
-          <small style="color: red;">驗證碼錯誤</small>
+          <h1 style="color: #ff0000;">驗證碼錯誤</h1>
         }
         <div class="bottom-text"><span>
           <button type="button" class="link-btn" (click)="sendEmailCode()">再次傳送驗證碼</button></span>
