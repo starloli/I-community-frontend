@@ -271,4 +271,11 @@ export class VisitorComponent implements OnInit {
       ? value.replace('T', ' ').slice(0, 16)
       : '';
   }
+
+  //住戶刪除訪客
+  deleteByVisitor(id: number){
+this.http.delApi('/visitor/delete/'+id).subscribe((res:any)=>
+console.log(res)
+)
+  }
 }

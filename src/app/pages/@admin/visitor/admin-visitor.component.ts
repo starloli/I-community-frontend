@@ -61,6 +61,8 @@ export class VisitorComponent implements OnInit {
   ngOnInit(): void {
     this.getAllVisitors();
     this.getAllAddresses();
+    console.log("測試");
+
   }
 
   /**
