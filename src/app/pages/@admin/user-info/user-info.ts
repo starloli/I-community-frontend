@@ -4,6 +4,7 @@ import { UserResponse } from '../../../interface/interface';
 import { Subject, takeUntil } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
+import { UserRole } from '../../../interface/enum';
 
 @Component({
   selector: 'app-user-info',
@@ -19,18 +20,22 @@ export class UserInfo implements OnInit, OnDestroy {
   modifyUrl = "http://localhost:8083/modify/admin";
   user!: UserResponse;
   updateUser!: UserResponse;
+  userRole!: UserRole;
   private $destroy = new Subject<void>();
 
   ngOnInit(): void {
     this.getInfo();
+    const payload = JSON.parse(atob(this.getToken().split('.')[1]));
+    this.userRole = payload.role;
   }
 
   getInfo(): void {
     this.http.getApi<UserResponse>(this.getUrl).pipe(takeUntil(this.$destroy)).subscribe({
       next: (response) => {
-        this.user = response;
-        this.updateUser = { ...response };
-        console.log(this.user);
+        this.user = { ...response };
+        this.updateUser = { ...response, role: this.userRole };
+        console.log('this.user:', this.user);
+        console.log('this.updateUser:', this.updateUser);
       },
       error: (error) => {
         console.error(error);
@@ -40,6 +45,8 @@ export class UserInfo implements OnInit, OnDestroy {
 
   ModifyResident(): void {
     if (this.isValid(this.updateUser)) {
+      console.log('this.updateUser:', this.updateUser);
+
       this.http.putApi(this.modifyUrl, this.updateUser).pipe(takeUntil(this.$destroy)).subscribe({
         next: (response) => {
           this.snackBar.open('修改成功', '關閉', {
@@ -71,7 +78,18 @@ export class UserInfo implements OnInit, OnDestroy {
   }
 
   isValid(user: UserResponse): boolean {
-    return !user;
+    return Object.values(user).every(
+      value =>
+        value !== null &&
+        value !== undefined &&
+        value !== ''
+    ) && this.isValidEmail(user.email)
+      && this.isValidPhone(user.phone)
+      && this.isValidSquareFootage(this.updateUser.squareFootage);
+  }
+
+  isValidSquareFootage(squareFootage: number): boolean {
+    return squareFootage > 0;
   }
 
   isValidEmail(email: string): boolean {
@@ -81,10 +99,18 @@ export class UserInfo implements OnInit, OnDestroy {
   }
 
   isValidPhone(phone: string): boolean {
+    if (!phone) return false;
     const phoneStr = phone.toString();
     const phoneRegex = /^09\d{8}$/;
     return phoneRegex.test(phoneStr);
-    if (!phone) return false;
+  }
+
+  getToken(): string {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('找不到TOKEN');
+    }
+    return token;
   }
 
   ngOnDestroy(): void {

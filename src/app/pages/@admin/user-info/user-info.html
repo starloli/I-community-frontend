@@ -8,24 +8,36 @@
 <p>機車位數量：{{user.motorParkingSpace}}</p>
 <p>小客車位數量：{{user.carParkingSpace}}</p>
 <br>
-<p>管理者可編輯電子信箱、電話、房號、坪數、機車位數量、小客車位數量</p>
+<p>管理者可編輯電子信箱、電話、住址、坪數、機車位數量、小客車位數量</p>
 <div class="a">
-  <span class="">Email
+  <span class="">Email：
     @if(!isValidEmail(updateUser.email))
     {
     <span style="color: red;">Email格式不正確</span>
     }
   </span>
   <input type="text" placeholder="請輸入您的Email" [(ngModel)]="updateUser.email" (keydown.space)="$event.preventDefault()"
-    [class.input-error]="!isValidEmail(updateUser.email)" pattern="[0-9]*">
-  <span class="">電話
+    [class.input-error]="!isValidEmail(updateUser.email)">
+  <span class="">電話：
     @if(!isValidPhone(updateUser.phone))
     {
     <span style="color: red;">電話格式不正確 </span>
     }
   </span>
   <input type="tel" inputmode="numeric" placeholder="請輸入您的電話" [(ngModel)]="updateUser.phone"
-    (keydown.space)="$event.preventDefault()" [class.input-error]="!isValidPhone(updateUser.phone)">
+    (keydown.space)="$event.preventDefault()" [class.input-error]="!isValidPhone(updateUser.phone)" pattern="[0-9]*">
+  <span class="">住址：</span>
+  <input type="text" placeholder="請輸入您的住址" [(ngModel)]="updateUser.unitNumber" (keydown.space)="$event.preventDefault()"
+    [class.input-error]="updateUser.unitNumber">
+  <span class="">坪數：</span>
+  <input type="number" placeholder="請輸入您的房間坪數" [(ngModel)]="updateUser.squareFootage" (keydown.space)="$event.preventDefault()"
+    [class.input-error]="updateUser.squareFootage">
+  <span class="">機車位數量：</span>
+  <input type="number" placeholder="請輸入您的機車位數量" [(ngModel)]="updateUser.motorParkingSpace" (keydown.space)="$event.preventDefault()"
+    [class.input-error]="updateUser.motorParkingSpace">
+  <span class="">小客車位數量：</span>
+  <input type="number" placeholder="請輸入您的小客車位數量" [(ngModel)]="updateUser.carParkingSpace" (keydown.space)="$event.preventDefault()"
+    [class.input-error]="updateUser.carParkingSpace">
   @if(isValid(updateUser))
   {
   <button class="" (click)="ModifyResident()">提交</button>

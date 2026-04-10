@@ -30,6 +30,8 @@ export class UserInfo implements OnInit, OnDestroy {
     this.http.getApi<UserResponse>(this.getUrl).pipe(takeUntil(this.$destroy)).subscribe({
       next: (response) => {
         this.user = response;
+        this.userEmail = this.user.email;
+        this.userPhone = this.user.phone;
         console.log(this.user);
       },
       error: (error) => {
