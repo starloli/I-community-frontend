@@ -115,4 +115,43 @@ export class AuthService {
       this.snackBar.open('登出成功', '關閉', { duration: 2000 });
     }
   }
+
+  sendEmailcode(email: string) {
+    return this.http.post(
+      this.apiUrl + '/auth/email/code',
+      {
+        "email": email
+      }
+    ).pipe(
+    catchError((error) => {
+      console.error('API error:', error);
+
+      let message = '信箱錯誤';
+      if (error.error?.message) {
+        message = error.error.message;
+      }
+
+      return throwError(() => new Error(message));
+    }))
+  }
+
+  verifyEmail(email: string, code: string) {
+    return this.http.post(
+      this.apiUrl + '/auth/email/verify',
+      {
+        "email": email,
+        "code": code
+      }
+    ).pipe(
+    catchError((error) => {
+      console.error('API error:', error);
+
+      let message = '信箱認證錯誤';
+      if (error.error?.message) {
+        message = error.error.message;
+      }
+
+      return throwError(() => new Error(message));
+    }))
+  }
 }
