@@ -24,18 +24,13 @@ export class BillComponent implements OnInit {
       width: '500px',
       disableClose: false // 點擊背景是否可以關閉
     });
-    ref.afterClosed().subscribe(result => {
-      if (result === 'refresh') {
-        console.log('收到刷新指令，重新獲取數據...');
-      }
-    });
   }
   bills: any[] = [];
 
 
 
   currentPage = 1;
-  pageSize = 10; // 每頁顯示 5 筆，可自行調整
+  pageSize = 8; // 每頁顯示 5 筆，可自行調整
 
   selectedMonth: string = '';
   adminSelectedMonth: string = '';
@@ -136,13 +131,13 @@ export class BillComponent implements OnInit {
 
 
   //使用者點擊繳費
-  payBill(id: number) {
-    this.http.putApi('/bills/pay/user/' + id).subscribe((res: any) => {
-      console.log(res);
-      this.getMyBills();
+  // payBill(id: number) {
+  //   this.http.putApi('/bills/pay/user/' + id).subscribe((res: any) => {
+  //     console.log(res);
+  //     this.getMyBills();
 
-    })
-  }
+  //   })
+  // }
 
   //打開dialog 查看詳細
   billsDialog(bill: any) {
@@ -150,4 +145,25 @@ export class BillComponent implements OnInit {
     this.service.booleanOpenDialog = '';
     this.openDialog();
   }
+
+
+    payBill(id:number){
+      return this.http.postApi('/payment/pay/'+id,{}).subscribe((res:any)=>{
+      console.log("收到表單資料：", res.form);
+
+      // 1. 建立一個隱藏的 div
+      const div = document.createElement('div');
+      div.style.display = 'none'; // 隱藏起來，不影響畫面
+      div.innerHTML = res.form;
+      document.body.appendChild(div);
+
+      // 2. 找到剛剛塞進去的那個表單並手動提交 (保險起見)
+      const form = div.querySelector('form');
+      if (form) {
+        form.submit();
+      } else {
+        console.error("在回傳內容中找不到表單！");
+      }
+    });
+    }
 }

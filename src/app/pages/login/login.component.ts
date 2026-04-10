@@ -41,6 +41,10 @@ export class LoginComponent {
   isClickEmail = false;
   isPasswordLength = false;
 
+
+
+
+
   isValidEmail(email: string): boolean {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
@@ -75,8 +79,9 @@ export class LoginComponent {
 
           if (payload.role === 'ADMIN') {
             this.router.navigate(['/admin/dashboard']);
-          }else if(payload.role === 'SUPER_ADMIN'){ this.router.navigate(['/admin/dashboard'])}
-           else {
+          } else if (payload.role === 'SUPER_ADMIN') {
+            this.router.navigate(['/admin/dashboard']);
+          } else {
             // RESIDENT 或 GUARD
             this.router.navigate(['/resident/dashboard']);
           }
@@ -214,4 +219,6 @@ export class LoginComponent {
   toForgetPage() {
     this.router.navigate(['/forget-password']);
   }
+
+
 }

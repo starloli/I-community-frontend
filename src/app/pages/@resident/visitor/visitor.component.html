@@ -136,11 +136,14 @@
               }
             </td>
             <td>
-              @if (visitor.status === 'INSIDE') {
+              <!-- @if (visitor.status === 'INSIDE') {
                 <button class="checkout-btn" (click)="checkOut(visitor.visitorId)">
                   登記離開
                 </button>
-              }
+              }  -->
+              @if(visitor.status === 'NOTYET'){<button class="checkout-btn" (click)="deleteByVisitor(visitor.visitorId)">
+                  刪除
+                </button>}
             </td>
           </tr>
         } @empty {

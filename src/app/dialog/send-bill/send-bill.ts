@@ -12,7 +12,7 @@ import { BillsdialogComponent } from '../billsdialog/billsdialog.component';
 })
 export class SendBill {
 
-  constructor(private http: ApiService, private dialogRef: MatDialogRef<BillsdialogComponent>) { }
+  constructor(private http: ApiService, private dialogRef: MatDialogRef<SendBill>) { }
   title!: string;
   billingMonth!: string;
   dueDate!: string;
@@ -50,7 +50,7 @@ export class SendBill {
     this.http.postApi("/bills/sendAllBills", billData).subscribe((res: any) => {
       console.log(res, "成功發送賬單");
       this.page = 1
-      this.dialogRef.close();
+      this.dialogRef.close('refresh');
 
     })
   }
