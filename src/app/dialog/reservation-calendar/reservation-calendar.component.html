@@ -1,0 +1,29 @@
+<div class="calendar-container">
+  <div class="calendar-nav">
+    <button (click)="changeWeek(-1)">上周</button>
+    <button (click)="changeWeek(0)">回到現在</button>
+    <button (click)="changeWeek(1)">下周</button>
+  </div>
+  <!-- 當前視圖日期，控制日曆顯示哪一週 -->
+  <!-- 要顯示在日曆上的事件陣列 -->
+  <!-- 每小時分割成幾段，這裡是1代表以小時為單位 -->
+  <!-- 每天開始顯示的時間 (小時) -->
+  <!-- 每天結束顯示的時間 (小時) -->
+  <!-- 在日曆視圖渲染前觸發的事件，用於自定義顯示 -->
+  <!-- 點擊日曆中的小時段時觸發的事件 -->
+  <!-- 點擊日曆事件時觸發的事件 -->
+  <div class="calendar-scroll-area">
+<mwl-calendar-week-view
+  [viewDate]="viewDate"
+  [events]="events"
+  [hourSegments]="1"
+  [hourSegmentHeight]="60"
+  [dayStartHour]="openTime"
+  [dayEndHour]="closeTime"
+  (beforeViewRender)="beforeWeekViewRender($event)"
+  (hourSegmentClicked)="hourSegmentClicked($event.date)"
+  (eventClicked)="onEventClick($event.event)"
+>
+</mwl-calendar-week-view>
+  </div>
+</div>
