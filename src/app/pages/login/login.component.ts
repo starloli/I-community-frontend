@@ -230,6 +230,7 @@ export class LoginComponent {
     this.auth.sendEmailcode(this.email).subscribe({
       next: () => {
         console.log('寄出驗證碼至: ' + this.email)
+        this.emailError = false;
         this.signUpStep = 3;
       },
       error: (err) => {
