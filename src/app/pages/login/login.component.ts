@@ -1,20 +1,21 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ApiService } from '../../@service/api.service';
+import { AuthService } from '../../@service/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
 
-  constructor(private router: Router, private http: ApiService) {}
+  constructor(private router: Router, private http: ApiService, private auth: AuthService) {}
 
   booleanSignup = false;
   booleanIsManager: boolean = false;
@@ -154,12 +155,16 @@ export class LoginComponent {
       if (!this.email?.trim() || !this.phone || !this.unitNumber?.trim()) return;
       if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(this.email)) return;
       if (!/^09\d{8}$/.test(this.phone)) return;
-      this.signUpStep++;
+      this.sendEmailCode()
     }
   }
 
+  toStep2() {
+    this.signUpStep = 2;
+  }
+
   lastStep() {
-    if (this.signUpStep > 1 && this.signUpStep <= 3) this.signUpStep--;
+    if (this.signUpStep > 1 && this.signUpStep <= 4) this.signUpStep--;
   }
 
   backLogin() {
@@ -219,5 +224,81 @@ export class LoginComponent {
     this.router.navigate(['/forget-password']);
   }
 
+  codeError: boolean = false;
 
+  sendEmailCode() {
+    this.auth.sendEmailcode(this.email).subscribe({
+      next: () => {
+        console.log('寄出驗證碼至: ' + this.email)
+        this.signUpStep = 3;
+      },
+      error: (err) => {
+        this.codeError = true;
+        console.log(err);
+      }
+    });
+  }
+
+  verifyEmail(email: string, code: string) {
+    this.auth.verifyEmail(email, code).subscribe({
+      next: () => {
+        console.log('驗證成功')
+        this.signUpStep = 4;
+      },
+      error: (err) => {
+        this.codeError = true;
+        console.log(err);
+      }
+    });
+  }
+
+  otpControls = Array.from({ length: 6 }, () => new FormControl(''));
+
+  onInput(event: any, index: number) {
+    const value = event.target.value;
+
+    // 只允許數字
+    if (!/^[0-9]$/.test(value)) {
+      this.otpControls[index].setValue('');
+      return;
+    }
+
+    // 自動跳到下一格
+    if (value && index < 5) {
+      const nextInput = event.target.parentElement.children[index + 1];
+      nextInput.focus();
+    }
+
+    // ⭐ 自動 submit
+    const otp = this.getOtp();
+    if (otp.length === 6) {
+      this.verifyEmail(this.email, otp);
+    }
+  }
+
+  onKeyDown(event: KeyboardEvent, index: number) {
+    // Backspace 回到上一格
+    if (event.key === 'Backspace' && !this.otpControls[index].value && index > 0) {
+      const prevInput = (event.target as HTMLElement).parentElement!.children[index - 1];
+      (prevInput as HTMLElement).focus();
+    }
+  }
+
+  onPaste(event: ClipboardEvent) {
+    const pasteData = event.clipboardData?.getData('text').slice(0, 6) || '';
+
+    if (!/^\d+$/.test(pasteData)) return;
+
+    pasteData.split('').forEach((num, i) => {
+      if (this.otpControls[i]) {
+        this.otpControls[i].setValue(num);
+      }
+    });
+
+    event.preventDefault();
+  }
+
+  getOtp(): string {
+    return this.otpControls.map(c => c.value).join('');
+  }
 }
