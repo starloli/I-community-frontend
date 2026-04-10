@@ -221,16 +221,19 @@ export class LoginComponent {
     this.router.navigate(['/forget-password']);
   }
 
-  codeError: boolean = false;
+  emailError: boolean = false; // 重複信箱錯誤
+  codeError: boolean = false; // 驗證碼錯誤
 
   sendEmailCode() {
+    this.otpControls = Array.from({ length: 6 }, () => new FormControl(''));
+    this.codeError = false;
     this.auth.sendEmailcode(this.email).subscribe({
       next: () => {
         console.log('寄出驗證碼至: ' + this.email)
         this.signUpStep = 3;
       },
       error: (err) => {
-        this.codeError = true;
+        this.emailError = true;
         console.log(err);
       }
     });
@@ -262,6 +265,7 @@ export class LoginComponent {
 
     // 自動跳到下一格
     if (value && index < 5) {
+      this.codeError = false;
       const nextInput = event.target.parentElement.children[index + 1];
       nextInput.focus();
     }

@@ -175,6 +175,9 @@
 
       <div class="signUpTxtb"><span class="input-label">Email@if(isClickEmail && !isValidEmail(email)){<span
             style="color: red;">Email格式不正確</span>}</span>
+        @if(emailError) {
+          <small style="display: block; color: #ff0000; text-align: left; font-size: 14px; margin-bottom: 8px; font-weight: bold;">已註冊過的信箱</small>
+        }
         <input type="text" placeholder="請輸入您的Email" [(ngModel)]="email" (keydown.space)="$event.preventDefault()"
           (focus)="isClickEmail =true" [class.input-error]="isClickEmail && !isValidEmail(email)">
       </div>
@@ -215,6 +218,9 @@
         }
         <div class="bottom-text"><span>
           <button type="button" class="link-btn" (click)="sendEmailCode()">再次傳送驗證碼</button></span>
+        </div>
+        <div class="button-container">
+          <button class="lastStep" (click)="toStep2()">上一步</button>
         </div>
       }
 
