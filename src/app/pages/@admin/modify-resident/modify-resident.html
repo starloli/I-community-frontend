@@ -1,1 +1,14 @@
-<p>modify-resident works!</p>
+@if (users) {
+<p>我找到了</p>
+@for (user of users; track user.userId) {
+  <div>
+    <h1>{{user.fullName}}</h1>
+    <p>{{user.userName}}</p>
+    <p>{{user.phone}}</p>
+    <p>{{user.email}}</p>
+    <p>{{user.squareFootage}}</p>
+    <p>{{user.carParkingSpace}}</p>
+    <p>{{user.motorParkingSpace}}</p>
+  </div>
+}
+}
