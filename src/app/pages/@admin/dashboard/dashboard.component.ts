@@ -50,6 +50,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private loadVisitors(): void {
     this.apiService.getApi('/visitor/getVisitor').pipe(takeUntil(this.$destroy)).subscribe({
       next: (res: any) => {
+
+
         const visitors = Array.isArray(res) ? res : res?.data ?? [];
 
         const todayCount = visitors.filter((visitor: any) => this.isToday(visitor?.checkInTime)).length;

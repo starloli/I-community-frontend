@@ -3,6 +3,8 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { LayoutComponent } from './shared/layout/layout.component';
 import { ResidentLayoutComponent } from './shared/resident-layout/resident-layout.component';
+import { adminGuard } from './guards/admin.guard';
+import { authGuard } from './guards/auth.guard';
 
 // ── 管理員頁面 ────────────────────────────────────────
 import { DashboardComponent } from './pages/@admin/dashboard/dashboard.component';
@@ -39,6 +41,8 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: LayoutComponent,
+    canActivate: [adminGuard],
+    canActivateChild: [adminGuard],
     children: [
       { path: 'userInfo', component: UserInfo },
       { path: 'dashboard', component: DashboardComponent },
@@ -57,6 +61,8 @@ export const routes: Routes = [
   {
     path: 'resident',
     component: ResidentLayoutComponent,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     children: [
       { path: 'userInfo', component: ResidentUserInfo },
       { path: 'dashboard', component: ResidentDashboardComponent },
