@@ -273,8 +273,8 @@ export class VisitorComponent implements OnInit {
   }
 
   //住戶刪除訪客
-  deleteByVisitor(id: number){
-this.http.delApi('/visitor/delete/'+id).subscribe({
+  deleteByVisitor(id: number) {
+    this.http.delApi('/visitor/delete/' + id).subscribe({
       next: (res: any) => {
         console.log('刪除成功', res);
         // 成功後才重新獲取清單，確保畫面數據是最新的
@@ -287,3 +287,4 @@ this.http.delApi('/visitor/delete/'+id).subscribe({
     });
   }
 }
+
