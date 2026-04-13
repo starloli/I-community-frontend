@@ -73,14 +73,31 @@ export class VisitorComponent implements OnInit {
     this.http.getApi('/visitor/getVisitor').subscribe({
       next: (res: any) => {
         const rawData = Array.isArray(res) ? res : (res?.data || []);
-        this.allVisitor = rawData.map((visitor: any) => ({
+        const formattedData = rawData.map((visitor: any) => ({
           ...visitor,
           estimatedTime: visitor.estimatedTime ? visitor.estimatedTime.replace('T', ' ').slice(0, 16) : '-',
           checkInTime: visitor.checkInTime ? visitor.checkInTime.replace('T', ' ').slice(0, 16) : '-',
           checkOutTime: visitor.checkOutTime ? visitor.checkOutTime.replace('T', ' ').slice(0, 16) : '-',
-        })).reverse();
+        }));
+        const statusPriority: { [key: string]: number } = {
+        'NOTYET': 1, // 未到訪 (請確認後端對應的字串，可能是 PENDING 或其他)
+        'INSIDE': 2,   // 在內
+        'LEFT': 3,    // 已離開 (請確認後端對應的字串，可能是 COMPLETED)
+      };this.allVisitor = formattedData.sort((a: any, b: any) => {
+        const priorityA = statusPriority[a.status] || 99; // 找不到狀態就排最後
+        const priorityB = statusPriority[b.status] || 99;
+
+        if (priorityA !== priorityB) {
+          return priorityA - priorityB; // 先按狀態權重排
+        }
+
+        // 如果狀態相同，按時間倒序排列 (新的在前)
+        return new Date(b.estimatedTime).getTime() - new Date(a.estimatedTime).getTime();
+      });
+
       }
     });
+
   }
 
   /**
