@@ -48,6 +48,11 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   }
 
+  &.active {
+    border-color: rgba(123, 168, 158, 0.75);
+    box-shadow: 0 10px 28px rgba(123, 168, 158, 0.18);
+  }
+
   .stat-icon-wrap {
     font-size: 32px;
     width: 32px;

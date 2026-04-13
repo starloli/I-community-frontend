@@ -25,12 +25,12 @@ export class RepairService {
   }
 
   getUserAll() {
-      return this.http.get<RepairRequest[]>(this.userUrl).pipe(
-        tap(data => this.userRepairsSubject.next(data))
-      );
-    }
+    return this.http.get<RepairRequest[]>(this.userUrl).pipe(
+      tap(data => this.userRepairsSubject.next(data))
+    );
+  }
 
-  post(data: any) {
+  post(data: Pick<RepairRequest, 'location' | 'category' | 'description'>) {
     return this.http.post<any>(
         this.apiUrl,
         data

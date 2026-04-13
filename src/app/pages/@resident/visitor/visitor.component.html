@@ -89,10 +89,11 @@
     <input
       type="text"
       [(ngModel)]="searchKeyword"
+      (ngModelChange)="onFilterChange()"
       placeholder="搜尋訪客姓名、電話、門牌、車牌或時間"
     />
     @if (searchKeyword) {
-      <mat-icon class="clear-btn" (click)="searchKeyword = ''">close</mat-icon>
+      <mat-icon class="clear-btn" (click)="searchKeyword = ''; onFilterChange()">close</mat-icon>
     }
   </div>
 
@@ -112,7 +113,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (visitor of filteredVisitors; track visitor.visitorId) {
+        @for (visitor of pagedVisitors; track visitor.visitorId) {
           <tr>
             <td>
               <div class="visitor-name-cell" (click)="visitorMore(visitor)">
@@ -154,4 +155,20 @@
       </tbody>
     </table>
   </div>
+
+  @if (totalPages > 1) {
+    <div class="pagination">
+      <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      @for (page of pageNumbers; track page) {
+        <button class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">
+          {{ page }}
+        </button>
+      }
+      <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  }
 </div>

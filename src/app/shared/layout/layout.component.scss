@@ -8,5 +8,14 @@
   flex: 1;
   padding: 32px;
   overflow-y: auto;
+  --admin-dashboard-stat-shift: 0px;
+  --admin-dashboard-stat-value-size: 40px;
+  --admin-dashboard-stat-label-size: 15px;
+}
+
+app-sidebar.sidebar-collapsed-host + .main-content {
+  --admin-dashboard-stat-shift: 16px;
+  --admin-dashboard-stat-value-size: 43px;
+  --admin-dashboard-stat-label-size: 16px;
 }
 

@@ -1,19 +1,37 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { CommonModule, formatDate } from '@angular/common';
+import { Component, Inject, Injectable, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { CalendarEvent, CalendarModule, CalendarView, CalendarWeekViewBeforeRenderEvent } from 'angular-calendar';
-import { startOfDay, addHours } from 'date-fns';
+import { CalendarDateFormatter, CalendarEvent, CalendarModule, CalendarView, CalendarWeekViewBeforeRenderEvent, DateFormatterParams } from 'angular-calendar';
+import { startOfDay, addHours, addMinutes } from 'date-fns';
 import { Facility, ResReservation } from '../../interface/interface';
 import { ReserveFacilityComponent } from '../reserve-facility/reserve-facility.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { takeUntil } from 'rxjs';
 import { parse } from 'date-fns';
 
+@Injectable()
+class ReservationCalendarDateFormatter extends CalendarDateFormatter {
+  override weekViewColumnHeader({ date, locale }: DateFormatterParams): string {
+    return formatDate(date, 'EEE', locale || 'zh-TW');
+  }
+
+  override weekViewColumnSubHeader({ date, locale }: DateFormatterParams): string {
+    return formatDate(date, 'M/d', locale || 'zh-TW');
+  }
+}
+
 @Component({
   selector: 'app-reservation-calendar',
   standalone: true,
-  imports: [CalendarModule],
+  imports: [CalendarModule, CommonModule],
   templateUrl: './reservation-calendar.component.html',
   styleUrls: ['./reservation-calendar.component.scss'],
+  providers: [
+    {
+      provide: CalendarDateFormatter,
+      useClass: ReservationCalendarDateFormatter
+    }
+  ]
 })
 export class ReservationCalendar implements OnInit {
   constructor(
@@ -41,10 +59,11 @@ export class ReservationCalendar implements OnInit {
     let resTime = this.sortReservations(this.data.reservations);
 
     const eventColors = {
-      available: { primary: '#1e90ff', secondary: '#D1E8FF' },  // 藍色：開放預約
-      warning: { primary: '#e3bc08', secondary: '#FDF1BA' },    // 黃色：即將額滿
-      full: { primary: '#ad2121', secondary: '#FAE3E3' }        // 紅色：已額滿
+      available: { primary: '#D6EAF8', secondary: '#206894' },  // 淺藍色背景，深藍色文字
+      warning: { primary: '#FCF3CF', secondary: '#ae7802' },    // 淺黃色背景，深橘色文字
+      full: { primary: '#FADBD8', secondary: '#ad1c0f' }        // 淺紅色背景，深紅色文字
     };
+
 
     this.events = resTime.map((reservation): CalendarEvent => {
       let full = reservation.attendees >= this.data.facility.capacity;
@@ -66,8 +85,7 @@ export class ReservationCalendar implements OnInit {
 
   // 當使用者點擊時間格子時觸發
   hourSegmentClicked(time: Date) {
-    const hour = time.getHours();
-    if (hour >= Number(this.data.facility.closeTime.split(':')[0]) || hour < Number(this.data.facility.openTime.split(':')[0]) || time < new Date()) {
+    if (this.isSlotUnavailable(time)) {
       console.log('NO');
       // 你可以在這裡跳出 MatDialog 進行預約
     } else {
@@ -93,11 +111,9 @@ export class ReservationCalendar implements OnInit {
   }
 
   onEventClick(event: CalendarEvent) {
-
-    const hour = event.start.getHours();
     const time = event.start;
 
-    if (hour >= Number(this.data.facility.closeTime.split(':')[0]) || hour < Number(this.data.facility.openTime.split(':')[0]) || time < new Date()) {
+    if (this.isSlotUnavailable(time)) {
       console.log('NO');
     } else {
       if (this.events.some(event => event.start.getTime() === time.getTime() && event.meta.full)) {
@@ -140,12 +156,47 @@ export class ReservationCalendar implements OnInit {
   beforeWeekViewRender(renderEvent: CalendarWeekViewBeforeRenderEvent) {
     renderEvent.hourColumns.forEach((column) => {
       column.hours.forEach((hour) => {
-        // 如果時間已經過了，就幫它加上一個叫 'cal-disabled' 的標籤
-        if (hour.segments[0].date < new Date()) {
-          hour.segments[0].cssClass = 'cal-disabled';
-        }
+        // 改成遍歷所有 segments，不只取 [0]
+        hour.segments.forEach((segment) => {
+          const unavailableReason = this.getSlotUnavailableReason(segment.date);
+          if (unavailableReason) {
+            segment.cssClass = ((segment.cssClass || '') + ' cal-disabled').trim();
+          }
+        });
       });
     });
+  }
+
+  private isSlotUnavailable(time: Date): boolean {
+    return this.getSlotUnavailableReason(time) !== null;
+  }
+
+  private getSlotUnavailableReason(time: Date): 'beforeOpen' | 'afterClose' | 'past' | null {
+    const hour = time.getHours();
+    const facilityOpenHour = Number(this.data.facility.openTime.split(':')[0]);
+    const facilityCloseHour = Number(this.data.facility.closeTime.split(':')[0]);
+
+    const now = new Date();
+    const timeDay = new Date(time.getFullYear(), time.getMonth(), time.getDate());
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    const isSameDay = timeDay.getTime() === today.getTime();
+    const isPastDay = timeDay.getTime() < today.getTime();
+
+    // 無視分鐘數，只比較小時
+    if (isPastDay || (isSameDay && hour <= now.getHours())) {
+      return 'past';
+    }
+
+    if (hour >= facilityCloseHour) {
+      return 'afterClose';
+    }
+
+    if (hour < facilityOpenHour) {
+      return 'beforeOpen';
+    }
+
+    return null;
   }
 
   changeWeek(i: number) {
@@ -165,7 +216,7 @@ export class ReservationCalendar implements OnInit {
   }
 
   sortReservations(resvation: ResReservation[]): Re[] {
-    console.log(resvation);
+
     const res = Object.values(
       resvation.reduce((acc, curr) => {
         if (!acc[curr.date + '' + curr.startTime]) {

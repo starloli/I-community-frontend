@@ -163,14 +163,19 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
   }
 
   // 設施列表是住戶頁面的主資料，進頁時先載入。
-  // 抓取住戶可看到的公共設施清單。
+  // 抓取住戶可看到的公共設施清單，並將未開放的設施排到最下方。
   getFacility(): void {
     this.http.getApi<Array<Facility>>(this.getFacilityUrl)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: res => {
           if (res) {
-            this.facilities = res;
+            // 將未開放的設施排到最下面
+            this.facilities = res.sort((a, b) => {
+              const aIsOpen = this.isFacilityOpen(a);
+              const bIsOpen = this.isFacilityOpen(b);
+              return (bIsOpen ? 1 : 0) - (aIsOpen ? 1 : 0);
+            });
           }
         },
         error: err => {
@@ -181,6 +186,15 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
           });
         }
       });
+  }
+
+  // 檢查設施目前是否在開放時間內
+  isFacilityOpen(facility: Facility): boolean {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const openHour = parseInt(facility.openTime.split(':')[0], 10);
+    const closeHour = parseInt(facility.closeTime.split(':')[0], 10);
+    return currentHour >= openHour && currentHour < closeHour;
   }
 
   // 依名稱給對應 icon，讓常見設施有更直覺的視覺辨識。
@@ -254,6 +268,8 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
               reservations: res
             },
             disableClose: false,
+            width: '800px',
+            maxWidth: '95vw',
             panelClass: 'reservation-calendar-dialog'
           });
 

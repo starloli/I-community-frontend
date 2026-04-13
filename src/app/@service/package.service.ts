@@ -68,21 +68,6 @@ export class PackageService {
     );
   }
 
-  notifyById(id: number) {
-    return this.http.put<any>(`${this.apiUrl + '/admin/package'}/${id}/notify`, null)
-        .subscribe(() => {
-          const current = this.packagesSubject.value;
-
-          const updated = current.map(pkg =>
-            pkg.id === id
-              ? { ...pkg, isNotified: true }
-              : pkg
-          );
-
-          this.packagesSubject.next(updated);
-        });
-  }
-
   pickupById(id: number, pickupAt: string) {
     return this.http.put<any>(`${this.apiUrl + '/admin/package'}/${id}/pickup`, pickupAt)
         .subscribe(() => {

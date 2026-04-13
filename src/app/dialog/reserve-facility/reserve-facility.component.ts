@@ -101,7 +101,7 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
             horizontalPosition: 'center',
             verticalPosition: 'top'
           })
-          console.log(err.error.message);
+          console.log(err);
         }
       })
   }
