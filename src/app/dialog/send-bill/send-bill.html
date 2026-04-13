@@ -27,7 +27,7 @@
     <div class="input-grid">
       <div class="field">
         <label>社區總水費 </label>
-        <input type="number" placeholder="0.00" class="standard-input" [(ngModel)]="TOTAL_WATER">
+        <input type="number" placeholder="0.00" class="standard-input" [(ngModel)]="TOTAL_WATER" min=0 >
       </div>
       <div class="field">
         <label>社區總電費 </label>
@@ -68,7 +68,7 @@
   <div class="action-bar">
     <button class="btn-plain" (click)="cancel()">取消</button>
     @if(!title?.trim() || !billingMonth?.trim() || !dueDate?.trim()|| TOTAL_WATER== null ||
-     PING_PRICE== null || CAR_SPACE_PRICE== null ||MOTO_SPACE_PRICE== null || billingMonth > dueDate){
+     PING_PRICE== null || CAR_SPACE_PRICE== null ||MOTO_SPACE_PRICE== null || billingMonth > dueDate || TOTAL_WATER < 0 || PING_PRICE < 0 || CAR_SPACE_PRICE < 0 || MOTO_SPACE_PRICE < 0 || TOTAL_ELECTRICITY<0){
       <button class="btn-send btn-disabled" >下一步</button>}
       @else{
     <button class="btn-send" (click)="next()">下一步</button>
