@@ -1,0 +1,13 @@
+  <div>
+    <h1>{{user.fullName}}</h1>
+    <p>{{user.userName}}</p>
+    <p>{{user.phone}}</p>
+    <p>{{user.email}}</p>
+    <p>坪數：</p>
+    <input type="number" [(ngModel)]="user.squareFootage" min="0">
+    <p>機車位：</p>
+    <input type="number" [(ngModel)]="user.motorParkingSpace" min="0">
+    <p>小客車位：</p>
+    <input type="number" [(ngModel)]="user.carParkingSpace" min="0">
+    <button (click)="returnUser(user)">送出</button>
+  </div>

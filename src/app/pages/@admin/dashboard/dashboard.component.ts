@@ -11,6 +11,7 @@ import { PackageStatus, RepairStatus } from '../../../interface/enum';
 import { Announcement } from '../../../interface/interface';
 import { PackageService } from './../../../@service/package.service';
 import { Subject, takeUntil } from 'rxjs';
+import { HttpService } from '../../../@service/http.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,6 +22,8 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   // 卡片順序有固定意義，因為各個載入方法會依索引更新對應數值。
+  userName = '';
+  getUrl = 'http://localhost:8083/user/me';
   stats = [
     {
       label: '社區住戶總數',
@@ -45,7 +48,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private statisticsService: StatisticsService,
     private packageService: PackageService,
     private repairService: RepairService,
-    private router: Router
+    private router: Router,
+    private http: HttpService
   ) { }
 
   ngOnInit(): void {
@@ -55,13 +59,39 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.loadPackages();
     this.loadUserCount();
     this.loadPendingRepairs();
+    this.loadUserInfo();
   }
+
+  private loadUserInfo(): void {
+    this.http.getApi(this.getUrl).pipe(takeUntil(this.$destroy)).subscribe({
+      next: (res: any) => {
+        this.userName = res.fullName || res.userName || '管理員';
+      },
+      error: () => {
+        this.loadUserInfoFromToken();
+      }
+    });
+  }
+
+  private loadUserInfoFromToken(): void {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.userName = '管理員';
+      return;
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      this.userName = payload.fullName || payload.sub || '管理員';
+    } catch {
+      this.userName = '管理員';
+    }
+  }
+
 
   private loadVisitors(): void {
     this.apiService.getApi('/visitor/getVisitor').pipe(takeUntil(this.$destroy)).subscribe({
       next: (res: any) => {
-
-
         const visitors = Array.isArray(res) ? res : res?.data ?? [];
 
         const todayCount = visitors.filter((visitor: any) => this.isToday(visitor?.checkInTime)).length;
@@ -109,15 +139,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private loadUserCount(): void {
-    this.statisticsService.getUserNum().pipe(takeUntil(this.$destroy)).subscribe(
-      (res: number) => {
+    this.statisticsService.getUserNum().pipe(takeUntil(this.$destroy)).subscribe({
+      next: (res: number) => {
         this.stats[0].value = res.toString();
       },
-      (error) => {
+      error: (error) => {
         console.error('取得住戶總數失敗:', error);
         this.stats[0].value = 'N/A';
       }
-    );
+    });
   }
 
   private loadPendingRepairs(): void {

@@ -167,7 +167,7 @@ export interface UserResponse {
   squareFootage: number,
   motorParkingSpace: string,
   carParkingSpace: string,
-  isActive: boolean,
+  is_active: boolean,
 }
 
 export interface Res {
