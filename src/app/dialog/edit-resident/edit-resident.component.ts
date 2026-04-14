@@ -3,13 +3,21 @@ import { Subject } from 'rxjs';
 import { UserResponse } from '../../interface/interface';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-edit-resident',
-  imports: [FormsModule],
+  imports: [
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule
+  ],
   standalone: true,
-  templateUrl: './edit-resident.html',
-  styleUrl: './edit-resident.scss',
+  templateUrl: './edit-resident.component.html',
+  styleUrl: './edit-resident.component.scss',
 })
 export class EditResident implements OnInit, OnDestroy {
 

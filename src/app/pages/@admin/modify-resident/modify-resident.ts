@@ -4,7 +4,7 @@ import { HttpService } from '../../../@service/http.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserResponse } from '../../../interface/interface';
 import { MatDialog } from '@angular/material/dialog';
-import { EditResident } from '../../../dialog/edit-resident/edit-resident';
+import { EditResident } from '../../../dialog/edit-resident/edit-resident.component';
 
 @Component({
   selector: 'app-modify-resident',
