@@ -37,7 +37,7 @@ export class ResidentSidebarComponent implements OnInit {
   }
 
   private loadUserInfo(): void {
-    const getUrl = "http://localhost:8083/user/me";
+    const getUrl = "/user/me";
     this.http.getApi<User>(getUrl).subscribe({
       next: (res) => {
         this.userName = res.fullName || '住戶';

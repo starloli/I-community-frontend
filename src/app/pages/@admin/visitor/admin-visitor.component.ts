@@ -6,9 +6,9 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
-import { ApiService } from '../../../@service/api.service';
 import { VisitorServiceService } from '../../../@service/visitor-service.service';
 import { VisitorDialogComponent } from '../../../dialog/visitor-dialog/visitor-dialog.component';
+import { HttpService } from '../../../@service/http.service';
 
 @Component({
   selector: 'app-visitor',
@@ -26,7 +26,7 @@ import { VisitorDialogComponent } from '../../../dialog/visitor-dialog/visitor-d
 })
 export class VisitorComponent implements OnInit {
   // ── 注入服務 ──────────────────────────────────────────
-  private http = inject(ApiService);
+  private http = inject(HttpService);
   private service = inject(VisitorServiceService);
   private dialog = inject(MatDialog);
 

@@ -5,10 +5,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 
-import { ApiService } from '../../../@service/api.service';
 import { VisitorServiceService } from '../../../@service/visitor-service.service';
 import { VisitorDialogComponent } from '../../../dialog/visitor-dialog/visitor-dialog.component';
 import { VisitorRecord } from '../../../interface/interface';
+import { HttpService } from '../../../@service/http.service';
 
 @Component({
   selector: 'app-visitor',
@@ -18,7 +18,7 @@ import { VisitorRecord } from '../../../interface/interface';
   styleUrls: ['./visitor.component.scss']
 })
 export class VisitorComponent implements OnInit {
-  private http = inject(ApiService);
+  private http = inject(HttpService);
   private dialog = inject(MatDialog);
   private visitorService = inject(VisitorServiceService);
 
@@ -312,7 +312,7 @@ export class VisitorComponent implements OnInit {
 
   //住戶刪除訪客
   deleteByVisitor(id: number) {
-    this.http.delApi('/visitor/delete/' + id).subscribe({
+    this.http.deleteApi('/visitor/delete/' + id).subscribe({
       next: (res: any) => {
         console.log('刪除成功', res);
         // 成功後才重新獲取清單，確保畫面數據是最新的

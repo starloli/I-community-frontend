@@ -5,11 +5,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Subject, takeUntil } from 'rxjs';
 
-import { ApiService } from '../../../@service/api.service';
 import { AuthService } from '../../../@service/auth.service';
 import { PackageService } from '../../../@service/package.service';
 import { PackageStatus, UserRole } from '../../../interface/enum';
 import { User } from '../../../interface/interface';
+import { HttpService } from '../../../@service/http.service';
 
 @Component({
   selector: 'app-package',
@@ -68,7 +68,7 @@ export class PackageComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(
-    private apiService: ApiService,
+    private http: HttpService,
     private authService: AuthService,
     private packageService: PackageService,
     private snackBar: MatSnackBar
@@ -144,7 +144,7 @@ export class PackageComponent implements OnInit, OnDestroy {
   }
 
   private loadAddresses(): void {
-    this.apiService.getApi('/visitor/allAddresses').subscribe((res: any) => {
+    this.http.getApi('/visitor/allAddresses').subscribe((res: any) => {
       this.addressList = Array.isArray(res) ? res.sort() : [];
     });
   }

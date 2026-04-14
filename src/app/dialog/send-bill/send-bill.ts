@@ -1,9 +1,8 @@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ApiService } from './../../@service/api.service';
 import { Component } from '@angular/core';
 
 import { MatDialogRef } from '@angular/material/dialog';
-import { BillsdialogComponent } from '../billsdialog/billsdialog.component';
+import { HttpService } from '../../@service/http.service';
 @Component({
   selector: 'app-send-bill',
   imports: [FormsModule, ReactiveFormsModule,],
@@ -12,7 +11,7 @@ import { BillsdialogComponent } from '../billsdialog/billsdialog.component';
 })
 export class SendBill {
 
-  constructor(private http: ApiService, private dialogRef: MatDialogRef<SendBill>) { }
+  constructor(private http: HttpService, private dialogRef: MatDialogRef<SendBill>) { }
   title!: string;
   billingMonth!: string;
   dueDate!: string;

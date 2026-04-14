@@ -7,7 +7,7 @@ import { catchError, throwError, Observable, map } from 'rxjs';
 })
 export class StatisticsService {
 
-  private apiUrl = 'http://localhost:8083/statistics';
+  private apiUrl = '/statistics';
 
   constructor(private http: HttpClient) {}
 

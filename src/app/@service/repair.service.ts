@@ -9,9 +9,9 @@ import { RepairRequest } from '../interface/interface';
 })
 export class RepairService {
 
-  private apiUrl = 'http://localhost:8083/repair';
-  private adminUrl = 'http://localhost:8083/admin/repair';
-  private userUrl = 'http://localhost:8083/user/repair';
+  private apiUrl = '/repair';
+  private adminUrl = '/admin/repair';
+  private userUrl = '/user/repair';
   private repairsSubject = new BehaviorSubject<RepairRequest[]>([]);
   repairs$ = this.repairsSubject.asObservable();
   private userRepairsSubject = new BehaviorSubject<RepairRequest[]>([]);

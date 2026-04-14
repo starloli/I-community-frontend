@@ -16,8 +16,8 @@ export class ModifyResident implements OnInit, OnDestroy {
 
   constructor(private http: HttpService, private snackBar: MatSnackBar, private dialog: MatDialog) { }
 
-  getUrl = 'http://localhost:8083/admin/get-all-residents-users';
-  postUrl = 'http://localhost:8083/modify/admin';
+  getUrl = '/admin/get-all-residents-users';
+  postUrl = '/modify/admin';
   users: UserResponse[] = [];
 
   private $destroy = new Subject<void>();

@@ -9,8 +9,7 @@ import { PackageStatus } from '../interface/enum';
 })
 export class PackageService {
 
-  private apiUrl = 'http://localhost:8083';
-  private userUrl = 'http://localhost:8083/user/package'
+  private userUrl = '/user/package'
   private packagesSubject = new BehaviorSubject<Package[]>([]);
   packages$ = this.packagesSubject.asObservable();
   private userPackagesSubject = new BehaviorSubject<Package[]>([]);
@@ -19,7 +18,7 @@ export class PackageService {
   constructor(private http: HttpClient) {}
 
   getAll() {
-    return this.http.get<Package[]>(this.apiUrl + '/admin/package').pipe(
+    return this.http.get<Package[]>('/admin/package').pipe(
       tap(data => this.packagesSubject.next(data))
     );
   }
@@ -49,10 +48,10 @@ export class PackageService {
     };
 
 
-    return this.http.post<any>(this.apiUrl + '/admin/package', adminPayload).pipe(
+    return this.http.post<any>('/admin/package', adminPayload).pipe(
       catchError((error) => {
         if (error.status === 404 || error.status === 405) {
-          return this.http.post<any>(this.apiUrl + '/package/create', createPayload);
+          return this.http.post<any>('/package/create', createPayload);
         }
 
         return throwError(() => error);
@@ -69,7 +68,7 @@ export class PackageService {
   }
 
   pickupById(id: number, pickupAt: string) {
-    return this.http.put<any>(`${this.apiUrl + '/admin/package'}/${id}/pickup`, pickupAt)
+    return this.http.put<any>(`${'/admin/package'}/${id}/pickup`, pickupAt)
         .subscribe(() => {
           const current = this.packagesSubject.value;
 

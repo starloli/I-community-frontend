@@ -7,9 +7,12 @@ import { Observable } from 'rxjs';
 })
 export class HttpService {
 
+  private baseUrl = 'http://localhost:8083';
+
   constructor(private http: HttpClient) { }
 
   getApi<T>(url: string, id?: number, id2?: number): Observable<T> {
+    url = `${this.baseUrl}${url}`;
     if (id) {
       if (id2) {
         url = `${url}/${id}/${id2}`;
@@ -20,15 +23,18 @@ export class HttpService {
     return this.http.get<T>(url);
   }
 
-  postApi<T>(url: string, postData?: any): Observable<T> {
-    return this.http.post<T>(url, postData);
+  postApi<T>(url: string, postData?: any, options?: any): Observable<T> {
+    url = `${this.baseUrl}${url}`;
+    return this.http.post<T>(url, postData, options) as Observable<T>;
   }
 
   putApi(url: string, putData?: any) {
+    url = `${this.baseUrl}${url}`;
     return this.http.put(url, putData);
   }
 
-  deleteApi(url: string, id: number) {
+  deleteApi(url: string, id?: number) {
+    url = `${this.baseUrl}${url}`;
     return this.http.delete(`${url}/${id}`);
   }
 }
