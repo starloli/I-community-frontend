@@ -76,6 +76,7 @@ $hover-bg: #f5f5f5;
 
     .mat-icon[matPrefix] {
       color: #666;
+      align-items: center;
     }
 
     // 使用 ::ng-deep 穿透元件樣式，來微調內部對齊
