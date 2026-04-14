@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, throwError, Observable, map } from 'rxjs';
+import { HttpService } from './http.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +9,10 @@ export class StatisticsService {
 
   private apiUrl = '/statistics';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpService) {}
 
   getUserNum(): Observable<number> {
-    return this.http.get<any>(this.apiUrl)
+    return this.http.getApi<any>(this.apiUrl)
         .pipe(
           map(x => x.userNum),
           catchError((error) => {

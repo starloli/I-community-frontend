@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, tap, throwError } from 'rxjs';
 import { Package } from '../interface/interface';
 import { PackageStatus } from '../interface/enum';
+import { HttpService } from './http.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,16 +15,16 @@ export class PackageService {
   private userPackagesSubject = new BehaviorSubject<Package[]>([]);
   userPackages$ = this.userPackagesSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpService) {}
 
   getAll() {
-    return this.http.get<Package[]>('/admin/package').pipe(
+    return this.http.getApi<Package[]>('/admin/package').pipe(
       tap(data => this.packagesSubject.next(data))
     );
   }
 
   getUserAll() {
-    return this.http.get<Package[]>(this.userUrl).pipe(
+    return this.http.getApi<Package[]>(this.userUrl).pipe(
       tap(data => this.userPackagesSubject.next(data))
     );
   }
@@ -48,10 +48,10 @@ export class PackageService {
     };
 
 
-    return this.http.post<any>('/admin/package', adminPayload).pipe(
+    return this.http.postApi<any>('/admin/package', adminPayload).pipe(
       catchError((error) => {
         if (error.status === 404 || error.status === 405) {
-          return this.http.post<any>('/package/create', createPayload);
+          return this.http.postApi<any>('/package/create', createPayload);
         }
 
         return throwError(() => error);
@@ -68,7 +68,7 @@ export class PackageService {
   }
 
   pickupById(id: number, pickupAt: string) {
-    return this.http.put<any>(`${'/admin/package'}/${id}/pickup`, pickupAt)
+    return this.http.putApi<any>(`${'/admin/package'}/${id}/pickup`, pickupAt)
         .subscribe(() => {
           const current = this.packagesSubject.value;
 

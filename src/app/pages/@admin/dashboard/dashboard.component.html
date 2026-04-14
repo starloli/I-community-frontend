@@ -49,7 +49,7 @@
         <a class="card-more" (click)="navigateTo('/admin/visitor')">查看更多</a>
       </div>
 
-      @for (visitor of recentVisitors; track visitor.name + visitor.time) {
+      @for (visitor of recentVisitors; track $index) {
         <div class="visitor-item">
           <div class="visitor-avatar">
             {{ visitor.name.charAt(0) }}

@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { RepairStatus } from '../interface/enum';
 import { RepairRequest } from '../interface/interface';
+import { HttpService } from './http.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,22 +16,22 @@ export class RepairService {
   repairs$ = this.repairsSubject.asObservable();
   private userRepairsSubject = new BehaviorSubject<RepairRequest[]>([]);
   userRepairs$ = this.userRepairsSubject.asObservable();
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpService) {}
 
   getAll() {
-    return this.http.get<RepairRequest[]>(this.apiUrl).pipe(
+    return this.http.getApi<RepairRequest[]>(this.apiUrl).pipe(
       tap(data => this.repairsSubject.next(data))
     );
   }
 
   getUserAll() {
-    return this.http.get<RepairRequest[]>(this.userUrl).pipe(
+    return this.http.getApi<RepairRequest[]>(this.userUrl).pipe(
       tap(data => this.userRepairsSubject.next(data))
     );
   }
 
   post(data: Pick<RepairRequest, 'location' | 'category' | 'description'>) {
-    return this.http.post<any>(
+    return this.http.postApi<any>(
         this.apiUrl,
         data
       ).pipe(
@@ -47,7 +47,7 @@ export class RepairService {
   }
 
   updateById(id: number, data: any) {
-    return this.http.put<any>(
+    return this.http.putApi<any>(
         `${this.adminUrl}/${id}`,
         data
       ).pipe(
@@ -68,7 +68,7 @@ export class RepairService {
   }
 
   completeById(id: number, data: any = null) {
-    return this.http.put<any>(
+    return this.http.putApi<any>(
         `${this.adminUrl}/${id}/complete`,
         data
       ).pipe(
@@ -99,7 +99,7 @@ export class RepairService {
   }
 
   deleteById(id: number): Observable<boolean> {
-    return this.http.delete<void>(`${this.adminUrl}/${id}`).pipe(
+    return this.http.deleteApi<void>(`${this.adminUrl}/${id}`).pipe(
       tap(() => {
         const currentSurveys = this.repairsSubject.value;
         const updatedSurveys = currentSurveys.filter(s => s.repairId !== id);

@@ -28,13 +28,13 @@ export class HttpService {
     return this.http.post<T>(url, postData, options) as Observable<T>;
   }
 
-  putApi(url: string, putData?: any) {
+  putApi<T>(url: string, putData?: any): Observable<T> {
     url = `${this.baseUrl}${url}`;
-    return this.http.put(url, putData);
+    return this.http.put<T>(url, putData) as Observable<T>;
   }
 
-  deleteApi(url: string, id?: number) {
+  deleteApi<T>(url: string, id?: number): Observable<T> {
     url = `${this.baseUrl}${url}`;
-    return this.http.delete(`${url}/${id}`);
+    return this.http.delete<T>(`${url}/${id}`) as Observable<T>;
   }
 }

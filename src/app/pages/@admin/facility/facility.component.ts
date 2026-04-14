@@ -94,7 +94,7 @@ export class FacilityComponent implements OnInit, OnDestroy {
             for (let r of res) {
               this.facilities.push(r);
             }
-            console.log(this.facilities);
+            // console.log(this.facilities);
           } else {
             console.log("no data");
           }
