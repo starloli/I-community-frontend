@@ -4,8 +4,8 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 import { Router } from '@angular/router';
-import { ApiService } from '../../@service/api.service';
 import { AuthService } from '../../@service/auth.service';
+import { HttpService } from '../../@service/http.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +15,7 @@ import { AuthService } from '../../@service/auth.service';
 })
 export class LoginComponent {
 
-  constructor(private router: Router, private http: ApiService, private auth: AuthService) {}
+  constructor(private router: Router, private http: HttpService, private auth: AuthService) {}
 
   booleanSignup = false;
   booleanIsManager: boolean = false;

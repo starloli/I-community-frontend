@@ -20,7 +20,7 @@ export class RegistFacilityComponent {
     public dialogRef: MatDialogRef<RegistFacilityComponent>,
   ) { }
 
-  postUrl = "http://localhost:8083/admin/regist-facility";
+  postUrl = "/admin/regist-facility";
   update = false;
   facility: Facility = {
     facilityId: 0,

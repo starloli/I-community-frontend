@@ -4,7 +4,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 
 import { AnnouncementService } from '../../../@service/announcement.service';
-import { ApiService } from '../../../@service/api.service';
 import { RepairService } from '../../../@service/repair.service';
 import { StatisticsService } from '../../../@service/statistics.service';
 import { PackageStatus, RepairStatus } from '../../../interface/enum';
@@ -23,7 +22,7 @@ import { HttpService } from '../../../@service/http.service';
 export class DashboardComponent implements OnInit, OnDestroy {
   // 卡片順序有固定意義，因為各個載入方法會依索引更新對應數值。
   userName = '';
-  getUrl = 'http://localhost:8083/user/me';
+  getUrl = '/user/me';
   stats = [
     {
       label: '社區住戶總數',
@@ -43,7 +42,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private $destroy = new Subject<void>();
 
   constructor(
-    private apiService: ApiService,
     private announcementService: AnnouncementService,
     private statisticsService: StatisticsService,
     private packageService: PackageService,
@@ -90,7 +88,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 
   private loadVisitors(): void {
-    this.apiService.getApi('/visitor/getVisitor').pipe(takeUntil(this.$destroy)).subscribe({
+    this.http.getApi('/visitor/getVisitor').pipe(takeUntil(this.$destroy)).subscribe({
       next: (res: any) => {
         const visitors = Array.isArray(res) ? res : res?.data ?? [];
 
@@ -129,7 +127,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private loadPackages(): void {
-    this.packageService.getAll().pipe(takeUntil(this.$destroy)).subscribe();
+    this.packageService.getAll().pipe(takeUntil(this.$destroy));
     this.packageService.packages$.pipe(takeUntil(this.$destroy)).subscribe(data => {
       this.stats[3].value = data
         .filter(item => item.status === PackageStatus.WAITING)

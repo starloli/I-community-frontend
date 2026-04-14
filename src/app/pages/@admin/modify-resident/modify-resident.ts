@@ -16,9 +16,10 @@ export class ModifyResident implements OnInit, OnDestroy {
 
   constructor(private http: HttpService, private snackBar: MatSnackBar, private dialog: MatDialog) { }
 
-  getUrl = 'http://localhost:8083/admin/get-all-residents-users';
-  postUrl = 'http://localhost:8083/modify/admin';
+  getUrl = '/admin/get-all-residents-users';
+  postUrl = '/modify/admin';
   users: UserResponse[] = [];
+  UnqualifiedUsers: UserResponse[] = [];
 
   private $destroy = new Subject<void>();
 
@@ -37,6 +38,7 @@ export class ModifyResident implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getUser();
+    this.getUnqualifiedResident();
   }
 
   getUser(): void {
@@ -67,6 +69,22 @@ export class ModifyResident implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.snackBar.open(err.message || '使用者資料更新失敗', '關閉', {
+          duration: 2000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
+        });
+        console.log(err);
+      }
+    });
+  }
+
+  getUnqualifiedResident(): void {
+    this.http.getApi<UserResponse[]>("/modify/getUnqualifiedUser").pipe(takeUntil(this.$destroy)).subscribe({
+      next: (res) => {
+        this.UnqualifiedUsers = res;
+      },
+      error: (err) => {
+        this.snackBar.open(err.message || '載入住戶資料失敗', '關閉', {
           duration: 2000,
           horizontalPosition: 'center',
           verticalPosition: 'top'

@@ -20,7 +20,7 @@ import { Announcement, Package, User } from '../../../interface/interface';
 export class ResidentDashboardComponent implements OnInit, OnDestroy {
   userName = '住戶';
   unitNumber = '';
-  getUserUrl = 'http://localhost:8083/user/me';
+  getUserUrl = '/user/me';
   private $destroy = new Subject<void>();
 
   // TODO: 接後端統計 API 後，這裡可以改成動態資料。

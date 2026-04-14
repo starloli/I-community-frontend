@@ -8,12 +8,12 @@ import { AuthService } from '../../../@service/auth.service';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { RouterLink } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ApiService } from '../../../@service/api.service';
 import { VisitorServiceService } from '../../../@service/visitor-service.service';
 import { BillsdialogComponent } from '../../../dialog/billsdialog/billsdialog.component';
 
 import { MatButtonModule } from '@angular/material/button';
 import { SendBill } from '../../../dialog/send-bill/send-bill';
+import { HttpService } from '../../../@service/http.service';
 
 
 
@@ -25,7 +25,7 @@ import { SendBill } from '../../../dialog/send-bill/send-bill';
   styleUrl: './bill.component.scss'
 })
 export class BillComponent implements OnInit {
-  constructor(private http: ApiService, private service: VisitorServiceService, private auth: AuthService) { }
+  constructor(private http: HttpService, private service: VisitorServiceService, private auth: AuthService) { }
 
   adminBills: any[] = [];
   readonly dialog = inject(MatDialog);

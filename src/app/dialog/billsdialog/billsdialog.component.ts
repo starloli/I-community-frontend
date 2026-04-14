@@ -1,20 +1,19 @@
-import { ApiService } from './../../@service/api.service';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { VisitorServiceService } from '../../@service/visitor-service.service';
 
 import { CommonModule } from '@angular/common';
 
-import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef } from '@angular/material/dialog';
+import { HttpService } from '../../@service/http.service';
 @Component({
   selector: 'app-billsdialog',
-  imports: [CommonModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent],
+  imports: [CommonModule, MatButtonModule],
   templateUrl: './billsdialog.component.html',
   styleUrl: './billsdialog.component.scss'
 })
 export class BillsdialogComponent {
-  constructor(private service: VisitorServiceService, private http: ApiService, private cdRef: ChangeDetectorRef, private dialogRef: MatDialogRef<BillsdialogComponent>
+  constructor(private service: VisitorServiceService, private http: HttpService, private cdRef: ChangeDetectorRef, private dialogRef: MatDialogRef<BillsdialogComponent>
 
   ) { }
   bill!: any;

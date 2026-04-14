@@ -15,8 +15,8 @@ export class UserInfo implements OnInit, OnDestroy {
 
   constructor(private http: HttpService, private snackBar: MatSnackBar) { }
 
-  getUrl = "http://localhost:8083/user/me";
-  modifyUrl = "http://localhost:8083/modify/myself";
+  getUrl = "/user/me";
+  modifyUrl = "/modify/myself";
   user!: UserResponse;
   userEmail!: string;
   userPhone!: string;

@@ -2,9 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { of } from 'rxjs';
 
-import { ApiService } from '../../../@service/api.service';
 import { VisitorServiceService } from '../../../@service/visitor-service.service';
 import { VisitorComponent } from './admin-visitor.component';
+import { HttpService } from '../../../@service/http.service';
 
 describe('VisitorComponent', () => {
   let component: VisitorComponent;
@@ -15,7 +15,7 @@ describe('VisitorComponent', () => {
       imports: [VisitorComponent],
       providers: [
         {
-          provide: ApiService,
+          provide: HttpService,
           useValue: {
             getApi: () => of([]),
             postApi: () => of({}),
