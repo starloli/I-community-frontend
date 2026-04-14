@@ -79,7 +79,7 @@ export class ModifyResident implements OnInit, OnDestroy {
   }
 
   getUnqualifiedResident(): void {
-    this.http.getApi<UserResponse[]>("/modify/getUnqualifiedUser").pipe(takeUntil(this.$destroy)).subscribe({
+    this.http.getApi<UserResponse[]>("/modify/getUnqualifiedResidents").pipe(takeUntil(this.$destroy)).subscribe({
       next: (res) => {
         this.UnqualifiedUsers = res;
       },

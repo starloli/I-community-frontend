@@ -127,7 +127,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private loadPackages(): void {
-    this.packageService.getAll().pipe(takeUntil(this.$destroy));
+    this.packageService.getAll().pipe(takeUntil(this.$destroy)).subscribe();
     this.packageService.packages$.pipe(takeUntil(this.$destroy)).subscribe(data => {
       this.stats[3].value = data
         .filter(item => item.status === PackageStatus.WAITING)

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +14,8 @@ import { BillsdialogComponent } from '../../../dialog/billsdialog/billsdialog.co
 import { MatButtonModule } from '@angular/material/button';
 import { SendBill } from '../../../dialog/send-bill/send-bill';
 import { HttpService } from '../../../@service/http.service';
+import { UserResponse } from '../../../interface/interface';
+import { Subject, takeUntil } from 'rxjs';
 
 
 
@@ -24,11 +26,13 @@ import { HttpService } from '../../../@service/http.service';
   templateUrl: './bill.component.html',
   styleUrl: './bill.component.scss'
 })
-export class BillComponent implements OnInit {
+export class BillComponent implements OnInit, OnDestroy {
   constructor(private http: HttpService, private service: VisitorServiceService, private auth: AuthService) { }
 
   adminBills: any[] = [];
   readonly dialog = inject(MatDialog);
+
+  private $destroy = new Subject<void>();
 
   openDialog() {
     const ref = this.dialog.open(BillsdialogComponent, {
@@ -167,6 +171,20 @@ export class BillComponent implements OnInit {
     return [...new Set(this.adminBills.map(b => b.billingMonth))].sort().reverse();
   }
 
+  getUnqualifiedResidents(): string[] {
+    let unqualifiedResidents: string[] = [];
+    this.http.getApi<UserResponse[]>("/modify/getUnqualifiedResidents").pipe(takeUntil(this.$destroy)).subscribe({
+      next: (res) => {
+        unqualifiedResidents = res.map(r => r.unitNumber);
+        console.log(unqualifiedResidents);
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+    return unqualifiedResidents;
+  }
+
   onAdminFilterChange(): void { this.adminCurrentPage = 1; }
 
   goToAdminPage(page: number): void {
@@ -194,7 +212,10 @@ export class BillComponent implements OnInit {
     this.openSendAllBillsDialog();
   }
 
-
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
+  }
 }
 
 
