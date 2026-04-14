@@ -8,7 +8,7 @@ import { AnnouncementService } from '../../../@service/announcement.service';
 import { HttpService } from '../../../@service/http.service';
 import { PackageService } from '../../../@service/package.service';
 import { PackageStatus, RepairStatus, ReservationStatus } from '../../../interface/enum';
-import { Announcement, Package, ResReservation, User } from '../../../interface/interface';
+import { Announcement, Bill, Package, ResReservation, User } from '../../../interface/interface';
 import { StatisticsService } from '../../../@service/statistics.service';
 import { RepairService } from '../../../@service/repair.service';
 
@@ -57,7 +57,7 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
     this.loadUserInfo();
     this.loadAnnouncements();
     this.loadPackages();
-    this.loadUserCount();
+    this.loadBillsCount();
     this.loadPendingRepairs();
   }
 
@@ -96,13 +96,26 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
     }
   }
 
+  private loadBillsCount(): void {
+    this.http.getApi<any[]>("/bills/getMyBill").pipe(takeUntil(this.$destroy)).subscribe({
+      next: (bills: any[]) => {
+        console.log(bills);
+        this.stats[0].value = bills.filter(bill => bill.status === 'UNPAID').length.toString();
+      },
+      error: (error) => {
+        console.error('取得帳單資料失敗:', error);
+        this.stats[0].value = 'N/A';
+      }
+    });
+  }
+
   private loadReservations(): void {
     if (this.userId !== 0) {
       this.http.getApi<Array<ResReservation>>('/user/reservationsByUserId', this.userId)
         .pipe(takeUntil(this.$destroy))
         .subscribe({
           next: res => {
-            console.log(res);
+            // console.log(res);
             this.stats[3].value = res.filter(
               reservation => reservation.status === ReservationStatus.CONFIRMED &&
                 new Date(reservation.date) >= new Date()
@@ -186,18 +199,6 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit'
-    });
-  }
-
-  private loadUserCount(): void {
-    this.statisticsService.getUserNum().pipe(takeUntil(this.$destroy)).subscribe({
-      next: (res: number) => {
-        this.stats[0].value = res.toString();
-      },
-      error: (error) => {
-        console.error('取得住戶總數失敗:', error);
-        this.stats[0].value = 'N/A';
-      }
     });
   }
 
