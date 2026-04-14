@@ -142,9 +142,77 @@
     </div>
   </div>
 
+
   <div class="action-bar">
     <button class="btn-plain" (click)="last()">返回修改</button>
-    <button class="btn-send" (click)="sendBillToUnit()">發送賬單</button>
+    <button class="btn-send" (click)="searchAbnormalUnits()">發送賬單</button>
+  </div>
+</div>
+}
+@if(page == 3) {
+<div class="bill-form-content">
+  <div class="header-minimal">
+    <h3 class="section-label main-label" style="border-left-color: #f56c6c;">發送失敗：資料校驗異常</h3>
+  </div>
+
+  <div class="error-container">
+    <div class="error-header">
+      <i class="icon-warning">⚠️</i>
+      <span>以下住戶資料不完整（坪數缺失）</span>
+    </div>
+
+    <div class="error-list">
+      @for(abnormalUnit of AbnormalUnits; track $index) {
+        <div class="error-item">
+          🏠 房號：{{abnormalUnit}}
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="form-body-flat">
+    <p class="error-hint">
+      <strong>如何解決？</strong><br>
+      請先至「住戶管理」頁面，根據上方清單補齊這些住戶的<strong>「坪數」</strong>資訊。
+      系統規定不得向坪數缺失的住戶發送賬單。補齊後請重新嘗試發送。
+    </p>
+  </div>
+
+  <div class="action-bar">
+<button class="btn-plain" (click)="routerModifyResident()">修改住戶資料</button>
+
+    <button class="btn-send" style="background: #909399;" (click)="closeThisDialog()">關閉</button>
+  </div>
+</div>
+}
+
+@if(page==4){
+<div class="bill-form-content">
+  <div class="header-minimal">
+    <h3 class="section-label main-label" style="border-left-color: #e6a23c;">發送失敗：帳單月份重複</h3>
+  </div>
+
+  <div class="error-container" style="background-color: #fdf6ec; border-color: #faecd8;">
+    <div class="error-header" style="color: #e6a23c;">
+      <i class="icon-warning">⚠️</i>
+      <span>{{billingMonth}} 份帳單已存在</span>
+    </div>
+
+    <div class="error-hint" style="color: #666; margin-top: 10px;">
+      系統偵測到資料庫中已存有該月份的社區帳單。為了避免重複計費，系統已自動攔截本次發送動作。
+    </div>
+  </div>
+
+  <div class="form-body-flat">
+    <p class="error-hint">
+      <strong>如何解決？</strong><br>
+      1.請點擊下方按鈕返回，修改為正確的發送月份。
+    </p>
+  </div>
+
+  <div class="action-bar">
+    <button class="btn-plain" (click)="page = 1">返回修改月份</button>
+    <button class="btn-send" style="background: #909399;" (click)="closeThisDialog()">關閉視窗</button>
   </div>
 </div>
 }
