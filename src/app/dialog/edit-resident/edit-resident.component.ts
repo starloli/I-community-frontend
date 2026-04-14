@@ -36,7 +36,14 @@ export class EditResident implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
     this.user = { ...this.data };
+
+    // 如果坪數、機車位、汽車位沒有值，則預設為 0
+    this.user.squareFootage = this.user.squareFootage || 0;
+    this.user.motorParkingSpace = this.user.motorParkingSpace || 0;
+    this.user.carParkingSpace = this.user.carParkingSpace || 0;
+
     console.log(this.user);
   }
 
