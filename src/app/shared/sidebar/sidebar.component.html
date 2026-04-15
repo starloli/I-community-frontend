@@ -32,8 +32,13 @@
         [style.--nav-item-color]="item.color"
         [title]="isCollapsed ? item.label : ''"
       >
-        <mat-icon>{{ item.icon }}</mat-icon>
+        <div class="icon-wrapper">
+          <mat-icon>{{ item.icon }}</mat-icon>
+        </div>
         <span class="nav-label">{{ item.label }}</span>
+        @if (item.label === '住戶管理' && hasIncompleteResident) {
+          <span class="notification-dot"></span>
+        }
       </a>
     }
   </nav>

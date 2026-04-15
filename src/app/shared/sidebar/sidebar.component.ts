@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { HttpService } from '../../@service/http.service';
+import { ResidentStateService } from '../../@service/resident-state.service';
 import { User } from '../../interface/interface';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,14 +17,21 @@ import { User } from '../../interface/interface';
     '[class.sidebar-collapsed-host]': 'isCollapsed'
   }
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
 
-  constructor(private router: Router, private http: HttpService) { }
+  constructor(
+    private router: Router,
+    private http: HttpService,
+    private residentState: ResidentStateService
+  ) { }
 
   isCollapsed = false; // 收合狀態
   userName = '';
   unitNumber = '';
   userInitial = '';
+  hasIncompleteResident = false; // 是否有坪數為 null 或 0 的住戶
+
+  private $destroy = new Subject<void>();
 
   navItems = [
     { route: 'admin/dashboard', icon: 'home_work', label: '社區總覽', color: '#5B7FA6' },
@@ -43,6 +52,17 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUserInfo();
+    this.checkResidentIncomplete();
+    
+    // 訂閱即時狀態更新
+    this.residentState.hasIncompleteResident$
+      .pipe(takeUntil(this.$destroy))
+      .subscribe(status => this.hasIncompleteResident = status);
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 
   private loadUserInfo(): void {
@@ -55,6 +75,20 @@ export class SidebarComponent implements OnInit {
       },
       error: (error) => {
         console.error('取得住戶資訊失敗:', error);
+      }
+    });
+  }
+
+  private checkResidentIncomplete(): void {
+    const getUrl = "/admin/get-all-residents-users";
+    this.http.getApi<any[]>(getUrl).subscribe({
+      next: (res) => {
+        // 檢查是否有坪數為 null 或 0 的住戶，並更新服務狀態
+        const hasIncomplete = res.some(user => user.squareFootage === null || user.squareFootage === 0);
+        this.residentState.setIncompleteStatus(hasIncomplete);
+      },
+      error: (error) => {
+        console.error('取得住戶清單失敗:', error);
       }
     });
   }
