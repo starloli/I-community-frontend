@@ -23,7 +23,7 @@ export class FacilityComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  getUrl = "/user/facilities";
+  getUrl = "/facility";
   facilities: Facility[] = [];
 
   ngOnInit() {

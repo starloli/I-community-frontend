@@ -111,7 +111,7 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
 
   private loadReservations(): void {
     if (this.userId !== 0) {
-      this.http.getApi<Array<ResReservation>>('/user/reservationsByUserId', this.userId)
+      this.http.getApi<Array<ResReservation>>('/reservation/byUserId', this.userId)
         .pipe(takeUntil(this.$destroy))
         .subscribe({
           next: res => {
