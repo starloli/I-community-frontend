@@ -12,7 +12,7 @@ import { VisitorServiceService } from '../../../@service/visitor-service.service
 import { BillsdialogComponent } from '../../../dialog/billsdialog/billsdialog.component';
 
 import { MatButtonModule } from '@angular/material/button';
-import { SendBill } from '../../../dialog/send-bill/send-bill';
+import { SendBill } from '../../../dialog/send-bill/send-bill.component';
 import { HttpService } from '../../../@service/http.service';
 
 
@@ -45,7 +45,9 @@ export class BillComponent implements OnInit {
 
   openSendAllBillsDialog() {
     const ref = this.dialog.open(SendBill, {
-      width: '500px',
+      width: 'min(760px, 92vw)',
+      maxWidth: '92vw',
+      maxHeight: '90vh',
       disableClose: false // 點擊背景是否可以關閉
     });
     ref.afterClosed().subscribe(result => {

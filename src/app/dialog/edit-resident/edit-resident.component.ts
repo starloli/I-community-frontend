@@ -44,7 +44,6 @@ export class EditResident implements OnInit, OnDestroy {
     this.user.motorParkingSpace = this.user.motorParkingSpace || 0;
     this.user.carParkingSpace = this.user.carParkingSpace || 0;
 
-    console.log(this.user);
   }
 
   ngOnDestroy(): void {

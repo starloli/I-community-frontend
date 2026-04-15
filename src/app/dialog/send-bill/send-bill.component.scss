@@ -126,3 +126,74 @@
   cursor: not-allowed !important;      /* 鼠標變成禁制符號 */
   border: none;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//page3
+/* 異常頁面專屬樣式 */
+/* 異常頁面專屬樣式 */
+.error-container {
+  border: 1px solid #fde2e2;
+  background-color: #fef0f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 25px;
+}
+
+.error-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #f56c6c;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.error-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.error-item {
+  background: white;
+  border: 1px solid #ffdbdb;
+  color: #f56c6c;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(245, 108, 108, 0.05);
+}
+
+.error-hint {
+  margin-top: 20px;
+  color: #909399;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.icon-warning {
+  font-style: normal;
+}
