@@ -1,15 +1,155 @@
-@if (users) {
-@for (user of users; track user.userId) {
-<div>
-  <h1>{{user.fullName}}</h1>
-  <p>{{user.userName}}</p>
-  <p>{{user.phone}}</p>
-  <p>{{user.email}}</p>
-  <p>{{user.unitNumber}}</p>
-  <p>坪數：{{user.squareFootage}}</p>
-  <p>汽車停車位：{{user.carParkingSpace}}</p>
-  <p>機車停車位：{{user.motorParkingSpace}}</p>
-  <button (click)="editUser(user)">編輯</button>
+<div class="resident-container">
+  <div class="page-header">
+    <div class="header-left">
+      <h1>住戶管理</h1>
+      <span class="subtitle">管理社區住戶資訊、坪數校正與基礎帳號維護</span>
+    </div>
+  </div>
+
+  <!-- 統計資訊列：專注於住戶資料完整度 -->
+  <div class="stats-grid">
+    <div class="stat-card" (click)="selectedFilter = 'ALL'; onFilterChange()">
+      <mat-icon style="color: #5B7FA6">people</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value" style="color: #5B7FA6">{{ allUsers.length }}</span>
+        <span class="stat-label">登記住戶總數</span>
+      </div>
+    </div>
+    <div class="stat-card" (click)="selectedFilter = 'COMPLETE'; onFilterChange()">
+      <mat-icon style="color: #6A9E7F">verified</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value" style="color: #6A9E7F">{{ completeCount }}</span>
+        <span class="stat-label">資料已補全</span>
+      </div>
+    </div>
+    <div class="stat-card urgent" [class.active]="incompleteCount > 0" (click)="selectedFilter = 'INCOMPLETE'; onFilterChange()">
+      <mat-icon style="color: #ff4d4f">error_outline</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value" style="color: #ff4d4f">{{ incompleteCount }}</span>
+        <span class="stat-label">坪數待補全</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 工具列：篩選按鈕 + 搜尋框 -->
+  <div class="toolbar-row">
+    <div class="filter-pills">
+      <button class="filter-btn" [class.active]="selectedFilter === 'ALL'" (click)="selectedFilter = 'ALL'; onFilterChange()">全部住戶</button>
+      <button class="filter-btn" [class.active]="selectedFilter === 'COMPLETE'" (click)="selectedFilter = 'COMPLETE'; onFilterChange()">資料完整</button>
+      <button class="filter-btn danger" [class.active]="selectedFilter === 'INCOMPLETE'" (click)="selectedFilter = 'INCOMPLETE'; onFilterChange()">
+        資料異常
+        @if (incompleteCount > 0) {
+          <span class="count-badge">{{ incompleteCount }}</span>
+        }
+      </button>
+    </div>
+
+    <div class="search-box-wrapper">
+      <div class="search-control control-card">
+        <mat-icon>search</mat-icon>
+        <input
+          type="text"
+          [(ngModel)]="searchKeyword"
+          (ngModelChange)="onFilterChange()"
+          placeholder="搜尋住戶姓名、電話或戶號..."
+        >
+      </div>
+    </div>
+  </div>
+
+  @if (isLoading) {
+  <div class="loading-shade">
+    <mat-spinner></mat-spinner>
+  </div>
+  }
+
+  @if (!isLoading) {
+  <div class="resident-grid">
+    @for (user of pagedUsers; track user.userId) {
+    <div class="resident-card">
+      @if (user.squareFootage === 0 || user.squareFootage === null) {
+        <mat-icon class="error-indicator" title="坪數資料異常">error</mat-icon>
+      }
+      <div class="card-header">
+        <div class="resident-avatar">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="resident-main-info">
+          <h2 class="resident-name">{{ user.fullName }}</h2>
+          <span class="role-badge" [class.admin]="user.role === UserRole.ADMIN">
+            {{ user.role === UserRole.ADMIN ? '管理員' : '住戶' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="card-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <mat-icon>phone</mat-icon>
+            <span class="label">電話</span>
+            <span class="value">{{ user.phone }}</span>
+          </div>
+          <div class="info-item">
+            <mat-icon>home</mat-icon>
+            <span class="label">戶號</span>
+            <span class="value">{{ user.unitNumber }}</span>
+          </div>
+          <div class="info-item">
+            <mat-icon>square_foot</mat-icon>
+            <span class="label">坪數</span>
+            <span class="value">{{ user.squareFootage }} 坪</span>
+          </div>
+          <div class="info-item">
+            <mat-icon>two_wheeler</mat-icon>
+            <span class="label">機車位</span>
+            <span class="value">{{ user.motorParkingSpace }} 個</span>
+          </div>
+          <div class="info-item">
+            <mat-icon>directions_car</mat-icon>
+            <span class="label">汽車位</span>
+            <span class="value">{{ user.carParkingSpace }} 個</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button class="edit-btn" (click)="editUser(user)">
+          <mat-icon>edit</mat-icon>
+          編輯資料
+        </button>
+      </div>
+    </div>
+    } @empty {
+    <div class="empty-state">
+      <mat-icon>info</mat-icon>
+      <p>沒有找到符合條件的住戶</p>
+    </div>
+    }
+  </div>
+  }
+
+  <!-- 自訂分頁 UI -->
+  @if (totalPages > 1) {
+  <div class="pagination-bar">
+    <div class="pagination">
+      <button class="page-btn" (click)="previousPage()" [disabled]="currentPage === 1">
+        <mat-icon>keyboard_arrow_left</mat-icon>
+      </button>
+
+      @for (page of pageNumbers; track $index) {
+        @if (isPageNumber(page)) {
+        <button class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">
+          {{ page }}
+        </button>
+        } @else {
+        <span class="pagination-ellipsis">...</span>
+        }
+      }
+
+      <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+        <mat-icon>keyboard_arrow_right</mat-icon>
+      </button>
+    </div>
+  </div>
+  }
 </div>
-}
-}

@@ -10,7 +10,7 @@
     </div>
     <div class="header-actions">
       <button class="add-btn" (click)="sendBills()">
-        <mat-icon>add</mat-icon> 新增賬單
+        <mat-icon>add</mat-icon> 新增帳單
       </button>
     </div>
   </div>
@@ -81,7 +81,8 @@
     <thead>
       <tr>
         <th>帳單月份</th>
-        <th>住戶</th>
+        <th>住戶門牌</th>
+
         <th>標題</th>
         <th>金額</th>
         <th>截止日期</th>
@@ -123,7 +124,7 @@
         @if(bill.paymentMethod =='Cash'){
         <td>現金</td>
         }@else if(bill.paymentMethod =='Online'){
-        <td>綫上支付</td>
+        <td>線上支付</td>
         }@else{<td>—</td>}
         <!-- <td>{{ bill.paymentMethod || '—' }}</td> -->
         @if(bill.status !== 'PAID'){

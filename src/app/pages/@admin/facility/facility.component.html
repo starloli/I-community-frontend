@@ -13,8 +13,62 @@
     </button>
   </div>
 
+  <div class="toolbar-panel">
+    <label class="search-control control-card">
+      <mat-icon>search</mat-icon>
+      <input
+        type="text"
+        [(ngModel)]="searchKeyword"
+        (ngModelChange)="onFilterChange()"
+        placeholder="搜尋設備名稱或描述"
+      >
+    </label>
+
+    <div class="toolbar-actions">
+      <label class="filter-field">
+        <span class="field-label">狀態</span>
+        <select class="filter-select" [(ngModel)]="availabilityFilter" (ngModelChange)="onFilterChange()">
+          <option value="all">全部狀態</option>
+          <option value="available">可使用</option>
+          <option value="unavailable">暫停開放</option>
+        </select>
+      </label>
+
+      <label class="filter-field">
+        <span class="field-label">預約</span>
+        <select class="filter-select" [(ngModel)]="reservationFilter" (ngModelChange)="onFilterChange()">
+          <option value="all">全部設備</option>
+          <option value="reservable">可預約</option>
+          <option value="non-reservable">不可預約</option>
+        </select>
+      </label>
+
+      <label class="filter-field">
+        <span class="field-label">排序</span>
+        <select class="filter-select" [(ngModel)]="sortOption" (ngModelChange)="onFilterChange()">
+          <option value="open-time-asc">開放時間早到晚</option>
+          <option value="open-time-desc">開放時間晚到早</option>
+          <option value="capacity-desc">容量由大到小</option>
+          <option value="capacity-asc">容量由小到大</option>
+        </select>
+      </label>
+
+      @if (hasActiveFilters) {
+      <button
+        class="reset-btn"
+        type="button"
+        (click)="clearFilters()"
+        title="清除條件"
+        aria-label="清除條件"
+      >
+        <mat-icon>filter_alt_off</mat-icon>
+      </button>
+      }
+    </div>
+  </div>
+
   <div class="facility-grid">
-    @for (item of facilities; track item.facilityId) {
+    @for (item of pagedFacilities; track item.facilityId) {
     <div class="facility-card" [class.unavailable]="!item.isAvailable">
       <div class="facility-icon">
         <mat-icon>{{ getFacilityIcon(item.name) }}</mat-icon>
@@ -41,6 +95,10 @@
             <mat-icon>schedule</mat-icon>
             <span>{{ item.openTime.slice(0, 5) }} - {{ item.closeTime.slice(0, 5) }}</span>
           </div>
+          <div class="detail-item">
+            <mat-icon>event_available</mat-icon>
+            <span>{{ item.isReservable ? '可預約' : '不可預約' }}</span>
+          </div>
         </div>
       </div>
 
@@ -55,6 +113,38 @@
         </button>
       </div>
     </div>
+    } @empty {
+    <div class="empty-state">
+      <mat-icon>search_off</mat-icon>
+      <h2>找不到符合條件的設備</h2>
+      <p>可以換個關鍵字，或清除篩選條件後再試一次。</p>
+    </div>
     }
   </div>
+
+  @if (filteredFacilities.length > 0) {
+  <div class="pagination-bar">
+    <div class="pagination-summary">
+      顯示第 {{ (currentPage - 1) * pageSize + 1 }}
+      至 {{ Math.min(currentPage * pageSize, filteredFacilities.length) }} 筆，
+      共 {{ filteredFacilities.length }} 筆
+    </div>
+
+    <div class="pagination">
+      <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      @for (page of totalPagesArray; track page) {
+        <button class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">
+          {{ page }}
+        </button>
+      }
+
+      <button class="page-btn" [disabled]="currentPage === totalPagesArray.length" (click)="goToPage(currentPage + 1)">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
+  }
 </div>

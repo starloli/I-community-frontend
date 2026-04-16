@@ -19,6 +19,8 @@ import { HttpService } from '../../../@service/http.service';
   styleUrls: ['./package.component.scss']
 })
 export class PackageComponent implements OnInit, OnDestroy {
+  readonly Math = Math;
+
   // 目前登入者資訊會影響可見資料與可操作權限。
   currentUser: User = {
     userId: 1,

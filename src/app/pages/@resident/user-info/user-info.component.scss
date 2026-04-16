@@ -1,4 +1,327 @@
-.a{
+$primary-blue: #4a69bd;
+$accent-purple: #6c5ce7;
+$error-red: #ff7675;
+$text-dark: #2d3436;
+$text-light: #636e72;
+$border-color: #dfe6e9;
+$transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+.user-info-container {
+  padding: 0;
+  color: $text-dark;
+
+  // Page Header
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 28px;
+
+    .header-left {
+      .title-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 4px;
+
+        .header-icon {
+          font-size: 36px;
+          width: 36px;
+          height: 36px;
+          color: $primary-blue;
+        }
+
+        h1 {
+          font-size: 36px;
+          font-weight: 700;
+          color: #1a1a2e;
+          margin: 0;
+        }
+      }
+
+      .subtitle {
+        font-size: 15px;
+        color: #888;
+      }
+    }
+  }
+
+  // Information Content Wrapper
+  .info-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center; // 排版置中
+    gap: 32px; // 唯讀區塊與編輯區塊之間的間距
+    width: 100%;
+  }
+
+  .readonly-cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 7px; // 這裡控制兩張卡片之間的微小縫隙
+  }
+
+  // Information Groups (Cards)
+  .info-group {
+    display: flex; // 標題與內容橫向排列
+    align-items: center;
+    width: 100%;
+    max-width: 1000px; // 限制卡片最大寬度以便置中
+    background: rgba(255, 255, 255, 0.247);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    padding: 32px 48px;
+    gap: 64px; // 標題區與列表區的間隔
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+
+    // 第一個卡片（基本資訊）：上方圓，下方微圓
+    &:first-of-type {
+      border-radius: 48px 48px 10px 10px;
+    }
+
+    // 第二個卡片（車位資訊）：上方微圓，下方圓
+    &:nth-of-type(2) {
+      border-radius: 10px 10px 48px 48px;
+    }
+
+    border: 2px solid #ffffff;
+  }
+
+  // 左側標題區域
+  .title-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 160px;
+    gap: 12px;
+
+    .group-header-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: $primary-blue;
+      padding: 16px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: $primary-blue;
+      margin: 0;
+      white-space: nowrap;
+      letter-spacing: 1px;
+    }
+  }
+
+  // 右側資訊列表
+  .info-list {
+    flex: 1;
+    display: grid;
+    // 強制並排，根據內容數量自動分配或最多四列
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 20px;
+    align-items: center;
+  }
+
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0; // 防止內容溢出
+
+    mat-icon {
+      color: $primary-blue;
+      padding: 12px; // Icon 背景放大
+      border-radius: 14px;
+      font-size: 26px; // Icon 放大
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+    }
+
+    .text-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      label {
+        font-size: 15px; // 放大 2px (原約 13px)
+        color: $text-light;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      span {
+        font-size: 18px; // 大於 label (15px)
+        font-weight: 700;
+        color: $text-dark;
+      }
+    }
+  }
+}
+
+// Edit Section
+.edit-section {
+  width: 100%;
+  max-width: 1000px;
+  margin-top: 24px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 40px 48px;
+  border-radius: 24px;
+  border: 1px solid rgba($primary-blue, 0.2);
+  box-shadow: 0 10px 40px rgba($primary-blue, 0.12);
+  position: relative;
+  overflow: hidden;
+
+  .section-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: $primary-blue;
+  }
+
+  .edit-hint {
+    color: $text-light;
+    font-size: 14px;
+    margin-bottom: 32px;
+    display: block;
+  }
+
+  .edit-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: flex-end;
+
+    .form-actions {
+      grid-column: span 2;
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    label {
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .error-badge {
+        font-size: 12px;
+        background-color: $error-red;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-weight: normal;
+      }
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      mat-icon {
+        position: absolute;
+        left: 14px;
+        font-size: 22px;
+        width: 22px;
+        height: 22px;
+        color: $text-light;
+      }
+
+      input {
+        width: 100%;
+        padding: 14px 14px 14px 48px;
+        border: 2px solid $border-color;
+        border-radius: 12px;
+        font-size: 16px;
+        background: white;
+        transition: $transition;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-blue;
+          box-shadow: 0 0 0 4px rgba($primary-blue, 0.1);
+        }
+      }
+    }
+  }
+}
+
+.submit-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 40px;
+  background: linear-gradient(135deg, $primary-blue, $accent-purple);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: $transition;
+  box-shadow: 0 6px 20px rgba($primary-blue, 0.3);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba($primary-blue, 0.4);
+  }
+}
+
+// Loading
+.loading-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 0;
+  gap: 16px;
+  color: $text-light;
+}
+
+// Responsive
+@media (max-width: 900px) {
+  .user-info-container .info-group {
+    flex-direction: column;
+    gap: 32px;
+    padding: 32px;
+
+    .title-container {
+      min-width: unset;
+    }
+  }
+
+  .user-info-container .edit-section .edit-form {
+    grid-template-columns: 1fr;
+
+    .form-actions {
+      grid-column: span 1;
+    }
+  }
 }

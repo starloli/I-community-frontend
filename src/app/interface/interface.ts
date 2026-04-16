@@ -165,8 +165,8 @@ export interface UserResponse {
   phone: string,
   unitNumber: string,
   squareFootage: number,
-  motorParkingSpace: string,
-  carParkingSpace: string,
+  motorParkingSpace: number,
+  carParkingSpace: number,
   is_active: boolean,
 }
 

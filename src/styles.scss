@@ -1,3 +1,5 @@
+
+
 @import "@angular/material/prebuilt-themes/indigo-pink.css";
 * {
   margin: 0;
@@ -32,6 +34,12 @@ body {
   --color-facility-light: rgba(123, 127, 186, 0.15);
   --color-package-light: rgba(123, 168, 158, 0.15);
   --color-repair-light: rgba(196, 122, 90, 0.15);
+}
+@mixin page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
 }
 
 
@@ -74,6 +82,7 @@ body {
       cursor: not-allowed;
     }
   }
+
 }
 .reservation-calendar-dialog .mat-mdc-dialog-container {
   --mdc-dialog-container-shape: 24px !important;
