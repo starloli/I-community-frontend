@@ -8,7 +8,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { HttpService } from '../../../@service/http.service';
 import { Facility } from '../../../interface/interface';
 import { RegistFacilityComponent } from '../../../dialog/regist-facility/regist-facility.component';
-import { UpdateFacility } from '../../../dialog/update-facility/update-facility';
+import { UpdateFacility } from '../../../dialog/update-facility/update-facility.component';
+import { FacilityConfigComponent } from '../../../dialog/facility-config/facility-config.component';
 
 @Component({
   selector: 'app-facility',
@@ -37,6 +38,10 @@ export class FacilityComponent implements OnInit, OnDestroy {
         this.getFacility();
       }
     });
+  }
+
+  config(){
+    this.dialogRef.open(FacilityConfigComponent);
   }
 
   updateFacility(facility: Facility) {

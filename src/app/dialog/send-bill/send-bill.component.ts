@@ -6,8 +6,8 @@ import { HttpService } from '../../@service/http.service';
 @Component({
   selector: 'app-send-bill',
   imports: [FormsModule, ReactiveFormsModule,],
-  templateUrl: './send-bill.html',
-  styleUrl: './send-bill.scss',
+  templateUrl: './send-bill.component.html',
+  styleUrl: './send-bill.component.scss',
 })
 export class SendBill {
 

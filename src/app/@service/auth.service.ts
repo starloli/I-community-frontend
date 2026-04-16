@@ -1,4 +1,4 @@
-import { ResetPassword } from './../pages/reset-password/reset-password';
+import { ResetPassword } from '../pages/reset-password/reset-password.component';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';

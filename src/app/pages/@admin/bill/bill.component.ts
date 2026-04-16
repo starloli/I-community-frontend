@@ -12,7 +12,7 @@ import { VisitorServiceService } from '../../../@service/visitor-service.service
 import { BillsdialogComponent } from '../../../dialog/billsdialog/billsdialog.component';
 
 import { MatButtonModule } from '@angular/material/button';
-import { SendBill } from '../../../dialog/send-bill/send-bill';
+import { SendBill } from '../../../dialog/send-bill/send-bill.component';
 import { HttpService } from '../../../@service/http.service';
 import { UserResponse } from '../../../interface/interface';
 import { Subject, takeUntil } from 'rxjs';

@@ -8,8 +8,8 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-edit-resident',
   imports: [FormsModule],
   standalone: true,
-  templateUrl: './edit-resident.html',
-  styleUrl: './edit-resident.scss',
+  templateUrl: './edit-resident.component.html',
+  styleUrl: './edit-resident.component.scss',
 })
 export class EditResident implements OnInit, OnDestroy {
 

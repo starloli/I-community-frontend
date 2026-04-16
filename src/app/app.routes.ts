@@ -15,7 +15,7 @@ import { PackageComponent } from './pages/@admin/package/package.component';
 import { RepairComponent } from './pages/@admin/repair/repair.component';
 
 // ── 住戶頁面（之後陸續新增）──────────────────────────
-import { UserInfo as ResidentUserInfo } from './pages/@resident/user-info/user-info';
+import { UserInfo as ResidentUserInfo } from './pages/@resident/user-info/user-info.component';
 import { ResidentDashboardComponent } from './pages/@resident/dashboard/dashboard.component';
 import { ResidentAnnouncementComponent } from './pages/@resident/announcement/announcement.component';
 import { BillComponent as ResidentBillComponent } from './pages/@resident/bill/bill.component';
@@ -25,10 +25,10 @@ import { ResidentRepairComponent } from './pages/@resident/repair/repair.compone
 import { VisitorComponent as ResidentVisitorComponent } from './pages/@resident/visitor/visitor.component';
 
 import { VisitorDialogComponent } from './dialog/visitor-dialog/visitor-dialog.component';
-import { ResetPassword } from './pages/reset-password/reset-password';
-import { ForgetPassword } from './pages/forget-password/forget-password';
-import { ModifyResident } from './pages/@admin/modify-resident/modify-resident';
-import { UserInfo } from './pages/@admin/user-info/user-info';
+import { ResetPassword } from './pages/reset-password/reset-password.component';
+import { ForgetPassword } from './pages/forget-password/forget-password.component';
+import { ModifyResident } from './pages/@admin/modify-resident/modify-resident.component';
+import { UserInfo } from './pages/@admin/user-info/user-info.component';
 import { VisitorComponent } from './pages/@admin/visitor/admin-visitor.component';
 
 export const routes: Routes = [
