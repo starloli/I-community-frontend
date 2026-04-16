@@ -1,19 +1,17 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-
 import { Router, RouterLink } from '@angular/router';
-import { ApiService } from '../../@service/api.service';
-import { AuthService } from '../../@service/auth.service';
+import { ApiService } from '../@service/api.service';
+import { AuthService } from '../@service/auth.service';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-test',
   imports: [FormsModule, ReactiveFormsModule, RouterLink],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  templateUrl: './test.html',
+  styleUrl: './test.scss',
 })
-export class LoginComponent {
+export class Test {
 
   constructor(private router: Router, private http: ApiService, private auth: AuthService) {}
 
@@ -335,8 +333,4 @@ this.checkSignUpUserName=true;
   console.log(res);})
   }
 
-
-  goToTest(){
-    this.router.navigate(['/test']);
-  }
 }

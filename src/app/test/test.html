@@ -1,9 +1,19 @@
 
+<div class="login-container">
+  <div class="login-wrapper" [class.signup-mode]="booleanSignup">
+
+    <!-- 左邊圖片 -->
+    <div class="left-panel">
+   <img src="login1-side.png" alt="智慧社區">
+    </div>
+
+    <!-- 右邊內容 -->
+    <div class="right-panel">
 <!-- //使用者登錄 -->
+
 @if(booleanSignup==false && booleanIsManager ==false){
 
-<button (click)="goToTest()">測試頁面</button>
-<div class="login-container">
+
   <div class='allPage'>
 
 
@@ -52,7 +62,7 @@
     }
 
   </div>
-</div>
+
 }
 
 
@@ -112,7 +122,7 @@
 
 <!-- 注冊 -->
 @if(booleanSignup==true){
-<div class="login-container">
+
   <div class='allPage1'>
     <div class="stepper">
       <div class="step " [class.active]="signUpStep === 1" [class.completed]="signUpStep > 1">
@@ -255,5 +265,9 @@
       </div>
       }
   </div>
-</div>
+
+
 }
+    </div>
+  </div>
+</div>

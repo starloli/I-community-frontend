@@ -8,12 +8,20 @@
 }
 
 
-.login-container {
-  height: 100vh; /* 滿屏高度 */
+.login-wrapper {
   display: flex;
-  justify-content: center; /* 水平居中 */
-  align-items: center; /* 垂直居中 */
-  background-color: #f5f7fa; /* 背景色可放這裡 */
+  width: 1000px;         /* 登入時的寬度 */
+  min-height: 600px;     /* 基礎高度，內容多時會自動向下長 */
+  background: #fff;
+  border-radius: 20px;   /* 稍微圓潤一點更有現代感 */
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* 擴張時的平滑動畫 */
+}
+/* 2. 當處於註冊模式時，擴大整體寬度 */
+.login-wrapper.signup-mode {
+  width: 1250px;         /* 增加寬度，給註冊表單充足空間 */
+  min-height: 750px;     /* 增加最小高度，避免 Stepper 太擠 */
 }
 body {
   height: 100vh;
@@ -172,11 +180,12 @@ h1 {
 }
 /* --- 步進器樣式 --- */
 .stepper {
-  margin-top: -15px;
+
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 30px;
+    margin-top: 0;   /* 避免被裁 */
 }
 .step {
   display: flex;
@@ -381,4 +390,118 @@ h1 {
   height: 50px;
   text-align: center;
   font-size: 20px;
+}
+
+
+.login-container {
+height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+background: linear-gradient(135deg, #eef2f7, #f9fbfd);
+}
+/* 註冊模式：維持我們剛才設定的大寬度 */
+.login-wrapper{
+  display: grid !important;
+  grid-template-columns: 650px 1fr;  /* 左圖固定寬度 */
+  width: 1300px;
+  min-height: 800px;
+  overflow: hidden;
+}
+
+
+/* 🌟 註冊模式：總寬拉到 1300px。左邊圖片格子鎖定 650px */
+.login-wrapper.signup-mode {
+  width: 1300px;
+  grid-template-columns: 650px 1fr;
+  min-height: 800px;
+}
+.left-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f7f9fc;
+}
+
+.left-panel img {
+  width: 100%;
+  height: auto;
+}
+/* 4. 調整右側面板：讓它佔領剩餘空間 */
+/* --- 4. 右側內容區：自動分配剩餘空間 --- */
+/* --- 修正右側面板 --- */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 50px;
+  background: #fff;
+  /* 🌟 這裡一定要設為 0，防止被撐開 */
+  min-width: 0;
+}
+/* 隱藏滾動條美化（選擇性） */
+.right-panel::-webkit-scrollbar {
+  width: 6px;
+}
+.right-panel::-webkit-scrollbar-thumb {
+  background: #e0e0e0;
+  border-radius: 10px;
+}
+/* 5. 重要：移除 .allPage 和 .allPage1 的固定寬高 */
+.allPage, .allPage1 {
+  width: 100% !important;
+  max-width: 450px; /* 🌟 內容鎖死在 450px，外框再寬都不會跑版 */
+  height: auto !important;
+  margin: 0 auto;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+.allPage1 {
+  width: 100% !important;
+  max-width: 480px; /* 稍微縮小內容寬度上限，讓排版更精緻 */
+  margin: 0 auto;
+}
+.stepper {
+  width: 100%;
+  max-width: 450px; /* 讓步進器不要散得太開 */
+  margin: 0 auto 40px auto;
+}
+
+/* 修正輸入框 */
+.txtb input, .signUpTxtb input {
+  font-size: 18px; /* 容器變大，字體也要稍微加大 */
+}
+.line {
+  flex: 1;
+  height: 2px;
+  background: #e0e0e0;
+  margin: 0 10px;
+  transform: translateY(22px); /* 🌟 對齊圓圈中心 */
+}
+
+
+.errorMessage {
+  min-height: 25px;
+  margin-top: 15px;
+  font-size: 15px;
+  color: #ff0000;
+}
+/* 修正註冊標題與步進器間隔 */
+.allPage1 h1 {
+margin-top: 0;
+}
+/* 🔽 手機版（很重要） */
+/* --- 手機版修正 --- */
+/* 手機版適配 */
+@media (max-width: 768px) {
+  .login-wrapper, .login-wrapper.signup-mode {
+    flex-direction: column;
+    width: 95%;
+    height: auto;
+  }
+  .left-panel {
+    height: 250px; /* 手機版保留一定高度放圖片 */
+    flex: none;
+  }
 }
