@@ -1,7 +1,7 @@
 <div>
   <label class="field-card">
-    <span class="field-label">開始時間</span><br>
-    <span class="field-hint">住戶最早可使用的時間</span><br>
+    <span class="field-label">提醒時間</span><br>
+    <span class="field-hint">每天提醒住戶預約的時間</span><br>
     <select name="open_time" [(ngModel)]="remindTime" required>
       <option value="" disabled selected>請選擇提醒時間</option>
       @for (hour of hoursList; track $index) {

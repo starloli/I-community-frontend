@@ -24,7 +24,7 @@ export class UpdateFacility implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: Facility
   ) { }
 
-  putUrl = "/admin/update-facility";
+  putUrl = "/facility/update-facility";
   facility: Facility = {
     facilityId: 0,
     name: '',

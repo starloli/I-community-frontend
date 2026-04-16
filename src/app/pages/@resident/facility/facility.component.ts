@@ -28,7 +28,7 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
   // 統一管理訂閱生命週期，避免頁面離開後還殘留 API 訂閱。
   private destroy$ = new Subject<void>();
 
-  getFacilityUrl = '/facility';
+  getFacilityUrl = '/user/facility';
   getReservationByUserIdUrl = '/reservation/byUserId';
   getReservationByFacilityIdUrl = '/reservation/byFacilityId';
   cancelReservationUrl = '/reservation/cancel';

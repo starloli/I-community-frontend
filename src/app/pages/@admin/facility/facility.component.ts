@@ -24,7 +24,8 @@ export class FacilityComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  getUrl = "/facility";
+  getUrl = "/user/facility";
+  deleteUrl = "/facility/delete-facility";
   facilities: Facility[] = [];
 
   ngOnInit() {
@@ -67,7 +68,7 @@ export class FacilityComponent implements OnInit, OnDestroy {
 
   deleteFacility(facilityId: number) {
     if (confirm('確定要刪除這個設施嗎？\n此動作無法復原 且會刪除相關預約資料\n\n若要停用設施 請使用編輯功能')) {
-      this.http.deleteApi("/admin/delete-facility", facilityId).pipe(takeUntil(this.destroy$)).subscribe({
+      this.http.deleteApi(this.deleteUrl, facilityId).pipe(takeUntil(this.destroy$)).subscribe({
         next: res => {
           this.snackBar.open('刪除成功', '關閉', {
             duration: 2000,
