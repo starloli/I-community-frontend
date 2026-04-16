@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject, takeUntil } from 'rxjs';
 import { HttpService } from '../../../@service/http.service';
 import { ResidentStateService } from '../../../@service/resident-state.service';
-import { EditResident } from '../../../dialog/edit-resident/edit-resident.component';
+import { EditResidentComponent } from '../../../dialog/edit-resident/edit-resident.component';
 import { UserResponse } from '../../../interface/interface';
 import { UserRole } from '../../../interface/enum';
 
@@ -40,6 +40,7 @@ type PaginationItem = number | '...';
 })
 export class ModifyResidentComponent implements OnInit, OnDestroy {
 
+  getURUrl = '/modify/getUnqualifiedResidents';
   getUrl = '/admin/get-all-residents-users';
   putUrl = '/modify/admin';
   allUsers: UserResponse[] = [];
@@ -212,7 +213,7 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
   // ---- 原有方法 ----
 
   editUser(user: UserResponse): void {
-    const dialogRef = this.dialog.open(EditResident, {
+    const dialogRef = this.dialog.open(EditResidentComponent, {
       width: '520px',
       data: { ...user }
     });
@@ -239,7 +240,7 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
   }
 
   getUnqualifiedResident(): void {
-    this.http.getApi<UserResponse[]>("/modify/getUnqualifiedResidents").pipe(takeUntil(this.$destroy)).subscribe({
+    this.http.getApi<UserResponse[]>(this.getURUrl).pipe(takeUntil(this.$destroy)).subscribe({
       next: (res) => {
         this.UnqualifiedUsers = res;
       },

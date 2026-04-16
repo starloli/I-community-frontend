@@ -33,9 +33,9 @@ class ReservationCalendarDateFormatter extends CalendarDateFormatter {
     }
   ]
 })
-export class ReservationCalendar implements OnInit {
+export class ReservationCalendarComponent implements OnInit {
   constructor(
-    private dialogRefSelf: MatDialogRef<ReservationCalendar>,
+    private dialogRefSelf: MatDialogRef<ReservationCalendarComponent>,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: { facility: Facility, reservations: ResReservation[] }

@@ -12,7 +12,7 @@ import { VisitorServiceService } from '../../../@service/visitor-service.service
 import { BillsdialogComponent } from '../../../dialog/billsdialog/billsdialog.component';
 
 import { MatButtonModule } from '@angular/material/button';
-import { SendBill } from '../../../dialog/send-bill/send-bill.component';
+import { SendBillComponent } from '../../../dialog/send-bill/send-bill.component';
 import { HttpService } from '../../../@service/http.service';
 import { UserResponse } from '../../../interface/interface';
 import { Subject, takeUntil } from 'rxjs';
@@ -48,7 +48,7 @@ export class BillComponent implements OnInit, OnDestroy {
   }
 
   openSendAllBillsDialog() {
-    const ref = this.dialog.open(SendBill, {
+    const ref = this.dialog.open(SendBillComponent, {
       width: 'min(760px, 92vw)',
       maxWidth: '92vw',
       maxHeight: '90vh',

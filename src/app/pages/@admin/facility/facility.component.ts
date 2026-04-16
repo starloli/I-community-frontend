@@ -8,7 +8,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { HttpService } from '../../../@service/http.service';
 import { Facility } from '../../../interface/interface';
 import { RegistFacilityComponent } from '../../../dialog/regist-facility/regist-facility.component';
-import { UpdateFacility } from '../../../dialog/update-facility/update-facility.component';
+import { UpdateFacilityComponent } from '../../../dialog/update-facility/update-facility.component';
 import { FacilityConfigComponent } from '../../../dialog/facility-config/facility-config.component';
 
 @Component({
@@ -127,7 +127,7 @@ export class FacilityComponent implements OnInit, OnDestroy {
   }
 
   updateFacility(facility: Facility) {
-    const dialogRef = this.dialogRef.open(UpdateFacility, {
+    const dialogRef = this.dialogRef.open(UpdateFacilityComponent, {
       data: facility
     });
     dialogRef.afterClosed().subscribe({

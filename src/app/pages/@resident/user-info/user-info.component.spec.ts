@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 <<<<<<<< HEAD:src/app/pages/@resident/user-info/user-info.component.spec.ts
-import { UserInfo } from './user-info.component';
+import { UserInfoComponent } from './user-info.component';
 ========
 import { DeleteFacility } from './delete-facility.component';
 >>>>>>>> main:src/app/pages/@resident/user-info/delete-facility.spec.component.ts

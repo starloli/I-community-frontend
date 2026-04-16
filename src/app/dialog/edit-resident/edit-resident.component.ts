@@ -19,10 +19,10 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './edit-resident.component.html',
   styleUrl: './edit-resident.component.scss',
 })
-export class EditResident implements OnInit, OnDestroy {
+export class EditResidentComponent implements OnInit, OnDestroy {
 
   constructor(
-    private dialog: MatDialogRef<EditResident>,
+    private dialog: MatDialogRef<EditResidentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: UserResponse,
   ) { }
 
