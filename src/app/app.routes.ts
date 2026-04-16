@@ -30,6 +30,7 @@ import { ForgetPassword } from './pages/forget-password/forget-password';
 import { ModifyResidentComponent } from './pages/@admin/modify-resident/modify-resident.component';
 import { UserInfo } from './pages/@admin/user-info/user-info';
 import { VisitorComponent } from './pages/@admin/visitor/admin-visitor.component';
+import { Test } from './test/test';
 
 export const routes: Routes = [
   // ── 登入頁 ──────────────────────────────────────────
@@ -38,6 +39,7 @@ export const routes: Routes = [
   { path: 'visitorDialog', component: VisitorDialogComponent },
   { path: 'reset-password', component: ResetPassword },
   { path: 'forget-password', component: ForgetPassword },
+  {path :'test', component: Test},
   {
     path: 'admin',
     component: LayoutComponent,
