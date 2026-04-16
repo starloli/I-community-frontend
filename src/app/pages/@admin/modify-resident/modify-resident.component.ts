@@ -78,7 +78,7 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
         // 考量到 API 命名為 get-all-residents-users，通常已經過濾過。
         // 我們改為排除確定的管理員角色，以防住戶角色欄位為空或不同格式。
         this.allUsers = res.filter(user => user.role !== UserRole.ADMIN && user.role !== UserRole.SUPER_ADMIN);
-        
+
         // 如果過濾後沒資料，但原始資料有資料，則保留原始資料（代表 API 已處理角色）
         if (this.allUsers.length === 0 && res.length > 0) {
           this.allUsers = res;
@@ -238,6 +238,8 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
   }
 
   getUnqualifiedResident(): void {
+    console.log("a");
+
     this.http.getApi<UserResponse[]>("/modify/getUnqualifiedUser").pipe(takeUntil(this.$destroy)).subscribe({
       next: (res) => {
         this.UnqualifiedUsers = res;
