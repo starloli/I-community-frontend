@@ -1,0 +1,127 @@
+<div class="user-info-container">
+  <div class="page-header">
+    <div class="header-left">
+      <div class="title-row">
+        <mat-icon class="header-icon">account_circle</mat-icon>
+        <h1>個人資料設定</h1>
+      </div>
+      <span class="subtitle">查看您的帳號詳細資訊並管理聯絡方式</span>
+    </div>
+  </div>
+
+  @if (user) {
+    <div class="info-content">
+      <div class="readonly-cards">
+        <!-- 唯讀資訊區：基本資訊 -->
+        <div class="info-group">
+          <div class="title-container">
+            <mat-icon class="group-header-icon">assignment</mat-icon>
+            <h2 class="section-title">基本資訊</h2>
+          </div>
+          
+          <div class="info-list">
+            <div class="info-item">
+              <mat-icon>person</mat-icon>
+              <div class="text-group">
+                <label>姓名</label>
+                <span>{{user.fullName}}</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <mat-icon>badge</mat-icon>
+              <div class="text-group">
+                <label>使用者帳號</label>
+                <span>{{user.userName}}</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <mat-icon>home</mat-icon>
+              <div class="text-group">
+                <label>居住地址</label>
+                <span>{{user.unitNumber}}</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <mat-icon>straighten</mat-icon>
+              <div class="text-group">
+                <label>居住坪數</label>
+                <span>{{user.squareFootage}} 坪</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 唯讀資訊區：車位資訊 -->
+        <div class="info-group">
+          <div class="title-container">
+            <mat-icon class="group-header-icon">local_parking</mat-icon>
+            <h2 class="section-title">車位資訊</h2>
+          </div>
+
+          <div class="info-list">
+            <div class="info-item">
+              <mat-icon>moped</mat-icon>
+              <div class="text-group">
+                <label>機車位</label>
+                <span>{{user.motorParkingSpace}} 個</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <mat-icon>directions_car</mat-icon>
+              <div class="text-group">
+                <label>汽車位</label>
+                <span>{{user.carParkingSpace}} 個</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 編輯區 -->
+      <div class="edit-section">
+        <h2 class="section-title">聯絡資訊編輯</h2>
+        <p class="edit-hint">* 您目前僅可自行修改電子信箱與電話</p>
+
+        <div class="edit-form">
+          <div class="input-group">
+            <label>電子信箱
+              @if(!isValidEmail(userEmail)) {
+                <span class="error-badge">格式不正確</span>
+              }
+            </label>
+            <div class="input-wrapper" [class.input-error]="!isValidEmail(userEmail)">
+              <mat-icon>mail</mat-icon>
+              <input type="email" placeholder="請輸入您的Email" [(ngModel)]="userEmail" (keydown.space)="$event.preventDefault()">
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>聯絡電話
+              @if(!isValidPhone(userPhone)) {
+                <span class="error-badge">格式不正確</span>
+              }
+            </label>
+            <div class="input-wrapper" [class.input-error]="!isValidPhone(userPhone)">
+              <mat-icon>phone_iphone</mat-icon>
+              <input type="tel" placeholder="請輸入您的電話 (09xxxxxxxx)" [(ngModel)]="userPhone" (keydown.space)="$event.preventDefault()">
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="submit-btn"
+              [disabled]="!userEmail || !userPhone || !isValidEmail(userEmail) || !isValidPhone(userPhone)"
+              (click)="isValidEmail(userEmail) && isValidPhone(userPhone) ? ModifyResident() : No()">
+              <mat-icon>save</mat-icon>
+              儲存更新
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span>正在取得資料...</span>
+    </div>
+  }
+</div>
