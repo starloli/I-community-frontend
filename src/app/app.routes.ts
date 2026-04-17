@@ -30,7 +30,7 @@ import { ForgetPassword } from './pages/forget-password/forget-password';
 import { ModifyResidentComponent } from './pages/@admin/modify-resident/modify-resident.component';
 import { UserInfo } from './pages/@admin/user-info/user-info';
 import { VisitorComponent } from './pages/@admin/visitor/admin-visitor.component';
-import { Test } from './test/test';
+import { Test } from './test/test.component';
 
 export const routes: Routes = [
   // ── 登入頁 ──────────────────────────────────────────

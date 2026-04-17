@@ -4,7 +4,6 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 import { Router, RouterLink } from '@angular/router';
-import { ApiService } from '../../@service/api.service';
 import { AuthService } from '../../@service/auth.service';
 import { HttpService } from '../../@service/http.service';
 

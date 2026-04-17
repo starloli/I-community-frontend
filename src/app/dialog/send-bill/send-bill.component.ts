@@ -1,19 +1,19 @@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpService } from './../../@service/http.service';
 import { Component } from '@angular/core';
 
 import { MatDialogRef } from '@angular/material/dialog';
 import { BillsdialogComponent } from '../billsdialog/billsdialog.component';
 import { Router, RouterLink } from "@angular/router";
+import { HttpService } from '../../@service/http.service';
 @Component({
   selector: 'app-send-bill',
   imports: [FormsModule, ReactiveFormsModule, RouterLink,],
   templateUrl: './send-bill.component.html',
   styleUrl: './send-bill.component.scss',
 })
-export class SendBill {
+export class SendBillComponent {
 
-  constructor(private http: HttpService, private dialogRef: MatDialogRef<SendBill>, private router: Router) { }
+  constructor(private http: HttpService, private dialogRef: MatDialogRef<SendBillComponent>, private router: Router) { }
   title!: string;
   billingMonth!: string;
   dueDate!: string;
@@ -104,6 +104,7 @@ export class SendBill {
       }
       else if (ans.message === '本月還沒有賬單') {
         this.http.getApi("/bills/getAbnormalUnits").subscribe((res: any) => {
+console.log("00000");
 
 
           this.AbnormalUnits = res;
@@ -128,3 +129,4 @@ export class SendBill {
     this.dialogRef.close('refresh');
   }
 }
+

@@ -9,8 +9,8 @@ import { HttpService } from '../../@service/http.service';
   selector: 'app-update-facility',
   standalone: true,
   imports: [FormsModule],
-  templateUrl: './update-facility.html',
-  styleUrl: './update-facility.scss',
+  templateUrl: './update-facility.component.html',
+  styleUrl: './update-facility.component.scss',
 })
 export class UpdateFacility implements OnInit {
 

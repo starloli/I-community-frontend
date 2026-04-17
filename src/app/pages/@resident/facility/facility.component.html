@@ -53,7 +53,7 @@
           </div>
           <div class="detail-item">
             <mat-icon>schedule</mat-icon>
-            <span>{{ facility.openTime.slice(0, 5) }} - {{ facility.closeTime.slice(0, 5) }}</span>
+            <span>{{ formatTime(facility.openTime) }} - {{ formatTime(facility.closeTime) }}</span>
           </div>
         </div>
       </div>
@@ -102,7 +102,7 @@
             </div>
             <div class="res-details">
               <span><mat-icon>calendar_today</mat-icon>{{ formatDate(r.date) }}</span>
-              <span><mat-icon>schedule</mat-icon>{{ r.startTime.slice(0, 5) }} - {{ r.endTime.slice(0, 5) }}</span>
+              <span><mat-icon>schedule</mat-icon>{{ formatTime(r.startTime) }} - {{ formatTime(r.endTime) }}</span>
               <span><mat-icon>people</mat-icon>{{ r.attendees }} 人</span>
             </div>
           </div>
@@ -139,7 +139,7 @@
         @if (nextReservation) {
         <strong class="next-name">{{ nextReservation.facilityName }}</strong>
         <span class="next-meta">{{ formatDate(nextReservation.date) }}</span>
-        <span class="next-meta">{{ nextReservation.startTime.slice(0, 5) }} - {{ nextReservation.endTime.slice(0, 5) }}</span>
+        <span class="next-meta">{{ formatTime(nextReservation.startTime) }} - {{ formatTime(nextReservation.endTime) }}</span>
         } @else {
         <p class="sidebar-empty">目前沒有即將到來的預約</p>
         }
@@ -188,7 +188,7 @@
             </div>
             <div class="res-details">
               <span><mat-icon>calendar_today</mat-icon>{{ formatDate(r.date) }}</span>
-              <span><mat-icon>schedule</mat-icon>{{ r.startTime.slice(0, 5) }} - {{ r.endTime.slice(0, 5) }}</span>
+              <span><mat-icon>schedule</mat-icon>{{ formatTime(r.startTime) }} - {{ formatTime(r.endTime) }}</span>
               <span><mat-icon>people</mat-icon>{{ r.attendees }} 人</span>
             </div>
           </div>

@@ -1,3 +1,4 @@
+import { SendBillComponent } from './../../../dialog/send-bill/send-bill.component';
 import { Component, inject, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
@@ -12,7 +13,7 @@ import { VisitorServiceService } from '../../../@service/visitor-service.service
 import { BillsdialogComponent } from '../../../dialog/billsdialog/billsdialog.component';
 
 import { MatButtonModule } from '@angular/material/button';
-import { SendBill } from '../../../dialog/send-bill/send-bill.component';
+
 import { HttpService } from '../../../@service/http.service';
 
 
@@ -44,7 +45,7 @@ export class BillComponent implements OnInit {
   }
 
   openSendAllBillsDialog() {
-    const ref = this.dialog.open(SendBill, {
+    const ref = this.dialog.open(SendBillComponent, {
       width: 'min(760px, 92vw)',
       maxWidth: '92vw',
       maxHeight: '90vh',

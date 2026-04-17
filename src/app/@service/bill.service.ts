@@ -21,9 +21,26 @@ export class BillService {
    * 住戶取得自己的帳單
    */
   getMyBills() {
-    return this.http.get<Bill[]>(`${this.apiUrl}/user/bills`).pipe(
-      tap(data => this.billsSubject.next(data))
+    return this.http.get<Bill[]>(`${this.apiUrl}/bills/getMyBill`).pipe(
+      tap(data => {
+        const mappedData = data.map(bill => ({
+          ...bill,
+          status: this.mapStatus(bill.status)
+        }));
+        this.billsSubject.next(mappedData);
+      })
     );
+  }
+
+  private mapStatus(status: string): any {
+    if (status === 'UNPAID') return '待繳';
+    if (status === 'PAID') return '已繳';
+    if (status === 'OVERDUE') return '逾期';
+    return status;
+  }
+
+  getPendingCount(bills: any[]): number {
+    return bills.filter(b => b.status === '待繳' || b.status === 'UNPAID').length;
   }
 
   /**

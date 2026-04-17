@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UpdateFacility } from './update-facility';
+import { UpdateFacility } from './update-facility.component';
 
 describe('UpdateFacility', () => {
   let component: UpdateFacility;

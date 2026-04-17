@@ -7,8 +7,12 @@ import { Subject, takeUntil } from 'rxjs';
 import { AnnouncementService } from '../../../@service/announcement.service';
 import { HttpService } from '../../../@service/http.service';
 import { PackageService } from '../../../@service/package.service';
-import { PackageStatus } from '../../../interface/enum';
-import { Announcement, Package, User } from '../../../interface/interface';
+import { BillService } from '../../../@service/bill.service';
+import { RepairService } from '../../../@service/repair.service';
+import { ReservationService } from '../../../@service/reservation.service';
+import { StatisticsService } from '../../../@service/statistics.service';
+import { BillStatus, PackageStatus, RepairStatus, ReservationStatus } from '../../../interface/enum';
+import { Announcement, Bill, Package, RepairRequest, ResReservation, User } from '../../../interface/interface';
 
 @Component({
   selector: 'app-resident-dashboard',
@@ -23,12 +27,11 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
   getUserUrl = '/user/me';
   private $destroy = new Subject<void>();
 
-  // TODO: 接後端統計 API 後，這裡可以改成動態資料。
   stats = [
-    { label: '未繳帳單', value: '2', icon: 'receipt_long', color: '#B8935A', bg: 'rgba(184,147,90,0.12)', route: '/resident/bill' },
-    { label: '待領包裹', value: '3', icon: 'inventory_2', color: '#7BA89E', bg: 'rgba(123,168,158,0.12)', route: '/resident/package' },
-    { label: '報修進度', value: '1', icon: 'build', color: '#C47A5A', bg: 'rgba(196,122,90,0.12)', route: '/resident/repair' },
-    { label: '設施預約', value: '1', icon: 'meeting_room', color: '#7B7FBA', bg: 'rgba(123,127,186,0.12)', route: '/resident/facility' }
+    { label: '未繳帳單', value: '0', icon: 'receipt_long', color: '#B8935A', bg: 'rgba(184,147,90,0.12)', route: '/resident/bill' },
+    { label: '待領包裹', value: '0', icon: 'inventory_2', color: '#7BA89E', bg: 'rgba(123,168,158,0.12)', route: '/resident/package' },
+    { label: '報修進度', value: '0', icon: 'build', color: '#C47A5A', bg: 'rgba(196,122,90,0.12)', route: '/resident/repair' },
+    { label: '設施預約', value: '0', icon: 'meeting_room', color: '#7B7FBA', bg: 'rgba(123,127,186,0.12)', route: '/resident/facility' }
   ];
 
   announcements: Array<{ title: string; date: string; category: string }> = [];
@@ -44,13 +47,20 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
     private router: Router,
     private http: HttpService,
     private announcementService: AnnouncementService,
-    private packageService: PackageService
+    private packageService: PackageService,
+    private billService: BillService,
+    private repairService: RepairService,
+    private reservationService: ReservationService,
+    private statisticsService: StatisticsService
   ) {}
 
   ngOnInit(): void {
     this.loadUserInfo();
     this.loadAnnouncements();
     this.loadPackages();
+    this.loadBillStats();
+    this.loadRepairStats();
+    this.loadReservationStats();
   }
 
   private loadUserInfo(): void {
@@ -58,6 +68,10 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
       next: (user) => {
         this.userName = user.fullName || user.userName || '住戶';
         this.unitNumber = user.unitNumber || '';
+        // After user info is loaded, we can fetch user-specific reservations
+        if (user.userId) {
+          this.reservationService.getUserReservations(user.userId).pipe(takeUntil(this.$destroy)).subscribe();
+        }
       },
       error: () => {
         this.loadUserInfoFromToken();
@@ -77,6 +91,9 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
       const payload = JSON.parse(atob(token.split('.')[1]));
       this.userName = payload.fullName || payload.sub || '住戶';
       this.unitNumber = payload.unitNumber || '';
+      if (payload.userId) {
+        this.reservationService.getUserReservations(Number(payload.userId)).pipe(takeUntil(this.$destroy)).subscribe();
+      }
     } catch {
       this.userName = '住戶';
       this.unitNumber = '';
@@ -115,6 +132,35 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
           arrivedAt: this.formatPackageDate(pkg.arrivedAt),
           trackingNumber: pkg.trackingNumber
         }));
+      });
+  }
+
+  private loadBillStats(): void {
+    this.billService.getMyBills().pipe(takeUntil(this.$destroy)).subscribe(); // Ensure bills are fetched
+    this.billService.bills$
+      .pipe(takeUntil(this.$destroy))
+      .subscribe((bills: any[]) => {
+        // 使用和帳單頁面相同的篩選條件：status === '待繳'
+        const count = bills.filter(bill => bill.status === '待繳' || bill.status === 'UNPAID').length;
+        this.stats[0].value = count.toString();
+      });
+  }
+
+  private loadRepairStats(): void {
+    this.repairService.getUserAll().pipe(takeUntil(this.$destroy)).subscribe(); // Ensure repairs are fetched
+    this.repairService.userRepairs$
+      .pipe(takeUntil(this.$destroy))
+      .subscribe((repairs: RepairRequest[]) => {
+        const pendingRepairs = repairs.filter(repair => repair.status === RepairStatus.PENDING);
+        this.stats[2].value = pendingRepairs.length.toString();
+      });
+  }
+
+  private loadReservationStats(): void {
+    this.reservationService.getConfirmedReservationCount()
+      .pipe(takeUntil(this.$destroy))
+      .subscribe((count: number) => {
+        this.stats[3].value = count.toString();
       });
   }
 
