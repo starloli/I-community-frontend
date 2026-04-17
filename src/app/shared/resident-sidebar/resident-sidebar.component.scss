@@ -13,6 +13,7 @@ $transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   overflow: visible;
   flex-shrink: 0;
   position: relative;
+  border-radius: 15px;
 
   &.collapsed {
     width: $sidebar-collapsed;
@@ -21,8 +22,8 @@ $transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     .user-detail     { display: none; }
     .nav-label       { display: none; }
 
-    .nav-item { 
-      justify-content: center; 
+    .nav-item {
+      justify-content: center;
       padding: 12px 0;
       gap: 0;
       .nav-label { display: none; }
@@ -32,9 +33,9 @@ $transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       padding: 20px 0;
       gap: 0;
     }
-    .sidebar-footer { 
-      justify-content: center; 
-      padding: 12px 0; 
+    .sidebar-footer {
+      justify-content: center;
+      padding: 12px 0;
       margin: 16px 8px;
       gap: 0;
       .nav-label { display: none; }
@@ -130,7 +131,7 @@ $transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       margin: 0;
     }
 
-    .edit-button, 
+    .edit-button,
     .user-detail {
       display: none;
     }

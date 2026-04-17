@@ -104,9 +104,6 @@ export class SendBillComponent {
       }
       else if (ans.message === '本月還沒有賬單') {
         this.http.getApi("/bills/getAbnormalUnits").subscribe((res: any) => {
-console.log("00000");
-
-
           this.AbnormalUnits = res;
           console.log(this.AbnormalUnits);
           if (this.AbnormalUnits.length > 0) {

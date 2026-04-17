@@ -54,7 +54,8 @@
   flex: 1;
 }
 
-.input-item label, .field label {
+.input-item label,
+.field label {
   display: block;
   font-size: 0.85rem;
   color: #606266;
@@ -119,34 +120,12 @@
   background: #66b1ff;
 }
 
-
 .btn-disabled {
   background-color: #dcdfe6 !important; /* 淺灰色 */
   color: #a8abb2 !important;
-  cursor: not-allowed !important;      /* 鼠標變成禁制符號 */
+  cursor: not-allowed !important; /* 鼠標變成禁制符號 */
   border: none;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //page3
 /* 異常頁面專屬樣式 */
