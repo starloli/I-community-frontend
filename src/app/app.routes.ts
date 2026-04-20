@@ -25,10 +25,10 @@ import { ResidentRepairComponent } from './pages/@resident/repair/repair.compone
 import { VisitorComponent as ResidentVisitorComponent } from './pages/@resident/visitor/visitor.component';
 
 import { VisitorDialogComponent } from './dialog/visitor-dialog/visitor-dialog.component';
-import { ResetPassword } from './pages/reset-password/reset-password';
-import { ForgetPassword } from './pages/forget-password/forget-password';
-import { ModifyResident } from './pages/@admin/modify-resident/modify-resident';
-import { UserInfo } from './pages/@admin/user-info/user-info';
+import { ResetPassword } from './pages/reset-password/reset-password.component';
+import { ForgetPassword } from './pages/forget-password/forget-password.component';
+import { ModifyResident } from './pages/@admin/modify-resident/modify-resident.component';
+import { UserInfo } from './pages/@admin/user-info/user-info.component';
 import { VisitorComponent } from './pages/@admin/visitor/admin-visitor.component';
 import { Test } from './test/test';
 

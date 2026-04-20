@@ -9,8 +9,8 @@ import { UserRole } from '../../../interface/enum';
 @Component({
   selector: 'app-user-info',
   imports: [FormsModule],
-  templateUrl: './user-info.html',
-  styleUrl: './user-info.scss',
+  templateUrl: './user-info.component.html',
+  styleUrl: './user-info.component.scss',
 })
 export class UserInfo implements OnInit, OnDestroy {
 

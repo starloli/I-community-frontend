@@ -6,8 +6,8 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 @Component({
   selector: 'app-forget-password',
   imports: [FormsModule, ReactiveFormsModule],
-  templateUrl: './forget-password.html',
-  styleUrl: './forget-password.scss',
+  templateUrl: './forget-password.component.html',
+  styleUrl: './forget-password.component.scss',
 })
 export class ForgetPassword {
 

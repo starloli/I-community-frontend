@@ -1,5 +1,5 @@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ApiService } from './../../@service/api.service';
+import { ApiService } from '../../@service/api.service';
 import { Component } from '@angular/core';
 
 import { MatDialogRef } from '@angular/material/dialog';
@@ -8,8 +8,8 @@ import { Router, RouterLink } from "@angular/router";
 @Component({
   selector: 'app-send-bill',
   imports: [FormsModule, ReactiveFormsModule, RouterLink,],
-  templateUrl: './send-bill.html',
-  styleUrl: './send-bill.scss',
+  templateUrl: './send-bill.component.html',
+  styleUrl: './send-bill.component.scss',
 })
 export class SendBill {
 

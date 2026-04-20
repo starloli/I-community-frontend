@@ -7,8 +7,8 @@ import { User, UserResponse } from '../../../interface/interface';
 @Component({
   selector: 'app-modify-resident',
   imports: [],
-  templateUrl: './modify-resident.html',
-  styleUrl: './modify-resident.scss',
+  templateUrl: './modify-resident.component.html',
+  styleUrl: './modify-resident.component.scss',
 })
 export class ModifyResident implements OnInit, OnDestroy {
 
