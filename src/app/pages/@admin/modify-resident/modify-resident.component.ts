@@ -5,11 +5,9 @@ import { Subject, takeUntil } from 'rxjs'
 import { HttpService } from '../../../@service/http.service'
 import { ResidentStateService } from '../../../@service/resident-state.service'
 import { EditResidentComponent } from '../../../dialog/edit-resident/edit-resident.component'
-import { User, UserResponse } from '../../../interface/interface'
+import { UserResponse } from '../../../interface/interface'
 import { UserRole } from '../../../interface/enum'
-
-// 由於我們將使用自訂分頁，所以不再需要 MatPaginator
-// 同時，我們需要 CommonModule 來使用 @for, @if 等
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { MatCardModule } from '@angular/material/card'
@@ -18,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { EditUserComponent } from '../../../dialog/edit-user/edit-user.component'
 
 type PaginationItem = number | '...';
 
@@ -33,6 +32,7 @@ type PaginationItem = number | '...';
     MatFormFieldModule,
     MatInputModule,
     MatProgressSpinnerModule,
+    MatSlideToggleModule,
   ],
   templateUrl: './modify-resident.component.html',
   styleUrls: ['./modify-resident.component.scss'],
@@ -46,7 +46,7 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
 
   // 搜尋與分頁
   searchKeyword = ''
-  selectedFilter: 'ALL' | 'COMPLETE' | 'INCOMPLETE' = 'ALL'
+  selectedFilter: 'ALL' | 'COMPLETE' | 'INCOMPLETE' | 'DISACTIVED' = 'ALL'
   currentPage = 1
   pageSize = 6 // 每頁顯示 6 個卡片
   isLoading = true
@@ -62,7 +62,7 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
     private residentState: ResidentStateService
   ) { }
 
-  // TODO:待實作超級管理員修改所有住戶資料功能，包含修改普通管理員
+  // TODO: 篩選停用帳戶
 
   ngOnInit(): void {
     this.getUser()
@@ -81,12 +81,9 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
     }
     this.http.getApi<UserResponse[]>(getUrl).pipe(takeUntil(this.$destroy)).subscribe({
       next: (res) => {
-        if (this.allUsers.length === 0 && res.length > 0) {
-          this.allUsers = res
-        }
-        console.log(res)
-
-        this.isLoading = false
+        this.allUsers = res;
+        console.log(res);
+        this.isLoading = false;
         // 即時檢查並更新 Sidebar 的紅點狀態
         const hasIncomplete = this.allUsers.some(user => user.squareFootage === null || user.squareFootage === 0)
         this.residentState.setIncompleteStatus(hasIncomplete)
@@ -232,21 +229,33 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
   // ---- 原有方法 ----
 
   editUser(user: UserResponse): void {
-    const dialogRef = this.dialog.open(EditResidentComponent, {
-      width: '520px',
-      data: { ...user }
-    })
-
-    dialogRef.afterClosed().pipe(takeUntil(this.$destroy)).subscribe(result => {
-      if (result) {
-        // 注意：這裡的 result 應該是完整的 user 物件
-        this.updateUser(result)
-      }
-    })
+    if (this.userRole === UserRole.ADMIN) {
+      const dialogRef = this.dialog.open(EditResidentComponent, {
+        width: '520px',
+        data: { ...user }
+      })
+      dialogRef.afterClosed().pipe(takeUntil(this.$destroy)).subscribe(result => {
+        if (result) {
+          // 注意：這裡的 result 應該是完整的 user 物件
+          this.updateUser(result)
+        }
+      })
+    } else if (this.userRole === UserRole.SUPER_ADMIN) {
+      const dialogRef = this.dialog.open(EditUserComponent, {
+        width: '520px',
+        data: { ...user }
+      })
+      dialogRef.afterClosed().pipe(takeUntil(this.$destroy)).subscribe(result => {
+        if (result) {
+          // 注意：這裡的 result 應該是完整的 user 物件
+          this.updateUser(result)
+        }
+      })
+    }
   }
 
   updateUser(user: UserResponse): void {
-    this.http.putApi(this.putadminUrl, user).pipe(takeUntil(this.$destroy)).subscribe({
+    this.http.putApi(this.userRole === UserRole.ADMIN ? this.putadminUrl : this.superAdminUrl, user).pipe(takeUntil(this.$destroy)).subscribe({
       next: () => {
         this.snackBar.open('使用者資料更新成功', '關閉', { duration: 2000 })
         this.getUser() // 重新載入資料

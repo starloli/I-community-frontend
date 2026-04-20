@@ -42,6 +42,7 @@
           <span class="count-badge">{{ incompleteCount }}</span>
         }
       </button>
+      <button class="filter-btn" [class.active]="selectedFilter === 'COMPLETE'" (click)="selectedFilter = 'DISACTIVED'; onFilterChange()">已停用</button>
     </div>
 
     <div class="search-box-wrapper">

@@ -1,11 +1,64 @@
-import { Component } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core'
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
+import { Subject } from 'rxjs'
+import { UserResponse } from '../../interface/interface'
+import { FormsModule } from '@angular/forms'
+import { MatFormFieldModule } from '@angular/material/form-field'
+import { MatIconModule } from '@angular/material/icon'
+import { MatInputModule } from '@angular/material/input'
+import { UserRole } from '../../interface/enum'
+import { MatOptionModule } from '@angular/material/core'
+import { MatSelectModule } from '@angular/material/select'
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'
 
 @Component({
   selector: 'app-edit-user',
-  imports: [],
+  imports: [
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatOptionModule,
+    MatSelectModule,
+    MatSlideToggleModule
+  ],
+  standalone: true,
   templateUrl: './edit-user.component.html',
   styleUrl: './edit-user.component.scss',
 })
-export class EditUserComponent {
+export class EditUserComponent implements OnInit, OnDestroy {
 
+  constructor(
+    private dialog: MatDialogRef<EditUserComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: UserResponse,
+  ) { }
+
+  user!: UserResponse
+  roles = [UserRole.ADMIN, UserRole.RESIDENT]
+
+  private $destroy = new Subject<void>()
+
+  returnUser(user: UserResponse): void {
+    // console.log(user);
+    this.dialog.close(user)
+  }
+
+  ngOnInit(): void {
+
+    console.log(this.data)
+
+    this.user = { ...this.data }
+
+    // 如果坪數、機車位、汽車位沒有值，則預設為 0
+    this.user.squareFootage = this.user.squareFootage || 0
+    this.user.motorParkingSpace = this.user.motorParkingSpace || 0
+    this.user.carParkingSpace = this.user.carParkingSpace || 0
+
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next()
+    this.$destroy.complete()
+  }
 }
+
