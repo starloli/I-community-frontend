@@ -27,7 +27,6 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
   recentVisitors: Array<{ name: string; unit: string; time: string; status: string }> = [];
   private $destroy = new Subject<void>();
 
-  // TODO: 接後端統計 API 後，這裡可以改成動態資料。
   stats = [
     { label: '未繳帳單', value: '載入中...', icon: 'receipt_long', color: '#B8935A', bg: 'rgba(184,147,90,0.12)', route: '/resident/bill' },
     { label: '待領包裹', value: '載入中...', icon: 'inventory_2', color: '#7BA89E', bg: 'rgba(123,168,158,0.12)', route: '/resident/package' },

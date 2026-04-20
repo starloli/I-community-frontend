@@ -37,7 +37,7 @@ export const routes: Routes = [
   { path: 'visitorDialog', component: VisitorDialogComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'forget-password', component: ForgetPasswordComponent },
-  {path :'test', component: Test},
+  { path: 'test', component: Test },
   {
     path: 'admin',
     component: LayoutComponent,
