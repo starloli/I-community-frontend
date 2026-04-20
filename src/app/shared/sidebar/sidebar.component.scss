@@ -198,12 +198,31 @@ $transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     box-shadow 0.2s ease;
   white-space: nowrap;
 
+  .icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
   mat-icon {
     font-size: 22px;
     width: 22px;
     height: 22px;
-    flex-shrink: 0;
     transition: color 0.25s ease;
+  }
+
+  .notification-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #ff4d4f;
+    border-radius: 50%;
+    margin-left: auto;
+    box-shadow: 0 0 8px rgba(255, 77, 79, 0.6);
+    animation: pulse-red 1.5s infinite;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
   }
 
   &:hover {
@@ -222,6 +241,42 @@ $transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.14);
 
     mat-icon { color: #ffffff; }
+  }
+}
+
+// ===== Sidebar 收合時的紅點處理 =====
+.sidebar.collapsed {
+  .nav-item {
+    position: relative;
+    
+    .notification-dot {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      margin-left: 0;
+      border: 2px solid #fff;
+      width: 10px;
+      height: 10px;
+    }
+    
+    &:hover, &.active {
+      .notification-dot { border-color: var(--nav-item-color); }
+    }
+  }
+}
+
+@keyframes pulse-red {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 77, 79, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(255, 77, 79, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 77, 79, 0);
   }
 }
 

@@ -8,7 +8,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { HttpService } from '../../../@service/http.service';
 import { Facility } from '../../../interface/interface';
 import { RegistFacilityComponent } from '../../../dialog/regist-facility/regist-facility.component';
-import { UpdateFacility } from '../../../dialog/update-facility/update-facility';
+import { UpdateFacilityComponent } from '../../../dialog/update-facility/update-facility.component';
+import { FacilityConfigComponent } from '../../../dialog/facility-config/facility-config.component';
 
 @Component({
   selector: 'app-facility',
@@ -19,15 +20,97 @@ import { UpdateFacility } from '../../../dialog/update-facility/update-facility'
 })
 export class FacilityComponent implements OnInit, OnDestroy {
 
+  readonly Math = Math;
+
   constructor(private http: HttpService, private snackBar: MatSnackBar, private dialogRef: MatDialog) { }
 
   private destroy$ = new Subject<void>();
 
-  getUrl = "http://localhost:8083/user/facilities";
+  getUrl = "/user/facility";
+  deleteUrl = "/facility/delete-facility";
   facilities: Facility[] = [];
+  searchKeyword = '';
+  availabilityFilter: 'all' | 'available' | 'unavailable' = 'all';
+  reservationFilter: 'all' | 'reservable' | 'non-reservable' = 'all';
+  sortOption: 'open-time-asc' | 'open-time-desc' | 'capacity-desc' | 'capacity-asc' = 'open-time-asc';
+  currentPage = 1;
+  pageSize = 6;
+
+  get filteredFacilities(): Facility[] {
+    const keyword = this.searchKeyword.trim().toLowerCase();
+
+    return [...this.facilities]
+      .filter((facility) => {
+        const description = facility.description ?? '';
+        const matchesKeyword = !keyword ||
+          facility.name.toLowerCase().includes(keyword) ||
+          description.toLowerCase().includes(keyword);
+
+        const matchesAvailability =
+          this.availabilityFilter === 'all' ||
+          (this.availabilityFilter === 'available' && facility.isAvailable) ||
+          (this.availabilityFilter === 'unavailable' && !facility.isAvailable);
+
+        const matchesReservation =
+          this.reservationFilter === 'all' ||
+          (this.reservationFilter === 'reservable' && facility.isReservable) ||
+          (this.reservationFilter === 'non-reservable' && !facility.isReservable);
+
+        return matchesKeyword && matchesAvailability && matchesReservation;
+      })
+      .sort((a, b) => this.compareFacilities(a, b));
+  }
+
+  get hasActiveFilters(): boolean {
+    return !!this.searchKeyword.trim()
+      || this.availabilityFilter !== 'all'
+      || this.reservationFilter !== 'all'
+      || this.sortOption !== 'open-time-asc';
+  }
+
+  get totalPagesArray(): number[] {
+    const total = Math.ceil(this.filteredFacilities.length / this.pageSize);
+    return Array.from({ length: total }, (_, index) => index + 1);
+  }
+
+  get pagedFacilities(): Facility[] {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    return this.filteredFacilities.slice(startIndex, startIndex + this.pageSize);
+  }
 
   ngOnInit() {
     this.getFacility();
+  }
+
+  clearFilters(): void {
+    this.searchKeyword = '';
+    this.availabilityFilter = 'all';
+    this.reservationFilter = 'all';
+    this.sortOption = 'open-time-asc';
+    this.currentPage = 1;
+  }
+
+  onFilterChange(): void {
+    this.currentPage = 1;
+  }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPagesArray.length) {
+      return;
+    }
+
+    this.currentPage = page;
+  }
+
+  ensureValidCurrentPage(): void {
+    if (this.totalPagesArray.length === 0) {
+      this.currentPage = 1;
+      return;
+    }
+
+    if (this.currentPage > this.totalPagesArray.length) {
+      this.currentPage = this.totalPagesArray.length;
+    }
   }
 
   registFacility() {
@@ -39,8 +122,12 @@ export class FacilityComponent implements OnInit, OnDestroy {
     });
   }
 
+  config(){
+    this.dialogRef.open(FacilityConfigComponent);
+  }
+
   updateFacility(facility: Facility) {
-    const dialogRef = this.dialogRef.open(UpdateFacility, {
+    const dialogRef = this.dialogRef.open(UpdateFacilityComponent, {
       data: facility
     });
     dialogRef.afterClosed().subscribe({
@@ -62,7 +149,7 @@ export class FacilityComponent implements OnInit, OnDestroy {
 
   deleteFacility(facilityId: number) {
     if (confirm('確定要刪除這個設施嗎？\n此動作無法復原 且會刪除相關預約資料\n\n若要停用設施 請使用編輯功能')) {
-      this.http.deleteApi("http://localhost:8083/admin/delete-facility", facilityId).pipe(takeUntil(this.destroy$)).subscribe({
+      this.http.deleteApi(this.deleteUrl, facilityId).pipe(takeUntil(this.destroy$)).subscribe({
         next: res => {
           this.snackBar.open('刪除成功', '關閉', {
             duration: 2000,
@@ -94,7 +181,8 @@ export class FacilityComponent implements OnInit, OnDestroy {
             for (let r of res) {
               this.facilities.push(r);
             }
-            console.log(this.facilities);
+            this.ensureValidCurrentPage();
+            // console.log(this.facilities);
           } else {
             console.log("no data");
           }
@@ -108,6 +196,26 @@ export class FacilityComponent implements OnInit, OnDestroy {
           console.log(err);
         }
       })
+  }
+
+  compareFacilities(a: Facility, b: Facility): number {
+    switch (this.sortOption) {
+      case 'capacity-desc':
+        return b.capacity - a.capacity;
+      case 'capacity-asc':
+        return a.capacity - b.capacity;
+      case 'open-time-asc':
+        return this.timeToMinutes(a.openTime) - this.timeToMinutes(b.openTime);
+      case 'open-time-desc':
+        return this.timeToMinutes(b.openTime) - this.timeToMinutes(a.openTime);
+      default:
+        return this.timeToMinutes(a.openTime) - this.timeToMinutes(b.openTime);
+    }
+  }
+
+  timeToMinutes(time: string): number {
+    const [hours = '0', minutes = '0'] = time.split(':');
+    return Number(hours) * 60 + Number(minutes);
   }
 
   // ===== 目前選擇的設施 =====
@@ -167,6 +275,5 @@ export class FacilityComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 }
-
 
 

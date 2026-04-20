@@ -90,6 +90,7 @@ export interface Reservation {
   startTime: string,
   endTime: string,
   attendees: number,
+  isAvailable?: boolean,
   status?: ReservationStatus,
   createdAt?: string
 }
@@ -164,9 +165,9 @@ export interface UserResponse {
   phone: string,
   unitNumber: string,
   squareFootage: number,
-  motorParkingSpace: string,
-  carParkingSpace: string,
-  isActive: boolean,
+  motorParkingSpace: number,
+  carParkingSpace: number,
+  is_active: boolean,
 }
 
 export interface Res {

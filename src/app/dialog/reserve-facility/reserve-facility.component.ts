@@ -32,8 +32,8 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  postUrl = 'http://localhost:8083/user/reserve';
-  getUrl = 'http://localhost:8083/user/me';
+  postUrl = '/reservation';
+  getUrl = '/user/me';
   reservation: Reservation = {
     reservationId: 0,
     userId: 0,
@@ -101,7 +101,7 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
             horizontalPosition: 'center',
             verticalPosition: 'top'
           })
-          console.log(err.error.message);
+          console.log(err);
         }
       })
   }

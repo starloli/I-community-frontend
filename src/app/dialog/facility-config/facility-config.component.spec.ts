@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DeleteFacility } from './delete-facility';
+import { FacilityConfigComponent } from './facility-config.component';
 
-describe('DeleteFacility', () => {
-  let component: DeleteFacility;
-  let fixture: ComponentFixture<DeleteFacility>;
+describe('FacilityConfigComponent', () => {
+  let component: FacilityConfigComponent;
+  let fixture: ComponentFixture<FacilityConfigComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DeleteFacility]
+      imports: [FacilityConfigComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DeleteFacility);
+    fixture = TestBed.createComponent(FacilityConfigComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

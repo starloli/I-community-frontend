@@ -1,31 +1,30 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, tap, throwError } from 'rxjs';
 import { Package } from '../interface/interface';
 import { PackageStatus } from '../interface/enum';
+import { HttpService } from './http.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PackageService {
 
-  private apiUrl = 'http://localhost:8083';
-  private userUrl = 'http://localhost:8083/user/package'
+  private userUrl = '/user/package'
   private packagesSubject = new BehaviorSubject<Package[]>([]);
   packages$ = this.packagesSubject.asObservable();
   private userPackagesSubject = new BehaviorSubject<Package[]>([]);
   userPackages$ = this.userPackagesSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpService) {}
 
   getAll() {
-    return this.http.get<Package[]>(this.apiUrl + '/admin/package').pipe(
+    return this.http.getApi<Package[]>('/admin/package').pipe(
       tap(data => this.packagesSubject.next(data))
     );
   }
 
   getUserAll() {
-    return this.http.get<Package[]>(this.userUrl).pipe(
+    return this.http.getApi<Package[]>(this.userUrl).pipe(
       tap(data => this.userPackagesSubject.next(data))
     );
   }
@@ -49,10 +48,10 @@ export class PackageService {
     };
 
 
-    return this.http.post<any>(this.apiUrl + '/admin/package', adminPayload).pipe(
+    return this.http.postApi<any>('/admin/package', adminPayload).pipe(
       catchError((error) => {
         if (error.status === 404 || error.status === 405) {
-          return this.http.post<any>(this.apiUrl + '/package/create', createPayload);
+          return this.http.postApi<any>('/package/create', createPayload);
         }
 
         return throwError(() => error);
@@ -68,23 +67,8 @@ export class PackageService {
     );
   }
 
-  notifyById(id: number) {
-    return this.http.put<any>(`${this.apiUrl + '/admin/package'}/${id}/notify`, null)
-        .subscribe(() => {
-          const current = this.packagesSubject.value;
-
-          const updated = current.map(pkg =>
-            pkg.id === id
-              ? { ...pkg, isNotified: true }
-              : pkg
-          );
-
-          this.packagesSubject.next(updated);
-        });
-  }
-
   pickupById(id: number, pickupAt: string) {
-    return this.http.put<any>(`${this.apiUrl + '/admin/package'}/${id}/pickup`, pickupAt)
+    return this.http.putApi<any>(`${'/admin/package'}/${id}/pickup`, pickupAt)
         .subscribe(() => {
           const current = this.packagesSubject.value;
 

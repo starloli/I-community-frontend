@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,12 +8,14 @@ import { AuthService } from '../../../@service/auth.service';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { RouterLink } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ApiService } from '../../../@service/api.service';
 import { VisitorServiceService } from '../../../@service/visitor-service.service';
 import { BillsdialogComponent } from '../../../dialog/billsdialog/billsdialog.component';
 
 import { MatButtonModule } from '@angular/material/button';
-import { SendBill } from '../../../dialog/send-bill/send-bill.component';
+import { SendBillComponent } from '../../../dialog/send-bill/send-bill.component';
+import { HttpService } from '../../../@service/http.service';
+import { UserResponse } from '../../../interface/interface';
+import { Subject, takeUntil } from 'rxjs';
 
 
 
@@ -24,11 +26,13 @@ import { SendBill } from '../../../dialog/send-bill/send-bill.component';
   templateUrl: './bill.component.html',
   styleUrl: './bill.component.scss'
 })
-export class BillComponent implements OnInit {
-  constructor(private http: ApiService, private service: VisitorServiceService, private auth: AuthService) { }
+export class BillComponent implements OnInit, OnDestroy {
+  constructor(private http: HttpService, private service: VisitorServiceService, private auth: AuthService) { }
 
   adminBills: any[] = [];
   readonly dialog = inject(MatDialog);
+
+  private $destroy = new Subject<void>();
 
   openDialog() {
     const ref = this.dialog.open(BillsdialogComponent, {
@@ -44,8 +48,10 @@ export class BillComponent implements OnInit {
   }
 
   openSendAllBillsDialog() {
-    const ref = this.dialog.open(SendBill, {
-      width: '500px',
+    const ref = this.dialog.open(SendBillComponent, {
+      width: 'min(760px, 92vw)',
+      maxWidth: '92vw',
+      maxHeight: '90vh',
       disableClose: false // 點擊背景是否可以關閉
     });
     ref.afterClosed().subscribe(result => {
@@ -167,6 +173,20 @@ export class BillComponent implements OnInit {
     return [...new Set(this.adminBills.map(b => b.billingMonth))].sort().reverse();
   }
 
+  getUnqualifiedResidents(): string[] {
+    let unqualifiedResidents: string[] = [];
+    this.http.getApi<UserResponse[]>("/modify/getUnqualifiedResidents").pipe(takeUntil(this.$destroy)).subscribe({
+      next: (res) => {
+        unqualifiedResidents = res.map(r => r.unitNumber);
+        console.log(unqualifiedResidents);
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+    return unqualifiedResidents;
+  }
+
   onAdminFilterChange(): void { this.adminCurrentPage = 1; }
 
   goToAdminPage(page: number): void {
@@ -194,7 +214,10 @@ export class BillComponent implements OnInit {
     this.openSendAllBillsDialog();
   }
 
-
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
+  }
 }
 
 

@@ -1,14 +1,16 @@
 ﻿import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
+
 import { AnnouncementService } from '../../../@service/announcement.service';
-import { ApiService } from '../../../@service/api.service';
 import { RepairService } from '../../../@service/repair.service';
 import { StatisticsService } from '../../../@service/statistics.service';
 import { PackageStatus, RepairStatus } from '../../../interface/enum';
 import { Announcement } from '../../../interface/interface';
 import { PackageService } from './../../../@service/package.service';
 import { Subject, takeUntil } from 'rxjs';
+import { HttpService } from '../../../@service/http.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,11 +21,20 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   // 卡片順序有固定意義，因為各個載入方法會依索引更新對應數值。
+  userName = '';
+  getUrl = '/user/me';
   stats = [
-    { label: '社區住戶總數', value: '載入中...', icon: 'people', color: '#3f51b5', bg: '#e8eaf6' },
-    { label: '今日訪客登記', value: '載入中...', icon: 'person_add', color: '#0288d1', bg: '#e1f5fe' },
-    { label: '待處理報修', value: '載入中...', icon: 'build', color: '#f57c00', bg: '#fff3e0' },
-    { label: '待領取包裹', value: '載入中...', icon: 'inventory_2', color: '#388e3c', bg: '#e8f5e9' },
+    {
+      label: '社區住戶總數',
+      value: '載入中...',
+      icon: 'people',
+      color: '#3f51b5',
+      bg: '#e8eaf6',
+      // route:
+    },
+    { label: '今日訪客登記', value: '載入中...', icon: 'person_add', color: '#0288d1', bg: '#e1f5fe', route: '/admin/visitor' },
+    { label: '待處理報修', value: '載入中...', icon: 'build', color: '#f57c00', bg: '#fff3e0', route: '/admin/repair' },
+    { label: '待領取包裹', value: '載入中...', icon: 'inventory_2', color: '#388e3c', bg: '#e8f5e9', route: '/admin/package' },
   ];
 
   announcements: Announcement[] = [];
@@ -31,11 +42,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private $destroy = new Subject<void>();
 
   constructor(
-    private apiService: ApiService,
     private announcementService: AnnouncementService,
     private statisticsService: StatisticsService,
     private packageService: PackageService,
-    private repairService: RepairService
+    private repairService: RepairService,
+    private router: Router,
+    private http: HttpService
   ) { }
 
   ngOnInit(): void {
@@ -45,13 +57,39 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.loadPackages();
     this.loadUserCount();
     this.loadPendingRepairs();
+    this.loadUserInfo();
   }
 
-  private loadVisitors(): void {
-    this.apiService.getApi('/visitor/getVisitor').pipe(takeUntil(this.$destroy)).subscribe({
+  private loadUserInfo(): void {
+    this.http.getApi(this.getUrl).pipe(takeUntil(this.$destroy)).subscribe({
       next: (res: any) => {
+        this.userName = res.fullName || res.userName || '管理員';
+      },
+      error: () => {
+        this.loadUserInfoFromToken();
+      }
+    });
+  }
+
+  private loadUserInfoFromToken(): void {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.userName = '管理員';
+      return;
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      this.userName = payload.fullName || payload.sub || '管理員';
+    } catch {
+      this.userName = '管理員';
+    }
+  }
 
 
+  private loadVisitors(): void {
+    this.http.getApi('/visitor/getVisitor').pipe(takeUntil(this.$destroy)).subscribe({
+      next: (res: any) => {
         const visitors = Array.isArray(res) ? res : res?.data ?? [];
 
         const todayCount = visitors.filter((visitor: any) => this.isToday(visitor?.checkInTime)).length;
@@ -99,15 +137,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private loadUserCount(): void {
-    this.statisticsService.getUserNum().pipe(takeUntil(this.$destroy)).subscribe(
-      (res: number) => {
+    this.statisticsService.getUserNum().pipe(takeUntil(this.$destroy)).subscribe({
+      next: (res: number) => {
         this.stats[0].value = res.toString();
       },
-      (error) => {
+      error: (error) => {
         console.error('取得住戶總數失敗:', error);
         this.stats[0].value = 'N/A';
       }
-    );
+    });
   }
 
   private loadPendingRepairs(): void {
@@ -165,5 +203,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  navigateTo(route?: string): void {
+    if (!route) {
+      return;
+    }
+
+    this.router.navigate([route]);
   }
 }

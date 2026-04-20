@@ -1,38 +1,98 @@
-@if (user) {
-<p>使用者名稱：{{user.userName}}</p>
-<p>姓名：{{user.fullName}}</p>
-<p>電子信箱：{{user.email}}</p>
-<p>電話：{{user.phone}}</p>
-<!-- <p>管理者可編輯姓名、電子信箱、電話</p>
-<div class="a">
-  <span class="">姓名：</span>
-  <input type="text" placeholder="請輸入您的姓名" [(ngModel)]="updateUser.fullName" (keydown.space)="$event.preventDefault()"
-    [class.input-error]="updateUser.fu">
-  <span class="">Email：
-    @if(!isValidEmail(updateUser.email))
-    {
-    <span style="color: red;">Email格式不正確</span>
-    }
-  </span>
-  <input type="text" placeholder="請輸入您的Email" [(ngModel)]="updateUser.email" (keydown.space)="$event.preventDefault()"
-    [class.input-error]="!isValidEmail(updateUser.email)">
-  <span class="">電話：
-    @if(!isValidPhone(updateUser.phone))
-    {
-    <span style="color: red;">電話格式不正確 </span>
-    }
-  </span>
-  <input type="tel" inputmode="numeric" placeholder="請輸入您的電話" [(ngModel)]="updateUser.phone"
-    (keydown.space)="$event.preventDefault()" [class.input-error]="!isValidPhone(updateUser.phone)" pattern="[0-9]*">
-  <span class="">住址：</span>
-  <input type="text" placeholder="請輸入您的住址" [(ngModel)]="updateUser.unitNumber" (keydown.space)="$event.preventDefault()"
-    [class.input-error]="updateUser.unitNumber">
-  @if(isValid(updateUser))
-  {
-  <button class="" (click)="ModifyResident()">提交</button>
+<div class="profile-container">
+  <div class="page-header">
+    <div class="header-left">
+      <h1>個人資料</h1>
+      <button mat-icon-button color="primary" routerLink="/admin/user-info">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <span class="subtitle">管理您的帳號資訊與聯絡方式</span>
+    </div>
+  </div>
+
+  @if (user) {
+    <div class="profile-grid">
+      <!-- 左側：個人頭像與基本資訊摘要 -->
+      <div class="profile-card side-panel">
+        <div class="avatar-section">
+          <div class="large-avatar">
+            {{ user.fullName.charAt(0) }}
+          </div>
+          <h2 class="display-name">{{ user.fullName }}</h2>
+          <span class="user-role-badge">{{ userRole }}</span>
+        </div>
+
+        <div class="side-info-list">
+          <div class="side-info-item">
+            <mat-icon>account_circle</mat-icon>
+            <span>帳號：{{ user.userName }}</span>
+          </div>
+          <div class="side-info-item">
+            <mat-icon>home</mat-icon>
+            <span>戶號：{{ user.unitNumber }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右側：詳細資訊編輯表單 -->
+      <div class="profile-card main-form">
+        <div class="card-header">
+          <mat-icon>edit_note</mat-icon>
+          <h2>修改詳細資料</h2>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>真實姓名</label>
+            <div class="input-wrapper">
+              <mat-icon>person</mat-icon>
+              <input type="text" [(ngModel)]="updateUser.fullName" placeholder="請輸入姓名">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>電子信箱</label>
+            <div class="input-wrapper" [class.error]="!isValidEmail(updateUser.email)">
+              <mat-icon>email</mat-icon>
+              <input type="email" [(ngModel)]="updateUser.email" placeholder="example@mail.com">
+            </div>
+            @if(!isValidEmail(updateUser.email)) {
+              <span class="error-text">Email 格式不正確</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label>聯絡電話</label>
+            <div class="input-wrapper" [class.error]="!isValidPhone(updateUser.phone)">
+              <mat-icon>phone</mat-icon>
+              <input type="tel" [(ngModel)]="updateUser.phone" placeholder="09xxxxxxxx">
+            </div>
+            @if(!isValidPhone(updateUser.phone)) {
+              <span class="error-text">電話格式不正確</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label>居住戶號</label>
+            <div class="input-wrapper readonly">
+              <mat-icon>home</mat-icon>
+              <input type="text" [value]="user.unitNumber" readonly title="戶號不可自行修改">
+            </div>
+            <span class="hint-text">* 戶號如需變更請洽管理室</span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="submit-btn" [disabled]="!isValid(updateUser)" (click)="ModifyResident()">
+            <mat-icon>save</mat-icon>
+            儲存變更
+          </button>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="loading-shade">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span>載入資料中...</span>
+    </div>
   }
-  @else{
-  <button class="" (click)="No()">提交</button>
-  }
-</div> -->
-}
+</div>

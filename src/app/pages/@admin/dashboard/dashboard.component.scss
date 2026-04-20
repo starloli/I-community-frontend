@@ -56,6 +56,10 @@
       inset 0 1px 0 rgba(255, 255, 255, 1);
   }
 
+  &.clickable {
+    cursor: pointer;
+  }
+
   // 流光邊框特效
   &::before {
     content: '';
@@ -77,6 +81,10 @@
     animation: border-spin 3s linear infinite;
     pointer-events: none;
   }
+}
+
+.stat-card.clickable {
+  cursor: pointer;
 }
 
 @property --angle {
@@ -125,20 +133,24 @@
   gap: 4px;
   margin-top: 4px;
   justify-content: flex-end;
+  transform: translateY(var(--admin-dashboard-stat-shift, 0));
+  transition: transform 0.25s ease;
 }
 
 .stat-label {
-  font-size: 15px;
+  font-size: var(--admin-dashboard-stat-label-size, 15px);
   color: #888;
   font-weight: 500;
+  transition: font-size 0.25s ease;
 }
 
 // 統計數字放大顯示
 .stat-value {
-  font-size: 36px;
-  font-weight: 400;
+  font-size: var(--admin-dashboard-stat-value-size, 40px);
+  font-weight: 100;
   color: #1a1a2e;
   line-height: 1;
+  transition: font-size 0.25s ease;
 }
 
 
@@ -179,6 +191,19 @@
     color: #1a1a2e;
     margin: 0;
     line-height: 1;
+    flex: 1;
+  }
+
+  .card-more {
+    font-size: 14px;
+    color: #3f51b5;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 

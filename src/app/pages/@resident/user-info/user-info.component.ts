@@ -4,19 +4,23 @@ import { Subject, takeUntil } from 'rxjs';
 import { HttpService } from '../../../@service/http.service';
 import { UserResponse } from '../../../interface/interface';
 import { FormsModule } from "@angular/forms";
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-user-info',
-  imports: [FormsModule],
-  templateUrl: './user-info.html',
-  styleUrl: './user-info.scss',
+  standalone: true,
+  imports: [FormsModule, CommonModule, MatIconModule, MatProgressSpinnerModule],
+  templateUrl: './user-info.component.html',
+  styleUrl: './user-info.component.scss',
 })
-export class UserInfo implements OnInit, OnDestroy {
+export class UserInfoComponent implements OnInit, OnDestroy {
 
   constructor(private http: HttpService, private snackBar: MatSnackBar) { }
 
-  getUrl = "http://localhost:8083/user/me";
-  modifyUrl = "http://localhost:8083/modify/myself";
+  getUrl = "/user/me";
+  modifyUrl = "/modify/myself";
   user!: UserResponse;
   userEmail!: string;
   userPhone!: string;
@@ -42,7 +46,7 @@ export class UserInfo implements OnInit, OnDestroy {
 
   ModifyResident(): void {
     if (this.isValidEmail(this.userEmail) && this.isValidPhone(this.userPhone)) {
-      this.http.putApi(this.modifyUrl,{
+      this.http.putApi(this.modifyUrl, {
         email: this.userEmail,
         phone: this.userPhone
       }).pipe(takeUntil(this.$destroy)).subscribe({

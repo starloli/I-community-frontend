@@ -5,151 +5,145 @@
     <div class="header-left">
       <h1>帳單繳費</h1>
       <span class="subtitle">
-社區費用繳費歷史查詢
+        社區費用繳費歷史查詢
       </span>
     </div>
-         <div class="header-actions">
-      <button class="add-btn"  (click)="sendBills()">
-        <mat-icon>add</mat-icon> 新增賬單
+    <div class="header-actions">
+      <button class="add-btn" (click)="sendBills()">
+        <mat-icon>add</mat-icon> 新增帳單
       </button>
     </div>
+  </div>
+</div>
+
+
+<!-- 統計卡片 -->
+<div class="stats-row">
+  <div class="stat-card">
+    <mat-icon style="color:#B8935A;font-size:32px;width:32px;height:32px;">payments</mat-icon>
+    <div class="stat-info">
+      <span class="stat-value" style="color:#B8935A">{{ formatAmount(adminTotalAmount) }}</span>
+      <span class="stat-label">應收總額</span>
     </div>
   </div>
-
-
-    <!-- 統計卡片 -->
-    <div class="stats-row">
-      <div class="stat-card">
-        <mat-icon style="color:#B8935A;font-size:32px;width:32px;height:32px;">payments</mat-icon>
-        <div class="stat-info">
-          <span class="stat-value" style="color:#B8935A">{{ formatAmount(adminTotalAmount) }}</span>
-          <span class="stat-label">應收總額</span>
-        </div>
-      </div>
-      <div class="stat-card">
-        <mat-icon style="color:#388e3c;font-size:32px;width:32px;height:32px;">check_circle</mat-icon>
-        <div class="stat-info">
-          <span class="stat-value" style="color:#388e3c">{{ formatAmount(adminPaidAmount) }}</span>
-          <span class="stat-label">已收金額</span>
-        </div>
-      </div>
-      <div class="stat-card overdue-card" (click)="adminSelectedStatus = 'UNPAID'; onAdminFilterChange()">
-        <mat-icon style="color:#f57c00;font-size:32px;width:32px;height:32px;">pending_actions</mat-icon>
-        <div class="stat-info">
-          <span class="stat-value" style="color:#f57c00">{{ adminUnpaidCount }}</span>
-          <span class="stat-label">待繳件數</span>
-        </div>
-      </div>
-      <div class="stat-card overdue-card" (click)="adminSelectedStatus = 'OVERDUE'; onAdminFilterChange()">
-        <mat-icon style="color:#e53935;font-size:32px;width:32px;height:32px;">warning</mat-icon>
-        <div class="stat-info">
-          <span class="stat-value" style="color:#e53935">{{ adminOverdueCount }}</span>
-          <span class="stat-label">逾期件數</span>
-        </div>
-      </div>
+  <div class="stat-card">
+    <mat-icon style="color:#388e3c;font-size:32px;width:32px;height:32px;">check_circle</mat-icon>
+    <div class="stat-info">
+      <span class="stat-value" style="color:#388e3c">{{ formatAmount(adminPaidAmount) }}</span>
+      <span class="stat-label">已收金額</span>
     </div>
-
-    <!-- 篩選列 -->
-    <div class="filter-row admin-filter-row">
-      <!-- 狀態 pill 按鈕 -->
-      @for (s of statusOptions; track s.value) {
-        <button
-          class="filter-btn"
-          [class.active]="adminSelectedStatus === s.value"
-          (click)="adminSelectedStatus = s.value; onAdminFilterChange()"
-        >{{ s.label }}</button>
-      }
-
-
-
-      <!-- 月份下拉 -->
-      <select class="filter-select" [(ngModel)]="adminSelectedMonth" (ngModelChange)="onAdminFilterChange()">
-        <option value="">全部月份</option>
-        @for (m of uniqueMonths; track m) {
-          <option [value]="m">{{ m }}</option>
-        }
-      </select>
-
-      <!-- 搜尋框 -->
-      <div class="search-box">
-        <mat-icon>search</mat-icon>
-        <input
-          type="text"
-          placeholder="搜尋住戶、開始日期"
-          [(ngModel)]="adminSearchKeyword"
-          (ngModelChange)="onAdminFilterChange()"
-        />
-      </div>
+  </div>
+  <div class="stat-card overdue-card" (click)="adminSelectedStatus = 'UNPAID'; onAdminFilterChange()">
+    <mat-icon style="color:#f57c00;font-size:32px;width:32px;height:32px;">pending_actions</mat-icon>
+    <div class="stat-info">
+      <span class="stat-value" style="color:#f57c00">{{ adminUnpaidCount }}</span>
+      <span class="stat-label">待繳件數</span>
     </div>
-
-    <!-- 管理員帳單表格 -->
-    <div class="table-card">
-      <table>
-        <thead>
-          <tr>
-            <th>帳單月份</th>
-            <th>住戶門牌</th>
-
-            <th>標題</th>
-            <th>金額</th>
-            <th>截止日期</th>
-            <th>狀態</th>
-            <th>繳費時間</th>
-            <th>繳費方式</th>
-                   <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          @if (pagedAdminBills.length === 0) {
-            <tr>
-              <td colspan="9" class="empty-row">目前沒有符合條件的記錄</td>
-            </tr>
-          }
-          @for (bill of pagedAdminBills; track bill.id) {
-            <tr [class.row-overdue]="bill.status === '逾期'">
-              <td>{{ bill.billingMonth }}</td>
-              <td ><strong (click)="billsDialog(bill)" class="unitNumberCss">{{ bill.unitNumber }}</strong></td>
-
-              <td>
-                <div class="bill-type-cell">
-
-                  {{ bill?.title}}
-                </div>
-              </td>
-              <td class="amount">{{ bill.totalAmount | currency:'TWD':'symbol':'1.0-0'}}</td>
-              <td>{{ bill.dueDate }}</td>
-              <td>
-                @if (bill.status === 'PAID') {
-                  <span class="status-badge status-paid">已繳</span>
-                } @else if (bill.status === 'UNPAID') {
-                  <span class="status-badge status-pending">待繳</span>
-                } @else {
-                  <span class="status-badge status-overdue">逾期</span>
-                }
-              </td>
-              <td>{{ (bill.paidAtDate | date:'yyyy-MM-dd')|| '—' }}</td>
-              @if(bill.paymentMethod =='Cash'){
-                <td>現金</td>
-              }@else if(bill.paymentMethod =='Online'){
-                 <td>綫上支付</td>
-              }@else{<td>—</td>}
-              <!-- <td>{{ bill.paymentMethod || '—' }}</td> -->
-               @if(bill.status !== 'PAID'){
-                     <td><button class="unit-tag" (click)="userCashPay(bill)">現金付款</button></td>
-               }</tr>
-          }
-        </tbody>
-      </table>
+  </div>
+  <div class="stat-card overdue-card" (click)="adminSelectedStatus = 'OVERDUE'; onAdminFilterChange()">
+    <mat-icon style="color:#e53935;font-size:32px;width:32px;height:32px;">warning</mat-icon>
+    <div class="stat-info">
+      <span class="stat-value" style="color:#e53935">{{ adminOverdueCount }}</span>
+      <span class="stat-label">逾期件數</span>
     </div>
+  </div>
+</div>
 
-    <!-- 管理員分頁 -->
-    @if (adminTotalPages > 1) {
-      <div class="pagination">
-        <button class="page-btn" [disabled]="adminCurrentPage === 1" (click)="goToAdminPage(adminCurrentPage - 1)">‹</button>
-        @for (page of adminPageNumbers; track page) {
-          <button class="page-btn" [class.active]="page === adminCurrentPage" (click)="goToAdminPage(page)">{{ page }}</button>
-        }
-        <button class="page-btn" [disabled]="adminCurrentPage === adminTotalPages" (click)="goToAdminPage(adminCurrentPage + 1)">›</button>
-      </div>
+<!-- 篩選列 -->
+<div class="filter-row admin-filter-row">
+  <!-- 狀態 pill 按鈕 -->
+  @for (s of statusOptions; track s.value) {
+  <button class="filter-btn" [class.active]="adminSelectedStatus === s.value"
+    (click)="adminSelectedStatus = s.value; onAdminFilterChange()">{{ s.label }}</button>
+  }
+
+
+
+  <!-- 月份下拉 -->
+  <select class="filter-select" [(ngModel)]="adminSelectedMonth" (ngModelChange)="onAdminFilterChange()">
+    <option value="">全部月份</option>
+    @for (m of uniqueMonths; track m) {
+    <option [value]="m">{{ m }}</option>
     }
+  </select>
 
+  <!-- 搜尋框 -->
+  <div class="search-box">
+    <mat-icon>search</mat-icon>
+    <input type="text" placeholder="搜尋住戶、開始日期" [(ngModel)]="adminSearchKeyword"
+      (ngModelChange)="onAdminFilterChange()" />
+  </div>
+</div>
+
+<!-- 管理員帳單表格 -->
+<div class="table-card">
+  <table>
+    <thead>
+      <tr>
+        <th>帳單月份</th>
+        <th>住戶門牌</th>
+
+        <th>標題</th>
+        <th>金額</th>
+        <th>截止日期</th>
+        <th>狀態</th>
+        <th>繳費時間</th>
+        <th>繳費方式</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (pagedAdminBills.length === 0) {
+      <tr>
+        <td colspan="9" class="empty-row">目前沒有符合條件的記錄</td>
+      </tr>
+      }
+      @for (bill of pagedAdminBills; track bill.id) {
+      <tr [class.row-overdue]="bill.status === '逾期'">
+        <td>{{ bill.billingMonth }}</td>
+        <td><strong (click)="billsDialog(bill)" class="unitNumberCss">{{ bill.unitNumber }}</strong></td>
+
+        <td>
+          <div class="bill-type-cell">
+
+            {{ bill?.title}}
+          </div>
+        </td>
+        <td class="amount">{{ bill.totalAmount | currency:'TWD':'symbol':'1.0-0'}}</td>
+        <td>{{ bill.dueDate }}</td>
+        <td>
+          @if (bill.status === 'PAID') {
+          <span class="status-badge status-paid">已繳</span>
+          } @else if (bill.status === 'UNPAID') {
+          <span class="status-badge status-pending">待繳</span>
+          } @else {
+          <span class="status-badge status-overdue">逾期</span>
+          }
+        </td>
+        <td>{{ (bill.paidAtDate | date:'yyyy-MM-dd')|| '—' }}</td>
+        @if(bill.paymentMethod =='Cash'){
+        <td>現金</td>
+        }@else if(bill.paymentMethod =='Online'){
+        <td>線上支付</td>
+        }@else{<td>—</td>}
+        <!-- <td>{{ bill.paymentMethod || '—' }}</td> -->
+        @if(bill.status !== 'PAID'){
+        <td><button class="unit-tag" (click)="userCashPay(bill)">現金付款</button></td>
+        }
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<!-- 管理員分頁 -->
+@if (adminTotalPages > 1) {
+<div class="pagination">
+  <button class="page-btn" [disabled]="adminCurrentPage === 1" (click)="goToAdminPage(adminCurrentPage - 1)">‹</button>
+  @for (page of adminPageNumbers; track page) {
+  <button class="page-btn" [class.active]="page === adminCurrentPage" (click)="goToAdminPage(page)">{{ page }}</button>
+  }
+  <button class="page-btn" [disabled]="adminCurrentPage === adminTotalPages"
+    (click)="goToAdminPage(adminCurrentPage + 1)">›</button>
+</div>
+}

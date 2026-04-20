@@ -15,12 +15,15 @@
   </div>
 
   <!-- 住戶資訊 -->
-  <div class="user-info" [class.collapsed]="isCollapsed" routerLink="/resident/userInfo">
+  <div class="user-info" [class.collapsed]="isCollapsed">
     <div class="user-avatar">{{ userInitial }}</div>
     <div class="user-detail">
       <span class="user-name">{{ userName }}</span>
       <span class="user-unit">{{ unitNumber }}</span>
     </div>
+    <button class="edit-button" aria-label="編輯使用者資訊" routerLink="/resident/userInfo">
+      <mat-icon>edit</mat-icon>
+    </button>
   </div>
 
   <nav class="sidebar-nav">

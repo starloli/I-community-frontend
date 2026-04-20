@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject, takeUntil } from 'rxjs';
 
 import { HttpService } from '../../../@service/http.service';
-import { ReservationCalendar } from '../../../dialog/reservation-calendar/reservation-calendar.component';
+import { ReservationCalendarComponent } from '../../../dialog/reservation-calendar/reservation-calendar.component';
 import { ReservationStatus } from '../../../interface/enum';
 import { Facility, ResReservation, User } from '../../../interface/interface';
 
@@ -28,11 +28,11 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
   // 統一管理訂閱生命週期，避免頁面離開後還殘留 API 訂閱。
   private destroy$ = new Subject<void>();
 
-  getFacilityUrl = 'http://localhost:8083/user/facilities';
-  getReservationByUserIdUrl = 'http://localhost:8083/user/reservationsByUserId';
-  getReservationByFacilityIdUrl = 'http://localhost:8083/user/reservationsByFacilityId';
-  cancelReservationUrl = 'http://localhost:8083/user/cancelReservation';
-  getUserUrl = 'http://localhost:8083/user/me';
+  getFacilityUrl = '/user/facility';
+  getReservationByUserIdUrl = '/reservation/byUserId';
+  getReservationByFacilityIdUrl = '/reservation/byFacilityId';
+  cancelReservationUrl = '/reservation/cancel';
+  getUserUrl = '/user/me';
 
   // 目前流程只會用到當前登入者，因此這裡實際上只會放一筆 user 資料。
   user: User[] = [];
@@ -163,14 +163,19 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
   }
 
   // 設施列表是住戶頁面的主資料，進頁時先載入。
-  // 抓取住戶可看到的公共設施清單。
+  // 抓取住戶可看到的公共設施清單，並將未開放的設施排到最下方。
   getFacility(): void {
     this.http.getApi<Array<Facility>>(this.getFacilityUrl)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: res => {
           if (res) {
-            this.facilities = res;
+            // 將未開放的設施排到最下面
+            this.facilities = res.sort((a, b) => {
+              const aIsOpen = this.isFacilityOpen(a);
+              const bIsOpen = this.isFacilityOpen(b);
+              return (bIsOpen ? 1 : 0) - (aIsOpen ? 1 : 0);
+            });
           }
         },
         error: err => {
@@ -181,6 +186,15 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
           });
         }
       });
+  }
+
+  // 檢查設施目前是否在開放時間內
+  isFacilityOpen(facility: Facility): boolean {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const openHour = parseInt(facility.openTime.split(':')[0], 10);
+    const closeHour = parseInt(facility.closeTime.split(':')[0], 10);
+    return currentHour >= openHour && currentHour < closeHour;
   }
 
   // 依名稱給對應 icon，讓常見設施有更直覺的視覺辨識。
@@ -248,12 +262,14 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: res => {
-          const dialogRef = this.dialog.open(ReservationCalendar, {
+          const dialogRef = this.dialog.open(ReservationCalendarComponent, {
             data: {
               facility,
               reservations: res
             },
             disableClose: false,
+            width: '800px',
+            maxWidth: '95vw',
             panelClass: 'reservation-calendar-dialog'
           });
 

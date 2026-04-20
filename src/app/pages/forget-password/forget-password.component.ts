@@ -9,7 +9,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
   templateUrl: './forget-password.component.html',
   styleUrl: './forget-password.component.scss',
 })
-export class ForgetPassword {
+export class ForgetPasswordComponent {
 
   private fb = inject(FormBuilder);
 

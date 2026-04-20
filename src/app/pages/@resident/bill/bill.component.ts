@@ -5,8 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { VisitorServiceService } from '../../../@service/visitor-service.service';
-import { ApiService } from '../../../@service/api.service';
 import { BillsdialogComponent } from '../../../dialog/billsdialog/billsdialog.component';
+import { HttpService } from '../../../@service/http.service';
 
 @Component({
   selector: 'app-resident-bill',
@@ -16,7 +16,7 @@ import { BillsdialogComponent } from '../../../dialog/billsdialog/billsdialog.co
   styleUrl: './bill.component.scss'
 })
 export class BillComponent implements OnInit {
-  constructor(private http: ApiService, private service: VisitorServiceService) { }
+  constructor(private http: HttpService, private service: VisitorServiceService) { }
   readonly dialog = inject(MatDialog);
 
   openDialog() {
@@ -75,12 +75,11 @@ export class BillComponent implements OnInit {
 
   ngOnInit(): void {
     this.getMyBills();
-    console.log(localStorage.getItem('token'));
   }
   //得到個人的賬單
   getMyBills() {
     this.http.getApi("/bills/getMyBill").subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       this.bills = res.reverse();
 
       this.bills = res.map((bill: any) => {

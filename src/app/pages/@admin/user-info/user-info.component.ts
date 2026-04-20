@@ -6,18 +6,22 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { UserRole } from '../../../interface/enum';
 
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 @Component({
   selector: 'app-user-info',
   imports: [FormsModule],
   templateUrl: './user-info.component.html',
   styleUrl: './user-info.component.scss',
 })
-export class UserInfo implements OnInit, OnDestroy {
+export class UserInfoComponent implements OnInit, OnDestroy {
 
   constructor(private http: HttpService, private snackBar: MatSnackBar) { }
 
-  getUrl = "http://localhost:8083/user/me";
-  modifyUrl = "http://localhost:8083/modify/adminMyself";
+  getUrl = "/user/me";
+  modifyUrl = "/modify/adminMyself";
   user!: UserResponse;
   updateUser!: UserResponse;
   userRole!: UserRole;

@@ -1,18 +1,31 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { BehaviorSubject, of } from 'rxjs';
 
-import { AnnouncementComponent } from './announcement.component';
+import { AnnouncementService } from '../../../@service/announcement.service';
+import { ResidentAnnouncementComponent } from './announcement.component';
 
-describe('AnnouncementComponent', () => {
-  let component: AnnouncementComponent;
-  let fixture: ComponentFixture<AnnouncementComponent>;
+describe('ResidentAnnouncementComponent', () => {
+  let component: ResidentAnnouncementComponent;
+  let fixture: ComponentFixture<ResidentAnnouncementComponent>;
 
   beforeEach(async () => {
+    const announs$ = new BehaviorSubject<any[]>([]);
+
     await TestBed.configureTestingModule({
-      imports: [AnnouncementComponent]
+      imports: [ResidentAnnouncementComponent],
+      providers: [
+        {
+          provide: AnnouncementService,
+          useValue: {
+            announs$,
+            getAll: () => of([])
+          }
+        }
+      ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AnnouncementComponent);
+    fixture = TestBed.createComponent(ResidentAnnouncementComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
