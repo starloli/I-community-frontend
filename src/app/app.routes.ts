@@ -39,8 +39,7 @@ export const routes: Routes = [
   { path: 'forget-password', component: ForgetPasswordComponent },
   { path: 'test', component: Test },
   {
-    path: 'admin',
-    component: LayoutComponent,
+    path: 'admin', component: LayoutComponent,
     canActivate: [adminGuard],
     canActivateChild: [adminGuard],
     children: [
@@ -59,8 +58,7 @@ export const routes: Routes = [
 
   // ── 住戶路由 ─────────────────────────────────────────
   {
-    path: 'resident',
-    component: ResidentLayoutComponent,
+    path: 'resident', component: ResidentLayoutComponent,
     canActivate: [authGuard],
     canActivateChild: [authGuard],
     children: [

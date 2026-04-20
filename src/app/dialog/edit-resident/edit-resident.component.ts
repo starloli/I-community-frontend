@@ -30,7 +30,6 @@ export class EditResidentComponent implements OnInit, OnDestroy {
 
   private $destroy = new Subject<void>();
 
-  // TODO:待實作超級管理員修改所有住戶資料功能，包含修改普通管理員
   // TODO:社區行事曆功能，讓住戶可以看到社區活動資訊
 
   returnUser(user: UserResponse): void {
