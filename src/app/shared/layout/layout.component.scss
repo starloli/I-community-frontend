@@ -1,21 +1,29 @@
 .app-container {
   display: flex;
   height: 100vh;
+  height: 100dvh;
   background-color: #f0f2f5;
+  overflow: hidden;
 }
 
 .main-content {
   flex: 1;
   padding: 32px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   --admin-dashboard-stat-shift: 0px;
   --admin-dashboard-stat-value-size: 40px;
   --admin-dashboard-stat-label-size: 15px;
+
+  @media (max-width: 768px) {
+    padding: 60px 12px 65px; // 頂部留給 Header，左右留間距，底部留給 Tab Bar
+  }
 }
+
 
 app-sidebar.sidebar-collapsed-host + .main-content {
   --admin-dashboard-stat-shift: 16px;
   --admin-dashboard-stat-value-size: 43px;
   --admin-dashboard-stat-label-size: 16px;
 }
-

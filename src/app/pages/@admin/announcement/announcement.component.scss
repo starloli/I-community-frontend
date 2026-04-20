@@ -8,17 +8,17 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 
   .header-left {
     h1 {
-      font-size: 36px;
+      font-size: 32px;
       font-weight: 700;
       color: #1a1a2e;
       margin: 0 0 4px 0;
     }
     .subtitle {
-      font-size: 15px;
+      font-size: 14px;
       color: #888;
     }
   }
@@ -27,27 +27,22 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 20px;
+    padding: 10px 18px;
     background: #3f51b5;
     color: #fff;
     border: none;
-    border-radius: 12px;
-    font-size: 15px;
+    border-radius: 10px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s;
     white-space: nowrap;
 
-    mat-icon {
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
-    }
-    &:hover {
-      background: #303f9f;
-    }
+    mat-icon { font-size: 20px; width: 20px; height: 20px; }
+    &:hover { background: #303f9f; }
   }
 }
+
 
 // ===== 統計卡片 =====
 .stats-grid {

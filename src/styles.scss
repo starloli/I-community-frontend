@@ -16,6 +16,9 @@ body {
 html,
 body {
   height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; // 徹底禁止最外層捲動
 }
 
 :root {
@@ -119,6 +122,50 @@ body {
         background-color: rgba(63, 81, 181, 0.15) !important;
         color: primary-color !important;
       }
+    }
+  }
+}
+
+
+
+@media (max-width: 768px) {
+  // 1. 強制讓組件本身也撐滿，不准溢出
+  :host {
+    display: block;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .dashboard-container {
+    padding: 0 12px;
+    height: 100%; // 改為 100% 承接 host 的高度
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+    /* 這裡加入這行，確保所有子元素的 margin 不會撐破容器 */
+    * { margin-top: 0; }
+  }
+
+  .bottom-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, minmax(0, 1fr)); // 關鍵：使用 minmax(0, 1fr)
+    padding: 4px 0 12px;
+    gap: 10px;
+    min-height: 0; // 讓 grid 能縮小
+    overflow: hidden; // 確保這層也不捲動
+  }
+
+  .card {
+    // ... 其他不變
+    overflow: hidden; // 讓卡片本體不捲動
+
+    .card-scroll-area {
+      flex: 1;
+      overflow-y: auto; // 只有這裡允許捲動
+      -webkit-overflow-scrolling: touch; // 讓手機捲動更順暢
     }
   }
 }

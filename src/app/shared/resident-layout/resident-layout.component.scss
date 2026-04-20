@@ -1,11 +1,19 @@
 .app-container {
   display: flex;
   height: 100vh;
+  height: 100dvh; // 動態視窗高度，適配手機工具列
   background-color: #f0f2f5;
+  overflow: hidden; // 確保佈局本身不捲動
 }
 
 .main-content {
   flex: 1;
-  padding: 32px;
+  padding: 32px; // 電腦版維持美觀間距
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 768px) {
+    padding: 0; // 手機版移除間距，讓頁面組件自行控制滿版效果
+  }
 }
