@@ -304,6 +304,7 @@
         <input type="text" [(ngModel)]="newPackageForm.notes" placeholder="例：易碎品、需本人簽收…" />
       </div>
     </div>
+    <input input type="file" accept="image/*" (change)="onFileSelected($event)">
 
     <div class="form-footer">
       <button class="cancel-btn" (click)="closeAdd()">取消</button>

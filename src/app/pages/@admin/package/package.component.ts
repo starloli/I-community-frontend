@@ -9,6 +9,7 @@ import { AuthService } from '../../../@service/auth.service';
 import { PackageService } from '../../../@service/package.service';
 import { PackageStatus, UserRole } from '../../../interface/enum';
 import { User } from '../../../interface/interface';
+import { ApiService } from '../../../@service/api.service';
 
 @Component({
   selector: 'app-package',
@@ -65,7 +66,8 @@ export class PackageComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private packageService: PackageService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private http:ApiService
   ) { }
 
   ngOnInit(): void {
@@ -323,4 +325,34 @@ export class PackageComponent implements OnInit, OnDestroy {
   onFilterChange(): void {
     this.currentPage = 1;
   }
+
+
+
+
+
+  onFileSelected(event: any) {
+  const file: File = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = (e: any) => {
+      const base64String = e.target.result;
+
+      console.log('這是可以傳給後端的 Base64:', base64String);
+      const payload = { image: base64String };
+    this.http.postApi("/api/ocr/scan-package",payload).subscribe((res:any)=>{
+      console.log(res);
+      this.newPackageForm.recipientName=res.recipientName;
+      this.newPackageForm.unitNumber=res.unitNumber;
+      this.newPackageForm.trackingNumber=res.trackingNumber;
+this.newPackageForm.phoneNumber=res.phoneNumber;
+this.newPackageForm.courier=res.courier;
+this.newPackageForm.notes=res.notes;
+
+
+    })
+    };
+    reader.readAsDataURL(file);
+  }
+}
 }
