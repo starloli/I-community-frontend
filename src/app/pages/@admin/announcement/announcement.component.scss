@@ -618,34 +618,82 @@
 // =============================================================================
 
 @media (max-width: 768px) {
-  .page-header {
+  .announcement-container {
+    height: 100%;
+    display: flex;
     flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
-    margin-bottom: 20px;
+    overflow: hidden;
+  }
 
-    .header-left h1 {
-      font-size: 28px;
+  .page-header {
+    padding: 16px 0 12px 0; // 增加頂部內距
+    flex-direction: row; // 橫向排列
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 0;
+
+    .header-left {
+      h1 {
+        font-size: 20px; // 統一字體大小為 20px
+      }
+      .subtitle {
+        font-size: 13px;
+      }
     }
 
     .add-btn {
-      width: 100%;
+      width: auto;
       justify-content: center;
-      padding: 14px;
+      padding: 8px 16px;
+      font-size: 13px;
+      mat-icon { font-size: 18px; width: 18px; height: 18px; }
     }
   }
 
   .stats-grid {
-    grid-template-columns: 1fr; // 改為單欄
-    gap: 12px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 0 4px 4px; // 👈 調整為左右與下方 4px
   }
 
   .stat-card {
-    padding: 16px;
-    gap: 12px;
+    position: relative;
+    aspect-ratio: 1.2 / 1; // 👈 調整比例，使其看起來更寬大
+    padding: 6px; // 👈 縮小內距
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    border-radius: 12px;
+    background: #ffffff;
 
-    .stat-value {
-      font-size: 26px;
+    .stat-icon-wrap {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      font-size: 20px !important; // 👈 放大圖示比例
+      line-height: 1;
+    }
+
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-top: 8px; // 調整補償間距
+
+      .stat-value {
+        font-size: 36px; // 👈 放大至 36px
+        font-weight: 400; // 👈 字重改為 400
+        line-height: 1;
+      }
+
+      .stat-label {
+        font-size: 11px;
+        color: #888;
+        white-space: nowrap;
+      }
     }
   }
 
@@ -741,6 +789,35 @@
       width: 34px;
       height: 34px;
       font-size: 13px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      h1 { font-size: 20px; line-height: 1.2; }
+      .subtitle {
+        display: block;
+        font-size: 11px;
+        color: #999;
+        white-space: nowrap;
+      }
+    }
+
+    .add-btn {
+      width: auto;
+      padding: 8px 12px;
+      font-size: 12px;
+      margin-left: 10px;
+      mat-icon { font-size: 16px; width: 16px; height: 16px; }
     }
   }
 }

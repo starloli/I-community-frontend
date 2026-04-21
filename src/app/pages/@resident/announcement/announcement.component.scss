@@ -120,6 +120,12 @@
   }
 }
 
+// ===== 列表容器與捲動區 =====
+.list-container {
+  display: flex;
+  flex-direction: column;
+}
+
 // ===== 公告列表白卡 =====
 .list-card {
   background: #ffffff;
@@ -145,15 +151,9 @@
 }
 
 .ann-icon-box {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  background: rgba(176, 122, 138, 0.1);
-
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; background: rgba(176, 122, 138, 0.1);
   mat-icon { font-size: 22px; width: 22px; height: 22px; color: #b07a8a; }
 }
 
@@ -169,7 +169,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-
   .ann-title {
     font-size: 16px;
     font-weight: 600;
@@ -187,9 +186,7 @@
   align-items: center;
   gap: 12px;
   flex-shrink: 0;
-
   .ann-date { font-size: 13px; color: #aaa; white-space: nowrap; }
-  .ann-actions { display: flex; gap: 6px; }
 }
 
 // ===== 分類標籤 =====
@@ -200,7 +197,6 @@
   font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
-
   &.cat-notice      { background: #e8eaf6; color: #3f51b5; }
   &.cat-maintenance { background: #fff3e0; color: #e65100; }
   &.cat-event       { background: #e8f5e9; color: #388e3c; }
@@ -226,53 +222,43 @@
   font-weight: 600;
 }
 
-// ===== icon 操作按鈕 =====
-.icon-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
+// ===== 分頁 =====
+.pagination-bar {
   display: flex;
-  align-items: center;
   justify-content: center;
-  transition: background 0.2s;
-  background: transparent;
-
-  mat-icon { font-size: 18px; width: 18px; height: 18px; }
-
-  &.edit   { color: #3f51b5; &:hover { background: #e8eaf6; } }
-  &.delete { color: #e53935; &:hover { background: #ffebee; } }
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
 }
 
-// ===== 分頁 =====
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 6px;
   margin-top: 8px;
+}
 
-  .page-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    border: 1.5px solid #e0e0e0;
-    background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(8px);
-    color: #555;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
+.page-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1.5px solid #e0e0e0;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(8px);
+  color: #555;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
 
-    &:hover:not(:disabled) { background: #B07A8A; border-color: #B07A8A; color: #fff; }
-    &.active               { background: #B07A8A; border-color: #B07A8A; color: #fff; }
-    &:disabled             { opacity: 0.3; cursor: not-allowed; }
-  }
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+  &:hover:not(:disabled) { background: #b07a8a; border-color: #b07a8a; color: #fff; }
+  &.active               { background: #b07a8a; border-color: #b07a8a; color: #fff; }
+  &:disabled             { opacity: 0.3; cursor: not-allowed; }
 }
 
 // ===== 空狀態 =====
@@ -280,7 +266,6 @@
   padding: 48px;
   text-align: center;
   color: #bbb;
-
   .empty-icon {
     font-size: 48px !important;
     width: 48px !important;
@@ -319,57 +304,20 @@
   align-items: center;
   padding: 24px 28px;
   border-bottom: 1px solid #f0f0f0;
-
   h2 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 0; }
   .close-btn { color: #aaa; cursor: pointer; &:hover { color: #333; } }
 }
 
-.form-body {
-  padding: 24px 28px;
+.detail-body { padding: 24px 28px; display: flex; flex-direction: column; gap: 16px; }
+.detail-meta {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  span { font-size: 13px; color: #888; }
 }
-
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-
-  label { font-size: 14px; font-weight: 600; color: #555; }
-  .required { color: #e53935; }
-
-  input, select, textarea {
-    padding: 10px 14px;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 15px;
-    color: #333;
-    outline: none;
-    font-family: inherit;
-    background: #fff;
-    transition: border-color 0.2s;
-    &:focus { border-color: #3f51b5; }
-  }
-
-  textarea { resize: vertical; }
-
-  .checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    font-size: 15px;
-    color: #333;
-
-    input[type="checkbox"] {
-      width: 16px; height: 16px; padding: 0;
-      border: none; accent-color: #3f51b5; cursor: pointer;
-    }
-  }
-}
+.detail-content { font-size: 15px; color: #444; line-height: 1.8; white-space: pre-wrap; }
 
 .form-footer {
   display: flex;
@@ -382,54 +330,7 @@
 .cancel-btn {
   padding: 10px 24px; background: #f5f5f5; color: #555;
   border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
-  cursor: pointer;
-  &:hover { background: #eeeeee; }
-}
-
-.submit-btn {
-  padding: 10px 24px; background: #3f51b5; color: #fff;
-  border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
-  cursor: pointer;
-  &:hover { background: #303f9f; }
-}
-
-.delete-btn {
-  padding: 10px 24px; background: #e53935; color: #fff;
-  border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
-  cursor: pointer;
-  &:hover { background: #c62828; }
-}
-
-.detail-body { padding: 24px 28px; display: flex; flex-direction: column; gap: 16px; }
-
-.detail-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #f0f0f0;
-  span { font-size: 13px; color: #888; }
-}
-
-.detail-content { font-size: 15px; color: #444; line-height: 1.8; white-space: pre-wrap; }
-
-.confirm-card {
-  background: #ffffff;
-  border-radius: 20px;
-  width: 380px;
-  max-width: calc(100vw - 32px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  padding: 40px 28px 28px;
-
-  .confirm-icon {
-    font-size: 48px !important; width: 48px !important; height: 48px !important;
-    display: block; margin: 0 auto 16px; color: #e53935;
-  }
-  h3 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 0 0 8px; }
-  p  { font-size: 14px; color: #888; margin: 0 0 24px; }
-
-  .confirm-footer { display: flex; justify-content: center; gap: 12px; }
+  cursor: pointer; &:hover { background: #eeeeee; }
 }
 
 // 住戶版本：右側箭頭圖示
@@ -439,4 +340,192 @@
   height: 20px;
   color: #ccc;
   flex-shrink: 0;
+}
+
+// =============================================================================
+// ===== 手機版響應式設計 (RWD) =====
+// =============================================================================
+
+@media (max-width: 768px) {
+  .announcement-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .page-header {
+    padding: 16px 0 12px 0;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 0;
+
+    .header-left {
+      h1 { font-size: 20px; }
+      .subtitle { font-size: 13px; }
+    }
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 0 4px 4px;
+  }
+
+  .stat-card {
+    position: relative;
+    aspect-ratio: 1.2 / 1;
+    padding: 6px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    border-radius: 12px;
+    background: #ffffff;
+
+    .stat-icon-wrap {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      font-size: 20px !important;
+      line-height: 1;
+      width: 20px !important;
+      height: 20px !important;
+    }
+
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-top: 8px;
+
+      .stat-value {
+        font-size: 36px;
+        font-weight: 400;
+        line-height: 1;
+      }
+
+      .stat-label {
+        font-size: 11px;
+        color: #888;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .filter-bar {
+    gap: 8px;
+    padding: 0 4px 8px;
+    .filter-btn {
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+    .search-box {
+      width: 100%;
+      margin-top: 4px;
+      min-width: unset;
+      padding: 6px 14px;
+    }
+  }
+
+  .list-container {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .list-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 4px 12px;
+    &::-webkit-scrollbar { width: 3px; }
+    &::-webkit-scrollbar-thumb { background: #eee; }
+  }
+
+  .announcement-item {
+    padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    border: 1px solid #f0f0f0;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+
+    &.pinned { padding-left: 13px; }
+    .ann-icon-box { display: none; }
+
+    .ann-main {
+      width: 100%;
+      .ann-title-row {
+        flex-wrap: wrap;
+        gap: 4px;
+        .ann-title {
+          width: 100%;
+          font-size: 15px;
+          margin-top: 4px;
+          white-space: normal;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+
+    .ann-right {
+      width: 100%;
+      padding-top: 10px;
+      border-top: 1px dashed #eee;
+      justify-content: space-between;
+      .view-icon { order: 2; }
+    }
+  }
+
+  .pagination-bar {
+    padding: 12px 4px;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  
+  .page-info { font-weight: 700; font-size: 14px; color: #3f51b5; }
+  .page-btn { 
+    width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid #e0e0e0; background: #fff;
+    &:active { background: #eee; transform: scale(0.9); }
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      h1 { font-size: 20px; line-height: 1.2; }
+      .subtitle {
+        display: block;
+        font-size: 11px;
+        color: #999;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.form-card {
+  max-width: 92vw;
+  max-height: 85vh;
+  overflow-y: auto;
 }
