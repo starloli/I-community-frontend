@@ -7,13 +7,13 @@ import { HttpService } from '../@service/http.service';
 
 @Component({
   selector: 'app-test',
-  imports: [FormsModule, ReactiveFormsModule],
-  templateUrl: './test.html',
-  styleUrl: './test.scss',
+  imports: [FormsModule, ReactiveFormsModule, RouterLink],
+  templateUrl: './test.component.html',
+  styleUrl: './test.component.scss',
 })
 export class Test {
 
-  constructor(private router: Router, private http: HttpService, private auth: AuthService) { }
+  constructor(private router: Router, private http: HttpService, private auth: AuthService) {}
 
   booleanSignup = false;
   booleanIsManager: boolean = false;

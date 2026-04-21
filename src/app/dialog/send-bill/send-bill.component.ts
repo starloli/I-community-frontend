@@ -1,9 +1,11 @@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpService } from './../../@service/http.service';
 import { Component } from '@angular/core';
 
 import { MatDialogRef } from '@angular/material/dialog';
-import { Router } from "@angular/router";
+import { BillsdialogComponent } from '../billsdialog/billsdialog.component';
+import { Router, RouterLink } from "@angular/router";
+import { HttpService } from '../../@service/http.service';
+
 @Component({
   selector: 'app-send-bill',
   imports: [FormsModule, ReactiveFormsModule],
@@ -103,8 +105,6 @@ export class SendBillComponent {
       }
       else if (ans.message === '本月還沒有賬單') {
         this.http.getApi("/bills/getAbnormalUnits").subscribe((res: any) => {
-
-
           this.AbnormalUnits = res;
           console.log(this.AbnormalUnits);
           if (this.AbnormalUnits.length > 0) {
@@ -127,3 +127,4 @@ export class SendBillComponent {
     this.dialogRef.close('refresh');
   }
 }
+

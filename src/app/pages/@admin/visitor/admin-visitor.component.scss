@@ -18,7 +18,6 @@
       color: #1a1a2e;
       margin: 0 0 4px 0;
     }
-
     .subtitle {
       font-size: 15px;
       color: #888;
@@ -39,32 +38,16 @@
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition:
-    background 0.2s,
-    transform 0.2s,
-    box-shadow 0.2s;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
   white-space: nowrap;
-  box-shadow: 0 10px 24px rgba(106, 158, 127, 0.22);
+  box-shadow: 0 10px 24px rgba(63, 81, 181, 0.2);
 
-  mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-  }
-
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
   &:hover {
     background: #303f9f;
     transform: translateY(-1px);
-    box-shadow: 0 14px 28px rgba(106, 158, 127, 0.28);
+    box-shadow: 0 14px 28px rgba(63, 81, 181, 0.28);
   }
-}
-
-// ===== 工具列 =====
-.toolbar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
 }
 
 // ===== 搜尋欄 =====
@@ -79,259 +62,17 @@
   border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 14px;
   padding: 12px 18px;
-  margin-bottom: 16px; // 👈 添加這行，創建與 table-card 的距離
+  margin-bottom: 16px;
 
-  mat-icon {
-    color: #aaa;
-    font-size: 22px;
-    width: 22px;
-    height: 22px;
-  }
-
-  input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    font-size: 15px;
-    color: #333;
-    outline: none;
-
-    &::placeholder {
-      color: #bbb;
-    }
-  }
-
-  .clear-btn {
-    color: #aaa;
-    cursor: pointer;
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    transition: color 0.2s;
-
-    &:hover {
-      color: #555;
-    }
-  }
+  mat-icon { color: #aaa; font-size: 22px; width: 22px; height: 22px; }
+  input { flex: 1; border: none; background: transparent; font-size: 15px; color: #333; outline: none; }
+  .clear-btn { color: #aaa; cursor: pointer; font-size: 18px; width: 18px; height: 18px; }
 }
 
-// ===== 每頁筆數 =====
-.page-size-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 14px;
-  padding: 12px 18px;
-  color: #555;
-  white-space: nowrap;
-
-  select {
-    padding: 8px 12px;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 14px;
-    color: #333;
-    outline: none;
-    background: #ffffff;
-  }
-}
-
-// ===== 表單遮罩（點擊背景關閉）=====
-.form-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-// ===== 表單卡片 =====
-.form-card {
-  background: #ffffff;
-  border-radius: 20px;
-  width: 480px;
-  max-width: calc(100vw - 32px);
-  max-height: 90vh;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  overflow-y: auto;
-}
-
-.form-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  padding: 24px 28px;
-  border-bottom: 1px solid #f0f0f0;
-
-  h2 {
-    font-size: 18px;
-    font-weight: 700;
-    color: #1a1a2e;
-    margin: 0;
-  }
-
-  .close-btn {
-    color: #aaa;
-    cursor: pointer;
-    transition: color 0.2s;
-
-    &:hover {
-      color: #333;
-    }
-  }
-}
-
-.form-subtitle {
-  margin: 6px 0 0;
-  font-size: 13px;
-  color: #888;
-}
-
-.form-body {
-  padding: 24px 28px;
+// ===== 列表容器 (電腦版不限高) =====
+.list-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-.step-chip {
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: #e8eaf6;
-  color: #3f51b5;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.selected-address-card,
-.hint-card {
-  padding: 14px 16px;
-  border-radius: 12px;
-  font-size: 14px;
-}
-
-.selected-address-card {
-  background: #f5f7ff;
-  color: #333;
-
-  .label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: 12px;
-    color: #888;
-  }
-}
-
-.hint-card {
-  background: #fff3e0;
-  color: #ef6c00;
-}
-
-// ===== 表單欄位 =====
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-
-  label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #555;
-  }
-
-  .required {
-    color: #e53935;
-  }
-
-  input,
-  select {
-    padding: 10px 14px;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 15px;
-    color: #333;
-    outline: none;
-    transition: border-color 0.2s;
-    box-sizing: border-box;
-    width: 100%;
-    background: #ffffff;
-
-    &:focus {
-      border-color: #3f51b5;
-    }
-
-    &::placeholder {
-      color: #bbb;
-    }
-  }
-}
-
-.form-control {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-.form-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 20px 28px;
-  border-top: 1px solid #f0f0f0;
-}
-
-// ===== 按鈕 =====
-.cancel-btn {
-  padding: 10px 24px;
-  background: #f5f5f5;
-  color: #555;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-
-  &:hover {
-    background: #eeeeee;
-  }
-}
-
-.submit-btn {
-  padding: 10px 24px;
-  background: #3f51b5;
-  color: #ffffff;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    background 0.2s,
-    opacity 0.2s;
-
-  &:hover:not(:disabled) {
-    background: #303f9f;
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
 }
 
 // ===== 訪客列表表格 =====
@@ -352,288 +93,136 @@ table {
   min-width: 980px;
 }
 
-thead tr {
-  background: rgba(63, 81, 181, 0.08);
-}
+thead tr { background: rgba(63, 81, 181, 0.08); }
+th { padding: 16px 20px; text-align: left; font-size: 14px; font-weight: 600; color: #555; white-space: nowrap; }
+td { padding: 16px 20px; font-size: 15px; color: #333; border-bottom: 1px solid rgba(0, 0, 0, 0.05); vertical-align: middle; }
 
-th {
-  padding: 16px 20px;
-  text-align: left;
-  font-size: 14px;
-  font-weight: 600;
-  color: #555;
-  white-space: nowrap;
-  letter-spacing: 0.02em;
-}
+.col-name { width: 18%; }
+.col-phone { width: 13%; }
+.col-plate { width: 12%; }
+.col-host { width: 19%; }
+.col-time { width: 18%; }
+.col-status { width: 10%; text-align: center; }
+.col-action { width: 10%; text-align: center; }
 
-td {
-  padding: 16px 20px;
-  font-size: 15px;
-  color: #333;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  vertical-align: middle;
-}
-
-.col-name {
-  width: 18%;
-}
-
-.col-phone {
-  width: 13%;
-}
-
-.col-plate {
-  width: 12%;
-}
-
-.col-host {
-  width: 19%;
-}
-
-.col-time {
-  width: 18%;
-  white-space: nowrap;
-}
-
-.col-status {
-  width: 10%;
-  text-align: center;
-}
-
-.col-action {
-  width: 10%;
-  text-align: center;
-  white-space: nowrap;
-}
-
-tbody tr:last-child td {
-  border-bottom: none;
-}
-
-tbody tr:hover {
-  background: rgba(63, 81, 181, 0.03);
-}
-
-// ===== 點擊提示動畫 (Before Hover) =====
-@keyframes click-hint-pulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(63, 81, 181, 0.2);
-  }
-  50% {
-    transform: scale(1.02);
-    box-shadow: 0 0 0 8px rgba(63, 81, 181, 0);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(63, 81, 181, 0);
-  }
-}
-
-// ===== 訪客姓名欄位（含頭像）=====
 .visitor-name-cell {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  padding: 6px 12px;
-  margin-left: -12px;
-  border-radius: 10px;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-
-  .avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: #e8eaf6;
-    color: #3f51b5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 14px;
-    flex-shrink: 0;
-    transition: all 0.25s ease;
-
-    // 👈 加入呼吸動畫，提示使用者可點擊
-    animation: click-hint-pulse 2s infinite ease-in-out;
-  }
-
-  &:hover {
-    background: rgba(63, 81, 181, 0.08);
-
-    .avatar {
-      animation: none; // 👈 懸停時停止呼吸動畫，改為懸停特效
-      transform: scale(1.1) rotate(5deg);
-      box-shadow: 0 4px 12px rgba(63, 81, 181, 0.2);
-      background: #3f51b5;
-      color: #ffffff;
-    }
-
-    color: #3f51b5;
-  }
-
-  &:active {
-    transform: scale(0.96);
-    opacity: 0.8;
-  }
+  display: inline-flex; align-items: center; gap: 12px; cursor: pointer; padding: 6px 12px; margin-left: -12px; border-radius: 10px; transition: all 0.25s;
+  .avatar { width: 36px; height: 36px; border-radius: 50%; background: #e8eaf6; color: #3f51b5; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+  &:hover { background: rgba(63, 81, 181, 0.08); color: #3f51b5; .avatar { background: #3f51b5; color: #fff; } }
 }
 
-// ===== 狀態標籤 =====
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-}
+.status-badge { display: inline-flex; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+.status-notyet { background: #fff3e0; color: #ef6c00; }
+.status-inside { background: #e8f5e9; color: #388e3c; }
+.status-left   { background: #f5f5f5; color: #999; }
 
-.status-notyet {
-  background: #fff3e0;
-  color: #ef6c00;
-}
-
-.status-inside {
-  background: #e8f5e9;
-  color: #388e3c;
-}
-
-.status-left {
-  background: #f5f5f5;
-  color: #999;
-}
-
-// ===== 操作按鈕 =====
 .checkout-btn {
-  padding: 6px 16px;
-  background: transparent;
-  color: #e53935;
-  border: 1.5px solid #e53935;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background: #e53935;
-    color: #ffffff;
-  }
+  padding: 6px 16px; background: transparent; color: #e53935; border: 1.5px solid #e53935; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  &:hover { background: #e53935; color: #fff; }
+  &.arrival-btn { color: #3f51b5; border-color: #3f51b5; &:hover { background: #3f51b5; color: #fff; } }
 }
-
-.arrival-btn {
-  color: #3f51b5;
-  border-color: #3f51b5;
-
-  &:hover {
-    background: #3f51b5;
-    color: #ffffff;
-  }
-}
-
-.action-placeholder {
-  color: #999;
-}
-
-.empty-cell {
-  padding: 40px 20px;
-  text-align: center;
-  color: #999;
-}
-
 
 // ===== 分頁 =====
 .pagination-bar {
   display: flex;
-  flex-direction: column;    // 👈 改為垂直排列
+  justify-content: space-between;
   align-items: center;
-  gap: 16px;
-  margin-top: 16px;
+  margin-top: 24px;
 }
-
-.pagination-summary {
-  font-size: 14px;
-  color: #666;
-  width: 100%;
-  text-align: center;    // 👈 文字置中
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
+.pagination { display: flex; gap: 8px; align-items: center; }
 .page-btn {
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  background: rgba(255, 255, 255, 0.55);
-  color: #555;
-  border: 1.5px solid #e0e0e0;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  backdrop-filter: blur(8px);
-
-  mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-  }
-
-  &:hover:not(:disabled) {
-    background: #6a9e7f;
-    border-color: #6a9e7f;
-    color: #ffffff;
-  }
-
-  &.active {
-    background: #6a9e7f;
-    border-color: #6a9e7f;
-    color: #ffffff;
-  }
-
-  &:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
+  width: 40px; height: 40px; border: 1.5px solid #e0e0e0; border-radius: 10px; background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer;
+  &.active { background: #6a9e7f; border-color: #6a9e7f; color: #fff; }
+  &:disabled { opacity: 0.3; cursor: not-allowed; }
 }
 
-@media (max-width: 960px) {
-  .table-card {
-    overflow-x: auto;
-  }
-}
+// =============================================================================
+// ===== 手機版響應式設計 (RWD) =====
+// =============================================================================
 
 @media (max-width: 768px) {
-  .page-header,
-  .toolbar,
-  .pagination-bar {
+  .visitor-container {
+    height: 100dvh;
+    display: flex;
     flex-direction: column;
-    align-items: stretch;
+    overflow: hidden;
   }
 
-  .add-btn {
-    justify-content: center;
+  .page-header {
+    padding: 15px 15px 5px;
+    margin-bottom: 0;
+    h1 { font-size: 20px; }
+    .subtitle { font-size: 12px; }
   }
 
-  .page-size-box,
-  .pagination {
-    justify-content: center;
+  .search-bar { margin: 8px 15px 12px; padding: 8px 14px; border-radius: 12px; }
+
+  .list-container {
+    flex: 1;
+    min-height: 0;
+    padding: 0 15px 15px;
   }
 
-  .pagination-summary {
-    text-align: center;
+  .list-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  // ── 表格轉卡片 ──────────────────
+  .table-card { background: transparent; border: none; box-shadow: none; backdrop-filter: none; }
+  table, thead, tbody, th, td, tr { display: block; }
+  thead { display: none; }
+  table { min-width: 100%; }
+
+  tr {
+    background: #ffffff;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    padding: 12px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  }
+
+  td {
+    border-bottom: none; padding: 4px 0; display: flex; justify-content: space-between; align-items: center; font-size: 13px;
+    &::before { content: attr(data-label); font-weight: 600; color: #999; font-size: 12px; }
+    &.col-name {
+      padding-bottom: 8px; border-bottom: 1px solid #f8f8f8; margin-bottom: 8px;
+      &::before { content: none; }
+      .visitor-name-cell { margin-left: 0; padding: 0; .avatar { width: 36px; height: 36px; } }
+    }
+    &.col-action {
+      margin-top: 8px; padding-top: 8px; border-top: 1px solid #f8f8f8;
+      &::before { content: none; }
+      .checkout-btn { width: 100%; padding: 8px; font-size: 13px; }
+    }
+    &.col-status { text-align: right; }
+  }
+
+  .pagination-bar { flex-direction: column; gap: 12px; margin-top: 12px; }
+  .page-info { font-weight: 600; }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    flex-direction: row; justify-content: space-between; align-items: center;
+    .header-left .subtitle { display: none; }
+    .add-btn { width: auto; padding: 8px 12px; font-size: 12px; mat-icon { font-size: 16px; width: 16px; height: 16px; } }
   }
 }
+
+// ===== 表單 Modal =====
+.form-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+.form-card {
+  background: #fff; border-radius: 16px; width: 450px; max-width: 90vw; max-height: 85vh; overflow-y: auto;
+  .form-header, .form-body, .form-footer { padding: 16px 20px; }
+}
+.form-group {
+  margin-bottom: 15px; display: flex; flex-direction: column; gap: 6px;
+  label { font-size: 13px; font-weight: 600; color: #555; }
+  input, select { padding: 10px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; width: 100%; }
+}
+.form-footer { display: flex; justify-content: flex-end; gap: 10px; }
+.submit-btn { background: #3f51b5; color: #fff; padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; }
+.cancel-btn { background: #f5f5f5; color: #555; padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; }

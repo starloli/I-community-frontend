@@ -1,3 +1,4 @@
+import { SendBillComponent } from './../../../dialog/send-bill/send-bill.component';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
@@ -12,7 +13,6 @@ import { VisitorServiceService } from '../../../@service/visitor-service.service
 import { BillsdialogComponent } from '../../../dialog/billsdialog/billsdialog.component';
 
 import { MatButtonModule } from '@angular/material/button';
-import { SendBillComponent } from '../../../dialog/send-bill/send-bill.component';
 import { HttpService } from '../../../@service/http.service';
 import { UserResponse } from '../../../interface/interface';
 import { Subject, takeUntil } from 'rxjs';

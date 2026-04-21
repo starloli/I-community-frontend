@@ -31,15 +31,17 @@
         <a class="card-more" (click)="navigateTo('/admin/announcement')">查看更多</a>
       </div>
 
-      @for (item of announcements; track item.title) {
-        <div class="announcements-item">
-          <div class="announcements-left">
-            <span class="category-badge">{{ item.category }}</span>
-            <span class="announcements-title">{{ item.title }}</span>
+      <div class="card-scroll-area">
+        @for (item of announcements; track item.title) {
+          <div class="announcements-item">
+            <div class="announcements-left">
+              <span class="category-badge">{{ item.category }}</span>
+              <span class="announcements-title">{{ item.title }}</span>
+            </div>
+            <span class="announcements-date">{{ item.publishedAt | date: 'yyyy/MM/dd' }}</span>
           </div>
-          <span class="announcements-date">{{ item.publishedAt | date: 'yyyy/MM/dd' }}</span>
-        </div>
-      }
+        }
+      </div>
     </div>
 
     <div class="card">
@@ -49,27 +51,29 @@
         <a class="card-more" (click)="navigateTo('/admin/visitor')">查看更多</a>
       </div>
 
-      @for (visitor of recentVisitors; track $index) {
-        <div class="visitor-item">
-          <div class="visitor-avatar">
-            {{ visitor.name.charAt(0) }}
-          </div>
+      <div class="card-scroll-area">
+        @for (visitor of recentVisitors; track $index) {
+          <div class="visitor-item">
+            <div class="visitor-avatar">
+              {{ visitor.name.charAt(0) }}
+            </div>
 
-          <div class="visitor-info">
-            <span class="visitor-name">{{ visitor.name }}</span>
-            <span class="visitor-unit">{{ visitor.unit }}</span>
-          </div>
+            <div class="visitor-info">
+              <span class="visitor-name">{{ visitor.name }}</span>
+              <span class="visitor-unit">{{ visitor.unit }}</span>
+            </div>
 
-          <div class="visitor-right">
-            <span class="visitor-time">{{ visitor.time }}</span>
-            @if (visitor.status === '在社區') {
-              <span class="visitor-status status-inside">{{ visitor.status }}</span>
-            } @else {
-              <span class="visitor-status status-left">{{ visitor.status }}</span>
-            }
+            <div class="visitor-right">
+              <span class="visitor-time">{{ visitor.time }}</span>
+              @if (visitor.status === '在社區') {
+                <span class="visitor-status status-inside">{{ visitor.status }}</span>
+              } @else {
+                <span class="visitor-status status-left">{{ visitor.status }}</span>
+              }
+            </div>
           </div>
-        </div>
-      }
+        }
+      </div>
     </div>
   </div>
 </div>

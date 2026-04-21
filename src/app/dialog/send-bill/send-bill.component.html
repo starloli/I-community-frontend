@@ -1,9 +1,8 @@
-
 @if(page==1){
 <div class="bill-form-content">
 
   <div class="header-minimal">
-    <h3 class="section-label main-label">賬單基本設定</h3>
+    <h3 class="section-label main-label">帳單基本設定</h3>
 
     <div class="field title-field">
       <label>帳單名稱</label>
@@ -12,12 +11,14 @@
 
     <div class="date-flex">
       <div class="input-item">
-        <label>賬單月份</label>
-        <input type="month"  class="standard-input" [(ngModel)]="billingMonth" [max]="dueDate ? dueDate.substring(0, 7) : null">
+        <label>帳單月份</label>
+        <input type="month" class="standard-input" [(ngModel)]="billingMonth"
+          [max]="dueDate ? dueDate.substring(0, 7) : null">
       </div>
       <div class="input-item">
         <label>繳費截止日期</label>
-        <input type="date"  class="standard-input" [(ngModel)]="dueDate" [min]="billingMonth ? (billingMonth + '-01') : null">
+        <input type="date" class="standard-input" [(ngModel)]="dueDate"
+          [min]="billingMonth ? (billingMonth + '-01') : null">
       </div>
     </div>
   </div>
@@ -27,7 +28,7 @@
     <div class="input-grid">
       <div class="field">
         <label>社區總水費 </label>
-        <input type="number" placeholder="0.00" class="standard-input" [(ngModel)]="TOTAL_WATER" min=0 >
+        <input type="number" placeholder="0.00" class="standard-input" [(ngModel)]="TOTAL_WATER" min=0>
       </div>
       <div class="field">
         <label>社區總電費 </label>
@@ -68,11 +69,13 @@
   <div class="action-bar">
     <button class="btn-plain" (click)="cancel()">取消</button>
     @if(!title?.trim() || !billingMonth?.trim() || !dueDate?.trim()|| TOTAL_WATER== null ||
-     PING_PRICE== null || CAR_SPACE_PRICE== null ||MOTO_SPACE_PRICE== null || billingMonth > dueDate || TOTAL_WATER < 0 || PING_PRICE < 0 || CAR_SPACE_PRICE < 0 || MOTO_SPACE_PRICE < 0 || TOTAL_ELECTRICITY<0){
-      <button class="btn-send btn-disabled" >下一步</button>}
+    PING_PRICE== null || CAR_SPACE_PRICE== null ||MOTO_SPACE_PRICE== null || billingMonth > dueDate || TOTAL_WATER < 0
+      || PING_PRICE < 0 || CAR_SPACE_PRICE < 0 || MOTO_SPACE_PRICE < 0 || TOTAL_ELECTRICITY<0){ <button
+      class="btn-send btn-disabled">下一步</button>}
       @else{
-    <button class="btn-send" (click)="next()">下一步</button>
-      }</div>
+      <button class="btn-send" (click)="next()">下一步</button>
+      }
+  </div>
 </div>
 }
 @if(page ==2){
@@ -80,21 +83,21 @@
 <div class="bill-form-content">
 
   <div class="header-minimal">
-    <h3 class="section-label main-label">賬單基本設定</h3>
+    <h3 class="section-label main-label">帳單基本設定</h3>
 
     <div class="field title-field">
       <label>帳單名稱</label>
-     <b>{{title}}</b>
+      <b>{{title}}</b>
     </div>
 
     <div class="date-flex">
       <div class="input-item">
-        <label>賬單月份</label>
-       <b>{{billingMonth}}-01</b>
+        <label>帳單月份</label>
+        <b>{{billingMonth}}-01</b>
       </div>
       <div class="input-item">
         <label>繳費截止日期</label>
-       <b>{{dueDate}}</b>
+        <b>{{dueDate}}</b>
       </div>
     </div>
   </div>
@@ -104,11 +107,11 @@
     <div class="input-grid">
       <div class="field">
         <label>社區總水費</label>
- <b>{{TOTAL_WATER}}</b>
+        <b>{{TOTAL_WATER}}</b>
       </div>
       <div class="field">
         <label>社區總電費</label>
-       <b>{{TOTAL_ELECTRICITY}}</b>
+        <b>{{TOTAL_ELECTRICITY}}</b>
       </div>
     </div>
 
@@ -117,35 +120,35 @@
     <div class="input-grid">
       <div class="field">
         <label>管理費單價 (元/坪)</label>
-  <b>{{PING_PRICE}}</b>
+        <b>{{PING_PRICE}}</b>
       </div>
       <div class="field">
         <label>汽車位單價 (元/個)</label>
-   <b>{{CAR_SPACE_PRICE}}</b>
+        <b>{{CAR_SPACE_PRICE}}</b>
       </div>
     </div>
 
     <div class="input-grid">
       <div class="field">
         <label>機車位單價 (元/個)</label>
- <b>{{MOTO_SPACE_PRICE}}</b>
+        <b>{{MOTO_SPACE_PRICE}}</b>
       </div>
       <div class="field">
         <label>其他</label>
- <b>{{OTHERFEE}}</b>
+        <b>{{OTHERFEE}}</b>
       </div>
     </div>
 
     <div class="field full">
       <label>備註事項</label>
- <b>{{remark}}</b>
+      <b>{{remark}}</b>
     </div>
   </div>
 
 
   <div class="action-bar">
     <button class="btn-plain" (click)="last()">返回修改</button>
-    <button class="btn-send" (click)="searchAbnormalUnits()">發送賬單</button>
+    <button class="btn-send" (click)="searchAbnormalUnits()">發送帳單</button>
   </div>
 </div>
 }
@@ -163,9 +166,9 @@
 
     <div class="error-list">
       @for(abnormalUnit of AbnormalUnits; track $index) {
-        <div class="error-item">
-          🏠 房號：{{abnormalUnit}}
-        </div>
+      <div class="error-item">
+        🏠 房號：{{abnormalUnit}}
+      </div>
       }
     </div>
   </div>
@@ -174,12 +177,12 @@
     <p class="error-hint">
       <strong>如何解決？</strong><br>
       請先至「住戶管理」頁面，根據上方清單補齊這些住戶的<strong>「坪數」</strong>資訊。
-      系統規定不得向坪數缺失的住戶發送賬單。補齊後請重新嘗試發送。
+      系統規定不得向坪數缺失的住戶發送帳單。補齊後請重新嘗試發送。
     </p>
   </div>
 
   <div class="action-bar">
-<button class="btn-plain" (click)="routerModifyResident()">修改住戶資料</button>
+    <button class="btn-plain" (click)="routerModifyResident()">修改住戶資料</button>
 
     <button class="btn-send" style="background: #909399;" (click)="closeThisDialog()">關閉</button>
   </div>
@@ -216,5 +219,3 @@
   </div>
 </div>
 }
-
-

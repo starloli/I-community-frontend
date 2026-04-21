@@ -64,55 +64,57 @@
     </div>
   } @else {
     <div class="list-card">
-      @for (ann of pagedAnnouncements; track ann.announcementId) {
-        <div
-          class="announcement-item"
-          [class.pinned]="ann.isPinned"
-          [class.expired]="isExpired(ann)"
-          (click)="openDetail(ann)"
-        >
-          <div class="ann-icon-box" [ngClass]="getCategoryClass(ann.category)">
-            <mat-icon>campaign</mat-icon>
-          </div>
-
-          <div class="ann-main">
-            <div class="ann-title-row">
-              <span class="category-badge" [ngClass]="getCategoryClass(ann.category)">
-                {{ getCategoryLabel(ann.category) }}
-              </span>
-              @if (ann.isPinned) {
-                <span class="pin-badge">
-                  <mat-icon style="font-size:12px;width:12px;height:12px;vertical-align:middle;">push_pin</mat-icon>
-                  置頂
-                </span>
-              }
-              @if (isExpired(ann)) {
-                <span class="expired-badge">已到期</span>
-              }
-              <span class="ann-title">{{ ann.title }}</span>
+      <div class="list-scroll-area">
+        @for (ann of pagedAnnouncements; track ann.announcementId) {
+          <div
+            class="announcement-item"
+            [class.pinned]="ann.isPinned"
+            [class.expired]="isExpired(ann)"
+            (click)="openDetail(ann)"
+          >
+            <div class="ann-icon-box" [ngClass]="getCategoryClass(ann.category)">
+              <mat-icon>campaign</mat-icon>
             </div>
-            <span class="ann-sub">
-              <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">person</mat-icon>
-              {{ getAuthorName(ann) }} &nbsp;·&nbsp;
-              到期：{{ formatDate(ann.expiresAt) }}
-            </span>
-          </div>
 
-          <div class="ann-right">
-            <span class="ann-date">{{ formatDate(ann.publishedAt) }}</span>
-            @if (isAdmin) {
-              <div class="ann-actions" (click)="$event.stopPropagation()">
-                <button class="icon-btn edit" (click)="openEdit(ann, $event)" title="編輯">
-                  <mat-icon>edit</mat-icon>
-                </button>
-                <button class="icon-btn delete" (click)="openDelete(ann.announcementId, $event)" title="刪除">
-                  <mat-icon>delete</mat-icon>
-                </button>
+            <div class="ann-main">
+              <div class="ann-title-row">
+                <span class="category-badge" [ngClass]="getCategoryClass(ann.category)">
+                  {{ getCategoryLabel(ann.category) }}
+                </span>
+                @if (ann.isPinned) {
+                  <span class="pin-badge">
+                    <mat-icon style="font-size:12px;width:12px;height:12px;vertical-align:middle;">push_pin</mat-icon>
+                    置頂
+                  </span>
+                }
+                @if (isExpired(ann)) {
+                  <span class="expired-badge">已到期</span>
+                }
+                <span class="ann-title">{{ ann.title }}</span>
               </div>
-            }
+              <span class="ann-sub">
+                <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">person</mat-icon>
+                {{ getAuthorName(ann) }} &nbsp;·&nbsp;
+                到期：{{ formatDate(ann.expiresAt) }}
+              </span>
+            </div>
+
+            <div class="ann-right">
+              <span class="ann-date">{{ formatDate(ann.publishedAt) }}</span>
+              @if (isAdmin) {
+                <div class="ann-actions" (click)="$event.stopPropagation()">
+                  <button class="icon-btn edit" (click)="openEdit(ann, $event)" title="編輯">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button class="icon-btn delete" (click)="openDelete(ann.announcementId, $event)" title="刪除">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
+            </div>
           </div>
-        </div>
-      }
+        }
+      </div>
     </div>
   }
 
