@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -10,11 +10,14 @@ import { PackageService } from '../../../@service/package.service';
 import { PackageStatus, UserRole } from '../../../interface/enum';
 import { User } from '../../../interface/interface';
 import { HttpService } from '../../../@service/http.service';
+import { MatDialog } from '@angular/material/dialog';
+import { PackegeDiologComponent } from '../../../dialog/packege-diolog/packege-diolog.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-package',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatSnackBarModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatSnackBarModule,MatButtonModule],
   templateUrl: './package.component.html',
   styleUrls: ['./package.component.scss']
 })
@@ -62,7 +65,7 @@ export class PackageComponent implements OnInit, OnDestroy {
 
   PackageStatus = PackageStatus;
 
-  couriers = ['黑貓宅急便', '新竹物流', '郵局', '宅配通', '順豐速運', 'DHL', 'Lalamove', 'FedEx', '其他'];
+  couriers = ['黑貓宅急便', '新竹物流', '郵局', '宅配通', '順豐速運', 'DHL', 'Lalamove', 'FedEx', '中華郵局','其他'];
 
   addressList: string[] = [];
   packages: any[] = [];
@@ -73,7 +76,8 @@ export class PackageComponent implements OnInit, OnDestroy {
     private http: HttpService,
     private authService: AuthService,
     private packageService: PackageService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+
   ) {}
 
   ngOnInit(): void {
@@ -81,6 +85,20 @@ export class PackageComponent implements OnInit, OnDestroy {
     this.loadAddresses();
     this.loadPackages();
   }
+
+
+
+readonly dialog = inject(MatDialog);
+
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.dialog.open(PackegeDiologComponent, {
+      width: '250px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+  }
+
+
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -378,7 +396,8 @@ export class PackageComponent implements OnInit, OnDestroy {
 
       console.log('這是可以傳給後端的 Base64:', base64String);
       const payload = { image: base64String };
-    this.http.postApi("/api/ocr/scan-package",payload).subscribe((res:any)=>{
+    this.http.postApi("/api/ocr/scan-package",payload).subscribe({
+        next: (res:any) => {
       console.log(res);
       this.newPackageForm.recipientName=res.recipientName;
       this.newPackageForm.unitNumber=res.unitNumber;
@@ -387,10 +406,15 @@ this.newPackageForm.phoneNumber=res.phoneNumber;
 this.newPackageForm.courier=res.courier;
 this.newPackageForm.notes=res.notes;
 
-
+        },
+          error: (err) => {console.log('報錯了');
+            this.openDialog('0','0');
+          }
     })
     };
     reader.readAsDataURL(file);
   }
 }
+
+
 }
