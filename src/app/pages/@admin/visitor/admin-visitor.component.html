@@ -52,10 +52,10 @@
                     <span class="name-text">{{ visitor.visitorName }}</span>
                   </div>
                 </td>
-                <td class="col-phone" data-label="電話">{{ visitor.visitorPhone || '-' }}</td>
-                <td class="col-plate" data-label="車牌">{{ visitor.licensePlate || '-' }}</td>
-                <td class="col-host" data-label="被訪住戶">{{ visitor.residentialAddress || '-' }}</td>
-                <td class="col-time" data-label="時間">{{ visitor.estimatedTime !== '-' ? visitor.estimatedTime : visitor.checkInTime }}</td>
+                <td class="col-phone" data-label="電話"><span class="val-text">{{ visitor.visitorPhone || '-' }}</span></td>
+                <td class="col-plate" data-label="車牌"><span class="val-text">{{ visitor.licensePlate || '-' }}</span></td>
+                <td class="col-host" data-label="被訪住戶"><span class="val-text">{{ visitor.residentialAddress || '-' }}</span></td>
+                <td class="col-time" data-label="時間"><span class="val-text">{{ visitor.estimatedTime !== '-' ? visitor.estimatedTime : visitor.checkInTime }}</span></td>
                 <td class="col-status" data-label="狀態">
                   @if (visitor.status === 'NOTYET') { <span class="status-badge status-notyet">未到</span> }
                   @else if (visitor.status === 'INSIDE') { <span class="status-badge status-inside">在內</span> }
