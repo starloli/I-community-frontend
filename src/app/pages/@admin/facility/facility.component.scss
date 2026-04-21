@@ -4,7 +4,7 @@
 
 .page-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 28px;
@@ -15,16 +15,54 @@
     gap: 4px;
   }
 
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
   h1 {
     font-size: 36px;
     font-weight: 700;
     color: #1a1a2e;
-    margin: 0 0 4px 0;
+    margin: 0;
   }
 
   .subtitle {
     font-size: 15px;
     color: #888;
+  }
+}
+.config-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  outline: none;
+  background: #ffffff;
+  color: #5c6bc0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(92, 107, 192, 0.15);
+
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  &:hover {
+    background: #f5f6fa;
+    color: #3f51b5;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(92, 107, 192, 0.25);
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 }
 

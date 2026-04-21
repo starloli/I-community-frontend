@@ -4,9 +4,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpService } from '../../@service/http.service';
 import { FormsModule } from '@angular/forms';
 
+import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-facility-config',
-  imports: [FormsModule],
+  standalone: true,
+  imports: [FormsModule, MatIconModule, CommonModule],
   templateUrl: './facility-config.component.html',
   styleUrl: './facility-config.component.scss',
 })
