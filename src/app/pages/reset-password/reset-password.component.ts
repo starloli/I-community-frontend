@@ -6,10 +6,10 @@ import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validat
 @Component({
   selector: 'app-reset-password',
   imports: [FormsModule, ReactiveFormsModule],
-  templateUrl: './reset-password.html',
-  styleUrl: './reset-password.scss',
+  templateUrl: './reset-password.component.html',
+  styleUrl: './reset-password.component.scss',
 })
-export class ResetPassword {
+export class ResetPasswordComponent {
 
   private fb = inject(FormBuilder);
 

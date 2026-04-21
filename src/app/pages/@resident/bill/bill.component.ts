@@ -75,12 +75,11 @@ export class BillComponent implements OnInit {
 
   ngOnInit(): void {
     this.getMyBills();
-    console.log(localStorage.getItem('token'));
   }
   //得到個人的賬單
   getMyBills() {
     this.http.getApi("/bills/getMyBill").subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       this.bills = res.reverse();
 
       this.bills = res.map((bill: any) => {

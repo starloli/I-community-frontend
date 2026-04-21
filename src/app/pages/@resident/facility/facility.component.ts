@@ -7,10 +7,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject, takeUntil } from 'rxjs';
 
 import { HttpService } from '../../../@service/http.service';
-import { ReservationService } from '../../../@service/reservation.service';
-import { ReservationCalendar } from '../../../dialog/reservation-calendar/reservation-calendar.component';
+import { ReservationCalendarComponent } from '../../../dialog/reservation-calendar/reservation-calendar.component';
 import { ReservationStatus } from '../../../interface/enum';
 import { Facility, ResReservation, User } from '../../../interface/interface';
+import { ReservationService } from '../../../@service/reservation.service';
 
 @Component({
   selector: 'app-resident-facility',
@@ -30,9 +30,10 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
   // 統一管理訂閱生命週期，避免頁面離開後還殘留 API 訂閱。
   private destroy$ = new Subject<void>();
 
-  getFacilityUrl = '/user/facilities';
-  getReservationByFacilityIdUrl = '/user/reservationsByFacilityId';
-  cancelReservationUrl = '/user/cancelReservation';
+  getFacilityUrl = '/user/facility';
+  getReservationByUserIdUrl = '/reservation/byUserId';
+  getReservationByFacilityIdUrl = '/reservation/byFacilityId';
+  cancelReservationUrl = '/reservation/cancel';
   getUserUrl = '/user/me';
 
   // 目前流程只會用到當前登入者，因此這裡實際上只會放一筆 user 資料。
@@ -240,7 +241,7 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: res => {
-          const dialogRef = this.dialog.open(ReservationCalendar, {
+          const dialogRef = this.dialog.open(ReservationCalendarComponent, {
             data: {
               facility,
               reservations: res

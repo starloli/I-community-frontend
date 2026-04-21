@@ -12,12 +12,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-user-info',
-  standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatProgressSpinnerModule],
-  templateUrl: './user-info.html',
-  styleUrl: './user-info.scss',
+  imports: [FormsModule],
+  templateUrl: './user-info.component.html',
+  styleUrl: './user-info.component.scss',
 })
-export class UserInfo implements OnInit, OnDestroy {
+export class UserInfoComponent implements OnInit, OnDestroy {
 
   constructor(private http: HttpService, private snackBar: MatSnackBar) { }
 

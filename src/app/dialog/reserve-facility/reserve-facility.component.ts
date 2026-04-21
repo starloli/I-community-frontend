@@ -32,7 +32,7 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  postUrl = '/user/reserve';
+  postUrl = '/reservation';
   getUrl = '/user/me';
   reservation: Reservation = {
     reservationId: 0,

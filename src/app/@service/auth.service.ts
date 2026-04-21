@@ -1,4 +1,4 @@
-import { ResetPassword } from './../pages/reset-password/reset-password';
+import { ResetPasswordComponent } from '../pages/reset-password/reset-password.component';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -16,17 +16,17 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router
-  ) {}
+  ) { }
 
   login(userName: string, password: string) {
     return this.http.post<any>(
-        this.apiUrl + '/auth/login',
-        {
-          "userName": userName,
-          "password": password
-        },
-        { observe: 'response' }
-      )
+      this.apiUrl + '/auth/login',
+      {
+        "userName": userName,
+        "password": password
+      },
+      { observe: 'response' }
+    )
       .pipe(
         tap((res: HttpResponse<any>) => {
           localStorage.setItem('token', res.body.accessToken);
@@ -41,16 +41,16 @@ export class AuthService {
         "email": email
       }
     ).pipe(
-    catchError((error) => {
-      console.error('API error:', error);
+      catchError((error) => {
+        console.error('API error:', error);
 
-      let message = '信箱錯誤';
-      if (error.error?.message) {
-        message = error.error.message;
-      }
+        let message = '信箱錯誤';
+        if (error.error?.message) {
+          message = error.error.message;
+        }
 
-      return throwError(() => new Error(message));
-    }))
+        return throwError(() => new Error(message));
+      }))
   }
 
   resetPassword(token: string, npw: string) {
@@ -61,16 +61,16 @@ export class AuthService {
         "newPassword": npw
       }
     ).pipe(
-    catchError((error) => {
-      console.error('API error:', error);
+      catchError((error) => {
+        console.error('API error:', error);
 
-      let message = '重置密碼錯誤';
-      if (error.error?.message) {
-        message = error.error.message;
-      }
+        let message = '重置密碼錯誤';
+        if (error.error?.message) {
+          message = error.error.message;
+        }
 
-      return throwError(() => new Error(message));
-    }))
+        return throwError(() => new Error(message));
+      }))
   }
 
   getToken(): string | null {
@@ -89,7 +89,7 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.getUser()?.role === 'ADMIN';
+    return this.getUser()?.role === 'ADMIN' || this.getUser()?.role === 'SUPER_ADMIN';
   }
 
   isLoggedIn(): boolean {
@@ -123,16 +123,16 @@ export class AuthService {
         "email": email
       }
     ).pipe(
-    catchError((error) => {
-      console.error('API error:', error);
+      catchError((error) => {
+        console.error('API error:', error);
 
-      let message = '信箱錯誤';
-      if (error.error?.message) {
-        message = error.error.message;
-      }
+        let message = '信箱錯誤';
+        if (error.error?.message) {
+          message = error.error.message;
+        }
 
-      return throwError(() => new Error(message));
-    }))
+        return throwError(() => new Error(message));
+      }))
   }
 
   verifyEmail(email: string, code: string) {
@@ -143,15 +143,15 @@ export class AuthService {
         "code": code
       }
     ).pipe(
-    catchError((error) => {
-      console.error('API error:', error);
+      catchError((error) => {
+        console.error('API error:', error);
 
-      let message = '信箱認證錯誤';
-      if (error.error?.message) {
-        message = error.error.message;
-      }
+        let message = '信箱認證錯誤';
+        if (error.error?.message) {
+          message = error.error.message;
+        }
 
-      return throwError(() => new Error(message));
-    }))
+        return throwError(() => new Error(message));
+      }))
   }
 }

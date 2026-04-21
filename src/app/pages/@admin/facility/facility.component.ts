@@ -8,7 +8,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { HttpService } from '../../../@service/http.service';
 import { Facility } from '../../../interface/interface';
 import { RegistFacilityComponent } from '../../../dialog/regist-facility/regist-facility.component';
-import { UpdateFacility } from '../../../dialog/update-facility/update-facility.component';
+import { UpdateFacilityComponent } from '../../../dialog/update-facility/update-facility.component';
+import { FacilityConfigComponent } from '../../../dialog/facility-config/facility-config.component';
 
 @Component({
   selector: 'app-facility',
@@ -25,7 +26,8 @@ export class FacilityComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  getUrl = "/user/facilities";
+  getUrl = "/user/facility";
+  deleteUrl = "/facility/delete-facility";
   facilities: Facility[] = [];
   searchKeyword = '';
   availabilityFilter: 'all' | 'available' | 'unavailable' = 'all';
@@ -120,8 +122,12 @@ export class FacilityComponent implements OnInit, OnDestroy {
     });
   }
 
+  config(){
+    this.dialogRef.open(FacilityConfigComponent);
+  }
+
   updateFacility(facility: Facility) {
-    const dialogRef = this.dialogRef.open(UpdateFacility, {
+    const dialogRef = this.dialogRef.open(UpdateFacilityComponent, {
       data: facility
     });
     dialogRef.afterClosed().subscribe({
@@ -143,7 +149,7 @@ export class FacilityComponent implements OnInit, OnDestroy {
 
   deleteFacility(facilityId: number) {
     if (confirm('確定要刪除這個設施嗎？\n此動作無法復原 且會刪除相關預約資料\n\n若要停用設施 請使用編輯功能')) {
-      this.http.deleteApi("/admin/delete-facility", facilityId).pipe(takeUntil(this.destroy$)).subscribe({
+      this.http.deleteApi(this.deleteUrl, facilityId).pipe(takeUntil(this.destroy$)).subscribe({
         next: res => {
           this.snackBar.open('刪除成功', '關閉', {
             duration: 2000,

@@ -5,9 +5,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { BillsdialogComponent } from '../billsdialog/billsdialog.component';
 import { Router, RouterLink } from "@angular/router";
 import { HttpService } from '../../@service/http.service';
+
 @Component({
   selector: 'app-send-bill',
-  imports: [FormsModule, ReactiveFormsModule, RouterLink,],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './send-bill.component.html',
   styleUrl: './send-bill.component.scss',
 })

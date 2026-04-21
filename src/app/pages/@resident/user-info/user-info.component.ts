@@ -15,7 +15,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   templateUrl: './user-info.component.html',
   styleUrl: './user-info.component.scss',
 })
-export class UserInfo implements OnInit, OnDestroy {
+export class UserInfoComponent implements OnInit, OnDestroy {
 
   constructor(private http: HttpService, private snackBar: MatSnackBar) { }
 

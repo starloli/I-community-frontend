@@ -1,4 +1,3 @@
-import { Res } from './interface/interface';
 import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { LayoutComponent } from './shared/layout/layout.component';
@@ -15,7 +14,7 @@ import { PackageComponent } from './pages/@admin/package/package.component';
 import { RepairComponent } from './pages/@admin/repair/repair.component';
 
 // ── 住戶頁面（之後陸續新增）──────────────────────────
-import { UserInfo as ResidentUserInfo } from './pages/@resident/user-info/user-info.component';
+import { UserInfoComponent as ResidentUserInfo, UserInfoComponent } from './pages/@resident/user-info/user-info.component';
 import { ResidentDashboardComponent } from './pages/@resident/dashboard/dashboard.component';
 import { ResidentAnnouncementComponent } from './pages/@resident/announcement/announcement.component';
 import { BillComponent as ResidentBillComponent } from './pages/@resident/bill/bill.component';
@@ -25,11 +24,10 @@ import { ResidentRepairComponent } from './pages/@resident/repair/repair.compone
 import { VisitorComponent as ResidentVisitorComponent } from './pages/@resident/visitor/visitor.component';
 
 import { VisitorDialogComponent } from './dialog/visitor-dialog/visitor-dialog.component';
-import { ResetPassword } from './pages/reset-password/reset-password';
-import { ForgetPassword } from './pages/forget-password/forget-password';
-import { ModifyResidentComponent } from './pages/@admin/modify-resident/modify-resident.component';
-import { UserInfo } from './pages/@admin/user-info/user-info';
 import { VisitorComponent } from './pages/@admin/visitor/admin-visitor.component';
+import { ModifyResidentComponent } from './pages/@admin/modify-resident/modify-resident.component';
+import { ForgetPasswordComponent } from './pages/forget-password/forget-password.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { Test } from './test/test.component';
 
 export const routes: Routes = [
@@ -37,16 +35,15 @@ export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'visitorDialog', component: VisitorDialogComponent },
-  { path: 'reset-password', component: ResetPassword },
-  { path: 'forget-password', component: ForgetPassword },
-  {path :'test', component: Test},
+  { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'forget-password', component: ForgetPasswordComponent },
+  { path: 'test', component: Test },
   {
-    path: 'admin',
-    component: LayoutComponent,
+    path: 'admin', component: LayoutComponent,
     canActivate: [adminGuard],
     canActivateChild: [adminGuard],
     children: [
-      { path: 'userInfo', component: UserInfo },
+      { path: 'userInfo', component: UserInfoComponent },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'visitor', component: VisitorComponent },
       { path: 'announcement', component: AnnouncementComponent },
@@ -61,8 +58,7 @@ export const routes: Routes = [
 
   // ── 住戶路由 ─────────────────────────────────────────
   {
-    path: 'resident',
-    component: ResidentLayoutComponent,
+    path: 'resident', component: ResidentLayoutComponent,
     canActivate: [authGuard],
     canActivateChild: [authGuard],
     children: [

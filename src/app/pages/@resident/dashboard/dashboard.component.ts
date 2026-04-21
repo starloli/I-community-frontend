@@ -23,8 +23,10 @@ import { Announcement, Bill, Package, RepairRequest, ResReservation, User } from
 })
 export class ResidentDashboardComponent implements OnInit, OnDestroy {
   userName = '住戶';
+  userId = 0;
   unitNumber = '';
   getUserUrl = '/user/me';
+  recentVisitors: Array<{ name: string; unit: string; time: string; status: string }> = [];
   private $destroy = new Subject<void>();
 
   stats = [
@@ -46,21 +48,18 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private http: HttpService,
+    private statisticsService: StatisticsService,
     private announcementService: AnnouncementService,
     private packageService: PackageService,
-    private billService: BillService,
     private repairService: RepairService,
-    private reservationService: ReservationService,
-    private statisticsService: StatisticsService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadUserInfo();
     this.loadAnnouncements();
     this.loadPackages();
-    this.loadBillStats();
-    this.loadRepairStats();
-    this.loadReservationStats();
+    this.loadBillsCount();
+    this.loadPendingRepairs();
   }
 
   private loadUserInfo(): void {
@@ -68,10 +67,8 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
       next: (user) => {
         this.userName = user.fullName || user.userName || '住戶';
         this.unitNumber = user.unitNumber || '';
-        // After user info is loaded, we can fetch user-specific reservations
-        if (user.userId) {
-          this.reservationService.getUserReservations(user.userId).pipe(takeUntil(this.$destroy)).subscribe();
-        }
+        this.userId = user.userId || 0;
+        this.loadReservations();
       },
       error: () => {
         this.loadUserInfoFromToken();
@@ -84,19 +81,51 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
     if (!token) {
       this.userName = '住戶';
       this.unitNumber = '';
+      this.userId = 0;
       return;
     }
 
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
+
       this.userName = payload.fullName || payload.sub || '住戶';
       this.unitNumber = payload.unitNumber || '';
-      if (payload.userId) {
-        this.reservationService.getUserReservations(Number(payload.userId)).pipe(takeUntil(this.$destroy)).subscribe();
-      }
+      this.userId = payload.userId || 0;
     } catch {
       this.userName = '住戶';
       this.unitNumber = '';
+    }
+  }
+
+  private loadBillsCount(): void {
+    this.http.getApi<any[]>("/bills/getMyBill").pipe(takeUntil(this.$destroy)).subscribe({
+      next: (bills: any[]) => {
+        console.log(bills);
+        this.stats[0].value = bills.filter(bill => bill.status === 'UNPAID').length.toString();
+      },
+      error: (error) => {
+        console.error('取得帳單資料失敗:', error);
+        this.stats[0].value = 'N/A';
+      }
+    });
+  }
+
+  private loadReservations(): void {
+    if (this.userId !== 0) {
+      this.http.getApi<Array<ResReservation>>('/reservation/byUserId', this.userId)
+        .pipe(takeUntil(this.$destroy))
+        .subscribe({
+          next: res => {
+            // console.log(res);
+            this.stats[3].value = res.filter(
+              reservation => reservation.status === ReservationStatus.CONFIRMED &&
+                new Date(reservation.date) >= new Date()
+            ).length.toString();
+          },
+          error: err => {
+            console.error('取得預約資料失敗:', err);
+          }
+        });
     }
   }
 
@@ -125,7 +154,6 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
           .map(pkg => this.normalizePackage(pkg))
           .filter(pkg => pkg.status === PackageStatus.WAITING)
           .sort((a, b) => this.getDateTimestamp(b.arrivedAt) - this.getDateTimestamp(a.arrivedAt));
-
         this.stats[1].value = waitingPackages.length.toString();
         this.myPackages = waitingPackages.slice(0, 3).map(pkg => ({
           courier: pkg.courier,
@@ -135,38 +163,25 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
       });
   }
 
-  private loadBillStats(): void {
-    this.billService.getMyBills().pipe(takeUntil(this.$destroy)).subscribe(); // Ensure bills are fetched
-    this.billService.bills$
-      .pipe(takeUntil(this.$destroy))
-      .subscribe((bills: any[]) => {
-        // 使用和帳單頁面相同的篩選條件：status === '待繳'
-        const count = bills.filter(bill => bill.status === '待繳' || bill.status === 'UNPAID').length;
-        this.stats[0].value = count.toString();
-      });
-  }
+  private loadPendingRepairs(): void {
+    // Use the same source as the admin repair page so the "待處理報修" count stays consistent.
+    this.repairService.getAll().pipe(takeUntil(this.$destroy)).subscribe({
+      error: (error) => {
+        console.error('取得報修資料失敗:', error);
+        this.stats[2].value = 'N/A';
+      }
+    });
 
-  private loadRepairStats(): void {
-    this.repairService.getUserAll().pipe(takeUntil(this.$destroy)).subscribe(); // Ensure repairs are fetched
-    this.repairService.userRepairs$
-      .pipe(takeUntil(this.$destroy))
-      .subscribe((repairs: RepairRequest[]) => {
-        const pendingRepairs = repairs.filter(repair => repair.status === RepairStatus.PENDING);
-        this.stats[2].value = pendingRepairs.length.toString();
-      });
-  }
-
-  private loadReservationStats(): void {
-    this.reservationService.getConfirmedReservationCount()
-      .pipe(takeUntil(this.$destroy))
-      .subscribe((count: number) => {
-        this.stats[3].value = count.toString();
-      });
+    this.repairService.repairs$.pipe(takeUntil(this.$destroy)).subscribe(data => {
+      this.stats[2].value = data
+        .filter(item => item.status === RepairStatus.PENDING)
+        .length
+        .toString();
+    });
   }
 
   private normalizePackage(pkg: any): any {
     const rawStatus = pkg.status || PackageStatus.WAITING;
-
     return {
       ...pkg,
       trackingNumber: pkg.trackingNumber || pkg['trackingNo'] || '',

@@ -1,59 +1,37 @@
-# ICommunityFrontend
+# i-community 網頁功能大綱
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.5.
+此文件概述了 `i-community` 專案的主要網頁功能模組，旨在提供開發者與使用者一個清晰的功能藍圖。
 
-## Development server
+## 1. 使用者與帳戶管理 (User & Account Management)
+*   **帳戶註冊與登入**：支援 Email、手機號碼或第三方登錄（如 Google, LINE）。
+*   **個人資料設定**：使用者可上傳頭像、修改暱稱、聯絡電話及居住單位資訊。
+*   **身分驗證與權限**：
+    *   **一般住戶**：瀏覽社群資訊、參與討論、報修。
+    *   **管理員 (Admin)**：管理公告、審核用戶、查看統計數據。
+    *   **物業/維護人員**：接收並處理報修訂單。
 
-To start a local development server, run:
+## 2. 社群資訊與互動 (Community Interaction)
+*   **最新公告 (Announcements)**：展示社區重要通知（如停水停電、會議記錄），支援置頂功能。
+*   **討論區 (Forum/Feeds)**：
+    *   住戶交流區，可發布文字、圖片及投票。
+    *   支援留言、按讚與檢舉功能。
+*   **活動行事曆 (Events)**：展示社區活動，提供線上報名與名額限制功能。
 
-```bash
-ng serve
-```
+## 3. 物業服務與管理 (Property Services)
+*   **線上報修 (Maintenance Request)**：住戶可上傳修繕照片、描述問題，並追蹤處理進度。
+*   **包裹掛號通知 (Package Tracking)**：整合物流通知系統，管理室簽收後推送訊息給住戶。
+*   **公共設施預約 (Facility Booking)**：如健身房、視聽室、游泳池預約系統，包含時段限制與點數扣除。
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 4. 財務與繳費 (Finance & Payments)
+*   **管理費查詢**：顯示每期應繳金額與過往繳費紀錄。
+*   **線上支付**：串接金流 API，支援信用卡、超商代碼或虛擬帳號轉帳。
 
-## Code scaffolding
+## 5. 智慧後台控制台 (Admin Dashboard)
+*   **數據看板**：視覺化展示報修統計、設施設置率及住戶活躍度。
+*   **住戶清單管理**：匯入/匯出住戶資料，手動調整用戶狀態。
+*   **系統設定**：管理分類標籤、設定自動通知規則。
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 6. 技術規範 (Technical Specifications)
+*   **前端**：Responsive Web Design (RWD) 兼容行動裝置與桌機環境。
+*   **API 串接**：採用 RESTful 或 GraphQL 進行前後端資料交換。
+*   **安全性**：使用 JWT 進行驗證，並對敏感資料進行加密處理。

@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { UserResponse } from '../../interface/interface';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,10 +19,10 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './edit-resident.component.html',
   styleUrl: './edit-resident.component.scss',
 })
-export class EditResident implements OnInit, OnDestroy {
+export class EditResidentComponent implements OnInit, OnDestroy {
 
   constructor(
-    private dialog: MatDialogRef<EditResident>,
+    private dialog: MatDialogRef<EditResidentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: UserResponse,
   ) { }
 
@@ -30,8 +30,10 @@ export class EditResident implements OnInit, OnDestroy {
 
   private $destroy = new Subject<void>();
 
+  // TODO:社區行事曆功能，讓住戶可以看到社區活動資訊
+
   returnUser(user: UserResponse): void {
-    console.log(user);
+    // console.log(user);
     this.dialog.close(user);
   }
 

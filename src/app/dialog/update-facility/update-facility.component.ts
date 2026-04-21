@@ -12,7 +12,7 @@ import { HttpService } from '../../@service/http.service';
   templateUrl: './update-facility.component.html',
   styleUrl: './update-facility.component.scss',
 })
-export class UpdateFacility implements OnInit {
+export class UpdateFacilityComponent implements OnInit {
 
   hoursList: string[] = Array.from({ length: 24 }, (_, i) =>
     `${i.toString().padStart(2, '0')}:00`
@@ -20,11 +20,11 @@ export class UpdateFacility implements OnInit {
   constructor(
     private http: HttpService,
     private snackBar: MatSnackBar,
-    public dialogRef: MatDialogRef<UpdateFacility>,
+    public dialogRef: MatDialogRef<UpdateFacilityComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Facility
   ) { }
 
-  putUrl = "/admin/update-facility";
+  putUrl = "/facility/update-facility";
   facility: Facility = {
     facilityId: 0,
     name: '',
