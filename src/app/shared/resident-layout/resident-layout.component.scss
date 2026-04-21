@@ -14,6 +14,6 @@
   flex-direction: column;
 
   @media (max-width: 768px) {
-    padding: 0; // 手機版移除間距，讓頁面組件自行控制滿版效果
+    padding: 60px 16px 65px; // 頂部留給 Header，左右留間距，底部留給 Tab Bar
   }
 }

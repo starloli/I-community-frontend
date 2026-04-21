@@ -34,15 +34,17 @@
         <h2>社區公告</h2>
         <a class="card-more" (click)="navigateTo('/resident/announcement')">查看全部</a>
       </div>
-      @for (item of announcements; track item.title) {
-      <div class="announcements-item">
-        <div class="announcements-left">
-          <span class="category-badge">{{ item.category }}</span>
-          <span class="announcements-title">{{ item.title }}</span>
+      <div class="card-scroll-area">
+        @for (item of announcements; track item.title) {
+        <div class="announcements-item">
+          <div class="announcements-left">
+            <span class="category-badge">{{ item.category }}</span>
+            <span class="announcements-title">{{ item.title }}</span>
+          </div>
+          <span class="announcements-date">{{ item.date }}</span>
         </div>
-        <span class="announcements-date">{{ item.date }}</span>
+        }
       </div>
-      }
     </div>
 
     <div class="card">
@@ -51,25 +53,27 @@
         <h2>待領包裹</h2>
         <a class="card-more" (click)="navigateTo('/resident/package')">查看全部</a>
       </div>
-      @if (myPackages.length === 0) {
-      <div class="empty-packages">
-        <mat-icon>check_circle</mat-icon>
-        <span>目前沒有待領包裹</span>
-      </div>
-      } @else {
-      @for (pkg of myPackages; track pkg.trackingNumber) {
-      <div class="package-item">
-        <div class="package-icon">
-          <mat-icon>inventory_2</mat-icon>
+      <div class="card-scroll-area">
+        @if (myPackages.length === 0) {
+        <div class="empty-packages">
+          <mat-icon>check_circle</mat-icon>
+          <span>目前沒有待領包裹</span>
         </div>
-        <div class="package-info">
-          <span class="package-courier">{{ pkg.courier }}</span>
-          <span class="package-tracking">{{ pkg.trackingNumber }}</span>
+        } @else {
+        @for (pkg of myPackages; track pkg.trackingNumber) {
+        <div class="package-item">
+          <div class="package-icon">
+            <mat-icon>inventory_2</mat-icon>
+          </div>
+          <div class="package-info">
+            <span class="package-courier">{{ pkg.courier }}</span>
+            <span class="package-tracking">{{ pkg.trackingNumber }}</span>
+          </div>
+          <span class="package-time">{{ pkg.arrivedAt }}</span>
         </div>
-        <span class="package-time">{{ pkg.arrivedAt }}</span>
+        }
+        }
       </div>
-      }
-      }
     </div>
 
     <div class="card visitor-card">
@@ -79,17 +83,18 @@
         <a class="card-more" (click)="navigateTo('/resident/visitor')">前往頁面</a>
       </div>
 
-      <p class="visitor-copy">提前為來訪親友完成登記，方便社區櫃台快速確認資料。</p>
+      <div class="card-scroll-area">
+        <p class="visitor-copy">提前為來訪親友完成登記，方便社區櫃台快速確認資料。</p>
 
-      <div class="visitor-highlights">
-        @for (item of visitorHighlights; track item) {
-        <div class="visitor-highlight">
-          <mat-icon>check_circle</mat-icon>
-          <span>{{ item }}</span>
+        <div class="visitor-highlights">
+          @for (item of visitorHighlights; track item) {
+          <div class="visitor-highlight">
+            <mat-icon>check_circle</mat-icon>
+            <span>{{ item }}</span>
+          </div>
+          }
         </div>
-        }
       </div>
-
     </div>
   </div>
 </div>

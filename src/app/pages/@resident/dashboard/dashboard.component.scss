@@ -220,8 +220,155 @@
   }
 }
 
-@media (max-width: 1180px) {
+// =============================================================================
+// ===== 手機版響應式設計 (RWD) =====
+// =============================================================================
+
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    height: 100dvh; // 使用動態視窗高度
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; // 鎖定不捲動
+    box-sizing: border-box;
+    background: #f8f9fa;
+  }
+
+  .page-header {
+    padding: 12px 0 4px; // 壓縮標題區域
+    margin-bottom: 0;
+    flex-shrink: 0;
+    h1 {
+      font-size: 22px; // 稍微調小
+      letter-spacing: -0.5px;
+    }
+    .subtitle {
+      font-size: 11px;
+      margin-top: -2px;
+    }
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px; // 縮小間距
+    padding: 8px 0;
+    flex-shrink: 0;
+  }
+
+  .stat-card {
+    padding: 8px 12px 8px 8px; 
+    min-height: 68px;
+    position: relative; 
+    display: flex;
+    justify-content: flex-end; 
+    align-items: center; 
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    aspect-ratio: auto;
+
+    .stat-icon {
+      position: absolute;
+      top: 6px; 
+      left: 6px;
+      width: 35px;
+      height: 35px;
+      border-radius: 8px;
+      mat-icon {
+        font-size: 22px;
+        width: 22px;
+        height: 22px;
+      }
+    }
+
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center; 
+      text-align: center;
+      gap: 2px;
+      margin-left: auto;
+      margin-top: 0;
+      
+      .stat-value {
+        font-size: 25px;
+        font-weight: 400;
+        line-height: 1;
+      }
+      .stat-label {
+        font-size: 13px;
+        white-space: nowrap;
+        color: #888;
+        line-height: 1.2;
+      }
+    }
+  }
+
   .bottom-grid {
+    flex: 1;
+    display: grid;
     grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 1fr); // 住戶版有 3 個卡片，均分高度
+    padding: 4px 0 12px;
+    gap: 10px;
+    min-height: 0; 
+  }
+
+  .card {
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0; 
+    border-radius: 12px;
+
+    .card-header {
+      margin-bottom: 6px;
+      flex-shrink: 0;
+      h2 { font-size: 13px; font-weight: 600; }
+      mat-icon { font-size: 15px; width: 16px; height: 16px; }
+      .card-more { font-size: 11px; }
+    }
+
+    .card-scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+      &::-webkit-scrollbar { width: 3px; }
+      &::-webkit-scrollbar-thumb { background: #eee; border-radius: 3px; }
+    }
+
+    .announcements-item, .package-item {
+      padding: 5px 0;
+      border-bottom: 1px solid #fafafa;
+      font-size: 12px;
+    }
+
+    .announcements-title {
+      max-width: 140px; 
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .visitor-copy { font-size: 11px; margin-bottom: 8px; }
+    .visitor-highlight { 
+      font-size: 11px; 
+      gap: 4px;
+      mat-icon { font-size: 14px; width: 14px; height: 14px; }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .page-header h1 { font-size: 20px; }
+    .announcements-item {
+      flex-direction: row;
+      justify-content: space-between;
+      .announcements-date { font-size: 10px; }
+    }
   }
 }

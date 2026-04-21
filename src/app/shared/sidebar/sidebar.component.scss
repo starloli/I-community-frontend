@@ -367,17 +367,64 @@ $transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         font-weight: 600;
         color: #2c3e50;
       }
+
+      .edit-btn-mini {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: none;
+        background: transparent;
+        color: #95a5a6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-left: 4px;
+
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+        &:active {
+          background-color: rgba(0, 0, 0, 0.1);
+          transform: scale(0.92);
+        }
+      }
     }
 
     .m-header-right {
       .logout-btn-mini {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
         background: transparent;
         border: none;
         color: #e53935;
-        padding: 8px;
         display: flex;
         align-items: center;
-        mat-icon { font-size: 22px; width: 22px; height: 22px; }
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        mat-icon { 
+          font-size: 22px; 
+          width: 22px; 
+          height: 22px; 
+        }
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+        &:active {
+          background-color: rgba(0, 0, 0, 0.1);
+          transform: scale(0.92);
+        }
       }
     }
   }

@@ -199,15 +199,7 @@
 // ===== 住戶列表網格 =====
 .resident-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 20px;
-  margin-bottom: 24px;
-}
-
-// ===== 住戶列表網格 =====
-.resident-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(3, 1fr); // 強制固定為 3 欄，不隨螢幕寬度增加列數
   gap: 20px;
   margin-bottom: 24px;
 }
