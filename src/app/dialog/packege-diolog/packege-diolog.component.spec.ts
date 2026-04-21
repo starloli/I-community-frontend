@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SendBillComponent } from './send-bill.component';
+import { PackegeDiologComponent } from './packege-diolog.component';
 
-describe('SendBillComponent', () => {
-  let component: SendBillComponent;
-  let fixture: ComponentFixture<SendBillComponent>;
+describe('PackegeDiologComponent', () => {
+  let component: PackegeDiologComponent;
+  let fixture: ComponentFixture<PackegeDiologComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SendBillComponent]
+      imports: [PackegeDiologComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SendBillComponent);
+    fixture = TestBed.createComponent(PackegeDiologComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -12,7 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-user-info',
-  imports: [FormsModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './user-info.component.html',
   styleUrl: './user-info.component.scss',
 })

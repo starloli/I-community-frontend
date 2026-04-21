@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+<<<<<<<< HEAD:src/app/pages/@admin/modify-resident/modify-resident.spec.component.ts
+import { ModifyResident } from './modify-resident.component';
+========
 import { UserInfoComponent } from './user-info.component';
+>>>>>>>> starlo:src/app/pages/@admin/user-info/user-info.component.spec.ts
 
 describe('UserInfo', () => {
   let component: UserInfoComponent;
