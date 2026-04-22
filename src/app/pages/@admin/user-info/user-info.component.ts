@@ -27,6 +27,8 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   userRole!: UserRole;
   private $destroy = new Subject<void>();
 
+  // TODO: 超級管理員個人資料修改頁面
+
   ngOnInit(): void {
     this.getInfo();
     const payload = JSON.parse(atob(this.getToken().split('.')[1]));

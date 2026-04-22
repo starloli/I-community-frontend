@@ -44,6 +44,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { route: 'admin/ModifyResident', label: '住戶管理', color: '#5B7FA6', icon: 'manage_accounts' },
   ];
 
+  // TODO: 超級管理員的個人資料編輯按鈕待實作
 
   // 切換收合狀態
   toggleCollapse() {
@@ -53,7 +54,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadUserInfo();
     this.checkResidentIncomplete();
-    
+
     // 訂閱即時狀態更新
     this.residentState.hasIncompleteResident$
       .pipe(takeUntil(this.$destroy))
