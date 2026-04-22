@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+<<<<<<<< HEAD:src/app/pages/forget-password/forget-password.spec.component.ts
+import { ForgetPassword } from './forget-password.component';
+========
 import { ForgetPasswordComponent } from './forget-password.component';
+>>>>>>>> starlo:src/app/pages/forget-password/forget-password.component.spec.ts
 
 describe('ForgetPassword', () => {
   let component: ForgetPasswordComponent;
