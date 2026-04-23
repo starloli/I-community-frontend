@@ -1,9 +1,24 @@
-<h2 mat-dialog-title></h2>
+<div class="dialog-container">
+  <div class="dialog-header">
+    <div class="header-icon">
+      <mat-icon>error_outline</mat-icon>
+    </div>
+    <div class="header-title">
+      <h2>解析失敗</h2>
+      <p>圖片解析過程中發生錯誤</p>
+    </div>
+  </div>
 
-<mat-dialog-content>
-圖片解析失敗,請手動輸入
-</mat-dialog-content>
+  <div class="dialog-body">
+    <div class="alert-box">
+      <mat-icon>info</mat-icon>
+      <span>圖片解析失敗，請手動輸入包裹資訊。</span>
+    </div>
+  </div>
 
-<mat-dialog-actions>
-  <button mat-button cdkFocusInitial (click)="confirm()">確認</button>
-</mat-dialog-actions>
+  <div class="dialog-footer">
+    <button class="confirm-btn" (click)="confirm()">
+      我知道了
+    </button>
+  </div>
+</div>

@@ -69,6 +69,7 @@ export class PackageComponent implements OnInit, OnDestroy {
 
   addressList: string[] = [];
   packages: any[] = [];
+  selectedFileName = ''; // 儲存選取的檔案名稱
 
   private destroy$ = new Subject<void>();
 
@@ -308,11 +309,13 @@ readonly dialog = inject(MatDialog);
       courier: '',
       notes: ''
     };
+    this.selectedFileName = ''; // 重置選取檔案名稱
     this.showAddModal = true;
   }
 
   closeAdd(): void {
     this.showAddModal = false;
+    this.selectedFileName = ''; // 清除檔案名稱
   }
 
   submitAdd(): void {
@@ -389,6 +392,7 @@ readonly dialog = inject(MatDialog);
   onFileSelected(event: any) {
   const file: File = event.target.files[0];
   if (file) {
+    this.selectedFileName = file.name; // 儲存檔名以供 UI 顯示
     const reader = new FileReader();
 
     reader.onload = (e: any) => {

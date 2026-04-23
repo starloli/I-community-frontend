@@ -9,7 +9,7 @@ import { HttpService } from '../../@service/http.service';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -334,10 +334,5 @@ export class LoginComponent {
     this.http.getApi("/auth/checking/userName?name=" + "this.signUpUserName").subscribe((res: any) => {
       console.log(res);
     })
-  }
-
-
-  goToTest() {
-    this.router.navigate(['/test']);
   }
 }

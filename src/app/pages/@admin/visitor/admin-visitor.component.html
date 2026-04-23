@@ -78,20 +78,27 @@
     <div class="pagination-bar">
       <div class="pagination-summary">
         顯示第 {{ (currentPage - 1) * pageSize + 1 }}
-        至 {{ Math.min(currentPage * pageSize, filteredVisitorsRaw.length) }} 筆
+        至 {{ Math.min(currentPage * pageSize, filteredVisitorsRaw.length) }} 筆，
+        共 {{ filteredVisitorsRaw.length }} 筆
       </div>
 
+      @if (totalPagesArray.length > 1) {
       <div class="pagination">
         <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
           <mat-icon>chevron_left</mat-icon>
         </button>
 
-        <span class="page-info">{{ currentPage }} / {{ totalPagesArray.length || 1 }}</span>
+        @for (page of totalPagesArray; track page) {
+          <button class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">
+            {{ page }}
+          </button>
+        }
 
         <button class="page-btn" [disabled]="currentPage === totalPagesArray.length || totalPagesArray.length === 0" (click)="goToPage(currentPage + 1)">
           <mat-icon>chevron_right</mat-icon>
         </button>
       </div>
+      }
     </div>
   </div>
 

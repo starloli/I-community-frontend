@@ -135,19 +135,29 @@
   </div>
 
   <!-- 分頁 -->
-  @if (totalPages > 1) {
-  <div class="pagination">
-    <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-    @for (page of pageNumbers; track page) {
-    <button class="page-btn" [class.active]="currentPage === page" (click)="goToPage(page)">
-      {{ page }}
-    </button>
+  @if (pagedRepairs.length > 0) {
+  <div class="pagination-bar">
+    <div class="pagination-summary">
+      顯示第 {{ (currentPage - 1) * pageSize + 1 }}
+      至 {{ Math.min(currentPage * pageSize, filteredRepairs.length) }} 筆，
+      共 {{ filteredRepairs.length }} 筆
+    </div>
+
+    @if (totalPages > 1) {
+    <div class="pagination">
+      <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      @for (page of pageNumbers; track page) {
+      <button class="page-btn" [class.active]="currentPage === page" (click)="goToPage(page)">
+        {{ page }}
+      </button>
+      }
+      <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
     }
-    <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
   </div>
   }
 

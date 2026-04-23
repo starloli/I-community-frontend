@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject, takeUntil } from 'rxjs';
@@ -15,7 +16,7 @@ import { ReservationService } from '../../../@service/reservation.service';
 @Component({
   selector: 'app-resident-facility',
   standalone: true,
-  imports: [CommonModule, MatIconModule, FormsModule],
+  imports: [CommonModule, MatIconModule, FormsModule, MatMenuModule],
   templateUrl: './facility.component.html',
   styleUrls: ['./facility.component.scss']
 })
@@ -105,6 +106,18 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
     return this.currentReservations.find(
       reservation => reservation.status === ReservationStatus.CONFIRMED
     ) ?? this.currentReservations[0] ?? null;
+  }
+
+  /**
+   * 開啟狀態說明對話框
+   * @param template 模板引用
+   */
+  openStatusDialog(template: TemplateRef<any>): void {
+    this.dialog.open(template, {
+      width: '320px',
+      maxWidth: '90vw',
+      panelClass: 'status-info-dialog'
+    });
   }
 
   // 元件初始化時先抓設施清單，再取得登入住戶資料與其預約紀錄。

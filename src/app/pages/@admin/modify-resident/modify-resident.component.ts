@@ -52,6 +52,7 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
   isLoading = true
   role = UserRole.ADMIN
   UserRole = UserRole
+  protected Math = Math;
 
   private $destroy = new Subject<void>()
 

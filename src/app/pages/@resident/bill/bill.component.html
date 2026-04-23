@@ -45,7 +45,7 @@
 
   <!-- 帳單列表 -->
   <div class="table-card">
-    <table>
+    <table class="desktop-table">
       <thead>
         <tr>
           <th>帳單月份</th>
@@ -96,6 +96,62 @@
         }
       </tbody>
     </table>
+
+    <!-- 手機版帳單列表 -->
+    <div class="mobile-bill-list">
+      @for (bill of pagedBills; track bill.id) {
+      <div class="bill-mobile-item" [class.row-overdue]="bill.status === '逾期'" (click)="billsDialog(bill)">
+        <div class="item-header">
+          <div class="unit-info">
+            <span class="bill-title">{{ bill.title }}</span>
+            <span class="bill-month">{{ bill.billingMonth }}</span>
+          </div>
+          <div class="amount-info">
+            {{ bill.totalAmount | currency:'TWD':'symbol':'1.0-0'}}
+          </div>
+        </div>
+
+        <div class="item-body">
+          <div class="item-details">
+            <div class="detail-row">
+              <span class="label">截止日期</span>
+              <span class="value">{{ bill.dueDate }}</span>
+            </div>
+            @if (bill.paidAtDate) {
+            <div class="detail-row">
+              <span class="label">繳費時間</span>
+              <span class="value">{{ bill.paidAtDate | date:'yyyy-MM-dd' }}</span>
+            </div>
+            }
+          </div>
+        </div>
+
+        <div class="item-footer">
+          <div class="badge-group">
+            @if (bill.status === '已繳') {
+            <span class="status-badge status-paid">已繳</span>
+            } @else if (bill.status === '待繳') {
+            <span class="status-badge status-pending">待繳</span>
+            } @else {
+            <span class="status-badge status-overdue">逾期</span>
+            }
+          </div>
+
+          @if(bill.status !== '已繳'){
+          <button class="mobile-pay-btn" (click)="payBill(bill.id); $event.stopPropagation()">
+            立即繳費
+          </button>
+          }
+        </div>
+      </div>
+      }
+      @if (pagedBills.length === 0) {
+      <div class="empty-mobile-state">
+        <mat-icon>inbox</mat-icon>
+        <p>目前沒有符合條件的記錄</p>
+      </div>
+      }
+    </div>
   </div>
 
 </div>

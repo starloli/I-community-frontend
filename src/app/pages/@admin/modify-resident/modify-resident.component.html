@@ -132,6 +132,11 @@
   <!-- 自訂分頁 UI -->
   @if (totalPages > 1) {
   <div class="pagination-bar">
+    <div class="pagination-summary">
+      顯示第 {{ (currentPage - 1) * pageSize + 1 }}
+      至 {{ Math.min(currentPage * pageSize, filteredUsers.length) }} 位，
+      共 {{ filteredUsers.length }} 位住戶
+    </div>
     <div class="pagination">
       <button class="page-btn" (click)="previousPage()" [disabled]="currentPage === 1">
         <mat-icon>keyboard_arrow_left</mat-icon>

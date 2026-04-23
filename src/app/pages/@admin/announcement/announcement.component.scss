@@ -28,7 +28,7 @@
     align-items: center;
     gap: 8px;
     padding: 10px 18px;
-    background: #3f51b5;
+    background: #B07A8A;
     color: #fff;
     border: none;
     border-radius: 10px;
@@ -39,7 +39,7 @@
     white-space: nowrap;
 
     mat-icon { font-size: 20px; width: 20px; height: 20px; }
-    &:hover { background: #303f9f; }
+    &:hover { background: #9a6878; }
   }
 }
 
@@ -106,13 +106,13 @@
     transition: all 0.18s;
 
     &:hover {
-      border-color: #3f51b5;
-      color: #3f51b5;
+      border-color: #B07A8A;
+      color: #B07A8A;
     }
     &.active {
-      background: #3f51b5;
+      background: #B07A8A;
       color: #fff;
-      border-color: #3f51b5;
+      border-color: #B07A8A;
     }
   }
 
@@ -129,7 +129,7 @@
     transition: border-color 0.2s;
 
     &:focus-within {
-      border-color: #3f51b5;
+      border-color: #B07A8A;
     }
 
     mat-icon {
@@ -259,8 +259,8 @@
   white-space: nowrap;
 
   &.cat-notice {
-    background: #e8eaf6;
-    color: #3f51b5;
+    background: rgba(176, 122, 138, 0.1);
+    color: #b07a8a;
   }
   &.cat-maintenance {
     background: #fff3e0;
@@ -318,9 +318,9 @@
   }
 
   &.edit {
-    color: #3f51b5;
+    color: #b07a8a;
     &:hover {
-      background: #e8eaf6;
+      background: rgba(176, 122, 138, 0.1);
     }
   }
   &.delete {
@@ -474,7 +474,7 @@
     background: #fff;
     transition: border-color 0.2s;
     &:focus {
-      border-color: #3f51b5;
+      border-color: #b07a8a;
     }
   }
 
@@ -495,7 +495,7 @@
       height: 16px;
       padding: 0;
       border: none;
-      accent-color: #3f51b5;
+      accent-color: #b07a8a;
       cursor: pointer;
     }
   }
@@ -525,7 +525,7 @@
 
 .submit-btn {
   padding: 10px 24px;
-  background: #3f51b5;
+  background: #b07a8a;
   color: #fff;
   border: none;
   border-radius: 10px;
@@ -533,7 +533,7 @@
   font-weight: 600;
   cursor: pointer;
   &:hover {
-    background: #303f9f;
+    background: #9a6878;
   }
 }
 
@@ -647,7 +647,9 @@
       justify-content: center;
       padding: 8px 16px;
       font-size: 13px;
+      background: #B07A8A;
       mat-icon { font-size: 18px; width: 18px; height: 18px; }
+      &:hover { background: #9a6878; }
     }
   }
 
@@ -684,7 +686,7 @@
       margin-top: 8px; // 調整補償間距
 
       .stat-value {
-        font-size: 36px; // 👈 放大至 36px
+        font-size: 32px; // 👈 放大至 36px
         font-weight: 400; // 👈 字重改為 400
         line-height: 1;
       }
@@ -785,6 +787,7 @@
   }
 
   .pagination {
+    margin-bottom: 32px; // 增加底部間距
     .page-btn {
       width: 34px;
       height: 34px;
@@ -817,7 +820,9 @@
       padding: 8px 12px;
       font-size: 12px;
       margin-left: 10px;
+      background: #B07A8A;
       mat-icon { font-size: 16px; width: 16px; height: 16px; }
+      &:hover { background: #9a6878; }
     }
   }
 }
