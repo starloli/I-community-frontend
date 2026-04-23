@@ -31,6 +31,12 @@ export class SendBillComponent {
 
   AbnormalUnits: any[] = [];
 
+  ngOnInit(): void {
+   console.log("打開的是SendBillComponent");
+
+
+  }
+
   sendBillToUnit() {
     let billData = {
       "title": this.title,
