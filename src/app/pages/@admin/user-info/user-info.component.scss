@@ -235,3 +235,42 @@
     grid-template-columns: 1fr !important;
   }
 }
+
+// TODO: 【Phase 8】添加 Modal 樣式
+// 需要添加以下樣式類：
+//
+// .modal-overlay
+//   - position: fixed，覆蓋整個螢幕
+//   - background: rgba(0,0,0,0.5)，半透明黑色背景
+//   - display: flex，居中 Modal
+//   - z-index: 1000，置於最上層
+//   - 支援 backdrop-filter: blur()
+//
+// .modal-content
+//   - background: 白色 + 毛玻璃效果
+//   - border-radius: 24px
+//   - box-shadow: 陰影效果
+//   - max-width: 500px，響應式寬度
+//   - padding: 32px
+//   - animation: slideIn 0.3s（滑入動畫）
+//
+// .modal-header
+//   - 文字居中
+//   - h2：標題
+//   - p：描述文字
+//
+// .modal-body
+//   - .form-group：表單元素
+//   - .input-wrapper：輸入框容器
+//
+// .modal-footer
+//   - 按鈕排列
+//   - .confirm-btn：確認按鈕（藍色）
+//   - .cancel-btn：取消按鈕（灰色）
+//
+// .countdown-timer
+//   - 顯示倒計時秒數
+//   - .expired：過期提示（紅色）
+//
+// @keyframes slideIn
+//   - 從下方滑入的動畫效果

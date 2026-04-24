@@ -6,6 +6,15 @@
     </div>
   </div>
 
+  <!-- TODO: 【Phase 7】添加超級管理員密碼驗證 Modal
+       條件：userRole === 'SUPER_ADMIN' && !passwordVerified
+       功能：
+       - 顯示密碼輸入框
+       - 「驗證」按鈕 → 調用 verifyOldPassword()
+       - 支援 Enter 鍵提交
+       - 加載中狀態
+  -->
+
   @if (user) {
   <div class="profile-grid">
     <!-- 左側：個人頭像與基本資訊摘要 -->
@@ -87,6 +96,18 @@
     </div>
 
   </div>
+
+  <!-- TODO: 【Phase 7】添加驗證碼確認 Modal
+       條件：showVerifyCodeModal === true
+       功能：
+       - 顯示驗證碼輸入框（6位數字）
+       - 顯示倒計時（codeExpiry 秒）
+       - 「取消」按鈕 → 調用 cancelVerification()
+       - 「確認」按鈕 → 調用 confirmWithVerifyCode()
+       - 倒計時結束時禁用「確認」按鈕
+       - 支援 Enter 鍵提交
+  -->
+
   } @else {
   <div class="loading-shade">
     <mat-spinner diameter="40"></mat-spinner>

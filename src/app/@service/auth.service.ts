@@ -154,4 +154,22 @@ export class AuthService {
         return throwError(() => new Error(message));
       }))
   }
+
+  // TODO: 【Phase 5】超級管理員密碼驗證和信箱驗證相關方法
+  // 
+  // 1. verifySuperAdminPassword(password: string): Observable<any>
+  //    - POST 到 /modify/superadmin/verify-password
+  //    - 進入編輯頁面前驗證舊密碼
+  //    - 返回 { message, valid }
+  //
+  // 2. sendSuperAdminPasswordChangeCode(): Observable<any>
+  //    - POST 到 /modify/superadmin/send-change-verify-code
+  //    - 在點擊「儲存變更」時發送驗證碼到舊信箱
+  //    - 返回 { message, expiresIn: 900 }
+  //
+  // 3. updateSuperAdminSelf(updateData: any): Observable<any>
+  //    - PUT 到 /modify/superadmin/self
+  //    - 驗證碼驗證成功後，執行最終更新
+  //    - updateData 包含 verifyCode 字段
+  //    - 返回 { message }
 }

@@ -10,6 +10,9 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+// TODO: 【Phase 6】需要導入 AuthService
+// import { AuthService } from '../../../@service/auth.service';
+
 @Component({
   selector: 'app-user-info',
   imports: [CommonModule, FormsModule, MatIconModule, MatProgressSpinnerModule],
@@ -19,6 +22,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export class UserInfoComponent implements OnInit, OnDestroy {
 
   constructor(private http: HttpService, private snackBar: MatSnackBar) { }
+  
+  // TODO: 【Phase 6】需要注入 AuthService
+  // constructor(private http: HttpService, private authService: AuthService, private snackBar: MatSnackBar) { }
 
   getUrl = "/user/me";
   modifyUrl = "/modify/admin";
@@ -40,6 +46,16 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     this.getInfo();
     const payload = JSON.parse(atob(this.getToken().split('.')[1]));
     this.userRole = payload.role;
+    
+    // TODO: 【Phase 6】修改 ngOnInit() 邏輯
+    // 若是超級管理員，進入前需要驗證密碼，不應立即調用 getInfo()
+    // 
+    // 修改方式：
+    // if (this.userRole === 'SUPER_ADMIN') {
+    //   this.passwordVerified = false;
+    // } else {
+    //   this.getInfo();
+    // }
   }
 
   getInfo(): void {
@@ -79,6 +95,37 @@ export class UserInfoComponent implements OnInit, OnDestroy {
       })
     }
   }
+
+  // TODO: 【Phase 6】新增 verifyOldPassword() 方法
+  // 功能：驗證超級管理員舊密碼
+  // - 調用 authService.verifySuperAdminPassword(this.oldPassword)
+  // - 若驗證成功，設置 passwordVerified = true，清空 oldPassword，調用 getInfo()
+  // - 若驗證失敗，顯示錯誤提示
+
+  // TODO: 【Phase 6】新增 submitEditForm() 方法
+  // 功能：提交編輯表單前，發送驗證碼
+  // - 驗證表單數據是否完整
+  // - 調用 authService.sendSuperAdminPasswordChangeCode()
+  // - 若成功，設置 showVerifyCodeModal = true，啟動倒計時
+  // - 若失敗，顯示錯誤提示
+
+  // TODO: 【Phase 6】新增 confirmWithVerifyCode() 方法
+  // 功能：確認驗證碼，執行最終更新
+  // - 驗證驗證碼是否輸入（6位數字）
+  // - 組合 updateUser 和 verifyCode
+  // - 調用 authService.updateSuperAdminSelf(updateData)
+  // - 若成功，關閉 modal，刷新用戶信息
+  // - 若失敗，顯示錯誤提示
+
+  // TODO: 【Phase 6】新增 cancelVerification() 方法
+  // 功能：取消驗證流程
+  // - 關閉 showVerifyCodeModal
+  // - 清空 verifyCode 和 codeExpiry
+
+  // TODO: 【Phase 6】新增 startCodeCountdown() 方法
+  // 功能：驗證碼倒計時（15分鐘 = 900秒）
+  // - 每秒遞減 codeExpiry
+  // - 當 codeExpiry <= 0 時停止計時
 
   No(): void {
     this.snackBar.open('NO', 'NO', {
