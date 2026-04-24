@@ -1,0 +1,65 @@
+<div class="resident-container">
+  <div class="page-header">
+    <div class="header-left">
+      <h1>財務收支明細</h1>
+      <span class="subtitle">統一管理收支、薪資與財務狀況</span>
+    </div>
+  </div>
+
+<div class="financial-wrapper">
+  <div class="stats-grid">
+    <div class="stat-card balance">
+      <div class="stat-label">當前帳戶結餘</div>
+      <div class="stat-value">{{ totalBalance | currency:'TWD':'symbol':'1.0-0' }}</div>
+    </div>
+    <div class="stat-card income">
+      <div class="stat-label">累計總收入</div>
+      <div class="stat-value">+ {{ totalIncome | currency:'TWD':'symbol':'1.0-0' }}</div>
+    </div>
+    <div class="stat-card expense">
+      <div class="stat-label">累計總支出</div>
+      <div class="stat-value">- {{ totalExpense | currency:'TWD':'symbol':'1.0-0' }}</div>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <div class="table-header">
+      <h3>財務收支明細</h3>
+      <div class="badge-info">共 {{ transactions.length }} 筆記錄</div>
+    </div>
+
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>交易日期</th>
+          <th>類別</th>
+          <th>摘要</th>
+          <th>金額</th>
+          <th>結餘</th>
+          <th>操作人</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of transactions; track item.id) {
+          <tr>
+            <td>{{ item.transactionDate | date:'yyyy-MM-dd HH:mm' }}</td>
+            <td>
+              <span [class]="'type-tag ' + item.type.toLowerCase()">
+                {{ item.type === 'INCOME' ? '收入' : '支出' }}
+              </span>
+            </td>
+            <td class="remark-cell">
+              <strong>{{ item.category }}</strong>
+              <span>{{ item.remark }}</span>
+            </td>
+            <td [ngClass]="item.type === 'INCOME' ? 'text-green' : 'text-red'">
+              {{ item.type === 'INCOME' ? '+' : '-' }} {{ item.amount | currency:'TWD':'symbol':'1.0-0' }}
+            </td>
+            <td class="fw-bold">{{ item.balance | currency:'TWD':'symbol':'1.0-0' }}</td>
+            <td>{{ item.operator?.fullName || '系統自動入帳' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
