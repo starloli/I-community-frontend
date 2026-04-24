@@ -1,0 +1,240 @@
+/* === 整體 === */
+:host {
+  display: block;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  font-family: Arial, sans-serif;
+}
+
+// ── 頁面標題 ──────────────────────────────────────────
+.page-header {
+  margin-bottom: 24px;
+
+  h1 { font-size: 36px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px 0; }
+  .subtitle { font-size: 15px; color: #888; }
+}
+
+/* === Header === */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.header button {
+  font-size: 24px;
+  background: #f1f3f4;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.header button:hover {
+  background: #e0e0e0;
+}
+
+.header h2 {
+  margin: 0;
+  font-weight: 500;
+}
+
+/* === Grid === */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+/* === 星期標題 === */
+.header-cell-Sun-Sat {
+  text-align: center;
+  font-weight: bold;
+  padding: 6px 0;
+  color: #E57373;
+}
+
+.header-cell {
+  text-align: center;
+  font-weight: bold;
+  padding: 6px 0;
+  color: #6B7280;
+}
+
+/* === 日期格 === */
+.cell {
+  border: 1px solid #e0e0e0;
+  min-height: 90px;
+  padding: 6px;
+  border-radius: 8px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: 0.2s;
+}
+
+/* hover 效果 */
+.cell:hover {
+  background: #f5f7fa;
+  transform: translateY(-2px);
+}
+
+/* 非當月 */
+.out {
+  background: #A9A9A9;
+  color: white;
+}
+
+/* 今天 */
+.today {
+  border: 2px solid red;
+}
+
+/* 假日 */
+.holiday {
+  background: #fff4f4;
+}
+
+/* 日期數字 */
+.date {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 假日文字 */
+.holiday-text {
+  font-size: 12px;
+  color: #d93025;
+  margin-top: 4px;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.events {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.event-item {
+  font-size: 16px;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-panel {
+  position: fixed;
+  right: 20px;
+  top: 80px;
+  width: 310px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  padding: 24px;
+  z-index: 1000;
+  font-size: 24px;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.event-list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.event-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 4px;
+  border-bottom: 1px solid #eee;
+}
+
+.event-row:hover {
+  background: #f5f5f5;
+}
+
+.empty {
+  color: #999;
+  font-size: 20px;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 4px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.close-btn:hover {
+  opacity: 0.6;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0;
+}
+
+.event-row:hover .delete-btn {
+  opacity: 1;
+}
+
+.add-event {
+  display: flex;
+  gap: 6px;
+  border-top: 1px solid #eee;
+  padding-top: 8px;
+}
+
+.add-event input {
+  flex: 1;
+  padding: 6px;
+  font-size: 16px;
+}
+
+.add-btn {
+  background-color: #1677ff;
+  color: #fff;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.add-btn:hover {
+  background-color: #4096ff;
+}
+
+/* === 手機版 === */
+@media (max-width: 600px) {
+  .cell {
+    min-height: 70px;
+    padding: 4px;
+  }
+
+  .holiday-text {
+    font-size: 10px;
+  }
+
+  .header h2 {
+    font-size: 16px;
+  }
+}

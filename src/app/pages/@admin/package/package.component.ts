@@ -65,7 +65,7 @@ export class PackageComponent implements OnInit, OnDestroy {
 
   PackageStatus = PackageStatus;
 
-  couriers = ['黑貓宅急便', '新竹物流', '郵局', '宅配通', '順豐速運', 'DHL', 'Lalamove', 'FedEx', '中華郵局','其他'];
+  couriers = ['黑貓宅急便', '新竹物流',  '宅配通', '順豐速運', 'DHL', 'Lalamove', 'FedEx', '中華郵局','其他'];
 
   addressList: string[] = [];
   packages: any[] = [];

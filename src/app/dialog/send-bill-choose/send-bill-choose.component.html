@@ -1,0 +1,23 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>請選擇您要執行的發送方式：</h2>
+  </div>
+
+  <div class="dialog-actions-full">
+    <button class="btn-giant btn-left" (click)="onOpenUnitNumber()">
+      <div class="btn-content">
+        <span class="btn-icon">👤</span>
+        <span class="btn-text">發送給個人</span>
+        <span class="btn-desc">針對單一住戶進行發送</span>
+      </div>
+    </button>
+
+    <button class="btn-giant btn-right" (click)="onOpenMonthlyBill()">
+      <div class="btn-content">
+        <span class="btn-icon">📅</span>
+        <span class="btn-text">發送月度賬單</span>
+        <span class="btn-desc">全體住戶批次批量處理</span>
+      </div>
+    </button>
+  </div>
+</div>

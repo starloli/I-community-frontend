@@ -1,0 +1,75 @@
+/* 容器去掉左右內距，讓按鈕可以貼齊邊緣或保持極小間距 */
+.dialog-actions-full {
+  display: flex;
+  width: 100%;
+  gap: 1px; /* 兩按鈕間的細縫，如果不想要細縫可以設為 0 */
+  margin-top: 20px;
+  background-color: #eee; /* 細縫的顏色 */
+  border-radius: 0 0 12px 12px; /* 配合對話框圓角 */
+  overflow: hidden;
+}
+
+.btn-giant {
+  flex: 1; /* 關鍵：強制平分空間 */
+  padding: 40px 20px; /* 增加上下高度，讓按鈕變大 */
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 按鈕內的內容佈局 */
+.btn-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-icon {
+  font-size: 32px; /* 圖標加大 */
+  margin-bottom: 5px;
+}
+
+.btn-text {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.btn-desc {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* 左側：淺色系 */
+.btn-left {
+  background-color: #ffffff;
+  color: #333;
+}
+
+.btn-left:hover {
+  background-color: #f0f7ff;
+  color: #007bff;
+}
+
+/* 右側：主色系 */
+.btn-right {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-right:hover {
+  background-color: #0056b3;
+  box-shadow: inset 0 0 100px rgba(0,0,0,0.1);
+}
+
+/* 響應式：手機版變上下排 */
+@media (max-width: 480px) {
+  .dialog-actions-full {
+    flex-direction: column;
+  }
+}
