@@ -14,52 +14,35 @@
 
 
       <div class='allPage'>
-
-
-        @if(userloginStatus){
-
         <h1>登入</h1>
-        <div class="txtb">
+        <div [class.txtb]="userloginStatus" [class.txtbfalse]="!userloginStatus">
           <span class="input-label">帳號</span>
-          <input type="text" [(ngModel)]="userName" placeholder="請輸入帳號" (input)="handleInput1($event)"
+          <input type="text" [(ngModel)]="userName" placeholder="請輸入帳號" (input)="handleInput1($event); loginstatus()"
             (compositionend)="onCompositionEnd1($event)">
         </div>
 
-        <div class="txtb"> <span class="input-label">密碼</span>
-          <input type="password" placeholder="請輸入密碼" [(ngModel)]="password" (keydown.space)="$event.preventDefault()">
+        <div [class.txtb]="userloginStatus" [class.txtbfalse]="!userloginStatus">
+          <span class="input-label">密碼</span>
+          <input type="password" placeholder="請輸入密碼" [(ngModel)]="password" (keydown.space)="$event.preventDefault()"
+            (input)="loginstatus()">
           <div class="forgot-container">
+            @if(!userloginStatus){
+              <span class="errorMessage">
+                <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="currentColor">
+                  <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                </svg>
+                帳號或密碼有誤
+              </span>
+            }
             <button (click)="toForgetPage()" type="button" class="link-btn">忘記密碼?</button>
           </div>
         </div>
+
         <button class="logtb" (click)="useLoginApi()">登入</button>
 
         <div class="bottom-text"><span>還沒有帳號?點擊
             <button type="button" class="link-btn" (click)="sign_up()">註冊</button></span>
         </div>
-        }@else if(userloginStatus==false){
-        <h1>登入</h1>
-        <div class="txtbfalse">
-          <span class="input-label">帳號</span>
-          <input type="text" [(ngModel)]="userName" placeholder="請輸入帳號" (input)="handleInput1($event)"
-            (compositionend)="onCompositionEnd1($event)" (input)="loginstatus()">
-        </div>
-
-        <div class="txtbfalse"> <span class="input-label">密碼</span>
-          <input type="password" placeholder="請輸入密碼" [(ngModel)]="password" (keydown.space)="$event.preventDefault()"
-            (input)="loginstatus()">
-          <div class="forgot-container">
-            <button (click)="toForgetPage()" type="button" class="link-btn">忘記密碼?</button>
-          </div>
-        </div>
-        <button class="errorNext">登入</button>
-        <span class="errorMessage">帳號或密碼有誤</span>
-
-        <div class="bottom-text"><span>還沒有帳號?點擊
-            <button type="button" class="link-btn" (click)="sign_up()">註冊</button></span>
-        </div>
-
-        }
-
       </div>
 
       }
@@ -80,36 +63,26 @@
       </svg>
     </button>
 
-    @if(isManagerStatus){
-    <h1>登入(管理員)</h1>
-    <div class="txtb">
-      <span class="input-label">帳號</span>
-      <input type="text" placeholder="請輸入帳號" (input)="handleInput2($event)" (compositionend)="onCompositionEnd2($event)"
-        [(ngModel)]="adminAccountn">
+    <div class='allPage'>
+      <h1>登入(管理員)</h1>
+      <div [class.txtb]="isManagerStatus" [class.txtbfalse]="!isManagerStatus">
+        <span class="input-label">帳號</span>
+        <input type="text" placeholder="請輸入帳號" (input)="handleInput2($event); adminloginstatus()" (compositionend)="onCompositionEnd2($event)"
+          [(ngModel)]="adminAccountn">
+      </div>
+
+      <div [class.txtb]="isManagerStatus" [class.txtbfalse]="!isManagerStatus">
+        <span class="input-label">密碼</span>
+        <input type="password" placeholder="請輸入密碼" [(ngModel)]="adminPassword" (keydown.space)="$event.preventDefault()"
+          (input)="adminloginstatus()">
+      </div>
+
+      @if(!isManagerStatus){
+        <span class="errorMessage">帳號或密碼有誤</span>
+      }
+
+      <button class="logtb" (click)="adminLoginApi()">登入</button>
     </div>
-
-    <div class="txtb"> <span class="input-label">密碼</span>
-      <input type="password" placeholder="請輸入密碼" [(ngModel)]="adminPassword" (keydown.space)="$event.preventDefault()">
-    </div>
-    <button class="logtb" (click)="adminLoginApi()">登入</button>
-    }
-
-
-
-    @else if(isManagerStatus==false){
-    <h1>登入(管理員)</h1>
-    <div class="txtbfalse">
-      <span class="input-label">帳號</span>
-      <input type="txtbfalse" placeholder="請輸入帳號" (input)="handleInput2($event)"
-        (compositionend)="onCompositionEnd2($event)" [(ngModel)]="adminAccountn" (input)="adminloginstatus()">
-    </div>
-
-    <div class="txtbfalse"> <span class="input-label">密碼</span>
-      <input type="password" placeholder="請輸入密碼" [(ngModel)]="adminPassword" (keydown.space)="$event.preventDefault()"
-        (input)="adminloginstatus()">
-    </div>
-    <button class="errorNext">登入</button>
-    <span class="errorMessage">帳號或密碼有誤</span>}
   </div>
 </div>
 }
@@ -148,23 +121,49 @@
 
 
         @if(signUpStep==1){
-        <div class="signUpTxtb"><span class="input-label">帳號</span>
-          @if(checkSignUpUserName){<span style="color: red;">帳號已存在</span>}
+        <div class="signUpTxtb">
+          <span class="input-label">帳號
+            @if(checkSignUpUserName){
+              <span class="inline-error">
+                <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px" fill="currentColor">
+                  <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                </svg>
+                帳號已存在
+              </span>
+            }
+          </span>
           <input type="text" placeholder="請輸入帳號" [(ngModel)]="signUpUserName" (input)="handleInput($event)"
             (compositionend)="onCompositionEnd($event)">
         </div>
 
-        <div class="signUpTxtb"><span class="input-label">密碼</span>@if(isPasswordLength &&(signUpPassword.length>12 ||
-          signUpPassword.length<6) ){<span style="color: red;">密碼長度必須是6位-12位</span>}
-
-            <input type="password" placeholder="請輸入密碼" [(ngModel)]="signUpPassword"
-              (keydown.space)="$event.preventDefault()" (focus)="isPasswordLength=true"
-              [class.input-error]="isPasswordLength && ((signUpPassword.length>12 || signUpPassword.length<6) || signUpPassword !== confirmPassword)">
+        <div class="signUpTxtb">
+          <span class="input-label">密碼
+            @if(isPasswordLength && (signUpPassword.length > 12 || signUpPassword.length < 6)){
+              <span class="inline-error">
+                <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px" fill="currentColor">
+                  <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                </svg>
+                密碼長度必須是6位-12位
+              </span>
+            }
+          </span>
+          <input type="password" placeholder="請輸入密碼" [(ngModel)]="signUpPassword"
+            (keydown.space)="$event.preventDefault()" (focus)="isPasswordLength=true"
+            [class.input-error]="isPasswordLength && ((signUpPassword.length>12 || signUpPassword.length<6) || signUpPassword !== confirmPassword)">
         </div>
 
 
-        <div class="signUpTxtb"><span class="input-label">確認密碼 @if(
-            isConfirmTouched&&signUpPassword!==confirmPassword){<span style="color: red;">密碼不一致</span>}</span>
+        <div class="signUpTxtb">
+          <span class="input-label">確認密碼
+            @if(isConfirmTouched && signUpPassword !== confirmPassword){
+              <span class="inline-error">
+                <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px" fill="currentColor">
+                  <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                </svg>
+                密碼不一致
+              </span>
+            }
+          </span>
           <input type="password" placeholder="請確認密碼" [(ngModel)]="confirmPassword"
             (keydown.space)="$event.preventDefault()" (focus)="isConfirmTouched = true"
             [class.input-error]="isConfirmTouched && signUpPassword !== confirmPassword">
@@ -179,37 +178,67 @@
 
           }
           @if(signUpStep==2){
-          <div class="signUpTxtb"><span class="input-label">姓名</span>
+          <div class="signUpTxtb">
+            <span class="input-label">姓名</span>
             <input type="text" placeholder="請輸入您的真實姓名" [(ngModel)]="fullName" (keydown.space)="$event.preventDefault()">
           </div>
 
-          <div class="signUpTxtb"><span class="input-label">Email@if(isClickEmail && !isValidEmail(email)){<span
-                style="color: red;">Email格式不正確</span>}</span>
-            @if(emailError) {
-            <small
-              style="display: block; color: #ff0000; text-align: left; font-size: 14px; margin-bottom: 8px; font-weight: bold;">已註冊過的信箱</small>
-            }
+          <div class="signUpTxtb">
+            <span class="input-label">Email
+              @if(isClickEmail && !isValidEmail(email)){
+                <span class="inline-error">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px" fill="currentColor">
+                    <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                  </svg>
+                  格式不正確
+                </span>
+              }
+              @if(emailError) {
+                <span class="inline-error">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px" fill="currentColor">
+                    <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                  </svg>
+                  已註冊過的信箱
+                </span>
+              }
+            </span>
             <input type="text" placeholder="請輸入您的Email" [(ngModel)]="email" (keydown.space)="$event.preventDefault()"
-              (focus)="isClickEmail =true" [class.input-error]="isClickEmail && !isValidEmail(email)">
-          </div>
-          <div class="signUpTxtb"><span class="input-label">電話@if( isClickPhone &&!isValidPhone(phone)){<span
-                style="color: red;">電話格式不正確</span>}</span>
-            <input type="tel" placeholder="請輸入您的電話" [(ngModel)]="phone" (keydown.space)="$event.preventDefault()"
-              (focus)="isClickPhone =true" [class.input-error]="isClickPhone && !isValidPhone(phone)">
-          </div>
-          <div class="signUpTxtb"><span class="input-label">門牌號</span>
-            <input type="text" placeholder="請輸入您的門牌號（如 A棟3F-1）" [(ngModel)]="unitNumber">
-            <div class="button-container">
-              <button class="lastStep" (click)="lastStep()">上一步</button>
-              @if(this.email.trim() && this.phone && this.unitNumber.trim() && isValidEmail(email) &&
-              isValidPhone(phone)){<button class="nextStep" (click)="stepper2()">下一步</button>}
-              @else{<button class="errornext2">下一步</button>}
-            </div>
+              (focus)="isClickEmail = true" [class.input-error]="isClickEmail && !isValidEmail(email)">
           </div>
 
+          <div class="signUpTxtb">
+            <span class="input-label">電話
+              @if(isClickPhone && !isValidPhone(phone)){
+                <span class="inline-error">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px" fill="currentColor">
+                    <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                  </svg>
+                  格式不正確
+                </span>
+              }
+            </span>
+            <input type="tel" placeholder="請輸入您的電話" [(ngModel)]="phone" (keydown.space)="$event.preventDefault()"
+              (focus)="isClickPhone = true" [class.input-error]="isClickPhone && !isValidPhone(phone)">
+          </div>
+
+          <div class="signUpTxtb">
+            <span class="input-label">門牌號</span>
+            <input type="text" placeholder="請輸入您的門牌號（如 A棟3F-1）" [(ngModel)]="unitNumber">
+          </div>
+
+          <div class="button-container">
+            <button class="lastStep" (click)="lastStep()">上一步</button>
+            @if(this.email.trim() && this.phone && this.unitNumber.trim() && isValidEmail(email) && isValidPhone(phone)){
+              <button class="nextStep" (click)="stepper2()">下一步</button>
+            }
+            @else{
+              <button class="errornext2">下一步</button>
+            }
+          </div>
           }
 
           @if(signUpStep==3) {
+
           <h1>已傳送驗證碼至信箱，請在15分鐘內輸入</h1>
           <div class="otp-container" style="align-items: center; justify-content: center;">
             @for (ctrl of otpControls; track $index; let i = $index) {
@@ -221,7 +250,7 @@
           <h1 style="color: #ff0000;">驗證碼錯誤</h1>
           }
           <div class="bottom-text"><span>
-              <button type="button" class="link-btn" (click)="sendEmailCode()">再次傳送驗證碼</button></span>
+              <button type="button" class="link-btn" (click)="toForgetPage()">再次傳送驗證碼</button></span>
           </div>
           <div class="button-container">
             <button class="lastStep" (click)="toStep2()">上一步</button>
@@ -260,6 +289,8 @@
             <button class="nextStep" (click)="signUpApi()">提交</button>
           </div>
           }
+          <!-- 強制撐開底部的空間 -->
+          <div class="bottom-spacer"></div>
       </div>
 
 
