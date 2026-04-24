@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject, takeUntil } from 'rxjs';
@@ -10,11 +11,12 @@ import { HttpService } from '../../../@service/http.service';
 import { ReservationCalendarComponent } from '../../../dialog/reservation-calendar/reservation-calendar.component';
 import { ReservationStatus } from '../../../interface/enum';
 import { Facility, ResReservation, User } from '../../../interface/interface';
+import { ReservationService } from '../../../@service/reservation.service';
 
 @Component({
   selector: 'app-resident-facility',
   standalone: true,
-  imports: [CommonModule, MatIconModule, FormsModule],
+  imports: [CommonModule, MatIconModule, FormsModule, MatMenuModule],
   templateUrl: './facility.component.html',
   styleUrls: ['./facility.component.scss']
 })
@@ -22,7 +24,8 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private reservationService: ReservationService
   ) { }
 
   // 統一管理訂閱生命週期，避免頁面離開後還殘留 API 訂閱。
@@ -35,9 +38,9 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
   getUserUrl = '/user/me';
 
   // 目前流程只會用到當前登入者，因此這裡實際上只會放一筆 user 資料。
-  user: User[] = [];
+  user: User | null = null;
   facilities: Facility[] = [];
-  reservations: ResReservation[] = [];
+  userReservations: ResReservation[] = [];
   activeTab: 'facilities' | 'my-reservations' | 'history' = 'facilities';
 
   ReservationStatus = ReservationStatus;
@@ -59,12 +62,12 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
 
   // 計算所有預約中已經過期的筆數，供歷史紀錄摘要使用。
   get expiredReservationCount(): number {
-    return this.reservations.filter(reservation => this.isReservationExpired(reservation)).length;
+    return this.userReservations.filter(reservation => this.reservationService.isReservationExpired(reservation)).length;
   }
 
   // 計算已取消的預約筆數。
   get cancelledReservationCount(): number {
-    return this.reservations.filter(
+    return this.userReservations.filter(
       reservation => reservation.status === ReservationStatus.CANCELLED
     ).length;
   }
@@ -82,19 +85,19 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
   // 我的預約只保留仍有效的資料，已取消和已過期都移到歷史紀錄。
   // 篩出目前仍有效的預約，排除已取消與已過期項目。
   get currentReservations(): ResReservation[] {
-    return this.reservations.filter(
+    return this.userReservations.filter(
       reservation =>
         reservation.status !== ReservationStatus.CANCELLED &&
-        !this.isReservationExpired(reservation)
+        !this.reservationService.isReservationExpired(reservation)
     );
   }
 
   // 篩出歷史紀錄，包含已取消與已過期的預約。
   get historyReservations(): ResReservation[] {
-    return this.reservations.filter(
+    return this.userReservations.filter(
       reservation =>
         reservation.status === ReservationStatus.CANCELLED ||
-        this.isReservationExpired(reservation)
+        this.reservationService.isReservationExpired(reservation)
     );
   }
 
@@ -105,6 +108,18 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
     ) ?? this.currentReservations[0] ?? null;
   }
 
+  /**
+   * 開啟狀態說明對話框
+   * @param template 模板引用
+   */
+  openStatusDialog(template: TemplateRef<any>): void {
+    this.dialog.open(template, {
+      width: '320px',
+      maxWidth: '90vw',
+      panelClass: 'status-info-dialog'
+    });
+  }
+
   // 元件初始化時先抓設施清單，再取得登入住戶資料與其預約紀錄。
   ngOnInit(): void {
     this.getFacility();
@@ -112,8 +127,10 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
     // 先拿到當前使用者，再依 userId 載入住戶自己的預約資料。
     this.http.getApi<User>(this.getUserUrl).pipe(takeUntil(this.destroy$)).subscribe({
       next: res => {
-        this.user = [res];
-        this.getReservation();
+        this.user = res;
+        if (this.user?.userId) {
+          this.reservationService.getUserReservations(this.user.userId).pipe(takeUntil(this.destroy$)).subscribe();
+        }
       },
       error: err => {
         this.snackBar.open('取得使用者資料失敗 ' + err.status, '關閉', {
@@ -123,43 +140,28 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
         });
       }
     });
+
+    this.reservationService.userReservations$.pipe(takeUntil(this.destroy$)).subscribe(res => {
+      this.userReservations = res;
+    });
   }
 
   // 切換到「我的預約」分頁，並重新抓資料讓列表與 badge 保持同步。
   openMyReservations(): void {
     this.activeTab = 'my-reservations';
-    this.getReservation();
+    this.refreshReservations();
   }
 
   // 切換到「歷史紀錄」分頁，並重新抓資料以更新取消/過期狀態。
   openHistoryReservations(): void {
     this.activeTab = 'history';
-    this.getReservation();
+    this.refreshReservations();
   }
 
-  // 依目前登入住戶抓取所有預約資料，並依預約開始時間排序。
-  getReservation(): void {
-    const userId = this.user[0]?.userId;
-    if (!userId) {
-      return;
+  private refreshReservations(): void {
+    if (this.user?.userId) {
+      this.reservationService.getUserReservations(this.user.userId).pipe(takeUntil(this.destroy$)).subscribe();
     }
-
-    this.http.getApi<Array<ResReservation>>(this.getReservationByUserIdUrl, userId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: res => {
-          this.reservations = [...(res ?? [])].sort(
-            (a, b) => this.getReservationSortTime(b) - this.getReservationSortTime(a)
-          );
-        },
-        error: err => {
-          this.snackBar.open('取得預約失敗 ' + err.status, '關閉', {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
-        }
-      });
   }
 
   // 設施列表是住戶頁面的主資料，進頁時先載入。
@@ -214,7 +216,7 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
       return '已取消';
     }
 
-    if (this.isReservationExpired(reservation)) {
+    if (this.reservationService.isReservationExpired(reservation)) {
       return '已過期';
     }
 
@@ -231,7 +233,7 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
       return 'status-cancelled';
     }
 
-    if (this.isReservationExpired(reservation)) {
+    if (this.reservationService.isReservationExpired(reservation)) {
       return 'status-expired';
     }
 
@@ -242,17 +244,7 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
 
   // 判斷這筆預約是否仍可取消，只有已確認且未過期的預約可取消。
   canCancelReservation(reservation: ResReservation): boolean {
-    return reservation.status === ReservationStatus.CONFIRMED && !this.isReservationExpired(reservation);
-  }
-
-  // 用預約結束時間判斷是否已過期。
-  isReservationExpired(reservation: ResReservation): boolean {
-    const reservationEnd = this.buildReservationDateTime(reservation.date, reservation.endTime);
-    if (!reservationEnd) {
-      return false;
-    }
-
-    return reservationEnd.getTime() < Date.now();
+    return reservation.status === ReservationStatus.CONFIRMED && !this.reservationService.isReservationExpired(reservation);
   }
 
   // 開啟日曆前先抓這個設施既有預約，讓 dialog 能判斷時段是否可用。
@@ -281,9 +273,8 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
                   horizontalPosition: 'center',
                   verticalPosition: 'top'
                 });
-                this.getReservation();
+                this.refreshReservations();
               }
-              this.getReservation();
             }
           });
         },
@@ -295,6 +286,12 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
           });
         }
       });
+  }
+
+  // 安全格式化時間，避免 slice 報錯
+  formatTime(time: string | undefined): string {
+    if (!time) return '--:--';
+    return time.slice(0, 5);
   }
 
   // 取消成功後重新抓一次，讓列表和 badge 一起更新。
@@ -309,7 +306,7 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
               horizontalPosition: 'center',
               verticalPosition: 'top'
             });
-            this.getReservation();
+            this.refreshReservations();
           }
         },
         error: err => {
@@ -331,23 +328,6 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
       month: '2-digit',
       day: '2-digit'
     });
-  }
-
-  // 取得預約開始時間的 timestamp，方便在載入後做排序。
-  private getReservationSortTime(reservation: ResReservation): number {
-    const reservationStart = this.buildReservationDateTime(reservation.date, reservation.startTime);
-    return reservationStart?.getTime() ?? 0;
-  }
-
-  // 將日期與時間字串組合成可比較的 Date 物件。
-  private buildReservationDateTime(date: string, time: string): Date | null {
-    if (!date || !time) {
-      return null;
-    }
-
-    const safeTime = time.length === 5 ? `${time}:00` : time;
-    const parsed = new Date(`${date}T${safeTime}`);
-    return Number.isNaN(parsed.getTime()) ? null : parsed;
   }
 
   // 元件銷毀時關閉所有訂閱，避免記憶體洩漏。

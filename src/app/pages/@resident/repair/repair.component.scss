@@ -6,7 +6,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
 
   h1 { font-size: 36px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px 0; }
   .subtitle { font-size: 15px; color: #888; }
@@ -219,33 +219,180 @@
 }
 
 // ===== 分頁 =====
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  margin-top: 24px;
+@media (max-width: 768px) {
+  .repair-container {
+    padding: 0;
+  }
 
-  .page-btn {
-    width: 40px;
-    height: 40px;
+  .page-header {
+    padding: 12px 0 4px;
+    margin-bottom: 0;
+
+    h1 {
+      font-size: 22px;
+      letter-spacing: -0.5px;
+    }
+    .subtitle {
+      font-size: 11px;
+      margin-top: -2px;
+    }
+  }
+
+  .add-btn {
+    padding: 8px 16px;
+    font-size: 13px;
     border-radius: 10px;
-    border: 1.5px solid #e0e0e0;
-    background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(8px);
-    color: #555;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
+    mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  }
+
+  // 統計卡片 - 3 欄並列 (與包裹頁一致)
+  .stats-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 0 4px;
+  }
+
+  .stat-card {
+    position: relative;
+    aspect-ratio: 1.2 / 1;
+    padding: 6px;
+    flex-direction: column;
     justify-content: center;
-    transition: all 0.2s;
+    align-items: center;
+    gap: 2px;
+    border-radius: 12px;
+    background: #ffffff;
+    text-align: center;
+    min-height: unset;
 
-    mat-icon { font-size: 20px; width: 20px; height: 20px; }
+    mat-icon {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      font-size: 18px !important;
+      width: 18px !important;
+      height: 18px !important;
+      opacity: 0.8;
+    }
 
-    &:hover:not(:disabled) { background: #C47A5A; border-color: #C47A5A; color: #fff; }
-    &.active               { background: #C47A5A; border-color: #C47A5A; color: #fff; }
-    &:disabled             { opacity: 0.3; cursor: not-allowed; }
+    .stat-info {
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+
+      .stat-value {
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 1;
+      }
+
+      .stat-label {
+        font-size: 11px;
+        color: #888;
+        white-space: nowrap;
+        font-weight: 500;
+      }
+    }
+  }
+
+  // 篩選列 - 4 按鈕並列
+  .filter-row {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    margin-bottom: 16px;
+    padding: 0 4px;
+
+    .filter-btn {
+      flex: 1;
+      padding: 8px 2px;
+      font-size: 12px;
+      text-align: center;
+      white-space: nowrap;
+      min-width: 0;
+      border-radius: 20px;
+    }
+  }
+
+  // 報修列表卡片
+  .repair-card {
+    padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    position: relative;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    border: 1px solid #f0f0f0;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+
+    .repair-left {
+      width: 100%;
+      flex-direction: row;
+      gap: 12px;
+    }
+
+    .category-icon {
+      display: none; // 手機版隱藏大圖示
+    }
+
+    .repair-info {
+      width: 100%;
+      .repair-title-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 4px;
+        h3 { font-size: 17px; flex: 1; margin: 0; }
+        .category-tag { font-size: 11px; padding: 2px 8px; }
+      }
+      .repair-desc {
+        font-size: 14px;
+        color: #444;
+        margin-bottom: 8px;
+      }
+      .repair-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 12px;
+        span { font-size: 12px; color: #999; }
+      }
+      .repair-note {
+        font-size: 12px;
+        padding: 8px 12px;
+        margin-top: 10px;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+    }
+
+    .repair-right {
+      width: 100%;
+      padding-top: 10px;
+      border-top: 1px dashed #eee;
+      justify-content: flex-start;
+      min-width: unset;
+
+      .repair-status-col {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  .pagination {
+    margin-top: 16px;
+    margin-bottom: 32px;
+    .page-btn {
+      width: 36px;
+      height: 36px;
+      font-size: 13px;
+    }
   }
 }

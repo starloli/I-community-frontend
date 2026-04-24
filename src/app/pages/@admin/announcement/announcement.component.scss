@@ -1,6 +1,6 @@
 // ===== 整體容器 =====
 .announcement-container {
-  padding: 0;
+  padding: 0px;
 }
 
 // ===== 頁面標題 =====
@@ -8,17 +8,17 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 
   .header-left {
     h1 {
-      font-size: 36px;
+      font-size: 32px;
       font-weight: 700;
       color: #1a1a2e;
       margin: 0 0 4px 0;
     }
     .subtitle {
-      font-size: 15px;
+      font-size: 14px;
       color: #888;
     }
   }
@@ -27,21 +27,22 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 20px;
-    background: #3f51b5;
+    padding: 10px 18px;
+    background: #B07A8A;
     color: #fff;
     border: none;
-    border-radius: 12px;
-    font-size: 15px;
+    border-radius: 10px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s;
     white-space: nowrap;
 
     mat-icon { font-size: 20px; width: 20px; height: 20px; }
-    &:hover { background: #303f9f; }
+    &:hover { background: #9a6878; }
   }
 }
+
 
 // ===== 統計卡片 =====
 .stats-grid {
@@ -60,7 +61,11 @@
   align-items: center;
   gap: 16px;
 
-  .stat-icon-wrap { font-size: 28px; line-height: 1; flex-shrink: 0; }
+  .stat-icon-wrap {
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
 
   .stat-info {
     display: flex;
@@ -100,8 +105,15 @@
     cursor: pointer;
     transition: all 0.18s;
 
-    &:hover { border-color: #3f51b5; color: #3f51b5; }
-    &.active { background: #3f51b5; color: #fff; border-color: #3f51b5; }
+    &:hover {
+      border-color: #B07A8A;
+      color: #B07A8A;
+    }
+    &.active {
+      background: #B07A8A;
+      color: #fff;
+      border-color: #B07A8A;
+    }
   }
 
   .search-box {
@@ -116,15 +128,27 @@
     min-width: 240px;
     transition: border-color 0.2s;
 
-    &:focus-within { border-color: #3f51b5; }
+    &:focus-within {
+      border-color: #B07A8A;
+    }
 
-    mat-icon { color: #bbb; font-size: 20px; width: 20px; height: 20px; }
+    mat-icon {
+      color: #bbb;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
 
     input {
-      border: none; outline: none;
-      font-size: 14px; color: #333;
-      width: 100%; background: transparent;
-      &::placeholder { color: #bbb; }
+      border: none;
+      outline: none;
+      font-size: 14px;
+      color: #333;
+      width: 100%;
+      background: transparent;
+      &::placeholder {
+        color: #bbb;
+      }
     }
   }
 }
@@ -147,10 +171,19 @@
   cursor: pointer;
   transition: background 0.15s;
 
-  &:last-child { border-bottom: none; }
-  &:hover { background: #fafafa; }
-  &.pinned { border-left: 3px solid #b07a8a; padding-left: 21px; }
-  &.expired { opacity: 0.5; }
+  &:last-child {
+    border-bottom: none;
+  }
+  &:hover {
+    background: #fafafa;
+  }
+  &.pinned {
+    border-left: 3px solid #b07a8a;
+    padding-left: 21px;
+  }
+  &.expired {
+    opacity: 0.5;
+  }
 }
 
 .ann-icon-box {
@@ -163,7 +196,12 @@
   flex-shrink: 0;
   background: rgba(176, 122, 138, 0.1);
 
-  mat-icon { font-size: 22px; width: 22px; height: 22px; color: #b07a8a; }
+  mat-icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+    color: #b07a8a;
+  }
 }
 
 .ann-main {
@@ -189,7 +227,10 @@
   }
 }
 
-.ann-sub { font-size: 13px; color: #999; }
+.ann-sub {
+  font-size: 13px;
+  color: #999;
+}
 
 .ann-right {
   display: flex;
@@ -197,8 +238,15 @@
   gap: 12px;
   flex-shrink: 0;
 
-  .ann-date { font-size: 13px; color: #aaa; white-space: nowrap; }
-  .ann-actions { display: flex; gap: 6px; }
+  .ann-date {
+    font-size: 13px;
+    color: #aaa;
+    white-space: nowrap;
+  }
+  .ann-actions {
+    display: flex;
+    gap: 6px;
+  }
 }
 
 // ===== 分類標籤 =====
@@ -210,11 +258,26 @@
   font-weight: 600;
   white-space: nowrap;
 
-  &.cat-notice      { background: #e8eaf6; color: #3f51b5; }
-  &.cat-maintenance { background: #fff3e0; color: #e65100; }
-  &.cat-event       { background: #e8f5e9; color: #388e3c; }
-  &.cat-emergency   { background: #ffebee; color: #c62828; }
-  &.cat-rule        { background: #f3e5f5; color: #7b1fa2; }
+  &.cat-notice {
+    background: rgba(176, 122, 138, 0.1);
+    color: #b07a8a;
+  }
+  &.cat-maintenance {
+    background: #fff3e0;
+    color: #e65100;
+  }
+  &.cat-event {
+    background: #e8f5e9;
+    color: #388e3c;
+  }
+  &.cat-emergency {
+    background: #ffebee;
+    color: #c62828;
+  }
+  &.cat-rule {
+    background: #f3e5f5;
+    color: #7b1fa2;
+  }
 }
 
 .pin-badge {
@@ -248,10 +311,24 @@
   transition: background 0.2s;
   background: transparent;
 
-  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
 
-  &.edit   { color: #3f51b5; &:hover { background: #e8eaf6; } }
-  &.delete { color: #e53935; &:hover { background: #ffebee; } }
+  &.edit {
+    color: #b07a8a;
+    &:hover {
+      background: rgba(176, 122, 138, 0.1);
+    }
+  }
+  &.delete {
+    color: #e53935;
+    &:hover {
+      background: #ffebee;
+    }
+  }
 }
 
 // ===== 分頁 =====
@@ -278,9 +355,20 @@
     justify-content: center;
     transition: all 0.2s;
 
-    &:hover:not(:disabled) { background: #B07A8A; border-color: #B07A8A; color: #fff; }
-    &.active               { background: #B07A8A; border-color: #B07A8A; color: #fff; }
-    &:disabled             { opacity: 0.3; cursor: not-allowed; }
+    &:hover:not(:disabled) {
+      background: #b07a8a;
+      border-color: #b07a8a;
+      color: #fff;
+    }
+    &.active {
+      background: #b07a8a;
+      border-color: #b07a8a;
+      color: #fff;
+    }
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
   }
 }
 
@@ -298,7 +386,9 @@
     margin: 0 auto 12px;
     color: #bbb;
   }
-  p { font-size: 15px; }
+  p {
+    font-size: 15px;
+  }
 }
 
 // ===== Modal =====
@@ -329,8 +419,19 @@
   padding: 24px 28px;
   border-bottom: 1px solid #f0f0f0;
 
-  h2 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 0; }
-  .close-btn { color: #aaa; cursor: pointer; &:hover { color: #333; } }
+  h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0;
+  }
+  .close-btn {
+    color: #aaa;
+    cursor: pointer;
+    &:hover {
+      color: #333;
+    }
+  }
 }
 
 .form-body {
@@ -340,17 +441,29 @@
   gap: 16px;
 }
 
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
 
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 6px;
 
-  label { font-size: 14px; font-weight: 600; color: #555; }
-  .required { color: #e53935; }
+  label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+  }
+  .required {
+    color: #e53935;
+  }
 
-  input, select, textarea {
+  input,
+  select,
+  textarea {
     padding: 10px 14px;
     border: 1.5px solid #e0e0e0;
     border-radius: 10px;
@@ -360,10 +473,14 @@
     font-family: inherit;
     background: #fff;
     transition: border-color 0.2s;
-    &:focus { border-color: #3f51b5; }
+    &:focus {
+      border-color: #b07a8a;
+    }
   }
 
-  textarea { resize: vertical; }
+  textarea {
+    resize: vertical;
+  }
 
   .checkbox-label {
     display: flex;
@@ -374,8 +491,12 @@
     color: #333;
 
     input[type="checkbox"] {
-      width: 16px; height: 16px; padding: 0;
-      border: none; accent-color: #3f51b5; cursor: pointer;
+      width: 16px;
+      height: 16px;
+      padding: 0;
+      border: none;
+      accent-color: #b07a8a;
+      cursor: pointer;
     }
   }
 }
@@ -389,27 +510,53 @@
 }
 
 .cancel-btn {
-  padding: 10px 24px; background: #f5f5f5; color: #555;
-  border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
+  padding: 10px 24px;
+  background: #f5f5f5;
+  color: #555;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
-  &:hover { background: #eeeeee; }
+  &:hover {
+    background: #eeeeee;
+  }
 }
 
 .submit-btn {
-  padding: 10px 24px; background: #3f51b5; color: #fff;
-  border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
+  padding: 10px 24px;
+  background: #b07a8a;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
-  &:hover { background: #303f9f; }
+  &:hover {
+    background: #9a6878;
+  }
 }
 
 .delete-btn {
-  padding: 10px 24px; background: #e53935; color: #fff;
-  border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
+  padding: 10px 24px;
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
-  &:hover { background: #c62828; }
+  &:hover {
+    background: #c62828;
+  }
 }
 
-.detail-body { padding: 24px 28px; display: flex; flex-direction: column; gap: 16px; }
+.detail-body {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
 .detail-meta {
   display: flex;
@@ -417,10 +564,18 @@
   gap: 12px;
   padding-bottom: 16px;
   border-bottom: 1px solid #f0f0f0;
-  span { font-size: 13px; color: #888; }
+  span {
+    font-size: 13px;
+    color: #888;
+  }
 }
 
-.detail-content { font-size: 15px; color: #444; line-height: 1.8; white-space: pre-wrap; }
+.detail-content {
+  font-size: 15px;
+  color: #444;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
 
 .confirm-card {
   background: #ffffff;
@@ -432,15 +587,242 @@
   padding: 40px 28px 28px;
 
   .confirm-icon {
-    font-size: 48px !important; width: 48px !important; height: 48px !important;
-    display: block; margin: 0 auto 16px; color: #e53935;
+    font-size: 48px !important;
+    width: 48px !important;
+    height: 48px !important;
+    display: block;
+    margin: 0 auto 16px;
+    color: #e53935;
   }
-  h3 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 0 0 8px; }
-  p  { font-size: 14px; color: #888; margin: 0 0 24px; }
+  h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 8px;
+  }
+  p {
+    font-size: 14px;
+    color: #888;
+    margin: 0 0 24px;
+  }
 
   .confirm-footer {
     display: flex;
     justify-content: center;
     gap: 12px;
+  }
+}
+
+// =============================================================================
+// ===== 手機版響應式設計 (RWD) =====
+// =============================================================================
+
+@media (max-width: 768px) {
+  .announcement-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .page-header {
+    padding: 16px 0 12px 0; // 增加頂部內距
+    flex-direction: row; // 橫向排列
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 0;
+
+    .header-left {
+      h1 {
+        font-size: 20px; // 統一字體大小為 20px
+      }
+      .subtitle {
+        font-size: 13px;
+      }
+    }
+
+    .add-btn {
+      width: auto;
+      justify-content: center;
+      padding: 8px 16px;
+      font-size: 13px;
+      background: #B07A8A;
+      mat-icon { font-size: 18px; width: 18px; height: 18px; }
+      &:hover { background: #9a6878; }
+    }
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 0 4px 4px; // 👈 調整為左右與下方 4px
+  }
+
+  .stat-card {
+    position: relative;
+    aspect-ratio: 1.2 / 1; // 👈 調整比例，使其看起來更寬大
+    padding: 6px; // 👈 縮小內距
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    border-radius: 12px;
+    background: #ffffff;
+
+    .stat-icon-wrap {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      font-size: 20px !important; // 👈 放大圖示比例
+      line-height: 1;
+    }
+
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-top: 8px; // 調整補償間距
+
+      .stat-value {
+        font-size: 32px; // 👈 放大至 36px
+        font-weight: 400; // 👈 字重改為 400
+        line-height: 1;
+      }
+
+      .stat-label {
+        font-size: 11px;
+        color: #888;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .filter-bar {
+    gap: 8px;
+
+    .filter-btn {
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+
+    .search-box {
+      width: 100%;
+      margin-top: 4px;
+      min-width: unset;
+    }
+  }
+
+  .announcement-item {
+    padding: 16px;
+    flex-direction: column; // 改為垂直佈局
+    align-items: flex-start;
+    gap: 12px;
+
+    &.pinned {
+      padding-left: 13px;
+    }
+
+    .ann-icon-box {
+      display: none; // 手機版隱藏圖示以節省空間
+    }
+
+    .ann-main {
+      width: 100%;
+
+      .ann-title-row {
+        flex-wrap: wrap; // 標籤過多時自動換行
+        gap: 4px;
+
+        .ann-title {
+          width: 100%;
+          font-size: 15px;
+          margin-top: 4px;
+          white-space: normal; // 允許標題換行
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+
+    .ann-right {
+      width: 100%;
+      padding-top: 10px;
+      border-top: 1px dashed #eee;
+      justify-content: space-between;
+
+      .ann-actions {
+        margin-left: auto;
+      }
+    }
+  }
+
+  .form-card {
+    width: 95%;
+    max-height: 85vh;
+
+    .form-header,
+    .form-body,
+    .form-footer {
+      padding: 16px 20px;
+    }
+
+    .form-row {
+      grid-template-columns: 1fr; // 表單內的兩欄改為單欄
+      gap: 12px;
+    }
+  }
+
+  .detail-body {
+    padding: 16px 20px;
+  }
+
+  .detail-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .pagination {
+    margin-bottom: 32px; // 增加底部間距
+    .page-btn {
+      width: 34px;
+      height: 34px;
+      font-size: 13px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      h1 { font-size: 20px; line-height: 1.2; }
+      .subtitle {
+        display: block;
+        font-size: 11px;
+        color: #999;
+        white-space: nowrap;
+      }
+    }
+
+    .add-btn {
+      width: auto;
+      padding: 8px 12px;
+      font-size: 12px;
+      margin-left: 10px;
+      background: #B07A8A;
+      mat-icon { font-size: 16px; width: 16px; height: 16px; }
+      &:hover { background: #9a6878; }
+    }
   }
 }

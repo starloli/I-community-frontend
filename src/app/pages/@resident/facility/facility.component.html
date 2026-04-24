@@ -1,27 +1,59 @@
 <div class="facility-container">
-  <div class="page-header">
-    <div class="header-left">
-      <h1>公共設施預約</h1>
-      <span class="subtitle">查看設施、管理目前預約，並追蹤歷史紀錄</span>
-    </div>
-  </div>
+  <div class="dashboard-header">
+    <div class="header-main">
+      <div class="page-header">
+        <div class="header-left">
+          <h1>公共設施預約</h1>
+          <span class="subtitle">查看設施、管理目前預約，並追蹤歷史紀錄</span>
+        </div>
+      </div>
 
-  <div class="tab-bar">
-    <button class="tab-btn" [class.active]="activeTab === 'facilities'" (click)="activeTab = 'facilities'">
-      <mat-icon>apartment</mat-icon>
-      設施列表
-    </button>
-    <button class="tab-btn" [class.active]="activeTab === 'my-reservations'" (click)="openMyReservations()">
-      <mat-icon>event_note</mat-icon>
-      我的預約
-      @if (confirmedReservationCount > 0) {
-      <span class="tab-badge">{{ reservationBadgeLabel }}</span>
-      }
-    </button>
-    <button class="tab-btn" [class.active]="activeTab === 'history'" (click)="openHistoryReservations()">
-      <mat-icon>history</mat-icon>
-      歷史紀錄
-    </button>
+      <div class="tab-bar">
+        <button class="tab-btn" [class.active]="activeTab === 'facilities'" (click)="activeTab = 'facilities'">
+          <mat-icon>apartment</mat-icon>
+          設施列表
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'my-reservations'" (click)="openMyReservations()">
+          <mat-icon>event_note</mat-icon>
+          我的預約
+          @if (confirmedReservationCount > 0) {
+          <span class="tab-badge">{{ reservationBadgeLabel }}</span>
+          }
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'history'" (click)="openHistoryReservations()">
+          <mat-icon>history</mat-icon>
+          歷史紀錄
+        </button>
+      </div>
+    </div>
+
+    <!-- 頂部右側：精簡版下一筆預約 -->
+    @if (activeTab === 'my-reservations') {
+    <div class="header-next-info">
+      <div class="next-card-mini" [class.no-res]="!nextReservation">
+        <div class="mini-content">
+          <span class="mini-hint">
+            <mat-icon>auto_awesome</mat-icon>
+            下一筆預約
+          </span>
+          @if (nextReservation) {
+          <strong class="mini-name">{{ nextReservation.facilityName }}</strong>
+          <div class="mini-meta">
+            <span><mat-icon>calendar_today</mat-icon>{{ formatDate(nextReservation.date) }}</span>
+            <span><mat-icon>schedule</mat-icon>{{ formatTime(nextReservation.startTime) }}</span>
+          </div>
+          } @else {
+          <strong class="mini-name empty">目前無預約</strong>
+          }
+        </div>
+        @if (nextReservation) {
+        <div class="mini-icon">
+          <mat-icon>{{ getFacilityIcon(nextReservation.facilityName) }}</mat-icon>
+        </div>
+        }
+      </div>
+    </div>
+    }
   </div>
 
   @if (activeTab === 'facilities') {
@@ -53,7 +85,7 @@
           </div>
           <div class="detail-item">
             <mat-icon>schedule</mat-icon>
-            <span>{{ facility.openTime.slice(0, 5) }} - {{ facility.closeTime.slice(0, 5) }}</span>
+            <span>{{ formatTime(facility.openTime) }} - {{ formatTime(facility.closeTime) }}</span>
           </div>
         </div>
       </div>
@@ -76,162 +108,180 @@
   @if (activeTab === 'my-reservations') {
   <div class="reservation-layout">
     <div class="reservation-main">
-      @if (currentReservations.length === 0) {
-      <div class="empty-state">
-        <mat-icon class="empty-icon">event_busy</mat-icon>
-        <p>目前沒有有效中的預約</p>
-        <button class="reserve-btn-sm" (click)="activeTab = 'facilities'">
-          <mat-icon>add</mat-icon>
-          前往預約
-        </button>
-      </div>
-      } @else {
-      <div class="reservation-list">
-        @for (r of currentReservations; track r.reservationId) {
-        <div class="reservation-card">
-          <div class="res-icon">
-            <mat-icon>{{ getFacilityIcon(r.facilityName) }}</mat-icon>
-          </div>
-
-          <div class="res-info">
-            <div class="res-title-row">
-              <span class="res-name">{{ r.facilityName }}</span>
-              <span class="res-status" [ngClass]="getReservationStatusClass(r)">
-                {{ getReservationStatusLabel(r) }}
-              </span>
-            </div>
-            <div class="res-details">
-              <span><mat-icon>calendar_today</mat-icon>{{ formatDate(r.date) }}</span>
-              <span><mat-icon>schedule</mat-icon>{{ r.startTime.slice(0, 5) }} - {{ r.endTime.slice(0, 5) }}</span>
-              <span><mat-icon>people</mat-icon>{{ r.attendees }} 人</span>
-            </div>
-          </div>
-
-          @if (canCancelReservation(r) && r.reservationId) {
-          <button class="cancel-res-btn" (click)="openCancelConfirm(r.reservationId)">
-            取消預約
+      <div class="scroll-container">
+        @if (currentReservations.length === 0) {
+        <div class="empty-state">
+          <button class="info-btn" [matMenuTriggerFor]="statusMenu" title="狀態說明">
+            <mat-icon>info_outline</mat-icon>
           </button>
+          <div class="empty-icon-wrapper">
+            <mat-icon class="empty-icon">event_busy</mat-icon>
+          </div>
+          <h3>目前沒有有效中的預約</h3>
+          <p>規劃一些休閒時光吧！</p>
+          <button class="reserve-btn-sm" (click)="activeTab = 'facilities'">
+            <mat-icon>add</mat-icon>
+            前往預約
+          </button>
+        </div>
+        } @else {
+        <div class="reservation-list">
+          @for (r of currentReservations; track r.reservationId) {
+          <div class="reservation-card" [ngClass]="getReservationStatusClass(r)">
+            <div class="res-icon">
+              <mat-icon>{{ getFacilityIcon(r.facilityName) }}</mat-icon>
+            </div>
+            <div class="res-info">
+              <div class="res-title-row">
+                <span class="res-name">{{ r.facilityName }}</span>
+                <span class="res-status" [ngClass]="getReservationStatusClass(r)">
+                  {{ getReservationStatusLabel(r) }}
+                </span>
+              </div>
+              <div class="res-details">
+                <span><mat-icon>calendar_today</mat-icon>{{ formatDate(r.date) }}</span>
+                <span><mat-icon>schedule</mat-icon>{{ formatTime(r.startTime) }} - {{ formatTime(r.endTime) }}</span>
+                <span><mat-icon>people</mat-icon>{{ r.attendees }} 人</span>
+              </div>
+            </div>
+            @if (canCancelReservation(r) && r.reservationId) {
+            <div class="res-actions">
+              <button class="cancel-res-btn" (click)="openCancelConfirm(r.reservationId)">
+                取消預約
+              </button>
+            </div>
+            }
+          </div>
           }
         </div>
         }
       </div>
-      }
     </div>
 
     <aside class="reservation-sidebar">
-      <div class="summary-card">
-        <span class="summary-label">有效預約</span>
+      <div class="summary-card stat-card-verified">
+        <div class="stat-header">
+          <mat-icon class="stat-icon-wrap stat-verified">verified</mat-icon>
+          <span class="summary-label">有效預約</span>
+        </div>
         <strong class="summary-value">{{ confirmedReservationCount }}</strong>
-        <span class="summary-sub">目前可使用中的已確認預約</span>
       </div>
-
-      <div class="summary-card">
-        <span class="summary-label">待確認</span>
+      <div class="summary-card stat-card-pending">
+        <div class="stat-header">
+          <mat-icon class="stat-icon-wrap stat-pending">pending_actions</mat-icon>
+          <span class="summary-label">待確認</span>
+        </div>
         <strong class="summary-value">{{ pendingReservationCount }}</strong>
-        <span class="summary-sub">尚待管理端確認的申請</span>
-      </div>
-
-      <div class="summary-card next-card">
-        <div class="sidebar-title-row">
-          <mat-icon>schedule</mat-icon>
-          <h3>下一筆預約</h3>
-        </div>
-        @if (nextReservation) {
-        <strong class="next-name">{{ nextReservation.facilityName }}</strong>
-        <span class="next-meta">{{ formatDate(nextReservation.date) }}</span>
-        <span class="next-meta">{{ nextReservation.startTime.slice(0, 5) }} - {{ nextReservation.endTime.slice(0, 5) }}</span>
-        } @else {
-        <p class="sidebar-empty">目前沒有即將到來的預約</p>
-        }
-      </div>
-
-      <div class="summary-card legend-card">
-        <div class="sidebar-title-row">
-          <mat-icon>info</mat-icon>
-          <h3>狀態說明</h3>
-        </div>
-        <div class="legend-item">
-          <span class="legend-dot confirmed"></span>
-          <span>已確認：預約仍有效</span>
-        </div>
-        <div class="legend-item">
-          <span class="legend-dot pending"></span>
-          <span>確認中：等待處理</span>
-        </div>
       </div>
     </aside>
   </div>
   }
-
   @if (activeTab === 'history') {
   <div class="reservation-layout">
     <div class="reservation-main">
-      @if (historyReservations.length === 0) {
-      <div class="empty-state">
-        <mat-icon class="empty-icon">history</mat-icon>
-        <p>目前沒有歷史紀錄</p>
-      </div>
-      } @else {
-      <div class="reservation-list">
-        @for (r of historyReservations; track r.reservationId) {
-        <div class="reservation-card history-card">
-          <div class="res-icon">
-            <mat-icon>{{ getFacilityIcon(r.facilityName) }}</mat-icon>
+      <div class="scroll-container">
+        @if (historyReservations.length === 0) {
+        <div class="empty-state">
+          <button class="info-btn" [matMenuTriggerFor]="statusMenu" title="狀態說明">
+            <mat-icon>info_outline</mat-icon>
+          </button>
+          <div class="empty-icon-wrapper">
+            <mat-icon class="empty-icon">history</mat-icon>
           </div>
+          <h3>目前沒有歷史紀錄</h3>
+          <p>您過去的所有預約活動將會顯示在這裡</p>
+        </div>
+        } @else {
+        <div class="reservation-list">
+          @for (r of historyReservations; track r.reservationId) {
+          <div class="reservation-card history-card">
+            <div class="res-icon">
+              <mat-icon>{{ getFacilityIcon(r.facilityName) }}</mat-icon>
+            </div>
 
-          <div class="res-info">
-            <div class="res-title-row">
-              <span class="res-name">{{ r.facilityName }}</span>
-              <span class="res-status" [ngClass]="getReservationStatusClass(r)">
-                {{ getReservationStatusLabel(r) }}
-              </span>
-            </div>
-            <div class="res-details">
-              <span><mat-icon>calendar_today</mat-icon>{{ formatDate(r.date) }}</span>
-              <span><mat-icon>schedule</mat-icon>{{ r.startTime.slice(0, 5) }} - {{ r.endTime.slice(0, 5) }}</span>
-              <span><mat-icon>people</mat-icon>{{ r.attendees }} 人</span>
+            <div class="res-info">
+              <div class="res-title-row">
+                <span class="res-name">{{ r.facilityName }}</span>
+                <span class="res-status" [ngClass]="getReservationStatusClass(r)">
+                  {{ getReservationStatusLabel(r) }}
+                </span>
+              </div>
+              <div class="res-details">
+                <span><mat-icon>calendar_today</mat-icon>{{ formatDate(r.date) }}</span>
+                <span><mat-icon>schedule</mat-icon>{{ formatTime(r.startTime) }} - {{ formatTime(r.endTime) }}</span>
+                <span><mat-icon>people</mat-icon>{{ r.attendees }} 人</span>
+              </div>
             </div>
           </div>
+          }
         </div>
         }
       </div>
-      }
     </div>
 
     <aside class="reservation-sidebar">
-      <div class="summary-card">
-        <span class="summary-label">歷史總數</span>
+      <div class="summary-card stat-card-history">
+        <div class="stat-header">
+          <mat-icon class="stat-icon-wrap stat-history">history</mat-icon>
+          <span class="summary-label">歷史總數</span>
+        </div>
         <strong class="summary-value">{{ historyReservationCount }}</strong>
-        <span class="summary-sub">已取消與已過期的紀錄</span>
       </div>
 
-      <div class="summary-card">
-        <span class="summary-label">已取消</span>
+      <div class="summary-card stat-card-cancel">
+        <div class="stat-header">
+          <mat-icon class="stat-icon-wrap stat-cancel">cancel</mat-icon>
+          <span class="summary-label">已取消</span>
+        </div>
         <strong class="summary-value">{{ cancelledReservationCount }}</strong>
-        <span class="summary-sub">使用者或系統取消的預約</span>
       </div>
 
-      <div class="summary-card danger-card">
-        <span class="summary-label">已過期</span>
+      <div class="summary-card stat-card-expired">
+        <div class="stat-header">
+          <mat-icon class="stat-icon-wrap stat-expired">timer_off</mat-icon>
+          <span class="summary-label">已過期</span>
+        </div>
         <strong class="summary-value">{{ expiredReservationCount }}</strong>
-        <span class="summary-sub">預約時間已結束的紀錄</span>
-      </div>
-
-      <div class="summary-card legend-card">
-        <div class="sidebar-title-row">
-          <mat-icon>history_toggle_off</mat-icon>
-          <h3>歷史分類</h3>
-        </div>
-        <div class="legend-item">
-          <span class="legend-dot cancelled"></span>
-          <span>已取消：預約未成立或被取消</span>
-        </div>
-        <div class="legend-item">
-          <span class="legend-dot expired"></span>
-          <span>已過期：時間已超過結束時段</span>
-        </div>
       </div>
     </aside>
   </div>
   }
 </div>
+
+
+<mat-menu #statusMenu="matMenu" panelClass="status-popover-panel">
+  <div class="popover-content" (click)="$event.stopPropagation()">
+    <h4 class="popover-title">預約狀態說明</h4>
+    <div class="legend-items">
+      <div class="legend-item">
+        <span class="legend-dot confirmed"></span>
+        <div class="legend-text">
+          <span class="label">已確認</span>
+          <span class="desc">管理端已核准，請準時前往</span>
+        </div>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot pending"></span>
+        <div class="legend-text">
+          <span class="label">確認中</span>
+          <span class="desc">尚未審核，請耐心等候</span>
+        </div>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot cancelled"></span>
+        <div class="legend-text">
+          <span class="label">已取消</span>
+          <span class="desc">預約未成立或已手動取消</span>
+        </div>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot expired"></span>
+        <div class="legend-text">
+          <span class="label">已過期</span>
+          <span class="desc">預約時段已過，無法取消</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-menu>
+

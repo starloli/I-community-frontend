@@ -1,14 +1,13 @@
-// ===== 整體容器 =====
+// ===== 電腦版全域樣式 (維持不變) =====
 .visitor-container {
   padding: 0;
 }
 
-// ===== 頁面標題列 =====
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
 
   h1 {
     font-size: 36px;
@@ -23,7 +22,6 @@
   }
 }
 
-// ===== 新增訪客按鈕 =====
 .add-btn {
   display: flex;
   align-items: center;
@@ -37,6 +35,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
+  white-space: nowrap;
 
   mat-icon {
     font-size: 20px;
@@ -49,157 +48,6 @@
   }
 }
 
-// ===== 表單遮罩（點擊背景關閉）=====
-.form-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-// ===== 表單卡片 =====
-.form-card {
-  background: #ffffff;
-  border-radius: 20px;
-  width: 480px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-}
-
-.form-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px 28px;
-  border-bottom: 1px solid #f0f0f0;
-
-  h2 {
-    font-size: 18px;
-    font-weight: 700;
-    color: #1a1a2e;
-    margin: 0;
-  }
-
-  .close-btn {
-    color: #aaa;
-    cursor: pointer;
-    transition: color 0.2s;
-
-    &:hover {
-      color: #333;
-    }
-  }
-}
-
-.form-body {
-  padding: 24px 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-// ===== 表單欄位 =====
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-
-  label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #555;
-  }
-
-  // 必填標示紅色星號
-  .required {
-    color: #e53935;
-  }
-
-  input {
-    padding: 10px 14px;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 15px;
-    color: #333;
-    outline: none;
-    transition: border-color 0.2s;
-
-    &:focus {
-      border-color: #3f51b5;
-    }
-
-    &::placeholder {
-      color: #bbb;
-    }
-  }
-}
-
-.form-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 20px 28px;
-  border-top: 1px solid #f0f0f0;
-}
-
-// 取消按鈕
-.cancel-btn {
-  padding: 10px 24px;
-  background: #f5f5f5;
-  color: #555;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-
-  &:hover {
-    background: #eeeeee;
-  }
-}
-
-// 確認登記按鈕
-.submit-btn {
-  padding: 10px 24px;
-  background: #3f51b5;
-  color: #ffffff;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-
-  &:hover {
-    background: #303f9f;
-  }
-
-  &:disabled {
-    background: #c5cae9;
-    cursor: not-allowed;
-  }
-}
-
-.submit-btn1 {
-  padding: 10px 24px;
-  background: #edebeb;
-  color: #989898;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  transition: background 0.2s;
-
-  }
-
-// ===== 搜尋欄 =====
 .search-bar {
   display: flex;
   align-items: center;
@@ -232,7 +80,6 @@
     }
   }
 
-  // 清除按鈕
   .clear-btn {
     color: #aaa;
     cursor: pointer;
@@ -247,7 +94,11 @@
   }
 }
 
-// ===== 訪客列表表格 =====
+.list-container {
+  display: flex;
+  flex-direction: column;
+}
+
 .table-card {
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(16px);
@@ -279,35 +130,9 @@ td {
   padding: 16px 20px;
   font-size: 15px;
   color: #333;
-  // 每列之間加分隔線
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-tbody tr:last-child td {
-  border-bottom: none;
-}
-
-tbody tr:hover {
-  background: rgba(63, 81, 181, 0.03);
-}
-
-// ===== 點擊提示動畫 (Before Hover) =====
-@keyframes click-hint-pulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(63, 81, 181, 0.2);
-  }
-  50% {
-    transform: scale(1.02);
-    box-shadow: 0 0 0 8px rgba(63, 81, 181, 0);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(63, 81, 181, 0);
-  }
-}
-
-// ===== 訪客姓名欄位（含頭像）=====
 .visitor-name-cell {
   display: inline-flex;
   align-items: center;
@@ -332,53 +157,32 @@ tbody tr:hover {
     font-size: 14px;
     flex-shrink: 0;
     transition: all 0.25s ease;
-    
-    // 👈 加入呼吸動畫，提示使用者可點擊
     animation: click-hint-pulse 2s infinite ease-in-out;
   }
 
   &:hover {
     background: rgba(63, 81, 181, 0.08);
-    
     .avatar {
-      animation: none; // 👈 懸停時停止呼吸動畫，改為懸停特效
+      animation: none;
       transform: scale(1.1) rotate(5deg);
       box-shadow: 0 4px 12px rgba(63, 81, 181, 0.2);
       background: #3f51b5;
       color: #ffffff;
     }
-
     color: #3f51b5;
-  }
-
-  &:active {
-    transform: scale(0.96);
-    opacity: 0.8;
   }
 }
 
-// ===== 狀態標籤 =====
 .status-badge {
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
 }
-.status-notyet{
-  background: #fff3e0; /* 淺橙背景 */
-  color: #ef6c00;
-}
-.status-inside {
-  background: #e8f5e9;
-  color: #388e3c;
-}
+.status-notyet{ background: #fff3e0; color: #ef6c00; }
+.status-inside { background: #e8f5e9; color: #388e3c; }
+.status-left { background: #f5f5f5; color: #999; }
 
-.status-left {
-  background: #f5f5f5;
-  color: #999;
-}
-
-// ===== 登記離開按鈕 =====
 .checkout-btn {
   padding: 6px 16px;
   background: transparent;
@@ -389,6 +193,7 @@ tbody tr:hover {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap;
 
   &:hover {
     background: #e53935;
@@ -396,11 +201,11 @@ tbody tr:hover {
   }
 }
 
-.pagination {
+.pagination-bar {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin-top: 20px;
 }
 
@@ -420,26 +225,310 @@ tbody tr:hover {
   justify-content: center;
   transition: all 0.2s;
 
-  mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+  &:hover:not(:disabled) { background: #6a9e7f; border-color: #6a9e7f; color: #ffffff; }
+  &.active { background: #6a9e7f; border-color: #6a9e7f; color: #ffffff; }
+  &:disabled { opacity: 0.3; cursor: not-allowed; }
+}
+
+@keyframes click-hint-pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(63, 81, 181, 0.2); }
+  50% { transform: scale(1.02); box-shadow: 0 0 0 8px rgba(63, 81, 181, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(63, 81, 181, 0); }
+}
+
+// ===== 表單樣式 =====
+.form-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.form-card {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 480px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 28px;
+  border-bottom: 1px solid #f0f0f0;
+  h2 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 0; }
+  .close-btn { color: #aaa; cursor: pointer; &:hover { color: #333; } }
+}
+
+.form-body {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  label { font-size: 14px; font-weight: 600; color: #555; }
+  .required { color: #e53935; }
+  input {
+    padding: 10px 14px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.2s;
+    &:focus { border-color: #3f51b5; }
+    &::placeholder { color: #bbb; }
+  }
+}
+
+.form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 28px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.cancel-btn {
+  padding: 10px 24px;
+  background: #f5f5f5;
+  color: #555;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover { background: #eeeeee; }
+}
+
+.submit-btn {
+  padding: 10px 24px;
+  background: #3f51b5;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover:not(:disabled) { background: #303f9f; }
+  &:disabled { background: #c5cae9; cursor: not-allowed; }
+}
+
+// =============================================================================
+// ===== 手機版響應式設計 (RWD) =====
+// =============================================================================
+
+@media (max-width: 768px) {
+  .visitor-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
-  &:hover:not(:disabled) {
-    background: #6a9e7f;
-    border-color: #6a9e7f;
-    color: #ffffff;
+  .page-header {
+    padding: 12px 0 4px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+    h1 {
+      font-size: 22px;
+      letter-spacing: -0.5px;
+    }
+    .subtitle {
+      font-size: 11px;
+      margin-top: -2px;
+    }
   }
 
-  &.active {
-    background: #6a9e7f;
-    border-color: #6a9e7f;
-    color: #ffffff;
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 12px 0;
+    padding: 6px 14px;
+    height: 42px;
+    min-height: 42px;
+    max-height: 42px;
+    border-radius: 10px;
+    background: #ffffff;
+    border: 1px solid #eee;
+    flex-shrink: 0;
+    width: 100%;
+    box-sizing: border-box;
+
+    mat-icon { font-size: 18px; width: 18px; height: 18px; flex-shrink: 0; }
+    input {
+      flex: 1;
+      height: 100%;
+      font-size: 13px;
+      border: none;
+      background: transparent;
+      padding: 0;
+      line-height: normal;
+    }
+    .clear-btn { font-size: 16px; width: 16px; height: 16px; flex-shrink: 0; }
   }
 
-  &:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
+  .list-container {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
   }
+
+  .list-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 2px;
+    &::-webkit-scrollbar { width: 3px; }
+    &::-webkit-scrollbar-thumb { background: #eee; }
+  }
+
+  .table-card { background: transparent; border: none; box-shadow: none; backdrop-filter: none; }
+  table, thead, tbody, th, td, tr { display: block; width: 100%; }
+  thead { display: none; }
+  table { min-width: 100%; }
+
+  tr {
+    background: #ffffff;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    padding: 16px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: none;
+    font-size: 14px;
+    width: 100% !important;
+    box-sizing: border-box;
+
+    &::before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: #999;
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-right: 12px;
+    }
+
+    .val-text {
+      flex: 1;
+      min-width: 0;
+      text-align: right;
+      word-break: break-all;
+      line-height: 1.4;
+      color: #2c3e50;
+      font-weight: 500;
+    }
+
+    &.col-name {
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f8f8f8;
+      margin-bottom: 10px;
+      justify-content: flex-start;
+      &::before { content: none; }
+      .visitor-name-cell {
+        margin-left: 0; padding: 0;
+        .avatar { width: 44px; height: 44px; font-size: 16px; }
+        .name-text { font-size: 17px; font-weight: 700; color: #1a1a2e; }
+      }
+    }
+
+    &.col-status {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 0;
+      width: auto !important;
+      &::before { content: none; }
+      .status-badge {
+        padding: 4px 10px;
+        font-size: 11px;
+      }
+    }
+
+    &.col-action {
+      margin-top: 10px;
+      padding-top: 12px;
+      border-top: 1px solid #f8f8f8;
+      &::before { content: none; }
+      .checkout-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+        height: auto;
+        border-radius: 12px;
+      }
+    }
+  }
+
+  .pagination-bar {
+    padding: 12px 4px;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .page-info { font-weight: 700; font-size: 14px; color: #3f51b5; }
+  .page-btn {
+    width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid #e0e0e0; background: #fff;
+    &:active { background: #eee; transform: scale(0.9); }
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      h1 { font-size: 20px; line-height: 1.2; }
+      .subtitle {
+        display: block;
+        font-size: 11px;
+        color: #999;
+        white-space: nowrap;
+      }
+    }
+
+    .add-btn {
+      width: auto;
+      padding: 8px 12px;
+      font-size: 12px;
+      margin-left: 10px;
+      mat-icon { font-size: 16px; width: 16px; height: 16px; }
+    }
+  }
+}
+
+// ===== 表單 Modal (微調 RWD) =====
+.form-card {
+  max-width: 92vw;
+  max-height: 85vh;
+  overflow-y: auto;
 }

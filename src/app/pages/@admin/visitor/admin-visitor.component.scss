@@ -1,9 +1,8 @@
-// ===== 整體容器 =====
+// ===== 電腦版全域樣式 (恢復原始樣式) =====
 .visitor-container {
   padding: 0;
 }
 
-// ===== 頁面標題列 =====
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -18,7 +17,6 @@
       color: #1a1a2e;
       margin: 0 0 4px 0;
     }
-
     .subtitle {
       font-size: 15px;
       color: #888;
@@ -26,50 +24,32 @@
   }
 }
 
-// ===== 新增訪客按鈕 =====
 .add-btn {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  background: #3f51b5;
+  background: #6A9E7F;
   color: #ffffff;
   border: none;
   border-radius: 12px;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition:
-    background 0.2s,
-    transform 0.2s,
-    box-shadow 0.2s;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
   white-space: nowrap;
-  box-shadow: 0 10px 24px rgba(106, 158, 127, 0.22);
+  box-shadow: 0 10px 24px rgba(106, 158, 127, 0.2);
 
-  mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-  }
-
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
   &:hover {
-    background: #303f9f;
+    background: #5a8b6d;
     transform: translateY(-1px);
     box-shadow: 0 14px 28px rgba(106, 158, 127, 0.28);
   }
 }
 
-// ===== 工具列 =====
-.toolbar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-// ===== 搜尋欄 =====
 .search-bar {
-  flex: 1;
+  flex: 1; // 恢復滿版
   display: flex;
   align-items: center;
   gap: 10px;
@@ -79,262 +59,22 @@
   border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 14px;
   padding: 12px 18px;
-  margin-bottom: 16px; // 👈 添加這行，創建與 table-card 的距離
+  margin-bottom: 16px;
 
-  mat-icon {
-    color: #aaa;
-    font-size: 22px;
-    width: 22px;
-    height: 22px;
-  }
-
-  input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    font-size: 15px;
-    color: #333;
-    outline: none;
-
-    &::placeholder {
-      color: #bbb;
-    }
-  }
-
-  .clear-btn {
-    color: #aaa;
-    cursor: pointer;
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    transition: color 0.2s;
-
-    &:hover {
-      color: #555;
-    }
+  mat-icon { color: #aaa; font-size: 22px; width: 22px; height: 22px; }
+  input { flex: 1; border: none; background: transparent; font-size: 15px; color: #333; outline: none; }
+  .clear-btn { color: #aaa; cursor: pointer; font-size: 18px; width: 18px; height: 18px; }
+  
+  &:focus-within {
+    border-color: #6A9E7F;
   }
 }
 
-// ===== 每頁筆數 =====
-.page-size-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 14px;
-  padding: 12px 18px;
-  color: #555;
-  white-space: nowrap;
-
-  select {
-    padding: 8px 12px;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 14px;
-    color: #333;
-    outline: none;
-    background: #ffffff;
-  }
-}
-
-// ===== 表單遮罩（點擊背景關閉）=====
-.form-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-// ===== 表單卡片 =====
-.form-card {
-  background: #ffffff;
-  border-radius: 20px;
-  width: 480px;
-  max-width: calc(100vw - 32px);
-  max-height: 90vh;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  overflow-y: auto;
-}
-
-.form-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  padding: 24px 28px;
-  border-bottom: 1px solid #f0f0f0;
-
-  h2 {
-    font-size: 18px;
-    font-weight: 700;
-    color: #1a1a2e;
-    margin: 0;
-  }
-
-  .close-btn {
-    color: #aaa;
-    cursor: pointer;
-    transition: color 0.2s;
-
-    &:hover {
-      color: #333;
-    }
-  }
-}
-
-.form-subtitle {
-  margin: 6px 0 0;
-  font-size: 13px;
-  color: #888;
-}
-
-.form-body {
-  padding: 24px 28px;
+.list-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
 }
 
-.step-chip {
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: #e8eaf6;
-  color: #3f51b5;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.selected-address-card,
-.hint-card {
-  padding: 14px 16px;
-  border-radius: 12px;
-  font-size: 14px;
-}
-
-.selected-address-card {
-  background: #f5f7ff;
-  color: #333;
-
-  .label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: 12px;
-    color: #888;
-  }
-}
-
-.hint-card {
-  background: #fff3e0;
-  color: #ef6c00;
-}
-
-// ===== 表單欄位 =====
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-
-  label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #555;
-  }
-
-  .required {
-    color: #e53935;
-  }
-
-  input,
-  select {
-    padding: 10px 14px;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 15px;
-    color: #333;
-    outline: none;
-    transition: border-color 0.2s;
-    box-sizing: border-box;
-    width: 100%;
-    background: #ffffff;
-
-    &:focus {
-      border-color: #3f51b5;
-    }
-
-    &::placeholder {
-      color: #bbb;
-    }
-  }
-}
-
-.form-control {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-.form-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 20px 28px;
-  border-top: 1px solid #f0f0f0;
-}
-
-// ===== 按鈕 =====
-.cancel-btn {
-  padding: 10px 24px;
-  background: #f5f5f5;
-  color: #555;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-
-  &:hover {
-    background: #eeeeee;
-  }
-}
-
-.submit-btn {
-  padding: 10px 24px;
-  background: #3f51b5;
-  color: #ffffff;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    background 0.2s,
-    opacity 0.2s;
-
-  &:hover:not(:disabled) {
-    background: #303f9f;
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-}
-
-// ===== 訪客列表表格 =====
 .table-card {
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(16px);
@@ -352,161 +92,52 @@ table {
   min-width: 980px;
 }
 
-thead tr {
-  background: rgba(63, 81, 181, 0.08);
-}
-
+thead tr { background: rgba(106, 158, 127, 0.08); }
 th {
   padding: 16px 20px;
-  text-align: left;
+  text-align: center; // 👈 表頭預設居中
   font-size: 14px;
   font-weight: 600;
   color: #555;
   white-space: nowrap;
-  letter-spacing: 0.02em;
 }
 
 td {
   padding: 16px 20px;
   font-size: 15px;
   color: #333;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  vertical-align: middle;
-}
-
-.col-name {
-  width: 18%;
-}
-
-.col-phone {
-  width: 13%;
-}
-
-.col-plate {
-  width: 12%;
-}
-
-.col-host {
-  width: 19%;
-}
-
-.col-time {
-  width: 18%;
-  white-space: nowrap;
-}
-
-.col-status {
-  width: 10%;
-  text-align: center;
-}
-
-.col-action {
-  width: 10%;
-  text-align: center;
-  white-space: nowrap;
-}
-
-tbody tr:last-child td {
   border-bottom: none;
+  vertical-align: middle;
+  text-align: center; // 👈 資料格預設居中
 }
 
-tbody tr:hover {
-  background: rgba(63, 81, 181, 0.03);
-}
+.col-name { width: 18%; }
+.col-phone { width: 13%; }
+.col-plate { width: 12%; }
+.col-host { width: 19%; }
+.col-time { width: 18%; }
+.col-status { width: 10%; } // 移除重複的 text-align: center
+.col-action { width: 10%; } // 移除重複的 text-align: center
 
-// ===== 點擊提示動畫 (Before Hover) =====
-@keyframes click-hint-pulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(63, 81, 181, 0.2);
-  }
-  50% {
-    transform: scale(1.02);
-    box-shadow: 0 0 0 8px rgba(63, 81, 181, 0);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(63, 81, 181, 0);
-  }
-}
-
-// ===== 訪客姓名欄位（含頭像）=====
 .visitor-name-cell {
-  display: inline-flex;
+  display: inline-flex; // 👈 使用 inline-flex 配合 text-align: center 達成置中
   align-items: center;
   gap: 12px;
   cursor: pointer;
   padding: 6px 12px;
-  margin-left: -12px;
   border-radius: 10px;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
+  transition: all 0.25s;
+  text-align: left; // 內部文字維持左對齊圖示
 
-  .avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: #e8eaf6;
-    color: #3f51b5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 14px;
-    flex-shrink: 0;
-    transition: all 0.25s ease;
-
-    // 👈 加入呼吸動畫，提示使用者可點擊
-    animation: click-hint-pulse 2s infinite ease-in-out;
-  }
-
-  &:hover {
-    background: rgba(63, 81, 181, 0.08);
-
-    .avatar {
-      animation: none; // 👈 懸停時停止呼吸動畫，改為懸停特效
-      transform: scale(1.1) rotate(5deg);
-      box-shadow: 0 4px 12px rgba(63, 81, 181, 0.2);
-      background: #3f51b5;
-      color: #ffffff;
-    }
-
-    color: #3f51b5;
-  }
-
-  &:active {
-    transform: scale(0.96);
-    opacity: 0.8;
-  }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; background: rgba(106, 158, 127, 0.12); color: #6A9E7F; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+  &:hover { background: rgba(106, 158, 127, 0.08); color: #6A9E7F; .avatar { background: #6A9E7F; color: #fff; } }
 }
 
-// ===== 狀態標籤 =====
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-}
+.status-badge { display: inline-flex; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+.status-notyet { background: #fff3e0; color: #ef6c00; }
+.status-inside { background: #e8f5e9; color: #388e3c; }
+.status-left   { background: #f5f5f5; color: #999; }
 
-.status-notyet {
-  background: #fff3e0;
-  color: #ef6c00;
-}
-
-.status-inside {
-  background: #e8f5e9;
-  color: #388e3c;
-}
-
-.status-left {
-  background: #f5f5f5;
-  color: #999;
-}
-
-// ===== 操作按鈕 =====
 .checkout-btn {
   padding: 6px 16px;
   background: transparent;
@@ -517,123 +148,272 @@ tbody tr:hover {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap;
 
-  &:hover {
-    background: #e53935;
-    color: #ffffff;
-  }
+  &:hover { background: #e53935; color: #fff; }
+  &.arrival-btn { color: #6A9E7F; border-color: #6A9E7F; &:hover { background: #6A9E7F; color: #fff; } }
 }
 
-.arrival-btn {
-  color: #3f51b5;
-  border-color: #3f51b5;
-
-  &:hover {
-    background: #3f51b5;
-    color: #ffffff;
-  }
-}
-
-.action-placeholder {
-  color: #999;
-}
-
-.empty-cell {
-  padding: 40px 20px;
-  text-align: center;
-  color: #999;
-}
-
-
-// ===== 分頁 =====
 .pagination-bar {
   display: flex;
-  flex-direction: column;    // 👈 改為垂直排列
+  flex-direction: column;
   align-items: center;
   gap: 16px;
   margin-top: 16px;
+  margin-bottom: 32px;
 }
 
 .pagination-summary {
+  width: 100%;
+  text-align: center;
   font-size: 14px;
   color: #666;
-  width: 100%;
-  text-align: center;    // 👈 文字置中
 }
 
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
+  gap: 6px;
+  margin-top: 8px;
 
-.page-btn {
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  background: rgba(255, 255, 255, 0.55);
-  color: #555;
-  border: 1.5px solid #e0e0e0;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  backdrop-filter: blur(8px);
+  .page-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1.5px solid #e0e0e0;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(8px);
+    color: #555;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
 
-  mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-  }
+    mat-icon { font-size: 20px; width: 20px; height: 20px; }
 
-  &:hover:not(:disabled) {
-    background: #6a9e7f;
-    border-color: #6a9e7f;
-    color: #ffffff;
-  }
+    &:hover:not(:disabled) {
+      background: #6A9E7F;
+      border-color: #6A9E7F;
+      color: #fff;
+    }
 
-  &.active {
-    background: #6a9e7f;
-    border-color: #6a9e7f;
-    color: #ffffff;
-  }
+    &.active {
+      background: #6A9E7F;
+      border-color: #6A9E7F;
+      color: #fff;
+    }
 
-  &:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
   }
 }
 
-@media (max-width: 960px) {
-  .table-card {
-    overflow-x: auto;
-  }
-}
+// =============================================================================
+// ===== 手機版響應式設計 (RWD) =====
+// =============================================================================
 
 @media (max-width: 768px) {
-  .page-header,
-  .toolbar,
-  .pagination-bar {
+  .visitor-container {
+    height: 100%;
+    display: flex;
     flex-direction: column;
-    align-items: stretch;
+    overflow: hidden;
   }
 
-  .add-btn {
-    justify-content: center;
+  .page-header {
+    padding: 16px 0 12px 0;
+    margin-bottom: 0;
+    flex-shrink: 0;
+    h1 { font-size: 20px; } // 👈 修改為 20px
+    .subtitle { font-size: 13px; }
   }
 
-  .page-size-box,
-  .pagination {
-    justify-content: center;
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 12px 0;
+    padding: 6px 14px;
+    height: 42px; // 👈 強制設定一個合理的固定高度
+    min-height: 42px;
+    max-height: 42px;
+    border-radius: 10px;
+    background: #ffffff;
+    border: 1px solid #eee;
+    flex-shrink: 0; // 👈 關鍵：防止被 Flex 容器拉伸
+    width: 100%;
+    box-sizing: border-box;
+
+    mat-icon { font-size: 18px; width: 18px; height: 18px; flex-shrink: 0; }
+    input {
+      flex: 1;
+      height: 100%;
+      font-size: 13px;
+      border: none;
+      background: transparent;
+      padding: 0;
+      line-height: normal;
+    }
+    .clear-btn { font-size: 16px; width: 16px; height: 16px; flex-shrink: 0; }
   }
 
-  .pagination-summary {
-    text-align: center;
+  .list-container {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .list-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 2px;
+  }
+
+  .table-card { background: transparent; border: none; box-shadow: none; backdrop-filter: none; }
+  table, thead, tbody, th, td, tr { display: block; width: 100%; }
+  thead { display: none; }
+  table { min-width: 100%; }
+
+  tr {
+    background: #ffffff;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    padding: 16px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    box-sizing: border-box;
+    position: relative; // 為了讓狀態標籤絕對定位
+  }
+
+  td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: none;
+    font-size: 14px;
+    width: 100% !important; // 👈 強制覆蓋電腦版的百分比寬度
+    box-sizing: border-box;
+
+    &::before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: #999;
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-right: 16px;
+    }
+
+    .val-text {
+      flex: 1;
+      min-width: 0; // 👈 允許內容縮放以適應 flex 容器
+      text-align: right;
+      word-break: break-all; // 確保極長字串也能在邊界換行而不撐破
+      line-height: 1.4;
+      color: #2c3e50;
+      font-weight: 500;
+    }
+
+    &.col-name {
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f8f8f8;
+      margin-bottom: 10px;
+      justify-content: flex-start;
+      &::before { content: none; }
+      .visitor-name-cell { 
+        margin-left: 0; padding: 0; 
+        .avatar { width: 44px; height: 44px; font-size: 16px; } 
+        .name-text { font-size: 17px; font-weight: 700; color: #1a1a2e; } 
+      }
+    }
+
+    &.col-status {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 0;
+      width: auto !important; // 狀態標籤不需要滿版
+      &::before { content: none; }
+      .status-badge {
+        padding: 4px 10px;
+        font-size: 11px;
+      }
+    }
+
+    &.col-action {
+      margin-top: 10px;
+      padding-top: 12px;
+      border-top: 1px solid #f8f8f8;
+      &::before { content: none; }
+      .checkout-btn { 
+        width: 100%; 
+        padding: 12px; 
+        font-size: 14px; 
+        height: auto; 
+        border-radius: 12px;
+      }
+    }
+  }
+
+  .pagination-bar {
+    padding: 16px 4px;
+    background: transparent;
+    .pagination-summary { display: block; margin-bottom: 12px; }
   }
 }
+
+@media (max-width: 480px) {
+  .page-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .header-left {
+      display: flex;
+      flex-direction: column; // 👈 確保標題與副標題垂直堆疊
+      gap: 2px;
+
+      h1 { font-size: 20px; line-height: 1.2; }
+      .subtitle {
+        display: block; // 👈 恢復顯示
+        font-size: 11px;
+        color: #999;
+        white-space: nowrap;
+      }
+    }
+
+    .add-btn {
+      width: auto;
+      padding: 8px 12px;
+      font-size: 12px;
+      margin-left: 10px;
+      background: #6A9E7F;
+      mat-icon { font-size: 16px; width: 16px; height: 16px; }
+      &:hover { background: #5a8b6d; }
+    }
+  }
+}
+
+// ===== 表單 Modal =====
+.form-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+.form-card {
+  background: #fff; border-radius: 16px; width: 450px; max-width: 92vw; max-height: 85vh; overflow-y: auto;
+  .form-header, .form-body, .form-footer { padding: 16px 20px; }
+  h2 { font-size: 16px; margin: 0; }
+}
+.form-group {
+  margin-bottom: 15px; display: flex; flex-direction: column; gap: 6px;
+  label { font-size: 14px; font-weight: 600; color: #555; }
+  input, select { padding: 12px; border: 1px solid #e0e0e0; border-radius: 10px; font-size: 15px; width: 100%; }
+  input:focus, select:focus { border-color: #6A9E7F; outline: none; }
+}
+.form-footer { display: flex; justify-content: flex-end; gap: 10px; }
+.submit-btn { background: #6A9E7F; color: #fff; padding: 10px 24px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; &:hover { background: #5a8b6d; } }
+.cancel-btn { background: #f5f5f5; color: #555; padding: 10px 24px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; }

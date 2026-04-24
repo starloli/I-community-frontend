@@ -19,80 +19,86 @@
     }
   </div>
 
-  <div class="table-card">
-    <table>
-      <colgroup>
-        <col class="col-name" />
-        <col class="col-phone" />
-        <col class="col-plate" />
-        <col class="col-host" />
-        <col class="col-time" />
-        <col class="col-status" />
-        <col class="col-action" />
-      </colgroup>
-      <thead>
-        <tr>
-          <th class="col-name">姓名</th>
-          <th class="col-phone">電話</th>
-          <th class="col-plate">車牌</th>
-          <th class="col-host">被訪住戶</th>
-          <th class="col-time">預約/進入時間</th>
-          <th class="col-status">狀態</th>
-          <th class="col-action">操作</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (visitor of pagedVisitors; track visitor.visitorId) {
-          <tr>
-            <td class="col-name">
-              <div class="visitor-name-cell" (click)="visitorMore(visitor)">
-                <div class="avatar">{{ visitor.visitorName.charAt(0) }}</div>
-                {{ visitor.visitorName }}
-              </div>
-            </td>
-            <td class="col-phone">{{ visitor.visitorPhone || '-' }}</td>
-            <td class="col-plate">{{ visitor.licensePlate || '-' }}</td>
-            <td class="col-host">{{ visitor.residentialAddress || '-' }}</td>
-            <td class="col-time">{{ visitor.estimatedTime !== '-' ? visitor.estimatedTime : visitor.checkInTime }}</td>
-            <td class="col-status">
-              @if (visitor.status === 'NOTYET') { <span class="status-badge status-notyet">未到</span> }
-              @else if (visitor.status === 'INSIDE') { <span class="status-badge status-inside">在內</span> }
-              @else { <span class="status-badge status-left">已離</span> }
-            </td>
-            <td class="col-action">
-              @if (visitor.status === 'NOTYET') {
-                <button class="checkout-btn arrival-btn" (click)="enterInside(visitor.visitorId)">登記入內</button>
-              } @else if (visitor.status === 'INSIDE') {
-                <button class="checkout-btn" (click)="checkOut(visitor.visitorId)">登記離開</button>
-              }
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-
-  <div class="pagination-bar">
-    <div class="pagination-summary">
-      顯示第 {{ (currentPage - 1) * pageSize + 1 }}
-      至 {{ Math.min(currentPage * pageSize, filteredVisitorsRaw.length) }} 筆，
-      共 {{ filteredVisitorsRaw.length }} 筆
+  <div class="list-container">
+    <div class="list-scroll-area">
+      <div class="table-card">
+        <table>
+          <colgroup>
+            <col class="col-name" />
+            <col class="col-phone" />
+            <col class="col-plate" />
+            <col class="col-host" />
+            <col class="col-time" />
+            <col class="col-status" />
+            <col class="col-action" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th class="col-name">姓名</th>
+              <th class="col-phone">電話</th>
+              <th class="col-plate">車牌</th>
+              <th class="col-host">被訪住戶</th>
+              <th class="col-time">預約/進入時間</th>
+              <th class="col-status">狀態</th>
+              <th class="col-action">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (visitor of pagedVisitors; track visitor.visitorId) {
+              <tr>
+                <td class="col-name" data-label="姓名">
+                  <div class="visitor-name-cell" (click)="visitorMore(visitor)">
+                    <div class="avatar">{{ visitor.visitorName.charAt(0) }}</div>
+                    <span class="name-text">{{ visitor.visitorName }}</span>
+                  </div>
+                </td>
+                <td class="col-phone" data-label="電話"><span class="val-text">{{ visitor.visitorPhone || '-' }}</span></td>
+                <td class="col-plate" data-label="車牌"><span class="val-text">{{ visitor.licensePlate || '-' }}</span></td>
+                <td class="col-host" data-label="被訪住戶"><span class="val-text">{{ visitor.residentialAddress || '-' }}</span></td>
+                <td class="col-time" data-label="時間"><span class="val-text">{{ visitor.estimatedTime !== '-' ? visitor.estimatedTime : visitor.checkInTime }}</span></td>
+                <td class="col-status" data-label="狀態">
+                  @if (visitor.status === 'NOTYET') { <span class="status-badge status-notyet">未到</span> }
+                  @else if (visitor.status === 'INSIDE') { <span class="status-badge status-inside">在內</span> }
+                  @else { <span class="status-badge status-left">已離</span> }
+                </td>
+                <td class="col-action">
+                  @if (visitor.status === 'NOTYET') {
+                    <button class="checkout-btn arrival-btn" (click)="enterInside(visitor.visitorId)">登記入內</button>
+                  } @else if (visitor.status === 'INSIDE') {
+                    <button class="checkout-btn" (click)="checkOut(visitor.visitorId)">登記離開</button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <div class="pagination">
-      <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
-        <mat-icon>chevron_left</mat-icon>
-      </button>
+    <div class="pagination-bar">
+      <div class="pagination-summary">
+        顯示第 {{ (currentPage - 1) * pageSize + 1 }}
+        至 {{ Math.min(currentPage * pageSize, filteredVisitorsRaw.length) }} 筆，
+        共 {{ filteredVisitorsRaw.length }} 筆
+      </div>
 
-      @for (p of totalPagesArray; track p) {
-        <button class="page-btn" [class.active]="currentPage === p" (click)="goToPage(p)">
-          {{ p }}
+      @if (totalPagesArray.length > 1) {
+      <div class="pagination">
+        <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+          <mat-icon>chevron_left</mat-icon>
         </button>
-      }
 
-      <button class="page-btn" [disabled]="currentPage === totalPagesArray.length || totalPagesArray.length === 0" (click)="goToPage(currentPage + 1)">
-        <mat-icon>chevron_right</mat-icon>
-      </button>
+        @for (page of totalPagesArray; track page) {
+          <button class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">
+            {{ page }}
+          </button>
+        }
+
+        <button class="page-btn" [disabled]="currentPage === totalPagesArray.length || totalPagesArray.length === 0" (click)="goToPage(currentPage + 1)">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+      }
     </div>
   </div>
 

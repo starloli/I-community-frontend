@@ -21,7 +21,6 @@
 }
 
 // ===== 統計卡片區塊 =====
-// grid-template-columns: repeat(4, 1fr) 讓四張卡片平均分配寬度
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -29,10 +28,8 @@
   margin-bottom: 28px;
 }
 
-// 每張統計卡片
 // 每張統計卡片：白色玻璃風格
 .stat-card {
-  // 白色半透明玻璃底
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -42,62 +39,25 @@
   flex-direction: column;
   position: relative;
   gap: 16px;
-  // 白色亮邊框
   border: 1px solid rgba(255, 255, 255, 0.8);
   box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 1);
-  transition: box-shadow 0.2s;
+  transition: box-shadow 0.2s, transform 0.2s;
   aspect-ratio: 1 / 0.7;
 
   &:hover {
     box-shadow:
       0 12px 32px rgba(0, 0, 0, 0.12),
       inset 0 1px 0 rgba(255, 255, 255, 1);
+    transform: translateY(-2px);
   }
 
   &.clickable {
     cursor: pointer;
   }
-
-  // 流光邊框特效
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 22px;
-    padding: 1.5px;
-    background: linear-gradient(
-      var(--angle, 0deg),
-      transparent 40%,
-      var(--glow-color, rgba(255, 255, 255, 0.8)) 50%,
-      transparent 60%
-    );
-    mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    animation: border-spin 3s linear infinite;
-    pointer-events: none;
-  }
 }
 
-.stat-card.clickable {
-  cursor: pointer;
-}
-
-@property --angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
-}
-
-@keyframes border-spin {
-  to { --angle: 360deg; }
-}
-
-// 圖示：更深一點的白色玻璃，讓層次感出來
 .stat-icon {
   width: 60px;
   height: 60px;
@@ -121,48 +81,43 @@
     filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.15));
   }
 }
+
 .stat-top {
   display: flex;
-  justify-content: flex-end; // icon 靠右
+  justify-content: flex-end;
   width: 100%;
 }
 
 .stat-info {
   display: flex;
   flex-direction: column;
+  align-items: center; // 讓數值在標籤上方居中對齊
+  align-self: flex-start; // 讓整個文字區塊靠左
+  text-align: center;
   gap: 4px;
   margin-top: 4px;
-  justify-content: flex-end;
-  transform: translateY(var(--admin-dashboard-stat-shift, 0));
-  transition: transform 0.25s ease;
 }
 
 .stat-label {
-  font-size: var(--admin-dashboard-stat-label-size, 15px);
+  font-size: 15px;
   color: #888;
   font-weight: 500;
-  transition: font-size 0.25s ease;
 }
 
-// 統計數字放大顯示
 .stat-value {
-  font-size: var(--admin-dashboard-stat-value-size, 40px);
-  font-weight: 100;
+  font-size: 36px;
+  font-weight: 400;
   color: #1a1a2e;
   line-height: 1;
-  transition: font-size 0.25s ease;
 }
 
-
 // ===== 下方兩欄 =====
-// repeat(2, 1fr) 讓公告和訪客各佔一半寬度
 .bottom-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
 
-// 共用卡片樣式
 .card {
   background: #ffffff;
   border-radius: 16px;
@@ -170,7 +125,6 @@
   border: 1px solid #f0f0f0;
 }
 
-// 卡片標題列
 .card-header {
   display: flex;
   align-items: center;
@@ -213,7 +167,6 @@
   justify-content: space-between;
   align-items: center;
   padding: 14px 0;
-  // 每列之間加上分隔線，最後一列不加
   border-bottom: 1px solid #f5f5f5;
 
   &:last-child {
@@ -227,7 +180,6 @@
   gap: 10px;
 }
 
-// 公告分類標籤
 .category-badge {
   font-size: 11px;
   padding: 3px 8px;
@@ -239,12 +191,12 @@
 }
 
 .announcements-title {
-  font-size: 18px;
+  font-size: 15px;
   color: #333;
 }
 
 .announcements-date {
-  font-size: 14px;
+  font-size: 13px;
   color: #aaa;
   white-space: nowrap;
 }
@@ -262,7 +214,6 @@
   }
 }
 
-// 訪客頭像（顯示姓名第一個字）
 .visitor-avatar {
   width: 40px;
   height: 40px;
@@ -307,8 +258,6 @@
   color: #999;
 }
 
-// 訪客狀態標籤
-// 在內 = 綠色，已離 = 灰色
 .visitor-status {
   font-size: 11px;
   padding: 3px 8px;
@@ -324,4 +273,150 @@
 .status-left {
   background: #f5f5f5;
   color: #999;
+}
+
+// =============================================================================
+// ===== 手機版響應式設計 (RWD) =====
+// =============================================================================
+
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    height: 100dvh; // 使用動態視窗高度
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; // 鎖定不捲動
+    box-sizing: border-box;
+    background: transparent; // 👈 確保使用最底層 Layout 的顏色
+  }
+
+  .page-header {
+    padding: 12px 0 4px; // 壓縮標題區域
+    margin-bottom: 0;
+    flex-shrink: 0;
+    h1 {
+      font-size: 22px; // 稍微調小，確保不換行
+      letter-spacing: -0.5px;
+    }
+    .subtitle {
+      font-size: 11px;
+      margin-top: -2px;
+    }
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px; // 縮小間距
+    padding: 8px 0;
+    flex-shrink: 0;
+  }
+
+  .stat-card {
+    padding: 8px 12px 8px 8px; // 減少內距，爭取空間
+    min-height: 68px;
+    position: relative; // 為了讓 icon 絕對定位
+    display: flex;
+    justify-content: flex-end; // 讓內容推到右邊
+    align-items: center;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+
+    .stat-icon {
+      position: absolute;
+      top: 6px; // 鎖定左上角
+      left: 6px;
+      width: 35px;
+      height: 35px;
+      border-radius: 8px;
+      mat-icon {
+        font-size: 22px;
+        width: 22px;
+        height: 22px;
+      }
+    }
+
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center; // 數值與標籤互相居中對齊
+      align-self: center; // 在卡片高度內垂直居中
+      text-align: center;
+      gap: 2px;
+      margin-left: auto; // 強制將整個區塊推至最右方
+
+      .stat-value {
+        font-size: 36px;
+        font-weight: 400;
+        line-height: 1;
+      }
+      .stat-label {
+        font-size: 13px;
+        white-space: nowrap;
+        color: #888;
+        line-height: 1.2;
+      }
+    }
+  }
+
+  .bottom-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr; // 強制兩個卡片平分高度，確保不溢出
+    padding: 4px 0 12px;
+    gap: 10px;
+    min-height: 0; // 關鍵：允許子元素在 Flex 容器中縮小
+  }
+
+  .card {
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0; // 允許卡片縮小以符合 grid rows
+    border-radius: 12px;
+
+    .card-header {
+      margin-bottom: 6px;
+      flex-shrink: 0;
+      h2 { font-size: 13px; font-weight: 600; }
+      mat-icon { font-size: 15px; width: 16px; height: 16px; }
+      .card-more { font-size: 11px; }
+    }
+
+    .card-scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+      &::-webkit-scrollbar { width: 3px; }
+      &::-webkit-scrollbar-thumb { background: #eee; border-radius: 3px; }
+    }
+
+    .announcements-item, .visitor-item {
+      padding: 5px 0;
+      border-bottom: 1px solid #fafafa;
+    }
+
+    .announcements-title {
+      font-size: 12px;
+      max-width: 140px; // 限制寬度避免擠壓日期
+    }
+
+    .visitor-avatar { width: 24px; height: 24px; font-size: 9px; }
+    .visitor-name { font-size: 12px; }
+    .visitor-unit { font-size: 10px; }
+  }
+
+  @media (max-width: 480px) {
+    .page-header h1 { font-size: 20px; }
+    .announcements-item {
+      flex-direction: row; // 在 100dvh 模式下，橫向排列能省空間
+      justify-content: space-between;
+      .announcements-date { font-size: 10px; }
+    }
+  }
 }

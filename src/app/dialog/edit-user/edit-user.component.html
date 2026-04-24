@@ -42,8 +42,24 @@
       <mat-icon matPrefix>directions_car</mat-icon>
       <input matInput type="number" [(ngModel)]="user.carParkingSpace" min="0">
     </mat-form-field>
-  </div>
 
+    <mat-form-field appearance="outline">
+      <mat-label>權限</mat-label>
+      <mat-icon matPrefix>security</mat-icon>
+      <mat-select [(ngModel)]="user.role">
+        @for (role of roles; track role) {
+        <mat-option [value]="role">
+          {{ role }}
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-label>啟用狀態</mat-label>
+    <mat-icon matPrefix>check_box</mat-icon>
+    <mat-slide-toggle [(ngModel)]="user.is_active"></mat-slide-toggle>
+
+  </div>
   <div class="form-footer">
     <button (click)="returnUser(user)">儲存變更</button>
   </div>

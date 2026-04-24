@@ -1,15 +1,47 @@
-<div>
-  <label class="field-card">
-    <span class="field-label">提醒時間</span><br>
-    <span class="field-hint">每天提醒住戶預約的時間</span><br>
-    <select name="open_time" [(ngModel)]="remindTime" required>
-      <option value="" disabled selected>請選擇提醒時間</option>
-      @for (hour of hoursList; track $index) {
-      <option [value]="hour">
-        {{ hour }}
-      </option>
-      }
-    </select>
-    <button (click)="updateRemindTime()">確認</button>
-  </label>
+<div class="config-container">
+  <div class="config-header">
+    <div class="header-icon">
+      <mat-icon>notifications_active</mat-icon>
+    </div>
+    <div class="header-title">
+      <h2>提醒設定</h2>
+      <p>調整系統自動發送預約提醒的時間點。</p>
+    </div>
+    <button class="close-btn" (click)="dialogRef.close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="config-body">
+    <div class="field-card">
+      <div class="field-info">
+        <span class="field-label">每日提醒時間</span>
+        <span class="field-hint">系統將於每天此時段檢查並通知有預約的住戶</span>
+      </div>
+
+      <div class="input-wrapper">
+        <mat-icon class="input-icon">schedule</mat-icon>
+        <select name="remind_time" [(ngModel)]="remindTime" required>
+          <option value="" disabled selected>請選擇提醒時間</option>
+          @for (hour of hoursList; track $index) {
+          <option [value]="hour">
+            {{ hour }}
+          </option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="info-note">
+      <mat-icon>info</mat-icon>
+      <span>設定成功後，系統將依據新時間點進行排程更新。</span>
+    </div>
+  </div>
+
+  <div class="config-footer">
+    <button class="cancel-btn" (click)="dialogRef.close()">取消</button>
+    <button class="submit-btn" (click)="updateRemindTime()" [disabled]="!remindTime">
+      儲存設定
+    </button>
+  </div>
 </div>

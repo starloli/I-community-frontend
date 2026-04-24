@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { UserResponse } from '../../interface/interface';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -30,7 +30,6 @@ export class EditResidentComponent implements OnInit, OnDestroy {
 
   private $destroy = new Subject<void>();
 
-  // TODO:待實作超級管理員修改所有住戶資料功能，包含修改普通管理員
   // TODO:社區行事曆功能，讓住戶可以看到社區活動資訊
 
   returnUser(user: UserResponse): void {

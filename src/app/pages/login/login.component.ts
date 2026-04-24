@@ -15,7 +15,7 @@ import { HttpService } from '../../@service/http.service';
 })
 export class LoginComponent {
 
-  constructor(private router: Router, private http: HttpService, private auth: AuthService) {}
+  constructor(private router: Router, private http: HttpService, private auth: AuthService) { }
 
   booleanSignup = false;
   booleanIsManager: boolean = false;
@@ -44,7 +44,7 @@ export class LoginComponent {
 
 
   // imageSrc='login_bg.png';
-  checkSignUpUserName!:boolean;
+  checkSignUpUserName!: boolean;
 
 
 
@@ -147,25 +147,25 @@ export class LoginComponent {
   Stepper1() {
     if (this.signUpStep === 1) {
       if (!this.signUpUserName?.trim() || !this.signUpPassword?.trim() ||
-          !this.confirmPassword?.trim() ||
-          this.signUpPassword.length < 6 || this.signUpPassword.length > 12) return;
+        !this.confirmPassword?.trim() ||
+        this.signUpPassword.length < 6 || this.signUpPassword.length > 12) return;
 
       if (this.signUpPassword !== this.confirmPassword) return;
 
-  this.http.getApi("/auth/checking/userName?name=" + this.signUpUserName).subscribe({
-      next: (isExists: any) => {
-        if (isExists) {
+      this.http.getApi("/auth/checking/userName?name=" + this.signUpUserName).subscribe({
+        next: (isExists: any) => {
+          if (isExists) {
 
-          console.log(isExists);
-this.checkSignUpUserName=true;
-          return;
+            console.log(isExists);
+            this.checkSignUpUserName = true;
+            return;
+          }
+          else {
+            this.signUpStep++;
+            this.checkSignUpUserName = false;
+          }
         }
-      else{
-      this.signUpStep++;
-    this.checkSignUpUserName=false;
-    }
-    }
-    });
+      });
 
 
 
@@ -330,13 +330,9 @@ this.checkSignUpUserName=true;
   getOtp(): string {
     return this.otpControls.map(c => c.value).join('');
   }
-  checkUserName(){
-  this.http.getApi("/auth/checking/userName?name="+"this.signUpUserName").subscribe((res:any)=>{
-  console.log(res);})
-  }
-
-
-  goToTest(){
-    this.router.navigate(['/test']);
+  checkUserName() {
+    this.http.getApi("/auth/checking/userName?name=" + "this.signUpUserName").subscribe((res: any) => {
+      console.log(res);
+    })
   }
 }

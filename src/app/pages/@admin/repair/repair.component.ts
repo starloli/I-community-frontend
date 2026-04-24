@@ -201,4 +201,5 @@ export class RepairComponent implements OnInit, OnDestroy {
   }
 
   RepairStatus = RepairStatus;
+  protected Math = Math;
 }

@@ -4,7 +4,7 @@
 
 .page-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 28px;
@@ -15,16 +15,54 @@
     gap: 4px;
   }
 
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
   h1 {
     font-size: 36px;
     font-weight: 700;
     color: #1a1a2e;
-    margin: 0 0 4px 0;
+    margin: 0;
   }
 
   .subtitle {
     font-size: 15px;
     color: #888;
+  }
+}
+.config-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  outline: none;
+  background: #ffffff;
+  color: #7B7FBA;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(123, 127, 186, 0.15);
+
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  &:hover {
+    background: #f5f6fa;
+    color: #6569a4;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(123, 127, 186, 0.25);
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 }
 
@@ -33,7 +71,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  background: #3f51b5;
+  background: #7B7FBA;
   color: #ffffff;
   border: none;
   border-radius: 12px;
@@ -45,7 +83,7 @@
     transform 0.2s,
     box-shadow 0.2s;
   white-space: nowrap;
-  box-shadow: 0 10px 24px rgba(106, 158, 127, 0.22);
+  box-shadow: 0 10px 24px rgba(123, 127, 186, 0.22);
 
   mat-icon {
     font-size: 20px;
@@ -54,9 +92,9 @@
   }
 
   &:hover {
-    background: #303f9f;
+    background: #6569a4;
     transform: translateY(-1px);
-    box-shadow: 0 14px 28px rgba(106, 158, 127, 0.28);
+    box-shadow: 0 14px 28px rgba(123, 127, 186, 0.28);
   }
 }
 
@@ -65,6 +103,16 @@
   flex-direction: column;
   gap: 16px;
   margin-bottom: 16px;
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .search-control {
+    flex: 1;
+  }
 }
 
 .toolbar-actions {
@@ -138,7 +186,7 @@
   transition: border-color 0.2s;
 
   &:focus {
-    border-color: #3f51b5;
+    border-color: #7B7FBA;
   }
 }
 
@@ -163,8 +211,8 @@
   }
 
   &:hover {
-    border-color: #3f51b5;
-    color: #3f51b5;
+    border-color: #7B7FBA;
+    color: #7B7FBA;
     background: #fff;
     transform: translateY(-1px);
   }
@@ -204,7 +252,7 @@
   width: 56px;
   height: 56px;
   border-radius: 16px;
-  background: rgba(63, 81, 181, 0.1);
+  background: rgba(123, 127, 186, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -213,7 +261,7 @@
     font-size: 28px;
     width: 28px;
     height: 28px;
-    color: #3f51b5;
+    color: #7B7FBA;
   }
 }
 
@@ -320,11 +368,11 @@
 }
 
 .edit-btn {
-  background: #3f51b5;
+  background: #7B7FBA;
 
   &:hover {
-    background: #303f9f;
-    box-shadow: 0 14px 28px rgba(63, 81, 181, 0.24);
+    background: #6569a4;
+    box-shadow: 0 14px 28px rgba(123, 127, 186, 0.24);
   }
 }
 
@@ -357,7 +405,7 @@
     width: 40px;
     height: 40px;
     font-size: 40px;
-    color: #7b7fba;
+    color: #7B7FBA;
   }
 
   h2 {
@@ -379,6 +427,7 @@
   align-items: center;
   gap: 16px;
   margin-top: 16px;
+  margin-bottom: 32px; // 增加底部間距
 }
 
 .pagination-summary {
@@ -420,14 +469,14 @@
   }
 
   &:hover:not(:disabled) {
-    background: #3f51b5;
-    border-color: #3f51b5;
+    background: #7B7FBA;
+    border-color: #7B7FBA;
     color: #ffffff;
   }
 
   &.active {
-    background: #3f51b5;
-    border-color: #3f51b5;
+    background: #7B7FBA;
+    border-color: #7B7FBA;
     color: #ffffff;
   }
 
@@ -437,44 +486,204 @@
   }
 }
 
+// =============================================================================
+// ===== 手機版響應式設計 (RWD) =====
+// =============================================================================
+
 @media (max-width: 768px) {
-  .page-header {
-    flex-direction: column;
-    align-items: stretch;
+  .facility-container {
+    padding: 0;
   }
 
-  .add-btn {
-    justify-content: center;
+  // 頁面標題
+  .page-header {
+    padding: 16px 0 12px 0;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+
+    .header-left {
+      h1 {
+        font-size: 20px;
+        margin-bottom: 2px;
+      }
+      .subtitle {
+        font-size: 13px;
+      }
+    }
+
+    .header-actions {
+      gap: 10px;
+
+      .config-btn {
+        width: 36px;
+        height: 36px;
+        mat-icon { font-size: 20px; width: 20px; height: 20px; }
+      }
+
+      .add-btn {
+        padding: 8px 12px;
+        font-size: 13px;
+        border-radius: 10px;
+        mat-icon { font-size: 18px; width: 18px; height: 18px; }
+      }
+    }
+  }
+
+  // 工具列 / 篩選器 - 恢復為帳單頁風格並排佈局
+  .toolbar-panel {
+    margin-bottom: 16px;
   }
 
   .toolbar-actions {
-    flex-direction: column;
-    align-items: stretch;
+    display: flex;
+    flex-direction: row; // 恢復橫向並排
+    flex-wrap: wrap; // 空間不足時自動換行
+    gap: 8px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    align-items: center;
+
+    .filter-field {
+      flex: 1; // 讓選單均分空間
+      min-width: calc(33.33% - 8px); // 盡量讓三個並排
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      min-height: unset;
+
+      .field-label {
+        display: none; // 手機版隱藏標籤，與帳單頁月份下拉一致
+      }
+
+      .filter-select {
+        width: 100%;
+        padding: 8px 10px;
+        border: 1.5px solid #e0e0e0;
+        border-radius: 10px;
+        background: #fff;
+        font-size: 13px;
+        font-weight: 500;
+        color: #555;
+        cursor: pointer;
+        outline: none;
+        appearance: auto; // 恢復原生下拉箭頭
+        -webkit-appearance: menulist;
+
+        &:focus {
+          border-color: #7B7FBA;
+        }
+      }
+    }
+
+    // 重設按鈕恢復為圓形圖示按鈕
+    .reset-btn {
+      width: 36px;
+      height: 36px;
+      min-height: unset;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 50%;
+      background: #fff;
+      color: #555;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      &::after {
+        content: none; // 移除文字
+      }
+
+      &:hover {
+        border-color: #7B7FBA;
+        color: #7B7FBA;
+        background: #fff;
+      }
+    }
   }
 
-  .filter-field {
-    width: 100%;
-  }
-
-  .reset-btn {
-    width: 43px;
-    height: 43px;
-    align-self: flex-start;
-  }
-
+  // 設備網格變為單欄
   .facility-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 
-  .action-row {
-    grid-template-columns: 1fr;
+  .facility-card {
+    padding: 16px;
+    gap: 12px;
+    border-radius: 16px;
+
+    .facility-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      mat-icon { font-size: 22px; width: 22px; height: 22px; }
+    }
+
+    .facility-header {
+      h2 { font-size: 18px; }
+      .available-badge { padding: 3px 10px; font-size: 12px; }
+    }
+
+    .facility-desc {
+      font-size: 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .facility-details {
+      gap: 8px;
+      .detail-item {
+        padding: 6px 10px;
+        font-size: 13px;
+        background: rgba(123, 127, 186, 0.05);
+        mat-icon { font-size: 16px; width: 16px; height: 16px; }
+      }
+    }
+
+    .action-row {
+      grid-template-columns: 1fr 1fr;
+      padding-top: 12px;
+      border-top: 1px dashed rgba(0,0,0,0.05);
+      gap: 10px;
+
+      .action-btn {
+        padding: 10px;
+        font-size: 14px;
+        border-radius: 10px;
+        box-shadow: none; // 手機版減少陰影厚重感
+      }
+    }
   }
 
   .pagination-bar {
-    align-items: stretch;
-  }
+    margin-top: 24px;
+    gap: 12px;
 
-  .pagination-summary {
-    text-align: center;
+    .pagination-summary {
+      font-size: 13px;
+    }
+
+    .pagination {
+      gap: 6px;
+      .page-btn {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+        border-radius: 8px;
+      }
+    }
   }
 }

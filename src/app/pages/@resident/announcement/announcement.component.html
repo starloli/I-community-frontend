@@ -54,65 +54,72 @@
   </div>
 
   <!-- 公告列表 -->
-  @if (pagedAnnouncements.length === 0) {
-    <div class="list-card">
-      <div class="empty-state">
-        <mat-icon class="empty-icon">inbox</mat-icon>
-        <p>目前沒有符合條件的公告</p>
-      </div>
-    </div>
-  } @else {
-    <div class="list-card">
-      @for (ann of pagedAnnouncements; track ann.announcementId) {
-        <div
-          class="announcement-item"
-          [class.pinned]="ann.isPinned"
-          (click)="openDetail(ann)"
-        >
-          <div class="ann-icon-box" [ngClass]="getCategoryClass(ann.category)">
-            <mat-icon>campaign</mat-icon>
+  <div class="list-container">
+    <div class="list-scroll-area">
+      @if (pagedAnnouncements.length === 0) {
+        <div class="list-card">
+          <div class="empty-state">
+            <mat-icon class="empty-icon">inbox</mat-icon>
+            <p>目前沒有符合條件的公告</p>
           </div>
+        </div>
+      } @else {
+        <div class="list-card">
+          @for (ann of pagedAnnouncements; track ann.announcementId) {
+            <div
+              class="announcement-item"
+              [class.pinned]="ann.isPinned"
+              (click)="openDetail(ann)"
+            >
+              <div class="ann-icon-box" [ngClass]="getCategoryClass(ann.category)">
+                <mat-icon>campaign</mat-icon>
+              </div>
 
-          <div class="ann-main">
-            <div class="ann-title-row">
-              <span class="category-badge" [ngClass]="getCategoryClass(ann.category)">
-                {{ getCategoryLabel(ann.category) }}
-              </span>
-              @if (ann.isPinned) {
-                <span class="pin-badge">
-                  <mat-icon style="font-size:12px;width:12px;height:12px;vertical-align:middle;">push_pin</mat-icon>
-                  置頂
+              <div class="ann-main">
+                <div class="ann-title-row">
+                  <span class="category-badge" [ngClass]="getCategoryClass(ann.category)">
+                    {{ getCategoryLabel(ann.category) }}
+                  </span>
+                  @if (ann.isPinned) {
+                    <span class="pin-badge">
+                      <mat-icon style="font-size:12px;width:12px;height:12px;vertical-align:middle;">push_pin</mat-icon>
+                      置頂
+                    </span>
+                  }
+                  <span class="ann-title">{{ ann.title }}</span>
+                </div>
+                <span class="ann-sub">
+                  <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">person</mat-icon>
+                  {{ ann.authorName }} &nbsp;·&nbsp;
+                  到期：{{ formatDate(ann.expiresAt) }}
                 </span>
-              }
-              <span class="ann-title">{{ ann.title }}</span>
-            </div>
-            <span class="ann-sub">
-              <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;">person</mat-icon>
-              {{ ann.authorName }} &nbsp;·&nbsp;
-              到期：{{ formatDate(ann.expiresAt) }}
-            </span>
-          </div>
+              </div>
 
-          <div class="ann-right">
-            <span class="ann-date">{{ formatDate(ann.publishedAt) }}</span>
-            <!-- 住戶只能瀏覽，沒有編輯/刪除按鈕 -->
-            <mat-icon class="view-icon">chevron_right</mat-icon>
-          </div>
+              <div class="ann-right">
+                <span class="ann-date">{{ formatDate(ann.publishedAt) }}</span>
+                <mat-icon class="view-icon">chevron_right</mat-icon>
+              </div>
+            </div>
+          }
         </div>
       }
     </div>
-  }
 
-  <!-- 分頁 -->
-  @if (totalPages > 1) {
-    <div class="pagination">
-      <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">‹</button>
-      @for (page of pageNumbers; track page) {
-        <button class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">{{ page }}</button>
-      }
-      <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">›</button>
-    </div>
-  }
+    <!-- 分頁 -->
+    @if (totalPages > 1) {
+      <div class="pagination-bar">
+        <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
+
+        <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    }
+  </div>
 
 </div>
 

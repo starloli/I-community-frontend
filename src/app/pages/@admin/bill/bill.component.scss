@@ -1,13 +1,6 @@
 // ===== 整體容器 =====
 .bill-container { padding: 0; }
 
-// ===== 頁面標題 =====
-// .page-header {
-//   margin-bottom: 28px;
-//   h1 { font-size: 36px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px 0; }
-//   .subtitle { font-size: 15px; color: #888; }
-// }
-
 // ===== 統計卡片列 =====
 .stats-row {
   display: grid;
@@ -57,7 +50,7 @@
 }
 
 .stat-info { display: flex; flex-direction: column; gap: 4px; }
-.stat-value { font-size: 28px; font-weight: 700; line-height: 1; }
+.stat-value { font-size: 28px; font-weight: 400; line-height: 1; }
 .stat-label { font-size: 14px; color: #888; }
 
 // ===== 篩選列 =====
@@ -82,8 +75,8 @@
   cursor: pointer;
   transition: all 0.2s;
 
-  &:hover { border-color: #3f51b5; color: #3f51b5; }
-  &.active { background: #3f51b5; border-color: #3f51b5; color: #ffffff; }
+  &:hover { border-color: #B8935A; color: #B8935A; }
+  &.active { background: #B8935A; border-color: #B8935A; color: #ffffff; }
 }
 
 .filter-select {
@@ -96,7 +89,7 @@
   outline: none;
   cursor: pointer;
   transition: border-color 0.2s;
-  &:focus { border-color: #3f51b5; }
+  &:focus { border-color: #B8935A; }
 }
 
 .search-box {
@@ -110,7 +103,7 @@
   min-width: 240px;
   transition: border-color 0.2s;
 
-  &:focus-within { border-color: #3f51b5; }
+  &:focus-within { border-color: #B8935A; }
 
   mat-icon { color: #bbb; font-size: 20px; width: 20px; height: 20px; }
 
@@ -134,12 +127,234 @@
   margin-bottom: 16px;
 }
 
-table { width: 100%; border-collapse: collapse; }
-thead tr { background: rgba(63, 81, 181, 0.08); }
-th { padding: 16px 20px; text-align: left; font-size: 14px; font-weight: 600; color: #555; white-space: nowrap; }
-td { padding: 16px 20px; font-size: 15px; color: #333; border-bottom: 1px solid rgba(0,0,0,0.05); }
+.desktop-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead tr { background: rgba(184, 147, 90, 0.08); }
+th { padding: 16px 20px; text-align: center; font-size: 14px; font-weight: 600; color: #555; white-space: nowrap; }
+td { padding: 16px 20px; font-size: 15px; color: #333; border-bottom: 1px solid rgba(0,0,0,0.05); text-align: center; }
 tbody tr:last-child td { border-bottom: none; }
-tbody tr:hover { background: rgba(63, 81, 181, 0.03); }
+tbody tr:hover { background: rgba(184, 147, 90, 0.03); }
+
+// 手機版列表預設隱藏
+.mobile-bill-list {
+  display: none;
+}
+
+// =============================================================================
+// ===== 手機版響應式設計 (RWD) =====
+// =============================================================================
+
+@media (max-width: 768px) {
+  .bill-container {
+    padding: 0;
+  }
+
+  // 頁面標題
+  .page-header {
+    padding: 16px 0 12px 0;
+    margin-bottom: 16px;
+
+    .header-left {
+      h1 { font-size: 24px; }
+      .subtitle { font-size: 13px; }
+    }
+
+    .add-btn {
+      padding: 8px 16px;
+      font-size: 13px;
+      background: #B8935A;
+      mat-icon { font-size: 18px; width: 18px; height: 18px; }
+      &:hover { background: #a6824d; }
+    }
+  }
+
+  // 統計卡片 - 參考公告頁風格
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr); // 改為 2x2 佈局
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card {
+    position: relative;
+    padding: 12px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 8px;
+    border-radius: 16px;
+
+    mat-icon {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 20px !important;
+      width: 20px !important;
+      height: 20px !important;
+      opacity: 0.8;
+    }
+
+    .stat-info {
+      margin-top: 12px;
+      .stat-value { font-size: 22px; }
+      .stat-label { font-size: 12px; }
+    }
+  }
+
+  // 篩選列
+  .filter-row {
+    gap: 8px;
+
+    .filter-btn {
+      padding: 6px 16px;
+      font-size: 13px;
+      flex: 1; // 在手機上按鈕等寬
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .filter-select {
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .search-box {
+      width: 100%;
+      margin-left: 0 !important;
+      margin-top: 8px;
+    }
+  }
+
+  // 表格切換為列表
+  .desktop-table {
+    display: none;
+  }
+
+  .mobile-bill-list {
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+  }
+
+  .bill-mobile-item {
+    padding: 16px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    cursor: pointer;
+    position: relative;
+
+    // 縮短的區隔線
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 20px;
+      right: 20px;
+      height: 1px;
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    &.row-overdue { border-left: 4px solid #e53935; }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      .unit-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        .unit-number { font-size: 16px; font-weight: 700; color: #B8935A; }
+        .bill-month { font-size: 12px; color: #888; }
+      }
+
+      .amount-info {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1a1a2e;
+      }
+    }
+
+    .item-body {
+      .bill-title {
+        font-size: 15px;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 8px;
+      }
+
+      .item-details {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        background: #f8f9fa;
+        padding: 8px 12px;
+        border-radius: 8px;
+
+        .detail-row {
+          display: flex;
+          justify-content: space-between;
+          font-size: 13px;
+          .label { color: #888; }
+          .value { color: #555; }
+        }
+      }
+    }
+
+    .item-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+
+      .badge-group {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .method-tag {
+        font-size: 12px;
+        color: #888;
+        background: #f0f0f0;
+        padding: 2px 8px;
+        border-radius: 4px;
+      }
+
+      .mobile-pay-btn {
+        padding: 6px 14px;
+        background: #B8935A;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .empty-mobile-state {
+    padding: 40px;
+    text-align: center;
+    color: #bbb;
+    mat-icon { font-size: 48px; width: 48px; height: 48px; margin-bottom: 8px; }
+  }
+
+  .pagination {
+    .page-btn {
+      width: 34px;
+      height: 34px;
+      font-size: 13px;
+    }
+  }
+}
 
 .row-overdue { border-left: 3px solid #e53935; }
 .amount { font-weight: 700; color: #1a1a2e; }
@@ -148,7 +363,7 @@ tbody tr:hover { background: rgba(63, 81, 181, 0.03); }
 .unit-tag {
     cursor: pointer;
   display: inline-block;
-  background: #e8eaf6; color: #3f51b5;
+  background: rgba(184, 147, 90, 0.12); color: #B8935A;
   padding: 2px 8px; border-radius: 8px;
   font-size: 13px; font-weight: 600;
   border: none;
@@ -156,6 +371,7 @@ tbody tr:hover { background: rgba(63, 81, 181, 0.03); }
 
 .bill-type-cell {
   display: flex; align-items: center; gap: 8px;
+  justify-content: center; // 確保內容水平置中
   mat-icon { font-size: 20px; width: 20px; height: 20px; }
 }
 
@@ -165,10 +381,10 @@ tbody tr:hover { background: rgba(63, 81, 181, 0.03); }
 .status-overdue { background: #ffebee; color: #e53935; }
 
 .pay-btn {
-  padding: 6px 16px; background: #3f51b5; color: #ffffff;
+  padding: 6px 16px; background: #B8935A; color: #ffffff;
   border: none; border-radius: 8px; font-size: 13px; font-weight: 600;
   cursor: pointer; transition: background 0.2s;
-  &:hover { background: #303f9f; }
+  &:hover { background: #a6824d; }
 }
 
 // ===== 分頁 =====
@@ -178,6 +394,7 @@ tbody tr:hover { background: rgba(63, 81, 181, 0.03); }
   align-items: center;
   gap: 6px;
   margin-top: 8px;
+  margin-bottom: 32px; // 增加底部間距
 
   .page-btn {
     width: 40px;
@@ -233,7 +450,7 @@ tbody tr:hover { background: rgba(63, 81, 181, 0.03); }
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  background: #3f51b5;
+  background: #B8935A;
   color: #ffffff;
   border: none;
   border-radius: 12px;
@@ -250,7 +467,7 @@ tbody tr:hover { background: rgba(63, 81, 181, 0.03); }
   }
 
   &:hover {
-    background: #303f9f;
+    background: #a6824d;
   }
 }
 

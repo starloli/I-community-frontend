@@ -7,10 +7,12 @@ import { Subject, takeUntil } from 'rxjs';
 import { AnnouncementService } from '../../../@service/announcement.service';
 import { HttpService } from '../../../@service/http.service';
 import { PackageService } from '../../../@service/package.service';
-import { PackageStatus, RepairStatus, ReservationStatus } from '../../../interface/enum';
-import { Announcement, Bill, Package, ResReservation, User } from '../../../interface/interface';
-import { StatisticsService } from '../../../@service/statistics.service';
+import { BillService } from '../../../@service/bill.service';
 import { RepairService } from '../../../@service/repair.service';
+import { ReservationService } from '../../../@service/reservation.service';
+import { StatisticsService } from '../../../@service/statistics.service';
+import { BillStatus, PackageStatus, RepairStatus, ReservationStatus } from '../../../interface/enum';
+import { Announcement, Bill, Package, RepairRequest, ResReservation, User } from '../../../interface/interface';
 
 @Component({
   selector: 'app-resident-dashboard',
@@ -28,10 +30,10 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
   private $destroy = new Subject<void>();
 
   stats = [
-    { label: '未繳帳單', value: '載入中...', icon: 'receipt_long', color: '#B8935A', bg: 'rgba(184,147,90,0.12)', route: '/resident/bill' },
-    { label: '待領包裹', value: '載入中...', icon: 'inventory_2', color: '#7BA89E', bg: 'rgba(123,168,158,0.12)', route: '/resident/package' },
-    { label: '報修進度', value: '載入中...', icon: 'build', color: '#C47A5A', bg: 'rgba(196,122,90,0.12)', route: '/resident/repair' },
-    { label: '設施預約', value: '載入中...', icon: 'meeting_room', color: '#7B7FBA', bg: 'rgba(123,127,186,0.12)', route: '/resident/facility' }
+    { label: '未繳帳單', value: '0', icon: 'receipt_long', color: '#B8935A', bg: 'rgba(184,147,90,0.12)', route: '/resident/bill' },
+    { label: '待領包裹', value: '0', icon: 'inventory_2', color: '#7BA89E', bg: 'rgba(123,168,158,0.12)', route: '/resident/package' },
+    { label: '報修進度', value: '0', icon: 'build', color: '#C47A5A', bg: 'rgba(196,122,90,0.12)', route: '/resident/repair' },
+    { label: '設施預約', value: '0', icon: 'meeting_room', color: '#7B7FBA', bg: 'rgba(123,127,186,0.12)', route: '/resident/facility' }
   ];
 
   announcements: Array<{ title: string; date: string; category: string }> = [];
