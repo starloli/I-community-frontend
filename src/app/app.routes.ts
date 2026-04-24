@@ -28,6 +28,8 @@ import { VisitorComponent } from './pages/@admin/visitor/admin-visitor.component
 import { ModifyResidentComponent } from './pages/@admin/modify-resident/modify-resident.component';
 import { ForgetPasswordComponent } from './pages/forget-password/forget-password.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { FinancialDashboardComponent } from './pages/@admin/financial-dashboard/financial-dashboard.component';
+
 import { CalendarComponent } from './pages/calendar/calendar.component';
 
 export const routes: Routes = [
@@ -51,8 +53,10 @@ export const routes: Routes = [
       { path: 'package', component: PackageComponent },
       { path: 'repair', component: RepairComponent },
       { path: 'ModifyResident', component: ModifyResidentComponent },
+            {path: 'FinancialDashboard' ,component:FinancialDashboardComponent},
       { path: 'calendar', component: CalendarComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+
     ]
   },
 
