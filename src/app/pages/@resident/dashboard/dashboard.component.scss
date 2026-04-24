@@ -3,9 +3,31 @@
 // ── 頁面標題 ──────────────────────────────────────────
 .page-header {
   margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   h1 { font-size: 36px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px 0; }
   .subtitle { font-size: 15px; color: #888; }
+}
+
+// ===== 日曆按鈕 =====
+.calendar-btn {
+  background: #f1f3f4;
+  border-radius: 10px;
+  padding: 10px;
+  transition: 0.2s;
+}
+
+.calendar-btn:hover {
+  background: #e0e0e0;
+  transform: scale(1.05);
+}
+
+.calendar-btn mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
 }
 
 // ── 統計卡片 ──────────────────────────────────────────
@@ -260,19 +282,19 @@
   }
 
   .stat-card {
-    padding: 8px 12px 8px 8px; 
+    padding: 8px 12px 8px 8px;
     min-height: 68px;
-    position: relative; 
+    position: relative;
     display: flex;
-    justify-content: flex-end; 
-    align-items: center; 
+    justify-content: flex-end;
+    align-items: center;
     border-radius: 12px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
     aspect-ratio: auto;
 
     .stat-icon {
       position: absolute;
-      top: 6px; 
+      top: 6px;
       left: 6px;
       width: 35px;
       height: 35px;
@@ -287,12 +309,12 @@
     .stat-info {
       display: flex;
       flex-direction: column;
-      align-items: center; 
+      align-items: center;
       text-align: center;
       gap: 2px;
       margin-left: auto;
       margin-top: 0;
-      
+
       .stat-value {
         font-size: 25px;
         font-weight: 400;
@@ -314,14 +336,14 @@
     grid-template-rows: repeat(3, 1fr); // 住戶版有 3 個卡片，均分高度
     padding: 4px 0 12px;
     gap: 10px;
-    min-height: 0; 
+    min-height: 0;
   }
 
   .card {
     padding: 10px 12px;
     display: flex;
     flex-direction: column;
-    min-height: 0; 
+    min-height: 0;
     border-radius: 12px;
 
     .card-header {
@@ -347,15 +369,15 @@
     }
 
     .announcements-title {
-      max-width: 140px; 
+      max-width: 140px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    
+
     .visitor-copy { font-size: 11px; margin-bottom: 8px; }
-    .visitor-highlight { 
-      font-size: 11px; 
+    .visitor-highlight {
+      font-size: 11px;
       gap: 4px;
       mat-icon { font-size: 14px; width: 14px; height: 14px; }
     }
