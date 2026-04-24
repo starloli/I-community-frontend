@@ -395,4 +395,28 @@
       font-size: 13px;
     }
   }
+
+  // ===== 表單 Modal (微調 RWD) =====
+  .form-card {
+    width: 92vw;
+    max-width: 480px;
+    max-height: 85vh;
+    overflow-y: auto;
+    border-radius: 16px;
+    margin: 16px;
+  }
+
+  .form-header {
+    padding: 16px 20px;
+    h2 { font-size: 16px; }
+  }
+
+  .form-body {
+    padding: 16px 20px;
+    gap: 12px;
+  }
+
+  .form-footer {
+    padding: 16px 20px;
+  }
 }

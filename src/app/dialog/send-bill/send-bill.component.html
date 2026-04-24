@@ -1,221 +1,226 @@
-@if(page==1){
-<div class="bill-form-content">
-
-  <div class="header-minimal">
-    <h3 class="section-label main-label">帳單基本設定</h3>
-
-    <div class="field title-field">
-      <label>帳單名稱</label>
-      <input type="text" placeholder="例如：2026年4月份綜合管理費單" class="standard-input" [(ngModel)]="title">
+<div class="dialog-scroll-wrapper">
+  <div class="dialog-content">
+    @if(page==1){
+    <div class="bill-form-content">
+    
+      <div class="header-minimal">
+        <h3 class="section-label main-label">帳單基本設定</h3>
+    
+        <div class="field title-field">
+          <label>帳單名稱</label>
+          <input type="text" placeholder="例如：2026年4月份綜合管理費單" class="standard-input" [(ngModel)]="title">
+        </div>
+    
+        <div class="date-flex">
+          <div class="input-item">
+            <label>帳單月份</label>
+            <input type="month" class="standard-input" [(ngModel)]="billingMonth"
+              [max]="dueDate ? dueDate.substring(0, 7) : null">
+          </div>
+          <div class="input-item">
+            <label>繳費截止日期</label>
+            <input type="date" class="standard-input" [(ngModel)]="dueDate"
+              [min]="billingMonth ? (billingMonth + '-01') : null">
+          </div>
+        </div>
+      </div>
+    
+      <div class="form-body-flat">
+        <h3 class="section-label">社區公設總費設定</h3>
+        <div class="input-grid">
+          <div class="field">
+            <label>社區總水費 </label>
+            <input type="number" placeholder="0.00" class="standard-input" [(ngModel)]="TOTAL_WATER" min=0>
+          </div>
+          <div class="field">
+            <label>社區總電費 </label>
+            <input type="number" placeholder="0.00" class="standard-input" [(ngModel)]="TOTAL_ELECTRICITY">
+          </div>
+        </div>
+    
+        <h3 class="section-label">個人資產單價設定</h3>
+        <p class="hint">系統將依據「每戶資產」自動計算</p>
+        <div class="input-grid">
+          <div class="field">
+            <label>管理費單價 (元/坪)</label>
+            <input type="number" placeholder="60" class="standard-input" [(ngModel)]="PING_PRICE">
+          </div>
+          <div class="field">
+            <label>汽車位單價 (元/個)</label>
+            <input type="number" placeholder="500" class="standard-input" [(ngModel)]="CAR_SPACE_PRICE">
+          </div>
+        </div>
+    
+        <div class="input-grid">
+          <div class="field">
+            <label>機車位單價 (元/個)</label>
+            <input type="number" placeholder="100" class="standard-input" [(ngModel)]="MOTO_SPACE_PRICE">
+          </div>
+          <div class="field">
+            <label>其他</label>
+            <input type="number" placeholder="0" class="standard-input" [(ngModel)]="OTHERFEE">
+          </div>
+        </div>
+    
+        <div class="field full">
+          <label>備註事項</label>
+          <textarea rows="2" placeholder="備註內容..." class="standard-input" [(ngModel)]="remark"></textarea>
+        </div>
+      </div>
+    
+      <div class="action-bar">
+        <button class="btn-plain" (click)="cancel()">取消</button>
+        @if(!title?.trim() || !billingMonth?.trim() || !dueDate?.trim()|| TOTAL_WATER== null ||
+        PING_PRICE== null || CAR_SPACE_PRICE== null ||MOTO_SPACE_PRICE== null || billingMonth > dueDate || TOTAL_WATER < 0
+          || PING_PRICE < 0 || CAR_SPACE_PRICE < 0 || MOTO_SPACE_PRICE < 0 || TOTAL_ELECTRICITY<0){ <button
+          class="btn-send btn-disabled">下一步</button>}
+          @else{
+          <button class="btn-send" (click)="next()">下一步</button>
+          }
+      </div>
     </div>
-
-    <div class="date-flex">
-      <div class="input-item">
-        <label>帳單月份</label>
-        <input type="month" class="standard-input" [(ngModel)]="billingMonth"
-          [max]="dueDate ? dueDate.substring(0, 7) : null">
+    }
+    @if(page ==2){
+    
+    <div class="bill-form-content">
+    
+      <div class="header-minimal">
+        <h3 class="section-label main-label">帳單基本設定</h3>
+    
+        <div class="field title-field">
+          <label>帳單名稱</label>
+          <b>{{title}}</b>
+        </div>
+    
+        <div class="date-flex">
+          <div class="input-item">
+            <label>帳單月份</label>
+            <b>{{billingMonth}}-01</b>
+          </div>
+          <div class="input-item">
+            <label>繳費截止日期</label>
+            <b>{{dueDate}}</b>
+          </div>
+        </div>
       </div>
-      <div class="input-item">
-        <label>繳費截止日期</label>
-        <input type="date" class="standard-input" [(ngModel)]="dueDate"
-          [min]="billingMonth ? (billingMonth + '-01') : null">
+    
+      <div class="form-body-flat">
+        <h3 class="section-label">社區公設總費設定</h3>
+        <div class="input-grid">
+          <div class="field">
+            <label>社區總水費</label>
+            <b>{{TOTAL_WATER}}</b>
+          </div>
+          <div class="field">
+            <label>社區總電費</label>
+            <b>{{TOTAL_ELECTRICITY}}</b>
+          </div>
+        </div>
+    
+        <h3 class="section-label">個人資產單價設定</h3>
+    
+        <div class="input-grid">
+          <div class="field">
+            <label>管理費單價 (元/坪)</label>
+            <b>{{PING_PRICE}}</b>
+          </div>
+          <div class="field">
+            <label>汽車位單價 (元/個)</label>
+            <b>{{CAR_SPACE_PRICE}}</b>
+          </div>
+        </div>
+    
+        <div class="input-grid">
+          <div class="field">
+            <label>機車位單價 (元/個)</label>
+            <b>{{MOTO_SPACE_PRICE}}</b>
+          </div>
+          <div class="field">
+            <label>其他</label>
+            <b>{{OTHERFEE}}</b>
+          </div>
+        </div>
+    
+        <div class="field full">
+          <label>備註事項</label>
+          <b>{{remark}}</b>
+        </div>
+      </div>
+    
+    
+      <div class="action-bar">
+        <button class="btn-plain" (click)="last()">返回修改</button>
+        <button class="btn-send" (click)="searchAbnormalUnits()">發送帳單</button>
       </div>
     </div>
-  </div>
-
-  <div class="form-body-flat">
-    <h3 class="section-label">社區公設總費設定</h3>
-    <div class="input-grid">
-      <div class="field">
-        <label>社區總水費 </label>
-        <input type="number" placeholder="0.00" class="standard-input" [(ngModel)]="TOTAL_WATER" min=0>
+    }
+    @if(page == 3) {
+    <div class="bill-form-content">
+      <div class="header-minimal">
+        <h3 class="section-label main-label" style="border-left-color: #f56c6c;">發送失敗：資料校驗異常</h3>
       </div>
-      <div class="field">
-        <label>社區總電費 </label>
-        <input type="number" placeholder="0.00" class="standard-input" [(ngModel)]="TOTAL_ELECTRICITY">
+    
+      <div class="error-container">
+        <div class="error-header">
+          <i class="icon-warning">⚠️</i>
+          <span>以下住戶資料不完整（坪數缺失）</span>
+        </div>
+    
+        <div class="error-list">
+          @for(abnormalUnit of AbnormalUnits; track $index) {
+          <div class="error-item">
+            🏠 房號：{{abnormalUnit}}
+          </div>
+          }
+        </div>
       </div>
-    </div>
-
-    <h3 class="section-label">個人資產單價設定</h3>
-    <p class="hint">系統將依據「每戶資產」自動計算</p>
-    <div class="input-grid">
-      <div class="field">
-        <label>管理費單價 (元/坪)</label>
-        <input type="number" placeholder="60" class="standard-input" [(ngModel)]="PING_PRICE">
+    
+      <div class="form-body-flat">
+        <p class="error-hint">
+          <strong>如何解決？</strong><br>
+          請先至「住戶管理」頁面，根據上方清單補齊這些住戶的<strong>「坪數」</strong>資訊。
+          系統規定不得向坪數缺失的住戶發送帳單。補齊後請重新嘗試發送。
+        </p>
       </div>
-      <div class="field">
-        <label>汽車位單價 (元/個)</label>
-        <input type="number" placeholder="500" class="standard-input" [(ngModel)]="CAR_SPACE_PRICE">
-      </div>
-    </div>
-
-    <div class="input-grid">
-      <div class="field">
-        <label>機車位單價 (元/個)</label>
-        <input type="number" placeholder="100" class="standard-input" [(ngModel)]="MOTO_SPACE_PRICE">
-      </div>
-      <div class="field">
-        <label>其他</label>
-        <input type="number" placeholder="0" class="standard-input" [(ngModel)]="OTHERFEE">
+    
+      <div class="action-bar">
+        <button class="btn-plain" (click)="routerModifyResident()">修改住戶資料</button>
+    
+        <button class="btn-send" style="background: #909399;" (click)="closeThisDialog()">關閉</button>
       </div>
     </div>
-
-    <div class="field full">
-      <label>備註事項</label>
-      <textarea rows="2" placeholder="備註內容..." class="standard-input" [(ngModel)]="remark"></textarea>
+    }
+    
+    @if(page==4){
+    <div class="bill-form-content">
+      <div class="header-minimal">
+        <h3 class="section-label main-label" style="border-left-color: #e6a23c;">發送失敗：帳單月份重複</h3>
+      </div>
+    
+      <div class="error-container" style="background-color: #fdf6ec; border-color: #faecd8;">
+        <div class="error-header" style="color: #e6a23c;">
+          <i class="icon-warning">⚠️</i>
+          <span>{{billingMonth}} 月份帳單已存在</span>
+        </div>
+    
+        <div class="error-hint" style="color: #666; margin-top: 10px;">
+          系統偵測到資料庫中已存有該月份的社區帳單。為了避免重複計費，系統已自動攔截本次發送動作。
+        </div>
+      </div>
+    
+      <div class="form-body-flat">
+        <p class="error-hint">
+          <strong>如何解決？</strong><br>
+          1.請點擊下方按鈕返回，修改為正確的發送月份。
+        </p>
+      </div>
+    
+      <div class="action-bar">
+        <button class="btn-plain" (click)="page = 1">返回修改月份</button>
+        <button class="btn-send" style="background: #909399;" (click)="closeThisDialog()">關閉視窗</button>
+      </div>
     </div>
-  </div>
-
-  <div class="action-bar">
-    <button class="btn-plain" (click)="cancel()">取消</button>
-    @if(!title?.trim() || !billingMonth?.trim() || !dueDate?.trim()|| TOTAL_WATER== null ||
-    PING_PRICE== null || CAR_SPACE_PRICE== null ||MOTO_SPACE_PRICE== null || billingMonth > dueDate || TOTAL_WATER < 0
-      || PING_PRICE < 0 || CAR_SPACE_PRICE < 0 || MOTO_SPACE_PRICE < 0 || TOTAL_ELECTRICITY<0){ <button
-      class="btn-send btn-disabled">下一步</button>}
-      @else{
-      <button class="btn-send" (click)="next()">下一步</button>
-      }
+    }
   </div>
 </div>
-}
-@if(page ==2){
 
-<div class="bill-form-content">
-
-  <div class="header-minimal">
-    <h3 class="section-label main-label">帳單基本設定</h3>
-
-    <div class="field title-field">
-      <label>帳單名稱</label>
-      <b>{{title}}</b>
-    </div>
-
-    <div class="date-flex">
-      <div class="input-item">
-        <label>帳單月份</label>
-        <b>{{billingMonth}}-01</b>
-      </div>
-      <div class="input-item">
-        <label>繳費截止日期</label>
-        <b>{{dueDate}}</b>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-body-flat">
-    <h3 class="section-label">社區公設總費設定</h3>
-    <div class="input-grid">
-      <div class="field">
-        <label>社區總水費</label>
-        <b>{{TOTAL_WATER}}</b>
-      </div>
-      <div class="field">
-        <label>社區總電費</label>
-        <b>{{TOTAL_ELECTRICITY}}</b>
-      </div>
-    </div>
-
-    <h3 class="section-label">個人資產單價設定</h3>
-
-    <div class="input-grid">
-      <div class="field">
-        <label>管理費單價 (元/坪)</label>
-        <b>{{PING_PRICE}}</b>
-      </div>
-      <div class="field">
-        <label>汽車位單價 (元/個)</label>
-        <b>{{CAR_SPACE_PRICE}}</b>
-      </div>
-    </div>
-
-    <div class="input-grid">
-      <div class="field">
-        <label>機車位單價 (元/個)</label>
-        <b>{{MOTO_SPACE_PRICE}}</b>
-      </div>
-      <div class="field">
-        <label>其他</label>
-        <b>{{OTHERFEE}}</b>
-      </div>
-    </div>
-
-    <div class="field full">
-      <label>備註事項</label>
-      <b>{{remark}}</b>
-    </div>
-  </div>
-
-
-  <div class="action-bar">
-    <button class="btn-plain" (click)="last()">返回修改</button>
-    <button class="btn-send" (click)="searchAbnormalUnits()">發送帳單</button>
-  </div>
-</div>
-}
-@if(page == 3) {
-<div class="bill-form-content">
-  <div class="header-minimal">
-    <h3 class="section-label main-label" style="border-left-color: #f56c6c;">發送失敗：資料校驗異常</h3>
-  </div>
-
-  <div class="error-container">
-    <div class="error-header">
-      <i class="icon-warning">⚠️</i>
-      <span>以下住戶資料不完整（坪數缺失）</span>
-    </div>
-
-    <div class="error-list">
-      @for(abnormalUnit of AbnormalUnits; track $index) {
-      <div class="error-item">
-        🏠 房號：{{abnormalUnit}}
-      </div>
-      }
-    </div>
-  </div>
-
-  <div class="form-body-flat">
-    <p class="error-hint">
-      <strong>如何解決？</strong><br>
-      請先至「住戶管理」頁面，根據上方清單補齊這些住戶的<strong>「坪數」</strong>資訊。
-      系統規定不得向坪數缺失的住戶發送帳單。補齊後請重新嘗試發送。
-    </p>
-  </div>
-
-  <div class="action-bar">
-    <button class="btn-plain" (click)="routerModifyResident()">修改住戶資料</button>
-
-    <button class="btn-send" style="background: #909399;" (click)="closeThisDialog()">關閉</button>
-  </div>
-</div>
-}
-
-@if(page==4){
-<div class="bill-form-content">
-  <div class="header-minimal">
-    <h3 class="section-label main-label" style="border-left-color: #e6a23c;">發送失敗：帳單月份重複</h3>
-  </div>
-
-  <div class="error-container" style="background-color: #fdf6ec; border-color: #faecd8;">
-    <div class="error-header" style="color: #e6a23c;">
-      <i class="icon-warning">⚠️</i>
-      <span>{{billingMonth}} 月份帳單已存在</span>
-    </div>
-
-    <div class="error-hint" style="color: #666; margin-top: 10px;">
-      系統偵測到資料庫中已存有該月份的社區帳單。為了避免重複計費，系統已自動攔截本次發送動作。
-    </div>
-  </div>
-
-  <div class="form-body-flat">
-    <p class="error-hint">
-      <strong>如何解決？</strong><br>
-      1.請點擊下方按鈕返回，修改為正確的發送月份。
-    </p>
-  </div>
-
-  <div class="action-bar">
-    <button class="btn-plain" (click)="page = 1">返回修改月份</button>
-    <button class="btn-send" style="background: #909399;" (click)="closeThisDialog()">關閉視窗</button>
-  </div>
-</div>
-}

@@ -99,61 +99,66 @@
 
   <div class="list-container">
     <div class="list-scroll-area">
-      <div class="table-card">
-        <table>
-          <thead>
-            <tr>
-              <th>姓名</th>
-              <th>電話</th>
-              <th>住戶門牌</th>
-              <th>來訪目的</th>
-              <th>車牌</th>
-              <th>預約/進入時間</th>
-              <th>離開時間</th>
-              <th>狀態</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (visitor of pagedVisitors; track visitor.visitorId) {
+      @if (pagedVisitors.length === 0) {
+        <div class="table-card">
+          <div class="empty-state">
+            <mat-icon class="empty-icon">person_off</mat-icon>
+            <p>目前沒有符合條件的訪客紀錄</p>
+          </div>
+        </div>
+      } @else {
+        <div class="table-card">
+          <table>
+            <thead>
               <tr>
-                <td class="col-name" data-label="姓名">
-                  <div class="visitor-name-cell" (click)="visitorMore(visitor)">
-                    <div class="avatar">{{ (visitor.visitorName || '?').charAt(0) }}</div>
-                    <span class="name-text">{{ visitor.visitorName || '-' }}</span>
-                  </div>
-                </td>
-                <td data-label="電話"><span class="val-text">{{ visitor.visitorPhone || '-' }}</span></td>
-                <td data-label="門牌"><span class="val-text">{{ visitor.residentialAddress || '-' }}</span></td>
-                <td data-label="目的"><span class="val-text">{{ visitor.purpose || '-' }}</span></td>
-                <td data-label="車牌"><span class="val-text">{{ visitor.licensePlate || '-' }}</span></td>
-                <td data-label="時間"><span class="val-text">{{ visitor.estimatedTime || visitor.checkInTime || '-' }}</span></td>
-                <td data-label="離開"><span class="val-text">{{ visitor.checkOutTime || '-' }}</span></td>
-                <td class="col-status" data-label="狀態">
-                  @if (visitor.status === 'NOTYET') {
-                    <span class="status-badge status-notyet">未到訪</span>
-                  } @else if (visitor.status === 'INSIDE') {
-                    <span class="status-badge status-inside">在社區</span>
-                  } @else {
-                    <span class="status-badge status-left">已離開</span>
-                  }
-                </td>
-                <td class="col-action">
-                  @if(visitor.status === 'NOTYET'){
-                    <button class="checkout-btn" (click)="deleteByVisitor(visitor.visitorId)">
-                      刪除
-                    </button>
-                  }
-                </td>
+                <th>姓名</th>
+                <th>電話</th>
+                <th>住戶門牌</th>
+                <th>來訪目的</th>
+                <th>車牌</th>
+                <th>預約/進入時間</th>
+                <th>離開時間</th>
+                <th>狀態</th>
+                <th>操作</th>
               </tr>
-            } @empty {
-              <tr>
-                <td colspan="9" class="empty-cell">目前沒有符合條件的訪客紀錄</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              @for (visitor of pagedVisitors; track visitor.visitorId) {
+                <tr>
+                  <td class="col-name" data-label="姓名">
+                    <div class="visitor-name-cell" (click)="visitorMore(visitor)">
+                      <div class="avatar">{{ (visitor.visitorName || '?').charAt(0) }}</div>
+                      <span class="name-text">{{ visitor.visitorName || '-' }}</span>
+                    </div>
+                  </td>
+                  <td data-label="電話"><span class="val-text">{{ visitor.visitorPhone || '-' }}</span></td>
+                  <td data-label="門牌"><span class="val-text">{{ visitor.residentialAddress || '-' }}</span></td>
+                  <td data-label="目的"><span class="val-text">{{ visitor.purpose || '-' }}</span></td>
+                  <td data-label="車牌"><span class="val-text">{{ visitor.licensePlate || '-' }}</span></td>
+                  <td data-label="時間"><span class="val-text">{{ visitor.estimatedTime || visitor.checkInTime || '-' }}</span></td>
+                  <td data-label="離開"><span class="val-text">{{ visitor.checkOutTime || '-' }}</span></td>
+                  <td class="col-status" data-label="狀態">
+                    @if (visitor.status === 'NOTYET') {
+                      <span class="status-badge status-notyet">未到訪</span>
+                    } @else if (visitor.status === 'INSIDE') {
+                      <span class="status-badge status-inside">在社區</span>
+                    } @else {
+                      <span class="status-badge status-left">已離開</span>
+                    }
+                  </td>
+                  <td class="col-action">
+                    @if(visitor.status === 'NOTYET'){
+                      <button class="checkout-btn" (click)="deleteByVisitor(visitor.visitorId)">
+                        刪除
+                      </button>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
     </div>
 
     @if (totalPages > 1) {

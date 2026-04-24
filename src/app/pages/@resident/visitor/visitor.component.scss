@@ -201,6 +201,22 @@ td {
   }
 }
 
+// ===== 空狀態 =====
+.empty-state {
+  padding: 48px;
+  text-align: center;
+  color: #bbb;
+  .empty-icon {
+    font-size: 48px !important;
+    width: 48px !important;
+    height: 48px !important;
+    display: block;
+    margin: 0 auto 12px;
+    color: #bbb;
+  }
+  p { font-size: 15px; }
+}
+
 .pagination-bar {
   display: flex;
   justify-content: center;

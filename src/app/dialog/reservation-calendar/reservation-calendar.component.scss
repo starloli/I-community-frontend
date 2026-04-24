@@ -17,15 +17,16 @@ $hover-bg: #f5f5f5;
   --calendar-grid-border: rgba(123, 127, 186, 0.12);
   --calendar-grid-border-strong: rgba(123, 127, 186, 0.2);
   --calendar-cell-bg: rgba(255, 255, 255, 0.95);
-  width: 100%;
+  width: 92vw;                      /* 左右留出空間 */
   max-width: 800px;
-  min-height: 400px;
-  max-height: calc(100vh - 96px);
+  min-height: 300px;
+  max-height: 75vh;                 /* 縮短高度，確保上下留白 */
   background: $background;
   border-radius: 15px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  margin: 20px auto;                /* 居中並保持外邊距 */
 }
 
 // ===== 導航列 =====
@@ -37,6 +38,7 @@ $hover-bg: #f5f5f5;
   padding: 20px 24px;
   background: linear-gradient(135deg, $primary-color 0%, $accent-color 100%);
   box-shadow: 0 2px 8px rgba(63, 81, 181, 0.15);
+  flex-shrink: 0;
 
   button {
     padding: 10px 20px;
@@ -49,6 +51,7 @@ $hover-bg: #f5f5f5;
     cursor: pointer;
     transition: all 0.2s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
 
     &:hover {
       background: #ffffff;
@@ -433,87 +436,87 @@ $hover-bg: #f5f5f5;
   }
 }
 
-// ===== 響應式設計 =====
+// ===== 響應式設計 (RWD) =====
 @media (max-width: 768px) {
   .calendar-container {
-    --calendar-time-column-width: 80px;
-    --calendar-hour-height: 50px;
-    width: 100%;
-    min-width: 100%;
-    min-height: 640px;
-    max-height: calc(100vh - 32px);
-    border-radius: 0;
+    --calendar-time-column-width: 60px;
+    --calendar-hour-height: 60px;
+    width: 92vw;                      /* 手機版左右留白 */
+    max-width: none;
+    min-height: 50vh;
+    max-height: 80vh;                 /* 降低高度確保上下留白 */
+    margin: 10px auto;
+    border-radius: 12px;              /* 手機版恢復圓角增加美感 */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
   }
 
   .calendar-nav {
-    padding: 12px 16px;
-    gap: 8px;
+    padding: 10px;
+    gap: 6px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 
     button {
-      padding: 8px 12px;
+      padding: 6px 10px;
       font-size: 12px;
+      flex: 1;
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #e2e8f0;
+      box-shadow: none;
+
+      &:nth-child(2) {
+        background: $primary-color;
+        color: #fff;
+      }
     }
   }
 
+  .calendar-scroll-area {
+    overflow: auto; /* 啟用雙向捲動 */
+    -webkit-overflow-scrolling: touch;
+    flex: 1;
+  }
+
   ::ng-deep {
+    .cal-week-view {
+      min-width: 700px; /* 強制最小寬度以啟用橫向捲動 */
+    }
+
     .cal-header .cal-day-headers .cal-header {
-      min-height: 60px;
-      padding: 8px 4px 6px;
-
-      b {
-        font-size: 14px;
-        margin-bottom: 4px;
-      }
-
-      span {
-        font-size: 11px;
-      }
-    }
-
-    .cal-hour-segment {
-      min-height: var(--calendar-hour-height);
-      height: var(--calendar-hour-height) !important;
-    }
-
-    .cal-event {
-      min-height: 30px;
-      width: calc(100% - 6px);
-      margin: 2px auto;
-      padding: 3px 5px;
-    }
-
-    .cal-event .cal-event-title {
-      font-size: 10px;
-      line-height: 1.2;
+      min-height: 50px;
+      padding: 8px 4px;
+      b { font-size: 14px; }
+      span { font-size: 10px; }
     }
 
     .cal-time-label-column {
-      width: var(--calendar-time-column-width);
-      min-width: var(--calendar-time-column-width);
-      flex: 0 0 var(--calendar-time-column-width);
+      width: var(--calendar-time-column-width) !important;
+      min-width: var(--calendar-time-column-width) !important;
+      flex: 0 0 var(--calendar-time-column-width) !important;
     }
 
-    .cal-day-columns {
-      flex: 1;
-      min-width: 0;
+    .cal-hour-segment {
+      height: var(--calendar-hour-height) !important;
+      min-height: var(--calendar-hour-height) !important;
+      &:hover:not(.cal-disabled)::before { content: none; }
     }
 
-    .cal-day-columns .cal-day-column {
-      min-width: 0;
+    .cal-event {
+      min-height: 28px;
+      padding: 2px;
+      .cal-event-title { font-size: 9px; }
     }
   }
 }
 
-// ===== 載入動畫（可選）=====
+// ===== 載入動畫 =====
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .calendar-container {
@@ -524,26 +527,20 @@ $hover-bg: #f5f5f5;
 .calendar-scroll-area {
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: auto;
 
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
   }
 
-  ::-webkit-scrollbar-track {
-    background: #f0f0f0;
-    border-radius: 4px;
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
   }
 
-  ::-webkit-scrollbar-thumb {
-    background: $accent-color;
-    border-radius: 4px;
-    transition: background 0.2s;
-
-    &:hover {
-      background: $primary-color;
-    }
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+    &:hover { background: #bbb; }
   }
 }

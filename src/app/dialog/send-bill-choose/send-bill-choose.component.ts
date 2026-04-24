@@ -6,9 +6,12 @@ import { SendBillToUnitnumberComponent } from '../send-bill-to-unitnumber/send-b
 import { SendBillComponent } from '../send-bill/send-bill.component';
 
 
+import { MatIconModule } from '@angular/material/icon';
+
+
 @Component({
   selector: 'app-send-bill-choose',
-  imports: [],
+  imports: [MatIconModule],
   templateUrl: './send-bill-choose.component.html',
   styleUrl: './send-bill-choose.component.scss',
 })
@@ -26,8 +29,10 @@ onOpenUnitNumber() {
     // 2. 開啟另一個 Dialog
 setTimeout(() => {
     this.dialog.open(SendBillToUnitnumberComponent, {
-      width: '500px',
-      disableClose: false
+      width: 'min(600px, 92vw)',
+      maxHeight: '85vh',
+      disableClose: false,
+      panelClass: 'custom-dialog-container'
     });
   }, 200);
   }
@@ -37,8 +42,10 @@ setTimeout(() => {
     this.dialogRef.close();
    setTimeout(() => {
     this.dialog.open(SendBillComponent, {
-      width: '500px',
-      disableClose: false
+      width: 'min(650px, 92vw)',
+      maxHeight: '85vh',
+      disableClose: false,
+      panelClass: 'custom-dialog-container'
     });
   }, 200);
   }
