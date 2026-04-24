@@ -1,0 +1,64 @@
+.resident-container {
+  padding: 0;
+}
+
+// ===== 頁面標題 =====
+.page-header {
+  margin-bottom: 28px;
+  .header-left {
+    h1 {
+      font-size: 36px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin: 0 0 4px 0;
+    }
+    .subtitle {
+      font-size: 15px;
+      color: #888;
+    }
+  }
+}
+
+/* 卡片設計 */
+.stats-grid {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  flex: 1;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+.stat-label { color: #64748b; font-size: 0.9rem; margin-bottom: 0.5rem; }
+.stat-value { font-size: 1.75rem; font-weight: 700; color: #1e293b; }
+
+.income .stat-value { color: #10b981; }
+.expense .stat-value { color: #ef4444; }
+.balance { background: white; }
+.balance .stat-label { color: #94a3b8; }
+.balance .stat-value { color: #000000; }
+
+/* 表格設計 */
+.table-container {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+.modern-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+.modern-table th { text-align: left; padding: 1rem; border-bottom: 2px solid #f1f5f9; color: #475569; }
+.modern-table td { padding: 1rem; border-bottom: 1px solid #f1f5f9; }
+
+.type-tag { padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+.type-tag.income { background: #dcfce7; color: #166534; }
+.type-tag.expense { background: #fee2e2; color: #991b1b; }
+
+.text-green { color: #10b981; }
+.text-red { color: #ef4444; }
+.remark-cell span { display: block; font-size: 0.8rem; color: #94a3b8; }

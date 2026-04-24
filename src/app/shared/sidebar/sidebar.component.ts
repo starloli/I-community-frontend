@@ -44,6 +44,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { route: 'admin/package', icon: 'inventory_2', label: '包裹管理', color: '#7BA89E' },
     { route: 'admin/repair', icon: 'build', label: '報修申請', color: '#C47A5A' },
     { route: 'admin/ModifyResident', label: '住戶管理', color: '#5B7FA6', icon: 'manage_accounts' },
+    {route :'admin/FinancialDashboard', label: '財務收支明細', color: '#4075ae', icon: 'manage_accounts'}
   ];
 
   // TODO: 超級管理員的個人資料編輯按鈕待實作
