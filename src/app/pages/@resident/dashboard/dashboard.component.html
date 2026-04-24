@@ -1,12 +1,19 @@
 <div class="dashboard-container">
   <div class="page-header">
     <div>
-      <h1>歡迎回來，{{ userName }}</h1>
+      <h1>
+        歡迎回來，{{ userName }}
+      </h1>
       <span class="subtitle">
         @if (unitNumber) {
         {{ unitNumber }} ·
         } 住戶首頁總覽
       </span>
+    </div>
+    <div>
+      <button class="calendar-btn" (click)="navigateTo('/resident/calendar')">
+        <mat-icon>calendar_month</mat-icon>
+      </button>
     </div>
   </div>
 
