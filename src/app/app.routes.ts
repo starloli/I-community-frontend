@@ -29,6 +29,7 @@ import { ModifyResidentComponent } from './pages/@admin/modify-resident/modify-r
 import { ForgetPasswordComponent } from './pages/forget-password/forget-password.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { Test } from './test/test.component';
+import { CalendarComponent } from './pages/calendar/calendar.component';
 
 export const routes: Routes = [
   // ── 登入頁 ──────────────────────────────────────────
@@ -52,6 +53,7 @@ export const routes: Routes = [
       { path: 'package', component: PackageComponent },
       { path: 'repair', component: RepairComponent },
       { path: 'ModifyResident', component: ModifyResidentComponent },
+      { path: 'calendar', component: CalendarComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ]
   },
@@ -70,6 +72,7 @@ export const routes: Routes = [
       { path: 'package', component: ResidentPackageComponent },
       { path: 'repair', component: ResidentRepairComponent },
       { path: 'visitor', component: ResidentVisitorComponent },
+      { path: 'calendar', component: CalendarComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ]
   },
