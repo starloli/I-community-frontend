@@ -36,8 +36,10 @@ export class RepairService {
         data
       ).pipe(
         tap(newItem => {
-          const current = this.userRepairsSubject.value;
-          this.userRepairsSubject.next([...current, newItem]);
+          const current = this.repairsSubject.value;
+          const userCurrent = this.userRepairsSubject.value;
+          this.repairsSubject.next([...current, newItem]);
+          this.userRepairsSubject.next([...userCurrent, newItem]);
         }),
         catchError((error) => {
           console.error('新增失敗', error);

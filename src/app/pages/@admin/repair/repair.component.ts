@@ -121,7 +121,20 @@ export class RepairComponent implements OnInit, OnDestroy {
   }
 
   submitRepair() {
+    // 地點與描述為必填，缺少任一欄位就不送出。
     if (!this.newRepair.location || !this.newRepair.description) return;
+
+    // 組出新增報修要送往後端的資料。
+    const newRep = {
+      location: this.newRepair.location,
+      category: this.newRepair.category,
+      description: this.newRepair.description,
+      submittedAt: new Date().toLocaleDateString('zh-TW')
+    };
+
+    this.repairService.post(newRep)
+      .subscribe(res => console.log(res));
+
     this.closeForm();
   }
 
