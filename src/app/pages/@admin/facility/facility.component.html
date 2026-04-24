@@ -4,25 +4,42 @@
       <h1>設備管理</h1>
       <span class="subtitle">管理社區設備資訊與開放狀態</span>
     </div>
-    <button class="add-btn" (click)="registFacility()">
-      <mat-icon>add</mat-icon>
-      新增設備
-    </button>
-    <button (click)="config()">
-      asdfasdfasdf
-    </button>
+    <div class="header-actions">
+      <!-- 提醒時間設定按鈕 -->
+      <button class="config-btn" (click)="config()" title="提醒時間設定">
+        <mat-icon>edit_notifications</mat-icon>
+      </button>
+      <button class="add-btn" (click)="registFacility()">
+        <mat-icon>add</mat-icon>
+        新增設備
+      </button>
+    </div>
   </div>
 
   <div class="toolbar-panel">
-    <label class="search-control control-card">
-      <mat-icon>search</mat-icon>
-      <input
-        type="text"
-        [(ngModel)]="searchKeyword"
-        (ngModelChange)="onFilterChange()"
-        placeholder="搜尋設備名稱或描述"
+    <div class="search-row">
+      <label class="search-control control-card">
+        <mat-icon>search</mat-icon>
+        <input
+          type="text"
+          [(ngModel)]="searchKeyword"
+          (ngModelChange)="onFilterChange()"
+          placeholder="搜尋設備名稱或描述"
+        >
+      </label>
+
+      @if (hasActiveFilters) {
+      <button
+        class="reset-btn"
+        type="button"
+        (click)="clearFilters()"
+        title="清除條件"
+        aria-label="清除條件"
       >
-    </label>
+        <mat-icon>filter_alt_off</mat-icon>
+      </button>
+      }
+    </div>
 
     <div class="toolbar-actions">
       <label class="filter-field">
@@ -52,18 +69,6 @@
           <option value="capacity-asc">容量由小到大</option>
         </select>
       </label>
-
-      @if (hasActiveFilters) {
-      <button
-        class="reset-btn"
-        type="button"
-        (click)="clearFilters()"
-        title="清除條件"
-        aria-label="清除條件"
-      >
-        <mat-icon>filter_alt_off</mat-icon>
-      </button>
-      }
     </div>
   </div>
 

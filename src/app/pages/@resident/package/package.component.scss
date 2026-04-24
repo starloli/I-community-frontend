@@ -5,7 +5,7 @@
 
 // ===== 頁面標題 =====
 .page-header {
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 
   .header-left {
     h1 {
@@ -407,38 +407,157 @@
   }
 }
 
-// ===== 響應式 =====
 @media (max-width: 768px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
+  .package-container {
+    padding: 0;
   }
 
-  .filter-bar {
-    flex-direction: column;
+  .page-header {
+    padding: 12px 0 4px;
+    margin-bottom: 0;
 
-    .search-box {
-      margin-left: 0;
-      width: 100%;
-
-      input {
-        width: 100%;
+    .header-left {
+      h1 {
+        font-size: 22px;
+        letter-spacing: -0.5px;
+      }
+      .subtitle {
+        font-size: 11px;
+        margin-top: -2px;
       }
     }
   }
 
+  // 統計卡片 - 3 欄並列
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+    padding: 0 4px;
+  }
+
+  .stat-card {
+    position: relative;
+    aspect-ratio: 1.2 / 1;
+    padding: 6px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    border-radius: 12px;
+    background: #ffffff;
+    text-align: center;
+    min-height: unset;
+
+    .stat-icon-wrap {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      font-size: 18px !important;
+      width: 18px !important;
+      height: 18px !important;
+      opacity: 0.8;
+    }
+
+    .stat-info {
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+
+      .stat-value {
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 1;
+      }
+
+      .stat-label {
+        font-size: 11px;
+        color: #888;
+        white-space: nowrap;
+        font-weight: 500;
+      }
+    }
+  }
+
+  // 篩選列 - 3 按鈕並列
+  .filter-bar {
+    display: flex;
+    flex-direction: row; // 改為橫向
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding: 0 4px;
+
+    .filter-btn {
+      flex: 1; // 等寬
+      padding: 8px 4px;
+      font-size: 13px;
+      text-align: center;
+      white-space: nowrap;
+      min-width: 0;
+    }
+
+    .search-box {
+      width: 100%;
+      margin-left: 0;
+      margin-top: 4px;
+      padding: 8px 14px;
+    }
+  }
+
+  // 包裹列表卡片
   .package-item {
+    padding: 16px;
     flex-direction: column;
     align-items: flex-start;
+    gap: 12px;
+    position: relative;
+    border-bottom: none;
 
-    .status-badge {
-      margin-left: 0;
-      margin-top: 8px;
+    // 縮短的區隔線
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 20px;
+      right: 20px;
+      height: 1px;
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .pkg-icon-box {
+      display: none; // 隱藏圖示節省空間
+    }
+
+    .pkg-main {
+      width: 100%;
+      .pkg-title-row {
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 4px;
+        .status-badge { font-size: 11px; padding: 2px 8px; }
+      }
+      .pkg-sub {
+        font-size: 13px;
+        gap: 6px;
+        .tracking { background: #f0f2f5; }
+      }
     }
 
     .pkg-right {
       width: 100%;
-      flex-direction: row;
+      display: flex;
       justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px dashed #eee;
+
+      .pkg-date-wrap {
+        align-items: flex-start;
+        .pkg-date { font-size: 12px; }
+      }
     }
   }
 }

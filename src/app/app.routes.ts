@@ -29,7 +29,6 @@ import { VisitorComponent } from './pages/@admin/visitor/admin-visitor.component
 import { ModifyResidentComponent } from './pages/@admin/modify-resident/modify-resident.component';
 import { ForgetPasswordComponent } from './pages/forget-password/forget-password.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
-import { Test } from './test/test.component';
 
 export const routes: Routes = [
   // ── 登入頁 ──────────────────────────────────────────
@@ -38,7 +37,6 @@ export const routes: Routes = [
   { path: 'visitorDialog', component: VisitorDialogComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'forget-password', component: ForgetPasswordComponent },
-  { path: 'test', component: Test },
   {
     path: 'admin', component: LayoutComponent,
     canActivate: [adminGuard],

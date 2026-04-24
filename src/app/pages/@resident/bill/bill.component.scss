@@ -3,7 +3,7 @@
 
 // ===== 頁面標題 =====
 .page-header {
-  margin-bottom: 24px;
+  margin-bottom: 32px;
   h1 { font-size: 36px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px 0; }
   .subtitle { font-size: 15px; color: #888; }
 }
@@ -84,12 +84,248 @@
   margin-bottom: 16px;
 }
 
-table { width: 100%; border-collapse: collapse; }
+.desktop-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
 thead tr { background: rgba(123, 127, 186, 0.08); }
 th { padding: 16px 20px; text-align: left; font-size: 14px; font-weight: 600; color: #555; white-space: nowrap; }
 td { padding: 16px 20px; font-size: 15px; color: #333; border-bottom: 1px solid rgba(0,0,0,0.05); }
 tbody tr:last-child td { border-bottom: none; }
 tbody tr:hover { background: rgba(123, 127, 186, 0.03); }
+
+// 手機版列表預設隱藏
+.mobile-bill-list {
+  display: none;
+}
+
+// =============================================================================
+// ===== 手機版響應式設計 (RWD) =====
+// =============================================================================
+
+@media (max-width: 768px) {
+  .bill-container {
+    padding: 0;
+  }
+
+  // 頁面標題
+  .page-header {
+    padding: 12px 0 4px;
+    margin-bottom: 0;
+
+    .header-left {
+      h1 {
+        font-size: 22px;
+        letter-spacing: -0.5px;
+      }
+      .subtitle {
+        font-size: 11px;
+        margin-top: -2px;
+      }
+    }
+  }
+
+  // 統計卡片 - 參考社區公告頁排版 (3 欄並排)
+  .stats-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 0 4px;
+  }
+
+  .stat-card {
+    position: relative;
+    aspect-ratio: 1.2 / 1;
+    padding: 6px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    border-radius: 12px;
+    background: #ffffff;
+    text-align: center;
+    min-height: unset;
+    width: 100%;
+
+    mat-icon {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      font-size: 20px !important;
+      width: 20px !important;
+      height: 20px !important;
+      opacity: 0.8;
+    }
+
+    .stat-info {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+
+      .stat-value {
+        font-size: 32px;
+        font-weight: 400;
+        line-height: 1;
+      }
+
+      .stat-label {
+        font-size: 11px;
+        color: #888;
+        white-space: nowrap;
+        font-weight: 500;
+      }
+    }
+
+    // 確保所有卡片（包括第一個）都遵循相同樣式
+    &:first-child {
+      grid-column: unset;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6px;
+      text-align: center;
+
+      mat-icon {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        margin-right: 0;
+      }
+
+      .stat-info {
+        margin-top: 8px;
+        align-items: center;
+        .stat-value { font-size: 32px; }
+      }
+    }
+  }
+
+  // 篩選列
+  .filter-row {
+    gap: 8px;
+
+    .filter-btn {
+      padding: 6px 16px;
+      font-size: 13px;
+      flex: 1;
+      text-align: center;
+      white-space: nowrap;
+    }
+  }
+
+  // 表格切換為列表
+  .desktop-table {
+    display: none;
+  }
+
+  .mobile-bill-list {
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+  }
+
+  .bill-mobile-item {
+    padding: 16px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    cursor: pointer;
+    position: relative;
+
+    // 縮短的區隔線
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 20px;
+      right: 20px;
+      height: 1px;
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    &.row-overdue { border-left: 4px solid #e53935; }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      .unit-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        .bill-title { font-size: 16px; font-weight: 700; color: #7B7FBA; }
+        .bill-month { font-size: 12px; color: #888; }
+      }
+
+      .amount-info {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1a1a2e;
+      }
+    }
+
+    .item-body {
+      .item-details {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        background: #f8f9fa;
+        padding: 8px 12px;
+        border-radius: 8px;
+
+        .detail-row {
+          display: flex;
+          justify-content: space-between;
+          font-size: 13px;
+          .label { color: #888; }
+          .value { color: #555; }
+        }
+      }
+    }
+
+    .item-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+
+      .badge-group {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .mobile-pay-btn {
+        padding: 6px 14px;
+        background: #7B7FBA;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .empty-mobile-state {
+    padding: 40px;
+    text-align: center;
+    color: #bbb;
+    mat-icon { font-size: 48px; width: 48px; height: 48px; margin-bottom: 8px; }
+  }
+
+  .pagination {
+    .page-btn {
+      width: 34px;
+      height: 34px;
+      font-size: 13px;
+    }
+  }
+}
 
 .row-overdue { border-left: 3px solid #e53935; }
 .amount { font-weight: 700; color: #1a1a2e; }
@@ -123,6 +359,7 @@ tbody tr:hover { background: rgba(123, 127, 186, 0.03); }
   align-items: center;
   gap: 6px;
   margin-top: 8px;
+  margin-bottom: 32px; // 增加底部間距
 
   .page-btn {
     width: 40px;

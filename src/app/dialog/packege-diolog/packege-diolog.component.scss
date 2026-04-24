@@ -1,73 +1,112 @@
-/* 整體容器 */
-:host {
-  display: block;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  color: #000; /* 👉 全域文字黑色 */
-}
-
-/* Dialog 卡片 */
-:host ::ng-deep .mat-mdc-dialog-container {
-  border-radius: 14px;
-  padding: 24px;
+.dialog-container {
+  width: 100%;
+  max-width: 380px;
   background: #ffffff;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-/* 標題 */
-h2[mat-dialog-title] {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #000; /* 👉 黑色 */
+// ── Header ──────────────────────────────────────────
+.dialog-header {
+  padding: 24px 28px;
+  background: linear-gradient(135deg, #fff5f5 0%, #fff0f0 100%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid #ffebeb;
+
+  .header-icon {
+    width: 44px;
+    height: 44px;
+    background: #ffffff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e53935;
+    box-shadow: 0 4px 12px rgba(229, 57, 53, 0.1);
+
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .header-title {
+    h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+    p {
+      margin: 2px 0 0;
+      font-size: 12px;
+      color: #9e9e9e;
+      white-space: nowrap; // 👈 防止副標題換行
+    }
+  }
 }
 
-/* 內容 */
-mat-dialog-content {
-  margin-top: 12px;
-  font-size: 14px;
-  color: #000; /* 👉 黑色 */
-  line-height: 1.6;
+// ── Body ──────────────────────────────────────────
+.dialog-body {
+  padding: 28px;
 }
 
-/* 按鈕區 */
-mat-dialog-actions {
-  margin-top: 24px;
+.alert-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 16px;
+  color: #555;
+  border: 1px solid #eee;
+
+  mat-icon {
+    color: #0288d1;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0; // 👈 防止圖示被文字擠壓變形
+  }
+
+  span {
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+}
+
+// ── Footer ──────────────────────────────────────────
+.dialog-footer {
+  padding: 0 28px 28px;
   display: flex;
   justify-content: flex-end;
 }
 
-/* 按鈕 */
-button {
-  padding: 8px 18px;
-  font-size: 14px;
-  border-radius: 8px;
+.confirm-btn {
+  width: 100%;
+  padding: 12px;
+  background: #3f51b5;
+  color: #ffffff;
   border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-}
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(63, 81, 181, 0.2);
 
-/* 🔵 主按鈕（確認） */
-button[cdkFocusInitial] {
-  background: #1976d2;  /* 👉 藍色（Material 藍） */
-  color: #fff;
-}
+  &:hover {
+    background: #303f9f;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(63, 81, 181, 0.3);
+  }
 
-button[cdkFocusInitial]:hover {
-  background: #1565c0;
-  transform: translateY(-1px);
-}
-
-/* 🔵 一般按鈕（如果你之後加取消） */
-button:not([cdkFocusInitial]) {
-  background: transparent;
-  color: #1976d2;
-}
-
-button:not([cdkFocusInitial]):hover {
-  background: rgba(25, 118, 210, 0.08);
-}
-
-/* 點擊感 */
-button:active {
-  transform: scale(0.97);
+  &:active {
+    transform: scale(0.98);
+  }
 }

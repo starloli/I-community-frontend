@@ -244,12 +244,14 @@ $transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
 // ── 通知紅點 ────────────────────────────────────────
 .notification-dot {
+  position: absolute;
+  top: 50%;
+  right: 18px; // 👈 微調至 18px，讓它在右側留白處看起來更置中
+  transform: translateY(-50%);
   width: 8px;
   height: 8px;
   background-color: #ff4d4f;
   border-radius: 50%;
-  margin-left: auto; // 展開時自動推至最右側
-  margin-right: 4px;
   box-shadow: 0 0 6px rgba(255, 77, 79, 0.6);
   animation: pulse-red 1.5s infinite;
   z-index: 5;
@@ -257,24 +259,22 @@ $transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   transition: all $transition;
 }
 
-// 收合狀態下的紅點精確位移
+// 收合狀態下的紅點精確位移 (移至 Icon 右上角)
 .sidebar.collapsed {
   .nav-item {
     .notification-dot {
-      position: absolute;
-      top: 8px;   /* Adjust to desired top position */
-      right: 8px; /* Adjust to desired right position */
-      margin-left: 0;
-      margin-right: 0; /* Ensure no margin interferes */
+      top: 12px;
+      right: 12px;
       border: 1.5px solid #fff;
-      transform: translate(50%, -50%); /* Fine-tune to center on the corner */
+      transform: translate(50%, -50%);
     }
   }
 }
+
 @keyframes pulse-red {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 77, 79, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(255, 77, 79, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 77, 79, 0); }
+  0% { transform: translateY(-50%) scale(0.95); box-shadow: 0 0 0 0 rgba(255, 77, 79, 0.7); }
+  70% { transform: translateY(-50%) scale(1); box-shadow: 0 0 0 5px rgba(255, 77, 79, 0); }
+  100% { transform: translateY(-50%) scale(0.95); box-shadow: 0 0 0 0 rgba(255, 77, 79, 0); }
 }
 
 // ── Footer ─────────────────────────────────────────
