@@ -1,251 +1,165 @@
+.dialog-scroll-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f8fafc;
+  border-radius: 20px;
+  overflow-x: hidden; /* 禁止左右拖動 */
+}
+
+.dialog-content {
+  width: 100%;
+  max-width: 600px;
+  padding: 32px 20px; /* 提供上下留白 */
+}
+
 .bill-form-content {
   width: 100%;
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 20px;
-  background: transparent;
+  background: #ffffff;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
   font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+}
+
+/* 標題與標籤 */
+.section-label {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 24px 0 16px 0;
+  padding-left: 12px;
+  border-left: 4px solid #7B7FBA;
+}
+
+.main-label {
+  margin-top: 0;
 }
 
 /* 統一輸入框樣式 */
 .standard-input {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  color: #333;
-  box-sizing: border-box;
-  transition: all 0.2s ease;
+  padding: 12px 16px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #334155;
+  background: #f8fafc;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #7B7FBA;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(123, 127, 186, 0.1);
+  }
 }
 
-.standard-input:focus {
-  outline: none;
-  border-color: #409eff;
-  box-shadow: 0 0 0 3px rgba(64, 158, 255, 0.1);
-}
-
-/* 標題與標籤 */
-.section-label {
-  font-size: 1.05rem;
+.field label {
+  display: block;
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 8px;
   font-weight: 600;
-  color: #2c3e50;
-  margin: 25px 0 15px 0;
-  padding-left: 10px;
-  border-left: 4px solid #409eff;
-}
-
-.main-label {
-  margin-top: 0;
-  border-left-color: #909399; /* 基礎設定用不同顏色區分 */
-}
-
-.title-field {
-  margin-bottom: 20px;
 }
 
 .date-flex {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
 }
 
-.input-item {
-  flex: 1;
-}
-
-.input-item label, .field label {
-  display: block;
-  font-size: 0.85rem;
-  color: #606266;
-  margin-bottom: 8px;
-  font-weight: 500;
-}
-
-.hint {
-  font-size: 0.8rem;
-  color: #909399;
-  margin: -10px 0 15px 14px;
-}
-
-/* 佈局 */
 .input-grid {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 15px;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
 }
 
-.field {
-  flex: 1;
-}
-
-.full {
-  width: 100%;
-  margin-top: 10px;
-}
-
-/* 按鈕 */
+/* 按鈕樣式 */
 .action-bar {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid #f0f0f0;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #f1f5f9;
 }
 
 .btn-plain {
-  padding: 9px 20px;
-  border: 1px solid #dcdfe6;
+  padding: 10px 24px;
+  border: 1.5px solid #e2e8f0;
   background: white;
-  color: #606266;
-  border-radius: 4px;
+  color: #64748b;
+  border-radius: 10px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 0.9rem;
+  transition: all 0.2s;
+
+  &:hover { background: #f8fafc; border-color: #cbd5e1; }
 }
 
 .btn-send {
-  padding: 9px 24px;
+  padding: 10px 28px;
   border: none;
-  background: #409eff;
+  background: linear-gradient(135deg, #7B7FBA 0%, #5d61a6 100%);
   color: white;
-  border-radius: 4px;
+  border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
-  font-size: 0.9rem;
-}
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(123, 127, 186, 0.2);
 
-.btn-send:hover {
-  background: #66b1ff;
+  &:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(123, 127, 186, 0.3); }
 }
-
 
 .btn-disabled {
-  background-color: #dcdfe6 !important; /* 淺灰色 */
-  color: #a8abb2 !important;
-  cursor: not-allowed !important;      /* 鼠標變成禁制符號 */
-  border: none;
+  background: #e2e8f0 !important;
+  color: #94a3b8 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//page3
-/* 異常頁面專屬樣式 */
-/* 異常頁面專屬樣式 */
-.error-container {
-  border: 1px solid #fde2e2;
-  background-color: #fef0f0;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 25px;
-}
-
-.error-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #f56c6c;
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 15px;
-}
-
-.error-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.error-item {
-  background: white;
-  border: 1px solid #ffdbdb;
-  color: #f56c6c;
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(245, 108, 108, 0.05);
-}
-
-.error-hint {
-  margin-top: 20px;
-  color: #909399;
-  font-size: 0.85rem;
-  line-height: 1.6;
-}
-
-.icon-warning {
-  font-style: normal;
-}
-
-
-
-/* 錯誤輸入框變紅框 */
-.input-error {
-  border: 1px solid #ff4d4f !important;
-  background-color: #fff2f0;
-}
-
-.error-text {
-  color: #ff4d4f;
-  font-size: 12px;
-  margin-top: 4px;
-  display: block;
-}
-
-/* 禁用按鈕的樣式 */
-.btn-next:disabled {
-  background-color: #d9d9d9;
-  color: #8c8c8c;
-  cursor: not-allowed; /* 游標變成禁止符號 */
-  box-shadow: none;
-  transform: none;
-}
-
-
-
-/* Page 2 專屬唯讀視覺優化 */
+/* 唯讀預覽樣式 (Page 2) */
 .bill-form-content b {
   display: block;
   width: 100%;
-  padding: 10px 12px;
-  background-color: #f9f9f9; /* 淺灰色背景表示不可編輯 */
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  color: #333;
-  font-weight: 500;
-  min-height: 41px; /* 保持與 input 高度一致 */
-  box-sizing: border-box;
+  padding: 12px 16px;
+  background: #f1f5f9;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #1e293b;
+  font-weight: 600;
+  min-height: 46px;
 }
 
-/* 針對備註事項的 b 標籤（多行效果） */
-.field.full b {
-  min-height: 60px;
-  white-space: pre-wrap; /* 保留換行 */
+.input-error {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2 !important;
 }
 
-/* 讓金額顯示更醒目一點 */
-.field b:contains('$'), .field b {
-  color: #2c3e50;
+/* 手機版響應式 */
+@media (max-width: 640px) {
+  .dialog-content {
+    padding: 16px 12px;
+  }
+
+  .bill-form-content {
+    padding: 24px 16px;
+    border-radius: 16px;
+  }
+
+  .date-flex, .input-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .action-bar {
+    flex-direction: column;
+    gap: 10px;
+    button { width: 100%; }
+  }
 }
