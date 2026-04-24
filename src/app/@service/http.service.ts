@@ -35,6 +35,8 @@ export class HttpService {
 
   deleteApi<T>(url: string, id?: number): Observable<T> {
     url = `${this.baseUrl}${url}`;
-    return this.http.delete<T>(`${url}/${id}`) as Observable<T>;
+    if(id)
+      url = `${url}/${id}`;
+    return this.http.delete<T>(url) as Observable<T>;
   }
 }
