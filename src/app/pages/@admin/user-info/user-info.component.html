@@ -1,95 +1,96 @@
-<!-- <div class="profile-container">
+<div class="profile-container">
   <div class="page-header">
     <div class="header-left">
       <h1>個人資料</h1>
       <span class="subtitle">管理您的帳號資訊與聯絡方式</span>
     </div>
-  </div> -->
-
-<!-- @if (user) {
-    <div class="profile-grid">
-      左側：個人頭像與基本資訊摘要 -->
-<!-- <div class="profile-card side-panel"> -->
-<!-- <div class="avatar-section">
-  <div class="large-avatar">
-    {{ user.fullName.charAt(0) }}
-  </div>
-  <h2 class="display-name">{{ user.fullName }}</h2>
-  <span class="user-role-badge">{{ userRole }}</span> -->
-<!-- </div> -->
-
-<!-- <div class="side-info-list">
-  <div class="side-info-item">
-    <mat-icon>account_circle</mat-icon>
-    <span>帳號：{{ user.userName }}</span>
-  </div>
-  <div class="side-info-item">
-    <mat-icon>home</mat-icon>
-    <span>戶號：{{ user.unitNumber }}</span>
-  </div>
-</div>
-</div> -->
-
-<!-- 右側：詳細資訊編輯表單 -->
-<!-- <div class="profile-card main-form">
-  <div class="card-header">
-    <mat-icon>edit_note</mat-icon>
-    <h2>修改詳細資料</h2>
   </div>
 
-  <div class="form-grid">
-    <div class="form-group">
-      <label>真實姓名</label>
-      <div class="input-wrapper">
-        <mat-icon>person</mat-icon>
-        <input type="text" [(ngModel)]="updateUser.fullName" placeholder="請輸入姓名">
+  @if (user) {
+  <div class="profile-grid">
+    <!-- 左側：個人頭像與基本資訊摘要 -->
+    <div class="profile-card side-panel">
+      <div class="avatar-section">
+        <div class="large-avatar">
+          {{ user.fullName.charAt(0) }}
+        </div>
+        <h2 class="display-name">{{ user.fullName }}</h2>
+        <span class="user-role-badge">{{ userRole }}</span>
       </div>
-    </div> -->
 
-    <!-- <div class="form-group">
-      <label>電子信箱</label>
-      <div class="input-wrapper" [class.error]="!isValidEmail(updateUser.email)">
-        <mat-icon>email</mat-icon>
-        <input type="email" [(ngModel)]="updateUser.email" placeholder="example@mail.com">
+      <div class="side-info-list">
+        <div class="side-info-item">
+          <mat-icon>account_circle</mat-icon>
+          <span>email：{{ user.email }}</span>
+        </div>
+        <div class="side-info-item">
+          <mat-icon>home</mat-icon>
+          <span>電話：{{ user.phone }}</span>
+        </div>
       </div>
-      @if(!isValidEmail(updateUser.email)) {
-      <span class="error-text">Email 格式不正確</span>
-      }
-    </div> -->
-
-    <!-- <div class="form-group">
-      <label>聯絡電話</label>
-      <div class="input-wrapper" [class.error]="!isValidPhone(updateUser.phone)">
-        <mat-icon>phone</mat-icon>
-        <input type="tel" [(ngModel)]="updateUser.phone" placeholder="09xxxxxxxx">
-      </div>
-      @if(!isValidPhone(updateUser.phone)) {
-      <span class="error-text">電話格式不正確</span>
-      }
-    </div> -->
-
-    <!-- <div class="form-group">
-      <label>居住戶號</label>
-      <div class="input-wrapper readonly">
-        <mat-icon>home</mat-icon>
-        <input type="text" [value]="user.unitNumber" readonly title="戶號不可自行修改">
-      </div>
-      <span class="hint-text">* 戶號如需變更請洽管理室</span>
     </div>
-  </div> -->
 
-  <!-- <div class="form-actions">
-    <button class="submit-btn" [disabled]="!isValid(updateUser)" (click)="ModifyResident()">
-      <mat-icon>save</mat-icon>
-      儲存變更
-    </button>
+    <!-- 右側：詳細資訊編輯表單 -->
+    <div class="profile-card main-form">
+      <div class="card-header">
+        <mat-icon>edit_note</mat-icon>
+        <h2>更改超級管理者資料</h2>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>新姓名</label>
+          <div class="input-wrapper">
+            <mat-icon>person</mat-icon>
+            <input type="text" [(ngModel)]="updateUser.fullName" placeholder="請輸入姓名">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>新電子信箱</label>
+          <div class="input-wrapper" [class.error]="!isValidEmail(updateUser.email)">
+            <mat-icon>mail</mat-icon>
+            <input type="email" [(ngModel)]="updateUser.email" placeholder="example@mail.com">
+          </div>
+          @if(!isValidEmail(updateUser.email)) {
+          <span class="error-text">Email 格式不正確</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>新聯絡電話</label>
+          <div class="input-wrapper" [class.error]="!isValidPhone(updateUser.phone)">
+            <mat-icon>phone</mat-icon>
+            <input type="tel" [(ngModel)]="updateUser.phone" placeholder="09xxxxxxxx">
+          </div>
+          @if(!isValidPhone(updateUser.phone)) {
+          <span class="error-text">電話格式不正確</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>新密碼</label>
+          <div class="input-wrapper">
+            <mat-icon>home</mat-icon>
+            <input type="text" [(ngModel)]="updateUser.password" placeholder="請輸入新密碼">
+          </div>
+          <span class="hint-text">請務必記下此密碼</span>
+        </div>
+
+      </div>
+      <div class="form-actions">
+        <button class="submit-btn" [disabled]="!isValid(updateUser)" (click)="ModifySelf()">
+          <mat-icon>save</mat-icon>
+          儲存變更
+        </button>
+      </div>
+    </div>
+
   </div>
+  } @else {
+  <div class="loading-shade">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>載入資料中...</span>
+  </div>
+  }
 </div>
-</div>
-} @else {
-<div class="loading-shade">
-  <mat-spinner diameter="40"></mat-spinner>
-  <span>載入資料中...</span>
-</div>
-}
-</div> -->

@@ -10,10 +10,13 @@
     <div class="m-header-left">
       <mat-icon class="logo-icon">home_work</mat-icon>
     </div>
-    
+
     <div class="m-header-center">
       <div class="user-avatar-mini">{{ userInitial }}</div>
       <span class="user-name-mini">{{ userName }}</span>
+      <button class="edit-btn-mini" routerLink="/admin/userInfo" aria-label="編輯個人資訊">
+        <mat-icon>edit</mat-icon>
+      </button>
     </div>
 
     <div class="m-header-right">
@@ -39,41 +42,41 @@
       <span class="user-name">{{ userName }}</span>
       <span class="user-unit">{{ unitNumber }}</span>
     </div>
+    @if (userRole === UserRole.SUPER_ADMIN) {
+    <button class="edit-button" aria-label="編輯超級管理者資訊" routerLink="/admin/userInfo">
+      <mat-icon>edit</mat-icon>
+    </button>
+    }
   </div>
 
   <!-- 導覽選單 (手機版將變為底部 Tab Bar) -->
   <nav class="sidebar-nav">
     @for (item of navItems; track item.route) {
-      <a
-        class="nav-item"
-        [routerLink]="'/' + item.route"
-        routerLinkActive="active"
-        [style.--nav-item-color]="item.color"
-        [title]="isCollapsed ? item.label : ''"
-      >
-        <div class="icon-wrapper">
-          <mat-icon>{{ item.icon }}</mat-icon>
-        </div>
-        <span class="nav-label">{{ item.label }}</span>
-        @if (item.label === '住戶管理' && hasIncompleteResident) {
-          <span class="notification-dot"></span>
-        }
-      </a>
+    <a class="nav-item" [routerLink]="'/' + item.route" routerLinkActive="active" [style.--nav-item-color]="item.color"
+      [title]="isCollapsed ? item.label : ''">
+      <div class="icon-wrapper">
+        <mat-icon>{{ item.icon }}</mat-icon>
+      </div>
+      <span class="nav-label">{{ item.label }}</span>
+      @if (item.label === '住戶管理' && hasIncompleteResident) {
+      <span class="notification-dot"></span>
+      }
+    </a>
     }
   </nav>
 
   <!-- 登出/登入按鈕 (電腦版顯示) -->
   <div class="sidebar-footer-wrap">
     @if (isLoggedIn) {
-      <div class="sidebar-footer" (click)="logout()" [title]="isCollapsed ? '登出' : ''">
-        <mat-icon>logout</mat-icon>
-        <span class="nav-label">登出</span>
-      </div>
+    <div class="sidebar-footer" (click)="logout()" [title]="isCollapsed ? '登出' : ''">
+      <mat-icon>logout</mat-icon>
+      <span class="nav-label">登出</span>
+    </div>
     } @else {
-      <div class="sidebar-footer" (click)="login()" [title]="isCollapsed ? '登入' : ''">
-        <mat-icon>login</mat-icon>
-        <span class="nav-label">登入</span>
-      </div>
+    <div class="sidebar-footer" (click)="login()" [title]="isCollapsed ? '登入' : ''">
+      <mat-icon>login</mat-icon>
+      <span class="nav-label">登入</span>
+    </div>
     }
   </div>
 

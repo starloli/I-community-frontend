@@ -26,7 +26,6 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   userPhone!: string;
   private $destroy = new Subject<void>();
 
-  // TODO: 超級管理員交接，變更密碼、信箱、電話等功能
 
   ngOnInit(): void {
     this.getInfo();

@@ -6,6 +6,7 @@ import { adminGuard } from './guards/admin.guard';
 import { authGuard } from './guards/auth.guard';
 
 // ── 管理員頁面 ────────────────────────────────────────
+import { UserInfoComponent } from './pages/@admin/user-info/user-info.component';
 import { DashboardComponent } from './pages/@admin/dashboard/dashboard.component';
 import { BillComponent } from './pages/@admin/bill/bill.component';
 import { AnnouncementComponent } from './pages/@admin/announcement/announcement.component';
@@ -14,7 +15,7 @@ import { PackageComponent } from './pages/@admin/package/package.component';
 import { RepairComponent } from './pages/@admin/repair/repair.component';
 
 // ── 住戶頁面（之後陸續新增）──────────────────────────
-import { UserInfoComponent as ResidentUserInfo, UserInfoComponent } from './pages/@resident/user-info/user-info.component';
+import { UserInfoComponent as ResidentUserInfo } from './pages/@resident/user-info/user-info.component';
 import { ResidentDashboardComponent } from './pages/@resident/dashboard/dashboard.component';
 import { ResidentAnnouncementComponent } from './pages/@resident/announcement/announcement.component';
 import { BillComponent as ResidentBillComponent } from './pages/@resident/bill/bill.component';

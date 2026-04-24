@@ -21,13 +21,20 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   constructor(private http: HttpService, private snackBar: MatSnackBar) { }
 
   getUrl = "/user/me";
-  modifyUrl = "/modify/adminMyself";
+  modifyUrl = "/modify/admin";
   user!: UserResponse;
-  updateUser!: UserResponse;
+  updateUser!: updateUser;
   userRole!: UserRole;
   private $destroy = new Subject<void>();
 
-  // TODO: 超級管理員個人資料修改頁面
+  // TODO: 超級管理員個人資料修改頁面 - 密碼驗證和信箱驗證相關變量
+  passwordVerified: boolean = false;
+  oldPassword: string = '';
+  showVerifyCodeModal: boolean = false;
+  verifyCode: string = '';
+  codeExpiry: number = 0;
+  isSubmittingVerify: boolean = false;
+  isLoadingPasswordVerify: boolean = false;
 
   ngOnInit(): void {
     this.getInfo();
@@ -39,9 +46,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     this.http.getApi<UserResponse>(this.getUrl).pipe(takeUntil(this.$destroy)).subscribe({
       next: (response) => {
         this.user = { ...response };
-        this.updateUser = { ...response, role: this.userRole };
         console.log('this.user:', this.user);
-        console.log('this.updateUser:', this.updateUser);
       },
       error: (error) => {
         console.error(error);
@@ -49,7 +54,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     });
   }
 
-  ModifyResident(): void {
+  ModifySelf(): void {
     if (this.isValid(this.updateUser)) {
       console.log('this.updateUser:', this.updateUser);
 
@@ -83,15 +88,14 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     })
   }
 
-  isValid(user: UserResponse): boolean {
+  isValid(user: updateUser): boolean {
     return Object.values(user).every(
       value =>
         value !== null &&
         value !== undefined &&
         value !== ''
-    ) && this.isValidEmail(user.email)
-      && this.isValidPhone(user.phone)
-      && this.isValidSquareFootage(this.updateUser.squareFootage);
+    ) && this.isValidEmail(this.updateUser.email)
+      && this.isValidPhone(this.updateUser.phone);
   }
 
   isValidSquareFootage(squareFootage: number): boolean {
@@ -123,4 +127,11 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     this.$destroy.next();
     this.$destroy.complete();
   }
+}
+
+interface updateUser {
+  fullName: string;
+  phone: string;
+  email: string;
+  password: string;
 }

@@ -62,8 +62,6 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
     private residentState: ResidentStateService
   ) { }
 
-  // TODO: 篩選停用帳戶
-
   ngOnInit(): void {
     this.getUser()
   }

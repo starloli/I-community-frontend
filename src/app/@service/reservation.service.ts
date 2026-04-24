@@ -8,7 +8,7 @@ import { ReservationStatus } from '../interface/enum';
   providedIn: 'root'
 })
 export class ReservationService {
-  private apiUrl = '/user/reservationsByUserId';
+  private apiUrl = '/reservation/byUserId';
   private reservationsSubject = new BehaviorSubject<ResReservation[]>([]);
   userReservations$ = this.reservationsSubject.asObservable();
 

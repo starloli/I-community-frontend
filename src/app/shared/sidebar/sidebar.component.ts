@@ -1,3 +1,4 @@
+import { UserRole } from './../../interface/enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,6 +31,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   unitNumber = '';
   userInitial = '';
   hasIncompleteResident = false; // 是否有坪數為 null 或 0 的住戶
+  UserRole = UserRole;
 
   private $destroy = new Subject<void>();
 
@@ -96,6 +98,19 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   get isLoggedIn(): boolean {
     return !!localStorage.getItem('token');
+  }
+
+  get userRole(): UserRole {
+    const payload = JSON.parse(atob(this.token.split('.')[1]))
+    return payload.role
+  }
+
+  get token(): string {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      throw new Error('找不到TOKEN')
+    }
+    return token
   }
 
   login() { this.router.navigate(['/login']); }
