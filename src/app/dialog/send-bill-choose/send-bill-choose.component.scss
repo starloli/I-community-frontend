@@ -1,75 +1,140 @@
-/* 容器去掉左右內距，讓按鈕可以貼齊邊緣或保持極小間距 */
-.dialog-actions-full {
-  display: flex;
+.dialog-wrapper {
   width: 100%;
-  gap: 1px; /* 兩按鈕間的細縫，如果不想要細縫可以設為 0 */
-  margin-top: 20px;
-  background-color: #eee; /* 細縫的顏色 */
-  border-radius: 0 0 12px 12px; /* 配合對話框圓角 */
-  overflow: hidden;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 垂直居中 */
+  align-items: center;     /* 水平居中 */
+  padding: 48px 32px;
+  background: #ffffff;
+  font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+  box-sizing: border-box;
 }
 
-.btn-giant {
-  flex: 1; /* 關鍵：強制平分空間 */
-  padding: 40px 20px; /* 增加上下高度，讓按鈕變大 */
-  border: none;
+.dialog-header {
+  margin-bottom: 40px;
+  text-align: center;
+  width: 100%;
+
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 8px 0;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: #64748b;
+  }
+}
+
+.choice-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 440px; /* 限制內部卡片寬度，保持視覺美感 */
+}
+
+.choice-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1.5px solid #f0f0f0;
   cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(123, 127, 186, 0.15);
+    border-color: #7B7FBA;
+
+    .card-icon {
+      background: #7B7FBA;
+      color: #fff;
+    }
+
+    .arrow {
+      color: #7B7FBA;
+      transform: translateX(4px);
+    }
+  }
+
+  .card-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: #f8f9fa;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+
+    mat-icon {
+      font-size: 30px;
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  .card-content {
+    flex: 1;
+
+    h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 4px;
+    }
+
+    p {
+      font-size: 13px;
+      color: #94a3b8;
+      margin: 0;
+    }
+  }
+
+  .arrow {
+    color: #cbd5e1;
+    transition: all 0.3s;
+  }
+
+  &.monthly {
+    &:hover {
+      border-color: #B8935A;
+      .card-icon { background: #B8935A; }
+      .arrow { color: #B8935A; }
+    }
+  }
 }
 
-/* 按鈕內的內容佈局 */
-.btn-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.btn-icon {
-  font-size: 32px; /* 圖標加大 */
-  margin-bottom: 5px;
-}
-
-.btn-text {
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 1px;
-}
-
-.btn-desc {
-  font-size: 12px;
-  opacity: 0.7;
-}
-
-/* 左側：淺色系 */
-.btn-left {
-  background-color: #ffffff;
-  color: #333;
-}
-
-.btn-left:hover {
-  background-color: #f0f7ff;
-  color: #007bff;
-}
-
-/* 右側：主色系 */
-.btn-right {
-  background-color: #007bff;
-  color: white;
-}
-
-.btn-right:hover {
-  background-color: #0056b3;
-  box-shadow: inset 0 0 100px rgba(0,0,0,0.1);
-}
-
-/* 響應式：手機版變上下排 */
 @media (max-width: 480px) {
-  .dialog-actions-full {
-    flex-direction: column;
+  .dialog-wrapper {
+    min-width: unset;
+    width: 100%;
+    padding: 24px 16px;
+  }
+
+  .dialog-header h1 {
+    font-size: 24px;
+  }
+
+  .choice-card {
+    padding: 16px;
+    gap: 16px;
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      mat-icon { font-size: 24px; width: 24px; height: 24px; }
+    }
+
+    .card-content h3 { font-size: 16px; }
   }
 }
