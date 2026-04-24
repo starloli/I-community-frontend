@@ -179,3 +179,17 @@ export interface Res {
 export interface LoginToken {
   accessToken: string
 }
+
+export interface Holiday {
+  id: number;
+  date: string; // yyyy-MM-dd
+  title: string;
+}
+
+export interface DayCell {
+  date: Date;
+  inMonth: boolean;
+  isToday: boolean;
+  holiday?: Holiday;
+  events: Holiday[];
+}

@@ -1,0 +1,91 @@
+<div class="page-header">
+  <h1>社區行事曆</h1>
+</div>
+
+<div class="header">
+  <button (click)="prevMonth()">‹</button>
+  <h2>{{ year() }} / {{ month() + 1 }}</h2>
+  <button (click)="nextMonth()">›</button>
+</div>
+
+<div class="grid">
+  <!-- 星期 -->
+  <div class="cell header-cell-Sun-Sat">Sun</div>
+  @for (d of ['Mon','Tue','Wed','Thu','Fri']; track d) {
+    <div class="cell header-cell">{{ d }}</div>
+  }
+  <div class="cell header-cell-Sun-Sat">Sat</div>
+
+  <!-- 日期 -->
+  @for (day of days(); track day.date) {
+    <div class="cell"
+        (click)="selectDay(day)"
+        [class.out]="!day.inMonth"
+        [class.today]="day.isToday"
+        [class.holiday]="day.holiday">
+
+      <div class="date">{{ day.date.getDate() }}</div>
+
+      @if (day.events.length) {
+        <div class="events">
+          @for (e of day.events.slice(0, 2); track e.title) {
+            <div class="event-item">
+              • {{ e.title }}
+            </div>
+          }
+        </div>
+      }
+
+      @if (day.holiday) {
+        <div class="holiday-text">
+          {{ day.holiday.title }}
+        </div>
+      }
+    </div>
+  }
+</div>
+
+@if (selectedDate()) {
+  <div class="event-panel">
+
+    <div class="panel-header">
+      {{ selectedDate() }}
+      <button class="close-btn" (click)="selectedDate.set(null)">✕</button>
+    </div>
+
+    <div class="event-list">
+      @if (selectedEvents().length === 0) {
+        <div class="empty">
+          <span>No events</span>
+        </div>
+      } @else {
+        @for (e of selectedEvents(); track e.id) {
+          <div class="event-row">
+            <span>• {{ e.title }}</span>
+            @if (isAdmin) {
+              <button class="delete-btn" (click)="deleteEvent(e)">✕</button>
+            }
+          </div>
+        }
+      }
+    </div>
+
+    @if (isAdmin) {
+      <div class="add-event">
+
+        <input
+          type="text"
+          placeholder="新增活動..."
+          [value]="newEventTitle()"
+          (input)="newEventTitle.set($any($event.target).value)"
+          (keyup.enter)="addEvent()"
+        />
+
+        <button class="add-btn" (click)="addEvent()">新增</button>
+
+      </div>
+    }
+
+
+  </div>
+}
