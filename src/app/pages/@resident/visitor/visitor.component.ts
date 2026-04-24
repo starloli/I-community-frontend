@@ -153,6 +153,7 @@ export class VisitorComponent implements OnInit {
     this.visitorService.visitorId = visitor;
     this.visitorService.permissions = 'residents';
 
+
     this.dialog.open(VisitorDialogComponent, {
       data: {
         visitor,
@@ -312,6 +313,8 @@ export class VisitorComponent implements OnInit {
 
   //住戶刪除訪客
   deleteByVisitor(id: number) {
+    console.log(id);
+
     this.http.deleteApi('/visitor/delete/' + id).subscribe({
       next: (res: any) => {
         console.log('刪除成功', res);

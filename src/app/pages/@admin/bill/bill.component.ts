@@ -16,6 +16,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { HttpService } from '../../../@service/http.service';
 import { UserResponse } from '../../../interface/interface';
 import { Subject, takeUntil } from 'rxjs';
+import { SendBillChooseComponent } from '../../../dialog/send-bill-choose/send-bill-choose.component';
+
 
 
 
@@ -48,7 +50,7 @@ export class BillComponent implements OnInit, OnDestroy {
   }
 
   openSendAllBillsDialog() {
-    const ref = this.dialog.open(SendBillComponent, {
+    const ref = this.dialog.open(SendBillChooseComponent, {
       width: 'min(760px, 92vw)',
       maxWidth: '92vw',
       maxHeight: '90vh',
