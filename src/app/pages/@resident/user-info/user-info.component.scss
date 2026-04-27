@@ -421,6 +421,7 @@ $transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       padding: 24px 20px;
       border-radius: 24px;
       margin-top: 0;
+      margin-bottom: 40px; // 加入底部間距，避免與 sidebar 貼在一起
       background: #ffffff;
       border: 1px solid #f0f0f0;
 
