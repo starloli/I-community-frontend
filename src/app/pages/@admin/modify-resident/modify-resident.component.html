@@ -48,8 +48,8 @@
       </button>
       <button class="filter-btn" [class.active]="selectedFilter === 'PENDING'"
         (click)="selectedFilter = 'PENDING'; onFilterChange()">待審核</button>
-      <button class="filter-btn" [class.active]="selectedFilter === 'DISACTIVED'"
-        (click)="selectedFilter = 'DISACTIVED'; onFilterChange()">已停用</button>
+      <button class="filter-btn" [class.active]="selectedFilter === 'INACTIVE'"
+        (click)="selectedFilter = 'INACTIVE'; onFilterChange()">已停用</button>
     </div>
 
     <div class="search-box-wrapper">

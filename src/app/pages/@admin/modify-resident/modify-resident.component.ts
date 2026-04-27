@@ -47,7 +47,7 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
 
   // 搜尋與分頁
   searchKeyword = ''
-  selectedFilter: 'ALL' | 'COMPLETE' | 'INCOMPLETE' | 'DISACTIVED' | 'PENDING' = 'ALL'
+  selectedFilter: 'ALL' | 'COMPLETE' | 'INCOMPLETE' | 'INACTIVE' | 'PENDING' = 'ALL'
   currentPage = 1
   pageSize = 6 // 每頁顯示 6 個卡片
   isLoading = true
@@ -136,7 +136,7 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
     }
 
     // 2. 資料完整度篩選
-    if (this.selectedFilter !== 'DISACTIVED') {
+    if (this.selectedFilter !== 'INACTIVE') {
       users = users.filter(user => user.status === UserStatus.ACTIVE)
       if (this.selectedFilter === 'COMPLETE') {
         users = users.filter(user => user.squareFootage !== null && user.squareFootage !== 0)

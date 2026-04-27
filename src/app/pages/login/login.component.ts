@@ -6,16 +6,17 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../@service/auth.service';
 import { HttpService } from '../../@service/http.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, ReactiveFormsModule, RouterLink],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
 
-  constructor(private router: Router, private http: HttpService, private auth: AuthService) { }
+  constructor(private router: Router, private http: HttpService, private auth: AuthService, private snackBar: MatSnackBar) { }
 
   booleanSignup = false;
   booleanIsManager: boolean = false;
@@ -47,9 +48,6 @@ export class LoginComponent {
   checkSignUpUserName!: boolean;
 
 
-
-
-
   isValidEmail(email: string): boolean {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
@@ -70,7 +68,7 @@ export class LoginComponent {
 
     this.http.postApi('/auth/login', loginAccount).subscribe({
       next: (res: any) => {
-        console.log('登入成功:', res);
+        // console.log('登入成功:', res);
         this.userloginStatus = true;
 
         // 儲存 token
@@ -79,6 +77,7 @@ export class LoginComponent {
         // 解析 JWT token 取得 role，根據角色導向不同路由
         try {
           const payload = JSON.parse(atob(res.accessToken.split('.')[1]));
+          console.log('payload:', payload);
           console.log('角色:', payload.role);
 
           if (payload.role === 'ADMIN') {
@@ -94,10 +93,29 @@ export class LoginComponent {
           this.router.navigate(['/admin/dashboard']);
         }
       },
-      error: (error: HttpErrorResponse) => {
-        console.log('狀態碼:', error.status);
-        console.log('錯誤訊息:', error.message);
-        this.userloginStatus = false;
+      error: (err: HttpErrorResponse) => {
+        console.log('狀態碼:', err.status);
+        console.log('錯誤訊息:', err.message);
+        console.log('錯誤內容:', err.error);
+
+        switch (err.error.errorCode) {
+          case 'ACCOUNT_PENDING':
+            this.snackBar.open('帳號尚未啟用，請聯繫管理員', '關閉', {
+              duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
+            break;
+          case 'ACCOUNT_INACTIVE':
+            this.snackBar.open('帳號已被停用，請聯繫管理員', '關閉', {
+              duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
+            break;
+          default:
+            this.userloginStatus = false;
+        }
       }
     });
   }
