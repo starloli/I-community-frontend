@@ -58,7 +58,7 @@
   align-items: center;
   padding-left: min(60px, 5%);
   padding-right: min(60px, 5%);
-  padding-bottom: 80px;        /* 增加底部間距，確保滾動到底部時有充足空間 */
+  padding-bottom: 0px;        /* 增加底部間距，確保滾動到底部時有充足空間 */
   background: #fff;
   min-width: 0;
   overflow-y: auto;
