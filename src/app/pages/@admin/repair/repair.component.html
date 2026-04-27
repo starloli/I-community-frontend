@@ -67,12 +67,12 @@
           <div class="repair-meta">
             <span>
               <mat-icon>calendar_today</mat-icon>
-              提交：{{ repair.submittedAt }}
+              提交：{{ repair.submittedAt | date: 'yyyy/MM/dd HH:mm' }}
             </span>
             @if (repair.status === RepairStatus.DONE) {
             <span>
               <mat-icon>done_all</mat-icon>
-              完工：{{ repair.resolvedAt }}
+              完工：{{ repair.resolvedAt | date: 'yyyy/MM/dd HH:mm' }}
             </span>
             <span>
               <mat-icon>person</mat-icon>

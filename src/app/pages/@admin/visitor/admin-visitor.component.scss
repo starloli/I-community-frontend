@@ -64,7 +64,7 @@
   mat-icon { color: #aaa; font-size: 22px; width: 22px; height: 22px; }
   input { flex: 1; border: none; background: transparent; font-size: 15px; color: #333; outline: none; }
   .clear-btn { color: #aaa; cursor: pointer; font-size: 18px; width: 18px; height: 18px; }
-  
+
   &:focus-within {
     border-color: #6A9E7F;
   }
@@ -230,8 +230,8 @@ td {
     padding: 16px 0 12px 0;
     margin-bottom: 0;
     flex-shrink: 0;
-    h1 { font-size: 20px; } // 👈 修改為 20px
-    .subtitle { font-size: 13px; }
+    h1 { font-size: 30px; } // 👈 修改為 30px
+    .subtitle { font-size: 15px; }
   }
 
   .search-bar {
@@ -292,71 +292,72 @@ td {
     position: relative; // 為了讓狀態標籤絕對定位
   }
 
-  td {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 0;
-    border-bottom: none;
-    font-size: 14px;
-    width: 100% !important; // 👈 強制覆蓋電腦版的百分比寬度
-    box-sizing: border-box;
+    td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: none;
+      font-size: 15px; // 👈 提升到 15px
+      width: 100% !important; 
+      box-sizing: border-box;
 
-    &::before {
-      content: attr(data-label);
-      font-weight: 600;
-      color: #999;
-      font-size: 13px;
-      flex-shrink: 0;
-      margin-right: 16px;
-    }
-
-    .val-text {
-      flex: 1;
-      min-width: 0; // 👈 允許內容縮放以適應 flex 容器
-      text-align: right;
-      word-break: break-all; // 確保極長字串也能在邊界換行而不撐破
-      line-height: 1.4;
-      color: #2c3e50;
-      font-weight: 500;
-    }
-
-    &.col-name {
-      padding-bottom: 12px;
-      border-bottom: 1px solid #f8f8f8;
-      margin-bottom: 10px;
-      justify-content: flex-start;
-      &::before { content: none; }
-      .visitor-name-cell { 
-        margin-left: 0; padding: 0; 
-        .avatar { width: 44px; height: 44px; font-size: 16px; } 
-        .name-text { font-size: 17px; font-weight: 700; color: #1a1a2e; } 
+      &::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #64748b; // 👈 使用更明顯的副標題顏色
+        font-size: 14px;
+        flex-shrink: 0;
+        margin-right: 16px;
       }
-    }
 
-    &.col-status {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      padding: 0;
-      width: auto !important; // 狀態標籤不需要滿版
-      &::before { content: none; }
-      .status-badge {
-        padding: 4px 10px;
-        font-size: 11px;
+      .val-text {
+        flex: 1;
+        min-width: 0;
+        text-align: right;
+        word-break: break-all;
+        line-height: 1.4;
+        color: #1a1a2e; // 👈 提升為深色以增加易讀性
+        font-weight: 500;
       }
-    }
+
+      &.col-name {
+        padding-bottom: 12px;
+        border-bottom: 1px solid #f8f8f8;
+        margin-bottom: 10px;
+        justify-content: flex-start;
+        &::before { content: none; }
+        .visitor-name-cell {
+          margin-left: 0; padding: 0;
+          .avatar { width: 44px; height: 44px; font-size: 16px; }
+          .name-text { font-size: 17px; font-weight: 700; color: #1a1a2e; }
+        }
+      }
+
+      &.col-status {
+        position: absolute;
+        top: 26px; // 👈 下調位置以跟姓名中心水平對齊
+        right: 16px;
+        padding: 0;
+        width: auto !important; 
+        &::before { content: none; }
+        .status-badge {
+          padding: 6px 14px;
+          font-size: 13px;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+      }
 
     &.col-action {
       margin-top: 10px;
       padding-top: 12px;
       border-top: 1px solid #f8f8f8;
       &::before { content: none; }
-      .checkout-btn { 
-        width: 100%; 
-        padding: 12px; 
-        font-size: 14px; 
-        height: auto; 
+      .checkout-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+        height: auto;
         border-radius: 12px;
       }
     }
@@ -380,10 +381,10 @@ td {
       flex-direction: column; // 👈 確保標題與副標題垂直堆疊
       gap: 2px;
 
-      h1 { font-size: 20px; line-height: 1.2; }
+      h1 { font-size: 30px; line-height: 1.2; }
       .subtitle {
         display: block; // 👈 恢復顯示
-        font-size: 11px;
+        font-size: 15px;
         color: #999;
         white-space: nowrap;
       }

@@ -4,11 +4,12 @@ import { VisitorServiceService } from '../../@service/visitor-service.service';
 import { CommonModule } from '@angular/common';
 
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { HttpService } from '../../@service/http.service';
 @Component({
   selector: 'app-billsdialog',
-  imports: [CommonModule, MatButtonModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatDialogModule],
   templateUrl: './billsdialog.component.html',
   styleUrl: './billsdialog.component.scss'
 })
