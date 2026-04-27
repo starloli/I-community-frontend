@@ -1,115 +1,107 @@
-
-<div class="bill-detail-card">
-
-  <h3>{{ bill.title }}</h3>
-
-  <hr>
-
-
-
-  <div class="info-grid">
-
-    <p><strong>住戶編號：</strong>{{ bill.unitNumber }}</p>
-
-    <p><strong>帳單月份：</strong>{{ bill.billingMonth | date: 'yyyy-MM-dd' }}</p>
-
-    <p><strong>繳費狀態：</strong>
-
-      <span [ngClass]="{
-
-        'status-paid': bill.status === '已繳',
-
-        'status-unpaid': bill.status === '待繳',
-
-        'status-OVERDUE': bill.status === '逾期'
-
-      }">
-
-        {{ bill.status }}
-
-      </span>
-
-    </p>
-
-    <p><strong>繳費日期：</strong>{{ bill.paidAtDate ? (bill.paidAtDate | date: 'yyyy-MM-dd ') : '尚未繳費' }}</p>
-
+<div class="dialog-container">
+  <div class="dialog-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">receipt_long</mat-icon>
+      <div class="title-group">
+        <h2>{{ bill.title }}</h2>
+        <p class="subtitle">帳單詳細資訊</p>
+      </div>
+    </div>
   </div>
 
+  <div class="dialog-body">
+    <div class="info-section">
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">住戶編號</span>
+          <span class="value">{{ bill.unitNumber }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">帳單月份</span>
+          <span class="value">{{ bill.billingMonth }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">繳費狀態</span>
+          <span class="value">
+            <span class="status-badge" [ngClass]="{
+              'status-paid': bill.status === '已繳',
+              'status-unpaid': bill.status === '待繳',
+              'status-overdue': bill.status === '逾期'
+            }">
+              {{ bill.status }}
+            </span>
+          </span>
+        </div>
+        <div class="info-item">
+          <span class="label">繳費日期</span>
+          <span class="value">{{ bill.paidAtDate ? (bill.paidAtDate | date: 'yyyy-MM-dd') : '尚未繳費' }}</span>
+        </div>
+      </div>
+    </div>
 
+    <div class="detail-section">
+      <h3 class="section-title">費用明細</h3>
+      <div class="detail-table-wrapper">
+        <table class="detail-table">
+          <thead>
+            <tr>
+              <th>項目名稱</th>
+              <th class="text-right">金額</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>水費</td>
+              <td class="text-right">{{ bill.detail.waterFee | currency:'TWD':'symbol':'1.0-0' }}</td>
+            </tr>
+            <tr>
+              <td>電費</td>
+              <td class="text-right">{{ bill.detail.electricityFee | currency:'TWD':'symbol':'1.0-0' }}</td>
+            </tr>
+            <tr>
+              <td>管理費</td>
+              <td class="text-right">{{ bill.detail.managementFee | currency:'TWD':'symbol':'1.0-0' }}</td>
+            </tr>
+            <tr>
+              <td>汽車清潔費</td>
+              <td class="text-right">{{ bill.detail.carParkingFee | currency:'TWD':'symbol':'1.0-0' }}</td>
+            </tr>
+            <tr>
+              <td>機車清潔費</td>
+              <td class="text-right">{{ bill.detail.locomotiveParkingFee | currency:'TWD':'symbol':'1.0-0' }}</td>
+            </tr>
+            <tr>
+              <td>其他</td>
+              <td class="text-right">{{ bill.detail.otherFee | currency:'TWD':'symbol':'1.0-0' }}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="total-row">
+              <td>總計金額</td>
+              <td class="text-right">{{ bill.totalAmount | currency:'TWD':'symbol':'1.0-0' }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
 
-  <table class="detail-table">
-
-    <thead>
-
-      <tr>
-
-        <th>項目</th>
-
-        <th>金額</th>
-
-      </tr>
-
-    </thead>
-
-
-
-    <tbody>
-
-      <tr>
-        <td>水費</td>
-        <td>{{ bill.detail.waterFee }}</td>
-      </tr>
-
-      <tr>
-        <td>電費</td>
-        <td>{{ bill.detail.electricityFee }}</td>
-      </tr>
-
-      <tr>
-        <td>管理費</td>
-        <td>{{ bill.detail.managementFee }}</td>
-      </tr>
-
-      <tr>
-        <td>汽車清潔費</td>
-        <td>{{ bill.detail.carParkingFee }}</td>
-      </tr>
-
-      <tr>
-        <td>機車清潔費</td>
-        <td>{{ bill.detail.locomotiveParkingFee }}</td>
-      </tr>
-
-
-
-      <tr>
-
-        <td>其他</td>
-
-        <td>{{ bill.detail.otherFee }}</td>
-
-      </tr>
-
-      <tr class="total-row">
-        <td >總計</td>
-        <td><strong>{{bill.totalAmount}}</strong></td>
-      </tr>
-
-      <tr class="remark-row">
-        <td >備註</td>
-        <td>{{bill.remark}}</td>
-      </tr>
-
-    </tbody>
-
-  </table>
-</div>
-<div class="bill-detail-card">
+    @if (bill.remark) {
+      <div class="remark-section">
+        <span class="label">備註事項</span>
+        <div class="remark-content">
+          {{ bill.remark }}
+        </div>
+      </div>
+    }
   </div>
 
-@if(dialogType === 'userCashPay'){
   <div class="dialog-footer">
-    <button class="btn-cancel" (click)="cancel()">取消</button>
-    <button class="btn-confirm" (click)="userPay(bill.id)">用戶線下付款</button>
+    <button class="btn-cancel" (click)="cancel()">關閉</button>
+    @if(dialogType === 'userCashPay'){
+      <button class="btn-confirm" (click)="userPay(bill.id)">
+        <mat-icon>payments</mat-icon>
+        確認收款
+      </button>
+    }
   </div>
-}
+</div>

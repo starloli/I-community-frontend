@@ -1,4 +1,4 @@
-/* === 整體 === */
+/* === 全域基礎 === */
 :host {
   display: block;
   max-width: 1200px;
@@ -7,12 +7,12 @@
   font-family: Arial, sans-serif;
 }
 
-// ── 頁面標題 ──────────────────────────────────────────
+// ===== 頁面標題 =====
 .page-header {
   margin-bottom: 24px;
 
-  h1 { font-size: 36px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px 0; }
-  .subtitle { font-size: 15px; color: #888; }
+  h1 { font-size: 30px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px 0; }
+  .subtitle { font-size: 15px; color: #64748b; }
 }
 
 /* === Header === */
@@ -64,7 +64,7 @@
   color: #6B7280;
 }
 
-/* === 日期格 === */
+/* === 日期單元格 === */
 .cell {
   border: 1px solid #e0e0e0;
   min-height: 90px;
@@ -83,7 +83,7 @@
   transform: translateY(-2px);
 }
 
-/* 非當月 */
+/* 非當月日期 */
 .out {
   background: #A9A9A9;
   color: white;
@@ -105,7 +105,7 @@
   font-weight: 500;
 }
 
-/* 假日文字 */
+/* 假日標題 */
 .holiday-text {
   font-size: 12px;
   color: #d93025;
@@ -168,7 +168,7 @@
 }
 
 .empty {
-  color: #999;
+  color: #64748b;
   font-size: 20px;
 }
 
@@ -223,7 +223,7 @@
   background-color: #4096ff;
 }
 
-/* === 手機版 === */
+/* 手機版適應 */
 @media (max-width: 600px) {
   .cell {
     min-height: 70px;

@@ -95,7 +95,12 @@
     <tbody>
       @if (pagedAdminBills.length === 0) {
       <tr>
-        <td colspan="9" class="empty-row">目前沒有符合條件的記錄</td>
+        <td colspan="9" class="empty-row">
+          <div class="empty-state-content">
+            <mat-icon>inbox</mat-icon>
+            <p>目前沒有符合條件的記錄</p>
+          </div>
+        </td>
       </tr>
       }
       @for (bill of pagedAdminBills; track bill.id) {

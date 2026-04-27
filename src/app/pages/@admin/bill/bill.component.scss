@@ -158,8 +158,8 @@ tbody tr:hover { background: rgba(184, 147, 90, 0.03); }
     margin-bottom: 16px;
 
     .header-left {
-      h1 { font-size: 24px; }
-      .subtitle { font-size: 13px; }
+      h1 { font-size: 30px; }
+      .subtitle { font-size: 15px; }
     }
 
     .add-btn {
@@ -201,7 +201,7 @@ tbody tr:hover { background: rgba(184, 147, 90, 0.03); }
     .stat-info {
       margin-top: 12px;
       .stat-value { font-size: 22px; }
-      .stat-label { font-size: 12px; }
+      .stat-label { font-size: 14px; }
     }
   }
 
@@ -358,7 +358,30 @@ tbody tr:hover { background: rgba(184, 147, 90, 0.03); }
 
 .row-overdue { border-left: 3px solid #e53935; }
 .amount { font-weight: 700; color: #1a1a2e; }
-.empty-row { text-align: center; padding: 48px !important; color: #bbb; font-size: 15px; }
+.empty-row {
+  text-align: center;
+  padding: 48px !important;
+  color: #bbb;
+  font-size: 15px;
+
+  .empty-state-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: #bbb;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+}
 
 .unit-tag {
     cursor: pointer;
@@ -481,7 +504,7 @@ tbody tr:hover { background: rgba(184, 147, 90, 0.03); }
 
   .header-left {
     h1 {
-      font-size: 36px;
+      font-size: 30px;
       font-weight: 700;
       color: #1a1a2e;
       margin: 0 0 4px 0;

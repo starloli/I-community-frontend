@@ -90,6 +90,45 @@ body {
 .reservation-calendar-dialog .mat-mdc-dialog-container {
   --mdc-dialog-container-shape: 24px !important;
 }
+
+// ===== 帳單詳情對話框樣式修正 =====
+.custom-bill-dialog {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+
+  // 針對內層容器
+  .mat-mdc-dialog-container {
+    --mdc-dialog-container-shape: 20px !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  
+  .mat-mdc-dialog-surface {
+    border-radius: 20px !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+
+  // 手機版間距修正
+  @media (max-width: 600px) {
+    // 限制整體高度與寬度，確保不會貼邊
+    width: 92vw !important;
+    height: 85vh !important;
+    margin: auto !important;
+
+    .mat-mdc-dialog-surface {
+      max-height: 85vh !important;
+    }
+  }
+}
+
 // ===== 修正 Angular Material 透明度問題 =====
 ::ng-deep {
   // 1. 修正輸入框本身的底色（未展開時）

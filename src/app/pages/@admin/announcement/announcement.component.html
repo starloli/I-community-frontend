@@ -139,7 +139,6 @@
           </span>
           {{ selectedAnnouncement.title }}
         </h2>
-        <mat-icon class="close-btn" (click)="closeDetail()">close</mat-icon>
       </div>
 
       <div class="detail-body">
@@ -187,7 +186,6 @@
     <div class="form-card" (click)="$event.stopPropagation()">
       <div class="form-header">
         <h2>{{ isEditMode ? '編輯公告' : '發布新公告' }}</h2>
-        <mat-icon class="close-btn" (click)="closeForm()">close</mat-icon>
       </div>
 
       <div class="form-body">

@@ -38,7 +38,10 @@ export class BillComponent implements OnInit, OnDestroy {
 
   openDialog() {
     const ref = this.dialog.open(BillsdialogComponent, {
-      width: '500px',
+      width: 'min(500px, 92vw)',
+      maxWidth: '92vw',
+      maxHeight: '90vh',
+      panelClass: 'custom-bill-dialog',
       disableClose: false // 點擊背景是否可以關閉
     });
     ref.afterClosed().subscribe(result => {
