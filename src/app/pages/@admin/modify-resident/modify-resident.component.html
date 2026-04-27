@@ -46,6 +46,8 @@
         <span class="count-badge">{{ incompleteCount }}</span>
         }
       </button>
+      <button class="filter-btn" [class.active]="selectedFilter === 'PENDING'"
+        (click)="selectedFilter = 'PENDING'; onFilterChange()">待審核</button>
       <button class="filter-btn" [class.active]="selectedFilter === 'DISACTIVED'"
         (click)="selectedFilter = 'DISACTIVED'; onFilterChange()">已停用</button>
     </div>
@@ -78,7 +80,8 @@
         <div class="resident-main-info">
           <h2 class="resident-name">{{ user.fullName }}</h2>
           <span class="role-badge" [class.admin]="user.role === UserRole.ADMIN">
-            {{ user.is_active ? user.role === UserRole.ADMIN ? '管理員' : '住戶': '已停用' }}
+            {{ user.status === UserStatus.ACTIVE? user.role === UserRole.ADMIN ? '管理員' : '住戶': user.status ===
+            UserStatus.INACTIVE ?'已停用':'未驗證' }}
           </span>
         </div>
       </div>

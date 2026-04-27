@@ -22,14 +22,19 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export class UserInfoComponent implements OnInit, OnDestroy {
 
   constructor(private http: HttpService, private snackBar: MatSnackBar) { }
-  
+
   // TODO: 【Phase 6】需要注入 AuthService
   // constructor(private http: HttpService, private authService: AuthService, private snackBar: MatSnackBar) { }
 
   getUrl = "/user/me";
   modifyUrl = "/modify/admin";
   user!: UserResponse;
-  updateUser!: updateUser;
+  updateUser: updateUser = {
+    fullName: '',
+    phone: '',
+    email: '',
+    password: ''
+  };
   userRole!: UserRole;
   private $destroy = new Subject<void>();
 
@@ -46,10 +51,10 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     this.getInfo();
     const payload = JSON.parse(atob(this.getToken().split('.')[1]));
     this.userRole = payload.role;
-    
+
     // TODO: 【Phase 6】修改 ngOnInit() 邏輯
     // 若是超級管理員，進入前需要驗證密碼，不應立即調用 getInfo()
-    // 
+    //
     // 修改方式：
     // if (this.userRole === 'SUPER_ADMIN') {
     //   this.passwordVerified = false;
@@ -60,8 +65,10 @@ export class UserInfoComponent implements OnInit, OnDestroy {
 
   getInfo(): void {
     this.http.getApi<UserResponse>(this.getUrl).pipe(takeUntil(this.$destroy)).subscribe({
-      next: (response) => {
-        this.user = { ...response };
+      next: (res) => {
+        console.log(res);
+
+        this.user = { ...res };
         console.log('this.user:', this.user);
       },
       error: (error) => {
@@ -149,13 +156,13 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     return squareFootage > 0;
   }
 
-  isValidEmail(email: string): boolean {
+  isValidEmail(email?: string): boolean {
     if (!email) return false;
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   }
 
-  isValidPhone(phone: string): boolean {
+  isValidPhone(phone?: string): boolean {
     if (!phone) return false;
     const phoneStr = phone.toString();
     const phoneRegex = /^09\d{8}$/;
@@ -177,8 +184,8 @@ export class UserInfoComponent implements OnInit, OnDestroy {
 }
 
 interface updateUser {
-  fullName: string;
-  phone: string;
-  email: string;
-  password: string;
+  fullName?: string;
+  phone?: string;
+  email?: string;
+  password?: string;
 }

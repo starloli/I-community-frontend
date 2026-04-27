@@ -7,7 +7,7 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { AuthService } from '../../../@service/auth.service';
 import { PackageService } from '../../../@service/package.service';
-import { PackageStatus, UserRole } from '../../../interface/enum';
+import { PackageStatus, UserRole, UserStatus } from '../../../interface/enum';
 import { User } from '../../../interface/interface';
 import { HttpService } from '../../../@service/http.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -34,7 +34,7 @@ export class PackageComponent implements OnInit, OnDestroy {
     phone: '',
     unitNumber: '',
     role: UserRole.ADMIN,
-    isActive: true,
+    status: UserStatus.ACTIVE,
     createdAt: ''
   };
 
@@ -122,7 +122,7 @@ readonly dialog = inject(MatDialog);
       phone: payload.phone || '',
       unitNumber: payload.unitNumber || '',
       role: this.mapRole(payload.role),
-      isActive: true,
+      status: UserStatus.ACTIVE,
       createdAt: payload.createdAt || ''
     };
   }
