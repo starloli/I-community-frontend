@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
-import { UserRole } from '../../interface/enum'
+import { UserRole, UserStatus } from '../../interface/enum'
 import { MatOptionModule } from '@angular/material/core'
 import { MatSelectModule } from '@angular/material/select'
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'
@@ -37,6 +37,15 @@ export class EditUserComponent implements OnInit, OnDestroy {
   roles = [UserRole.ADMIN, UserRole.RESIDENT]
 
   private $destroy = new Subject<void>()
+
+  get isUserActive(): boolean {
+    return this.user.status === UserStatus.ACTIVE;
+  }
+
+  set isUserActive(value: boolean) {
+    this.user.status = value ? UserStatus.ACTIVE : UserStatus.INACTIVE;
+  }
+
 
   returnUser(user: UserResponse): void {
     // console.log(user);

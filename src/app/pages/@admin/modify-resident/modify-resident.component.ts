@@ -18,6 +18,7 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { EditUserComponent } from '../../../dialog/edit-user/edit-user.component'
+import { ActiveUserComponent } from '../../../dialog/active-user/active-user.component';
 
 type PaginationItem = number | '...';
 
@@ -265,6 +266,19 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
         }
       })
     }
+  }
+
+  activeUser(user: UserResponse): void {
+    const dialogRef = this.dialog.open(ActiveUserComponent, {
+      width: '400px',
+      data: { ...user }
+    })
+    dialogRef.afterClosed().pipe(takeUntil(this.$destroy)).subscribe(result => {
+      if (result) {
+        const updatedUser = { ...user, status: UserStatus.ACTIVE }
+        this.updateUser(updatedUser)
+      }
+    })
   }
 
   updateUser(user: UserResponse): void {
