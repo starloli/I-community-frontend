@@ -1,15 +1,26 @@
+
+<div class="bill-container">
 <div class="resident-container">
   <div class="page-header">
     <div class="header-left">
       <h1>財務收支明細</h1>
       <span class="subtitle">統一管理收支、薪資與財務狀況</span>
     </div>
+       <div class="header-actions">
+      <button class="add-btn" (click)="openDialog()" >
+        <mat-icon >add</mat-icon> 新增收支
+      </button>
+    </div>
+  </div>
   </div>
 
 <div class="financial-wrapper">
   <div class="stats-grid">
     <div class="stat-card balance">
-      <div class="stat-label">當前帳戶結餘</div>
+      <div class="stat-label">當前帳戶結餘
+
+
+      </div>
       <div class="stat-value">{{ totalBalance | currency:'TWD':'symbol':'1.0-0' }}</div>
     </div>
     <div class="stat-card income">
@@ -22,11 +33,52 @@
     </div>
   </div>
 
+
+<div class="charts-container">
+  <div class="chart-box">
+    <h4 class="text-center">年度盈餘趨勢</h4>
+    <canvas id="chart"></canvas>
+  </div>
+
+  <div class="chart-box">
+    <h4 class="text-center">每月收支對比</h4>
+    <canvas id="barChart"></canvas>
+  </div>
+</div>
+<p>
+</p>
+<p></p>
+
+
   <div class="table-container">
     <div class="table-header">
-      <h3>財務收支明細</h3>
-      <div class="badge-info">共 {{ transactions.length }} 筆記錄</div>
+  <div class="table-title">
+    <h3>財務收支明細</h3>
+    <span class="record-count">共 {{ transactions.length }} 筆記錄</span>
+  </div>
+
+  <div class="filter-group">
+    <div class="filter-item">
+      <label>年月份</label>
+      <input type="month"[(ngModel)]="month"
+       (ngModelChange)="serchMonth($event)">
     </div>
+
+    <div class="filter-item search">
+      <label>搜尋</label>
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" placeholder="摘要或類別..."
+               [(ngModel)]="searchTerm"
+       (ngModelChange)="applyFilters()" >
+      </div>
+    </div>
+
+    <button class="clear-btn" (click)="resetFilters()">清除</button>
+  </div>
+</div>
+
+
 
     <table class="modern-table">
       <thead>
@@ -40,7 +92,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (item of transactions; track item.id) {
+        @for (item of displayTransactions; track item.id) {
           <tr>
             <td>{{ item.transactionDate | date:'yyyy-MM-dd HH:mm' }}</td>
             <td>
@@ -61,5 +113,64 @@
         }
       </tbody>
     </table>
+     </div>
+  @if (totalPages > 1) {
+  <div class="pagination">
+    <button class="page-btn"
+            [disabled]="p === 1"
+            (click)="goToPage(p - 1)">‹</button>
+
+    @for (page of pageNumbers; track page) {
+      <button class="page-btn"
+              [class.active]="page === p"
+              (click)="goToPage(page)">
+        {{ page }}
+      </button>
+    }
+
+    <button class="page-btn"
+            [disabled]="p === totalPages"
+            (click)="goToPage(p + 1)">›</button>
+  </div>
+}
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="filter-bar">
+  <div class="row g-2 align-items-end">
+    <div class="col-md-3">
+      <label class="form-label small text-muted">選擇年月份</label>
+      <input type="month" class="form-control" [(ngModel)]="filterMonth" (change)="applyFilters()">
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label small text-muted">搜尋摘要或類別</label>
+      <div class="input-group">
+        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control" placeholder="輸入關鍵字..."
+               [(ngModel)]="searchTerm" (input)="applyFilters()">
+      </div>
+    </div>
+
+    <div class="col-md-2">
+      <button class="btn btn-outline-secondary w-100" (click)="resetFilters()">清除</button>
+    </div>
+  </div>
+</div> -->

@@ -1,0 +1,81 @@
+<div class="form-container">
+
+  <div class="form-header">
+    <h2>新增財務記錄</h2>
+    <p>請輸入交易明細，系統將自動重新計算結餘</p>
+  </div>
+
+  <!-- 收入 / 支出 -->
+  <div class="type-toggle">
+    <button type="button"
+        class="income-btn"
+            [class.active]="formData.type === 'INCOME'"
+            (click)="formData.type = 'INCOME'">
+      <mat-icon>add</mat-icon>
+      收入
+
+    </button>
+
+    <button type="button"
+     class="expense-btn"
+            [class.active]="formData.type === 'EXPENSE'"
+            (click)="formData.type = 'EXPENSE'">
+      <mat-icon>remove</mat-icon>
+      支出
+    </button>
+  </div>
+
+
+  <!-- 金額 -->
+  <div class="form-group">
+    <label>交易金額</label>
+    <div class="input-prefix">
+      <span>$</span>
+      <input type="number" [(ngModel)]="formData.amount" placeholder="0">
+    </div>
+  </div>
+
+  <!-- 類別 -->
+   @if(formData.type=='INCOME'){
+  <div class="form-group">
+    <label>類別</label>
+    <select [(ngModel)]="formData.category">
+      <option [ngValue]="null" disabled>請選擇類別</option>
+      @for(data of incomeType;track $index){
+        <option [value]="data.value">{{data.label}}</option>
+      }
+    </select>
+  </div>}
+  @else  {
+      <div class="form-group">
+    <label>類別</label>
+    <select [(ngModel)]="formData.category">
+      <option [ngValue]="null" disabled>請選擇類別</option>
+      @for(data of expenditureType;track $index){
+        <option [value]="data.value">{{data.label}}</option>
+      }
+    </select>
+  </div>
+  }
+
+  <!-- 日期 -->
+  <div class="form-group">
+    <label>交易時間</label>
+    <input type="datetime-local" [(ngModel)]="formData.transactionDate">
+  </div>
+
+  <!-- 備註 -->
+  <div class="form-group">
+    <label>摘要說明</label>
+    <textarea rows="3"
+              [(ngModel)]="formData.remark"
+              placeholder="請輸入交易詳細說明..."></textarea>
+  </div>
+
+  <!-- 按鈕 -->
+  <div class="form-actions">
+    <button class="btn-cancel" mat-dialog-close>取消</button>
+    <button class="btn-submit" (click)="NewRevenueOrExpenditure()">儲存記錄</button>
+  </div>
+
+</div>
