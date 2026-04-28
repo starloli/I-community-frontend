@@ -51,7 +51,7 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
   currentPage = 1
   pageSize = 6 // 每頁顯示 6 個卡片
   isLoading = true
-  role = UserRole.ADMIN
+  role = UserRole.ADMIN;
   UserRole = UserRole
   UserStatus = UserStatus
   protected Math = Math;
