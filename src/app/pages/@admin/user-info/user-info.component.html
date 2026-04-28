@@ -7,12 +7,12 @@
   </div>
 
   <!-- TODO: 【Phase 7】添加超級管理員密碼驗證 Modal
-       條件：userRole === 'SUPER_ADMIN' && !passwordVerified
-       功能：
-       - 顯示密碼輸入框
-       - 「驗證」按鈕 → 調用 verifyOldPassword()
-       - 支援 Enter 鍵提交
-       - 加載中狀態
+      條件：userRole === 'SUPER_ADMIN' && !passwordVerified
+      功能：
+      - 顯示密碼輸入框
+      - 「驗證」按鈕 → 調用 verifyOldPassword()
+      - 支援 Enter 鍵提交
+      - 加載中狀態
   -->
 
   @if (user) {
@@ -33,7 +33,7 @@
           <span>email：{{ user.email }}</span>
         </div>
         <div class="side-info-item">
-          <mat-icon>home</mat-icon>
+          <mat-icon>phone_iphone</mat-icon>
           <span>電話：{{ user.phone }}</span>
         </div>
       </div>
@@ -69,7 +69,7 @@
         <div class="form-group">
           <label>新聯絡電話</label>
           <div class="input-wrapper" [class.error]="!isValidPhone(updateUser.phone)">
-            <mat-icon>phone</mat-icon>
+            <mat-icon>phone_iphone</mat-icon>
             <input type="tel" [(ngModel)]="updateUser.phone" placeholder="09xxxxxxxx">
           </div>
           @if(!isValidPhone(updateUser.phone)) {
@@ -80,7 +80,7 @@
         <div class="form-group">
           <label>新密碼</label>
           <div class="input-wrapper">
-            <mat-icon>home</mat-icon>
+            <mat-icon>lock</mat-icon>
             <input type="text" [(ngModel)]="updateUser.password" placeholder="請輸入新密碼">
           </div>
           <span class="hint-text">請務必記下此密碼</span>
@@ -98,14 +98,14 @@
   </div>
 
   <!-- TODO: 【Phase 7】添加驗證碼確認 Modal
-       條件：showVerifyCodeModal === true
-       功能：
-       - 顯示驗證碼輸入框（6位數字）
-       - 顯示倒計時（codeExpiry 秒）
-       - 「取消」按鈕 → 調用 cancelVerification()
-       - 「確認」按鈕 → 調用 confirmWithVerifyCode()
-       - 倒計時結束時禁用「確認」按鈕
-       - 支援 Enter 鍵提交
+      條件：showVerifyCodeModal === true
+      功能：
+      - 顯示驗證碼輸入框（6位數字）
+      - 顯示倒計時（codeExpiry 秒）
+      - 「取消」按鈕 → 調用 cancelVerification()
+      - 「確認」按鈕 → 調用 confirmWithVerifyCode()
+      - 倒計時結束時禁用「確認」按鈕
+      - 支援 Enter 鍵提交
   -->
 
   } @else {

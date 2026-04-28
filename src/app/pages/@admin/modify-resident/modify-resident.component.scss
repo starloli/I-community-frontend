@@ -304,31 +304,31 @@
   }
 
   .info-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #555;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #555;
 
-    mat-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-      color: #aaa;
-    }
-
-    .label {
-      font-size: 13px;
-      color: #999;
-      min-width: 50px;
-    }
-
-    .value {
-      font-size: 14px;
-      font-weight: 600;
-      color: #333;
-    }
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: #7d96b1; // 稍微加深一點，與主題呼應
   }
-}
+
+  .label {
+    font-size: 14px;
+    color: #777; // 比原本稍微深一點，提升對比度
+    min-width: 55px;
+    font-weight: 500;
+  }
+
+  .value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+  }
+  }}
 
 .card-actions {
   margin-top: auto;
