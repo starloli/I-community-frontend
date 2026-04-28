@@ -123,7 +123,16 @@ textarea:focus {
   background: #2563eb;
 }
 
-
+.btn-submit1 {
+  padding: 10px 18px;
+  border: none;
+  background: #848484;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  cursor: not-allowed;
+}
 /* 基本樣式 */
 .type-toggle {
   display: flex;

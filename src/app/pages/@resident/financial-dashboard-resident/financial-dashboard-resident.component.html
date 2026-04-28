@@ -6,11 +6,6 @@
       <h1>財務收支明細</h1>
       <span class="subtitle">統一管理收支、薪資與財務狀況</span>
     </div>
-       <div class="header-actions">
-      <button class="add-btn" (click)="openDialog()" >
-        <mat-icon >add</mat-icon> 新增收支
-      </button>
-    </div>
   </div>
   </div>
 
@@ -58,13 +53,13 @@
   </div>
 
   <div class="filter-group">
-    <div class="filter-item">
+    <!-- <div class="filter-item">
       <label>年月份</label>
       <input type="month"[(ngModel)]="month"
        (ngModelChange)="serchMonth($event)">
-    </div>
+    </div> -->
 
-    <div class="filter-item search">
+    <!-- <div class="filter-item search">
       <label>搜尋</label>
       <div class="search-box">
         <span>🔍</span>
@@ -72,9 +67,9 @@
                [(ngModel)]="searchTerm"
        (ngModelChange)="applyFilters()" >
       </div>
-    </div>
+    </div> -->
 
-    <button class="clear-btn" (click)="resetFilters()">清除</button>
+    <!-- <button class="clear-btn" (click)="resetFilters()">清除</button> -->
   </div>
 </div>
 
@@ -83,26 +78,24 @@
     <table class="modern-table">
       <thead>
         <tr>
-          <th>交易日期</th>
+          <th>賬單月份</th>
           <th>類別</th>
           <th>摘要</th>
           <th>金額</th>
-          <th>結餘</th>
-          <th>操作人</th>
+
         </tr>
       </thead>
       <tbody>
-        @for (item of displayTransactions; track item.id) {
+        @for (item of displayTransactions; track item.year + item.month + item.category) {
           <tr>
-            <td>{{ item.transactionDate | date:'yyyy-MM-dd HH:mm' }}</td>
+            <td>{{ item?.year }} - {{item?.month}}</td>
             <td>
               <span [class]="'type-tag ' + item.type.toLowerCase()">
                 {{ item.type === 'INCOME' ? '收入' : '支出' }}
               </span>
             </td>
             <td class="remark-cell">
-              <strong>
-                @if(item.category=='SALARY'){ 員工薪資}
+              <strong>            @if(item.category=='SALARY'){ 員工薪資}
  @else if(item.category=='REPAIR'){維修費（水電、電梯、弱電）}
 @else if(item.category=='PURCHASE'){採購（辦公用品、清潔耗材）}
 @else if(item.category=='WATER_ELEC'){公共水電費}
@@ -113,16 +106,13 @@
 @else if(item.category=='FACILITY_RENTAL'){公設租金收入}
 @else if(item.category=='PENALTY'){罰金/違規金收入}
 @else if(item.category=='COMMUNITY_ACT'){社區活動}
-@else if(item.category=='OTHER'){其他}
-
-              </strong>
+@else if(item.category=='OTHER'){其他}</strong>
               <span>{{ item.remark }}</span>
             </td>
             <td [ngClass]="item.type === 'INCOME' ? 'text-green' : 'text-red'">
-              {{ item.type === 'INCOME' ? '+' : '-' }} {{ item.amount | currency:'TWD':'symbol':'1.0-0' }}
+              {{ item.type === 'INCOME' ? '+' : '-' }} {{ item.totalAmount | currency:'TWD':'symbol':'1.0-0' }}
             </td>
-            <td class="fw-bold">{{ item.balance | currency:'TWD':'symbol':'1.0-0' }}</td>
-            <td>{{ item.operator?.fullName || '系統自動入帳' }}</td>
+
           </tr>
         }
       </tbody>
@@ -163,28 +153,3 @@
 
 
 
-
-
-
-
-<!-- <div class="filter-bar">
-  <div class="row g-2 align-items-end">
-    <div class="col-md-3">
-      <label class="form-label small text-muted">選擇年月份</label>
-      <input type="month" class="form-control" [(ngModel)]="filterMonth" (change)="applyFilters()">
-    </div>
-
-    <div class="col-md-4">
-      <label class="form-label small text-muted">搜尋摘要或類別</label>
-      <div class="input-group">
-        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-        <input type="text" class="form-control" placeholder="輸入關鍵字..."
-               [(ngModel)]="searchTerm" (input)="applyFilters()">
-      </div>
-    </div>
-
-    <div class="col-md-2">
-      <button class="btn btn-outline-secondary w-100" (click)="resetFilters()">清除</button>
-    </div>
-  </div>
-</div> -->

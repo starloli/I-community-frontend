@@ -31,6 +31,7 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
 import { FinancialDashboardComponent } from './pages/@admin/financial-dashboard/financial-dashboard.component';
 
 import { CalendarComponent } from './pages/calendar/calendar.component';
+import { FinancialDashboardResidentComponent } from './pages/@resident/financial-dashboard-resident/financial-dashboard-resident.component';
 
 export const routes: Routes = [
   // ── 登入頁 ──────────────────────────────────────────
@@ -75,7 +76,9 @@ export const routes: Routes = [
       { path: 'repair', component: ResidentRepairComponent },
       { path: 'visitor', component: ResidentVisitorComponent },
       { path: 'calendar', component: CalendarComponent },
+       {path:'FinancialDashboardResidentComponent',component:FinancialDashboardResidentComponent},
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+
     ]
   },
 

@@ -31,7 +31,7 @@
     <label>交易金額</label>
     <div class="input-prefix">
       <span>$</span>
-      <input type="number" [(ngModel)]="formData.amount" placeholder="0">
+      <input type="number" [(ngModel)]="formData.amount" placeholder="0" [min]="0">
     </div>
   </div>
 
@@ -73,9 +73,18 @@
   </div>
 
   <!-- 按鈕 -->
+@if((formData.amount!==null && formData.amount <=0) || !formData.amount || !formData.category ){
+
+  <div class="form-actions">
+    <button class="btn-cancel" mat-dialog-close>取消</button>
+    <button class="btn-submit1" >儲存記錄</button>
+  </div>
+}
+
+@else {
   <div class="form-actions">
     <button class="btn-cancel" mat-dialog-close>取消</button>
     <button class="btn-submit" (click)="NewRevenueOrExpenditure()">儲存記錄</button>
   </div>
-
+}
 </div>

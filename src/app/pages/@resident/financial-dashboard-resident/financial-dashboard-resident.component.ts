@@ -10,14 +10,15 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { BookkeepingComponent } from '../../../dialog/bookkeeping/bookkeeping.component';
+
 @Component({
-  selector: 'app-financial-dashboard',
+  selector: 'app-financial-dashboard-resident',
   imports: [MatIconModule, CommonModule, MatDialogModule, CommonModule, FormsModule, MatPaginatorModule, MatButtonModule,FormsModule],
-  templateUrl: './financial-dashboard.component.html',
-  styleUrl: './financial-dashboard.component.scss',
+  templateUrl: './financial-dashboard-resident.component.html',
+  styleUrl: './financial-dashboard-resident.component.scss',
 })
-export class FinancialDashboardComponent {
-  readonly dialog = inject(MatDialog);
+export class FinancialDashboardResidentComponent {
+
   constructor(private http:HttpService){}
 
   // 資料儲存
@@ -54,22 +55,6 @@ displayTransactions: any[] = []; // 存放「當前頁面」要顯示的資料
 
 
 
-  openDialog() {
-    const ref = this.dialog.open(BookkeepingComponent, {
-      width: '500px',
-      disableClose: false // 點擊背景是否可以關閉
-    });
-    ref.afterClosed().subscribe(result => {
-      if (result === 'refresh') {
-        console.log('收到刷新指令，重新獲取數據...');
-
-
- this.fetchFinancialData();
-
-    this.getMonth();
-      }
-    });
-  }
 
   fetchFinancialData() {
     this.http.getApi('/Salary/summary/total')
@@ -131,7 +116,11 @@ this.myLineChart = new Chart(ctx, {
     data: data,
   });
 
-
+// 創建圖表
+// let chart = new Chart(ctx, {
+//   type: 'line',
+//   data: data,
+// });
 }
 
 
@@ -214,35 +203,35 @@ this.myBarChart = new Chart(ctx, {
 
 
 //找月份
-serchMonth(val:string){
+// serchMonth(val:string){
 
-if (!val) return; // 如果清空了就不執行
+// if (!val) return; // 如果清空了就不執行
 
-  // 1. 處理格式轉換：將 "2026-04" 拆成 ["2026", "04"]
-  const parts = val.split('-');
-  const year = parts[0];
-  const month = parseInt(parts[1]);
+//   // 1. 處理格式轉換：將 "2026-04" 拆成 ["2026", "04"]
+//   const parts = val.split('-');
+//   const year = parts[0];
+//   const month = parseInt(parts[1]);
 
-  this.http.getApi('/Salary/summary/'+year+'/'+month).subscribe({
-    next: (res: any) => {
-      // 更新你的表格與圖表數據
-   this.totalBalance = res.balance;
-      this.totalIncome = res.totalIncome;
-      this.totalExpense = res.totalExpense;
+//   this.http.getApi('/Salary/summary/'+year+'/'+month).subscribe({
+//     next: (res: any) => {
+//       // 更新你的表格與圖表數據
+//    this.totalBalance = res.balance;
+//       this.totalIncome = res.totalIncome;
+//       this.totalExpense = res.totalExpense;
 
-      this.http.getApi('/Salary/summary/month/'+year+'/'+month).subscribe({
-        next:(res:any)=>{
-          console.log(res);
-          this.transactions=res;
- this.applyFilters();
-        }
-      })
+//       this.http.getApi('/Salary/summary/month/'+year+'/'+month).subscribe({
+//         next:(res:any)=>{
+//           console.log(res);
+//           this.transactions=res;
+//  this.applyFilters();
+//         }
+//       })
 
 
-    },
-    error: (err) => console.error('查詢失敗', err)
-})
-}
+//     },
+//     error: (err) => console.error('查詢失敗', err)
+// })
+// }
 
 
 
@@ -274,9 +263,11 @@ filteredTransactions: any[] = []; // 存放過濾後的結果
 
 //API 拿回資料後
 fetchDashboardFinancialData() {
-  this.http.getApi('/Salary/summary/now').subscribe({
+  this.http.getApi('/Salary/ResidentsInspect').subscribe({
     next: (res: any) => {
       this.transactions = res;
+      console.log(this.transactions);
+
       this.applyFilters(); // <--- 重點！抓到資料後立刻去計算顯示內容
     }
   });
