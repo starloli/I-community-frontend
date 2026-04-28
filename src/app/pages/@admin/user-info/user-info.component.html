@@ -57,22 +57,22 @@
 
         <div class="form-group">
           <label>新電子信箱</label>
-          <div class="input-wrapper" [class.error]="!isValidEmail(updateUser.email)">
+          <div class="input-wrapper" [class.error]="(emailModel.touched || emailModel.dirty) && !isValidEmail(updateUser.email)">
             <mat-icon>mail</mat-icon>
-            <input type="email" [(ngModel)]="updateUser.email" placeholder="example@mail.com">
+            <input type="email" [(ngModel)]="updateUser.email" #emailModel="ngModel" placeholder="example@mail.com">
           </div>
-          @if(!isValidEmail(updateUser.email)) {
+          @if((emailModel.touched || emailModel.dirty) && !isValidEmail(updateUser.email)) {
           <span class="error-text">Email 格式不正確</span>
           }
         </div>
 
         <div class="form-group">
           <label>新聯絡電話</label>
-          <div class="input-wrapper" [class.error]="!isValidPhone(updateUser.phone)">
-            <mat-icon>phone_iphone</mat-icon>
-            <input type="tel" [(ngModel)]="updateUser.phone" placeholder="09xxxxxxxx">
+          <div class="input-wrapper" [class.error]="(phoneModel.touched || phoneModel.dirty) && !isValidPhone(updateUser.phone)">
+            <mat-icon>phone</mat-icon>
+            <input type="tel" [(ngModel)]="updateUser.phone" #phoneModel="ngModel" placeholder="09xxxxxxxx">
           </div>
-          @if(!isValidPhone(updateUser.phone)) {
+          @if((phoneModel.touched || phoneModel.dirty) && !isValidPhone(updateUser.phone)) {
           <span class="error-text">電話格式不正確</span>
           }
         </div>

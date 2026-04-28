@@ -1,3 +1,4 @@
+import { UserStatus } from './../../../interface/enum';
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
 import { MatSnackBar } from '@angular/material/snack-bar'
@@ -46,12 +47,13 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
 
   // 搜尋與分頁
   searchKeyword = ''
-  selectedFilter: 'ALL' | 'COMPLETE' | 'INCOMPLETE' | 'DISACTIVED' = 'ALL'
+  selectedFilter: 'ALL' | 'COMPLETE' | 'INCOMPLETE' | 'INACTIVE' | 'PENDING' = 'ALL'
   currentPage = 1
   pageSize = 6 // 每頁顯示 6 個卡片
   isLoading = true
   role = UserRole.ADMIN
   UserRole = UserRole
+  UserStatus = UserStatus
   protected Math = Math;
 
   private $destroy = new Subject<void>()
@@ -134,16 +136,19 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
     }
 
     // 2. 資料完整度篩選
-    if (this.selectedFilter !== 'DISACTIVED') {
-      users = users.filter(user => user.is_active)
+    if (this.selectedFilter !== 'INACTIVE' && this.selectedFilter !== 'PENDING') {
+      users = users.filter(user => user.status === UserStatus.ACTIVE)
       if (this.selectedFilter === 'COMPLETE') {
         users = users.filter(user => user.squareFootage !== null && user.squareFootage !== 0)
       } else if (this.selectedFilter === 'INCOMPLETE') {
         users = users.filter(user => user.squareFootage === null || user.squareFootage === 0)
       }
-    } else {
-      users = users.filter(user => !user.is_active)
+    } else if (this.selectedFilter === 'PENDING') {
+      users = users.filter(user => user.status === UserStatus.PENDING)
+    } else if (this.selectedFilter === 'INACTIVE') {
+      users = users.filter(user => user.status === UserStatus.INACTIVE)
     }
+
 
     // 3. 排序：將坪數為 null 或 0 的住戶排在最上方
     users.sort((a, b) => {
@@ -168,11 +173,11 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
   }
 
   get incompleteCount(): number {
-    return this.allUsers.filter(user => user.squareFootage === null || user.squareFootage === 0 && user.is_active).length
+    return this.allUsers.filter(user => user.squareFootage === null || user.squareFootage === 0 && user.status === UserStatus.ACTIVE).length
   }
 
   get completeCount(): number {
-    return this.allUsers.filter(user => user.squareFootage !== null && user.squareFootage !== 0 && user.is_active).length
+    return this.allUsers.filter(user => user.squareFootage !== null && user.squareFootage !== 0 && user.status === UserStatus.ACTIVE).length
   } get pageNumbers(): PaginationItem[] {
     // 為了避免頁碼過多，可以只顯示當前頁前後的幾個頁碼
     const total = this.totalPages

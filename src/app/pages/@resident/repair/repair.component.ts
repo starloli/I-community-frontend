@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { RepairRequest, User } from '../../../interface/interface';
-import { RepairStatus, UserRole } from '../../../interface/enum';
+import { RepairStatus, UserRole, UserStatus } from '../../../interface/enum';
 import { AuthService } from '../../../@service/auth.service';
 import { RepairService } from '../../../@service/repair.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -34,7 +34,7 @@ export class ResidentRepairComponent implements OnInit {
     phone: '',
     unitNumber: '',
     role: UserRole.RESIDENT,
-    isActive: true,
+    status: UserStatus.ACTIVE,
     createdAt: new Date().toISOString(),
   };
 
@@ -66,7 +66,7 @@ export class ResidentRepairComponent implements OnInit {
     phone: '0912345678',
     unitNumber: 'A101',
     role: UserRole.RESIDENT,
-    isActive: true,
+    status: UserStatus.ACTIVE,
     createdAt: '2026-03-01'
   };
 
@@ -89,7 +89,7 @@ export class ResidentRepairComponent implements OnInit {
         phone: payload.phone || '',
         unitNumber: payload.unitNumber || '',
         role: payload.role === 'ADMIN' ? UserRole.ADMIN : UserRole.RESIDENT,
-        isActive: true,
+        status: UserStatus.ACTIVE,
         createdAt: payload.createdAt || new Date().toISOString(),
       };
       this.fakeResident = this.currentUser;
