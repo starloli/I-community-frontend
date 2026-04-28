@@ -136,18 +136,19 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
     }
 
     // 2. 資料完整度篩選
-    if (this.selectedFilter !== 'INACTIVE') {
+    if (this.selectedFilter !== 'INACTIVE' && this.selectedFilter !== 'PENDING') {
       users = users.filter(user => user.status === UserStatus.ACTIVE)
       if (this.selectedFilter === 'COMPLETE') {
         users = users.filter(user => user.squareFootage !== null && user.squareFootage !== 0)
       } else if (this.selectedFilter === 'INCOMPLETE') {
         users = users.filter(user => user.squareFootage === null || user.squareFootage === 0)
-      } else if (this.selectedFilter === 'PENDING') {
-        users = users.filter(user => user.status === UserStatus.PENDING)
       }
-    } else {
+    } else if (this.selectedFilter === 'PENDING') {
+      users = users.filter(user => user.status === UserStatus.PENDING)
+    } else if (this.selectedFilter === 'INACTIVE') {
       users = users.filter(user => user.status === UserStatus.INACTIVE)
     }
+
 
     // 3. 排序：將坪數為 null 或 0 的住戶排在最上方
     users.sort((a, b) => {
