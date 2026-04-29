@@ -30,6 +30,12 @@ export enum RepairStatus {
   DONE = "DONE"
 }
 
+export enum UserStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  PENDING = 'PENDING'
+}
+
 export enum ReservationStatus {
   CONFIRMED = 'CONFIRMED',
   CONFIRMING = 'CONFIRMING',

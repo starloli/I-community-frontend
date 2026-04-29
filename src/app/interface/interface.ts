@@ -1,4 +1,4 @@
-import { BillStatus, BillType, NotificationType, PackageStatus, RepairStatus, ReservationStatus, UserRole, VisitorStatus } from "./enum"
+import { BillStatus, BillType, NotificationType, PackageStatus, RepairStatus, ReservationStatus, UserRole, UserStatus, VisitorStatus } from "./enum"
 
 export interface Announcement {
   announcementId?: number,
@@ -115,7 +115,7 @@ export interface User {
   phone: string,
   unitNumber: string,
   role?: UserRole,
-  isActive?: boolean,
+  status?: UserStatus,
   createdAt?: string
 }
 
@@ -167,7 +167,7 @@ export interface UserResponse {
   squareFootage: number,
   motorParkingSpace: number,
   carParkingSpace: number,
-  is_active: boolean,
+  status: UserStatus,
 }
 
 export interface Res {
