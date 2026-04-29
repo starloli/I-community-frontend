@@ -67,9 +67,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     this.http.getApi<UserResponse>(this.getUrl).pipe(takeUntil(this.$destroy)).subscribe({
       next: (res) => {
         console.log(res);
-
         this.user = { ...res };
-        console.log('this.user:', this.user);
       },
       error: (error) => {
         console.error(error);

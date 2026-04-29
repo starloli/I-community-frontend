@@ -34,7 +34,11 @@ export class EditResidentComponent implements OnInit, OnDestroy {
 
   returnUser(user: UserResponse): void {
     // console.log(user);
-    this.dialog.close(user);
+    if (this.validNumber(user.squareFootage) && this.validNumber(user.motorParkingSpace) && this.validNumber(user.carParkingSpace)) {
+      this.dialog.close(user);
+    }else{
+      alert('坪數、機車位、汽車位必須為非負數');
+    }
   }
 
   ngOnInit(): void {
@@ -46,6 +50,10 @@ export class EditResidentComponent implements OnInit, OnDestroy {
     this.user.motorParkingSpace = this.user.motorParkingSpace || 0;
     this.user.carParkingSpace = this.user.carParkingSpace || 0;
 
+  }
+
+  validNumber(value:number): boolean {
+    return value >= 0;
   }
 
   ngOnDestroy(): void {

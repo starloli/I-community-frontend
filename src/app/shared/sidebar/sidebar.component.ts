@@ -7,6 +7,8 @@ import { HttpService } from '../../@service/http.service';
 import { ResidentStateService } from '../../@service/resident-state.service';
 import { User } from '../../interface/interface';
 import { Subject, takeUntil } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { VerifyPasswordComponent } from '../../dialog/verify-password/verify-password.component';
 
 @Component({
   selector: 'app-sidebar',
@@ -23,7 +25,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private http: HttpService,
-    private residentState: ResidentStateService
+    private residentState: ResidentStateService,
+    private dialog: MatDialog
   ) { }
 
   isCollapsed = false; // 收合狀態
@@ -44,7 +47,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { route: 'admin/package', icon: 'inventory_2', label: '包裹管理', color: '#7BA89E' },
     { route: 'admin/repair', icon: 'build', label: '報修申請', color: '#C47A5A' },
     { route: 'admin/ModifyResident', label: '住戶管理', color: '#5B7FA6', icon: 'manage_accounts' },
-    {route :'admin/FinancialDashboard', label: '財務收支明細', color: '#4075ae', icon: 'receipt_long'}
+    { route: 'admin/FinancialDashboard', label: '財務收支明細', color: '#4075ae', icon: 'receipt_long' }
   ];
 
   // TODO: 超級管理員的個人資料編輯按鈕待實作
@@ -52,7 +55,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   // 切換收合狀態
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
-    }
+  }
 
   ngOnInit(): void {
     this.loadUserInfo();
@@ -68,6 +71,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.$destroy.next();
     this.$destroy.complete();
   }
+
+  // verifyPasswordDialog() {
+  //   this.router.navigate(['/admin/userInfo']);
+  // }
 
   private loadUserInfo(): void {
     const getUrl = "/user/me";
