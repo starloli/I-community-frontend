@@ -192,4 +192,5 @@ export interface DayCell {
   isToday: boolean;
   holiday?: Holiday;
   events: Holiday[];
+  reservations: Holiday[];
 }
