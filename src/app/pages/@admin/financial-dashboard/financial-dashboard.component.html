@@ -111,8 +111,9 @@
 @else if(item.category=='INSURANCE'){保險費}
 @else if(item.category=='MGMT_FEE'){管理費收入}
 @else if(item.category=='FACILITY_RENTAL'){公設租金收入}
-@else if(item.category=='PENALTY'){罰金/違規金收入}
-@else if(item.category=='COMMUNITY_ACT'){社區活動}
+@else if(item.category=='PENALTY' && item.type=='INCOME'){罰金/違規金收入}
+@else if (item.category=='PENALTY' && item.type!=='INCOME') {罰金/違規金支出}
+  @else if(item.category=='COMMUNITY_ACT'){社區活動}
 @else if(item.category=='OTHER'){其他}
 
               </strong>

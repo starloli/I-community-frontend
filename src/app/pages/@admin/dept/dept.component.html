@@ -1,1 +1,81 @@
-<p>dept works!</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="bill-container">
+
+  <div class="resident-container">
+    <div class="page-header">
+      <div class="header-left">
+        <h1>部門管理</h1>
+        <span class="subtitle">統一管理收支、薪資與財務狀況</span>
+      </div>
+      <div class="header-actions">
+        <button class="add-btn">
+          <mat-icon>add</mat-icon> 新增部門
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="content-card">
+
+    <div class="table-toolbar">
+      <div class="filter-item search">
+        <label>搜尋</label>
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" placeholder="摘要或類別..." />
+        </div>
+      </div>
+    </div>
+
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>部門名稱</th>
+          <th>職能描述</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (item of mockDepartments; track item.id) {
+          <tr>
+            <td>{{ item.name }}</td>
+
+            <td>
+              <span class="type-tag">
+                {{ item.description }}
+              </span>
+            </td>
+
+            <td class="remark-cell">
+
+              <span>更多</span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+  </div>
+
+</div>

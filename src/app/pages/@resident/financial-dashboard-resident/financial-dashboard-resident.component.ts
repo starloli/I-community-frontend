@@ -116,11 +116,7 @@ this.myLineChart = new Chart(ctx, {
     data: data,
   });
 
-// 創建圖表
-// let chart = new Chart(ctx, {
-//   type: 'line',
-//   data: data,
-// });
+
 }
 
 
@@ -193,45 +189,11 @@ this.myBarChart = new Chart(ctx, {
     options: options,
   });
 
-// 創建圖表
-// new Chart(ctx, {
-//   type: 'bar',
-//   data: data,
-//   options: options,
-// });
+
 }
 
 
-//找月份
-// serchMonth(val:string){
 
-// if (!val) return; // 如果清空了就不執行
-
-//   // 1. 處理格式轉換：將 "2026-04" 拆成 ["2026", "04"]
-//   const parts = val.split('-');
-//   const year = parts[0];
-//   const month = parseInt(parts[1]);
-
-//   this.http.getApi('/Salary/summary/'+year+'/'+month).subscribe({
-//     next: (res: any) => {
-//       // 更新你的表格與圖表數據
-//    this.totalBalance = res.balance;
-//       this.totalIncome = res.totalIncome;
-//       this.totalExpense = res.totalExpense;
-
-//       this.http.getApi('/Salary/summary/month/'+year+'/'+month).subscribe({
-//         next:(res:any)=>{
-//           console.log(res);
-//           this.transactions=res;
-//  this.applyFilters();
-//         }
-//       })
-
-
-//     },
-//     error: (err) => console.error('查詢失敗', err)
-// })
-// }
 
 
 
