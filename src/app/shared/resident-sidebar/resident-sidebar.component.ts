@@ -25,7 +25,8 @@ export class ResidentSidebarComponent implements OnInit {
     { route: 'resident/visitor', icon: 'person_add', label: '訪客登記', color: '#6A9E7F' },
     { route: 'resident/facility', icon: 'meeting_room', label: '設施預約', color: '#7B7FBA' },
     { route: 'resident/package', icon: 'inventory_2', label: '我的包裹', color: '#7BA89E' },
-    { route: 'resident/repair', icon: 'build', label: '我的報修', color: '#C47A5A' }
+    { route: 'resident/repair', icon: 'build', label: '我的報修', color: '#C47A5A' },
+        {route :'resident/FinancialDashboardResidentComponent', label: '財務明細', color: '#88acd2', icon: 'receipt_long'}
   ];
 
   userName = '';
