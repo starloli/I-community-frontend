@@ -90,29 +90,48 @@
 .filter-bar {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 16px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
 
-  .filter-btn {
-    padding: 8px 20px;
-    border-radius: 20px;
-    border: 1.5px solid #e0e0e0;
-    background: #fff;
-    font-size: 14px;
-    font-weight: 500;
-    color: #555;
-    cursor: pointer;
-    transition: all 0.18s;
+  .filter-pills {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+    padding: 4px 0 12px 0;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
 
-    &:hover {
-      border-color: #B07A8A;
-      color: #B07A8A;
+    // 隱藏捲軸
+    &::-webkit-scrollbar {
+      display: none;
     }
-    &.active {
-      background: #B07A8A;
-      color: #fff;
-      border-color: #B07A8A;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    .filter-btn {
+      flex-shrink: 0;
+      padding: 8px 20px;
+      border-radius: 20px;
+      border: 1.5px solid #e0e0e0;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      color: #555;
+      cursor: pointer;
+      transition: all 0.18s;
+
+      &:hover {
+        border-color: #B07A8A;
+        color: #B07A8A;
+      }
+      &.active {
+        background: #B07A8A;
+        color: #fff;
+        border-color: #B07A8A;
+      }
     }
   }
 
@@ -375,20 +394,26 @@
 
 // ===== 空狀態 =====
 .empty-state {
-  padding: 48px;
-  text-align: center;
-  color: #bbb;
+  height: 250px; // 與儀表板卡片高度一致
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
 
   .empty-icon {
-    font-size: 48px !important;
-    width: 48px !important;
-    height: 48px !important;
+    font-size: 56px !important;
+    width: 56px !important;
+    height: 56px !important;
     display: block;
-    margin: 0 auto 12px;
-    color: #bbb;
+    margin: 0 auto 16px;
+    color: #cbd5e1;
+    opacity: 0.7;
   }
   p {
-    font-size: 15px;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
   }
 }
 
@@ -701,16 +726,29 @@
   }
 
   .filter-bar {
-    gap: 8px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
 
-    .filter-btn {
-      padding: 6px 14px;
-      font-size: 13px;
+    .filter-pills {
+      justify-content: flex-start;
+      gap: 10px;
+      padding: 4px 24px 12px 0;
+      margin: -4px -16px 0 -16px;
+      padding-left: 16px;
+
+      .filter-btn {
+        padding: 6px 16px;
+        font-size: 13px;
+        flex: none;
+        justify-content: center;
+        white-space: nowrap;
+      }
     }
 
     .search-box {
       width: 100%;
-      margin-top: 4px;
+      margin-top: 0;
       min-width: unset;
     }
   }

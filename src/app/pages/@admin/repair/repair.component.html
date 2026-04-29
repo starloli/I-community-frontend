@@ -131,6 +131,21 @@
 
       </div>
     </div>
+    } @empty {
+      <div class="empty-container">
+        <mat-icon class="empty-icon">build_circle</mat-icon>
+        <h3>目前沒有報修紀錄</h3>
+        <p>
+          @if (selectedFilter === '全部') {
+            目前尚無任何報修申請，當有住戶提交報修後將會顯示在此。
+          } @else {
+            目前沒有狀態為「{{
+              selectedFilter === RepairStatus.PENDING ? '待處理' : 
+              selectedFilter === RepairStatus.IN_PROGRESS ? '處理中' : '已完工'
+            }}」的報修申請。
+          }
+        </p>
+      </div>
     }
   </div>
 

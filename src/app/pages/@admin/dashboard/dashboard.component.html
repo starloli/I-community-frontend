@@ -49,6 +49,11 @@
             </div>
             <span class="announcements-date">{{ item.publishedAt | date: 'yyyy/MM/dd' }}</span>
           </div>
+        } @empty {
+          <div class="empty-state">
+            <mat-icon>campaign</mat-icon>
+            <p>目前沒有公告</p>
+          </div>
         }
       </div>
     </div>
@@ -80,6 +85,11 @@
                 <span class="visitor-status status-left">{{ visitor.status }}</span>
               }
             </div>
+          </div>
+        } @empty {
+          <div class="empty-state">
+            <mat-icon>person_outline</mat-icon>
+            <p>目前沒有訪客</p>
           </div>
         }
       </div>

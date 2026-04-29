@@ -119,7 +119,9 @@ export class BillComponent implements OnInit, OnDestroy {
     }
 
     if (this.adminSelectedStatus) list = list.filter(b => b.status === this.adminSelectedStatus);
-    if (this.adminSelectedMonth) list = list.filter(b => b.billingMonth && b.billingMonth.substring(0, 10) === this.adminSelectedMonth.substring(0, 10));
+    if (this.adminSelectedMonth) {
+      list = list.filter(b => b.billingMonth && b.billingMonth.substring(0, 7) === this.adminSelectedMonth);
+    }
 
 
 
@@ -175,7 +177,7 @@ export class BillComponent implements OnInit, OnDestroy {
   }
 
   get uniqueMonths(): string[] {
-    return [...new Set(this.adminBills.map(b => b.billingMonth))].sort().reverse();
+    return [...new Set(this.adminBills.map(b => b.billingMonth?.substring(0, 7)))].filter(m => !!m).sort().reverse();
   }
 
   getUnqualifiedResidents(): string[] {
