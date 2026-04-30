@@ -37,11 +37,14 @@
               📢 {{ day.events.length }}
             }
           </div>
-          <div class="reservation">
-            @if(day.reservations.length) {
-              📅 {{ day.reservations.length }}
-            }
-          </div>
+          @if (!isAdmin) {
+            <div class="reservation">
+              @if(day.reservations.length) {
+                📅 {{ day.reservations.length }}
+              }
+            </div>
+          }
+
         </div>
 
       </div>
@@ -91,20 +94,23 @@
       }
     </div>
 
-    <div class="list-header">[預約]</div>
-    <div class="panel-list">
-      @if (selectedReservations().length === 0) {
-        <div class="empty">
-          <span>No reservations</span>
-        </div>
-      } @else {
-        @for (r of selectedReservations(); track r.title) {
-          <div class="event-row">
-            <mat-icon>schedule</mat-icon><span> {{ r.title }}</span>
+    @if (!isAdmin) {
+      <div class="list-header">[預約]</div>
+      <div class="panel-list">
+        @if (selectedReservations().length === 0) {
+          <div class="empty">
+            <span>No reservations</span>
           </div>
+        } @else {
+          @for (r of selectedReservations(); track r.title) {
+            <div class="event-row">
+              <mat-icon>schedule</mat-icon><span> {{ r.title }}</span>
+            </div>
+          }
         }
-      }
-    </div>
+      </div>
+    }
+
 
     @if (isAdmin) {
       <div class="add-event">
