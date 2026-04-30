@@ -7,6 +7,8 @@ import { HttpService } from '../../@service/http.service';
 import { ResidentStateService } from '../../@service/resident-state.service';
 import { User } from '../../interface/interface';
 import { Subject, takeUntil } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { VerifyPasswordComponent } from '../../dialog/verify-password/verify-password.component';
 
 @Component({
   selector: 'app-sidebar',
@@ -23,7 +25,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private http: HttpService,
-    private residentState: ResidentStateService
+    private residentState: ResidentStateService,
+    private dialog: MatDialog
   ) { }
 
   isCollapsed = false; // 收合狀態
@@ -66,6 +69,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.$destroy.next();
     this.$destroy.complete();
   }
+
+  // verifyPasswordDialog() {
+  //   this.router.navigate(['/admin/userInfo']);
+  // }
 
   private loadUserInfo(): void {
     const getUrl = "/user/me";

@@ -14,6 +14,11 @@
     <div class="m-header-center">
       <div class="user-avatar-mini"><mat-icon>admin_panel_settings</mat-icon></div>
       <span class="user-name-mini">{{ userName }}</span>
+      @if (userRole==UserRole.SUPER_ADMIN) {
+      <button class="edit-btn-mini" routerLink="/admin/userInfo" aria-label="編輯個人資訊">
+        <mat-icon>edit</mat-icon>
+      </button>
+      }
     </div>
 
     <div class="m-header-right">

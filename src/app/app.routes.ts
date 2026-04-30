@@ -32,8 +32,7 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
 import { FinancialDashboardComponent } from './pages/@admin/financial-dashboard/financial-dashboard.component';
 
 import { CalendarComponent } from './pages/calendar/calendar.component';
-import { FinancialDashboardResidentComponent } from './pages/@resident/financial-dashboard-resident/financial-dashboard-resident.component';
-
+import { superAdminGuard } from './guards/super-admin-guard';
 
 export const routes: Routes = [
   // ── 登入頁 ──────────────────────────────────────────
@@ -48,7 +47,7 @@ export const routes: Routes = [
     canActivate: [adminGuard],
     canActivateChild: [adminGuard],
     children: [
-      { path: 'userInfo', component: UserInfoComponent },
+      { path: 'userInfo', component: UserInfoComponent, canActivate: [superAdminGuard] },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'visitor', component: VisitorComponent },
       { path: 'announcement', component: AnnouncementComponent },
@@ -61,7 +60,6 @@ export const routes: Routes = [
       { path: 'calendar', component: CalendarComponent },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-
     ]
   },
 
@@ -88,4 +86,6 @@ export const routes: Routes = [
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
+
+  // TODO: 重發驗證碼會跳到忘記密碼頁面，需修正
 ]
