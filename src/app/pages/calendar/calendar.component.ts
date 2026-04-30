@@ -2,10 +2,13 @@ import { Component, computed, signal } from '@angular/core';
 import { DayCell, Holiday } from '../../interface/interface';
 import { HolidayService } from '../../@service/holiday-service';
 import { AuthService } from '../../@service/auth.service';
+import { Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-calendar',
-  imports: [],
+  standalone: true,
+  imports: [MatIconModule],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss',
 })
@@ -25,13 +28,18 @@ export class CalendarComponent {
 
   constructor(
     private service: HolidayService,
-    private auth: AuthService
+    private auth: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit() {
     this.loadHolidays();
     this.loadEvents();
     this.isAdmin = this.auth.isAdmin();
+  }
+
+  goBack() {
+    this.router.navigate(['/admin/dashboard']);
   }
 
   // 🔁 載入當月假日

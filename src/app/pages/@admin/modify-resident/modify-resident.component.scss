@@ -93,7 +93,7 @@
   overflow-x: auto;
   white-space: nowrap;
   flex-wrap: nowrap;
-  padding: 4px 0 12px 0;
+  padding: 15px 16px 10px 4px; // 頂部預留更多空間給 badge
   max-width: 100%;
   -webkit-overflow-scrolling: touch;
 
@@ -106,7 +106,8 @@
 
   .filter-btn {
     flex-shrink: 0;
-    position: relative; // 為了讓 badge 定位
+    position: relative; 
+    overflow: visible; // 確保 badge 不會被按鈕自身切掉
     padding: 8px 24px;
     border-radius: 20px;
     border: 1.5px solid #e0e0e0;
@@ -556,9 +557,10 @@
   .filter-pills {
     justify-content: flex-start;
     gap: 10px;
-    padding: 4px 24px 12px 0;
+    padding: 12px 24px 12px 16px; // 頂部預留空間給 badge
     margin: -4px -16px 0 -16px;
-    padding-left: 16px;
+    overflow-x: auto;
+    overflow-y: visible; // 允許 badge 向上延伸
 
     .filter-btn {
       padding: 6px 16px;
@@ -566,6 +568,16 @@
       flex: none;
       justify-content: center;
       white-space: nowrap;
+      position: relative;
+      overflow: visible; // 確保 badge 不被切掉
+
+      .count-badge {
+        top: -8px; // 調整手機版位置
+        right: -6px;
+        min-width: 18px;
+        height: 18px;
+        font-size: 10px;
+      }
     }
   }
 

@@ -5,36 +5,6 @@
 
 // ===== 頁面標題 =====
 .page-header {
-  margin-bottom: 28px;
-  .header-left {
-    h1 {
-      font-size: 36px;
-      font-weight: 700;
-      color: #1a1a2e;
-      margin: 0 0 4px 0;
-    }
-    .subtitle {
-      font-size: 15px;
-      color: #64748b;
-    }
-  }
-}
-
-/* 統計設計 */
-.stats-grid {
-  display: flex;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.stat-card {
-  flex: 1;
-  padding: 1.5rem;
-  border-radius: 12px;
-  background: white;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-}
-.page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -59,35 +29,69 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 24px;
-  background: #88acd2;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #7d96b1 0%, #5B7FA6 100%);
   color: #ffffff;
   border: none;
   border-radius: 12px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
-  box-shadow: 0 10px 24px rgba(106, 158, 127, 0.2);
+  box-shadow: 0 4px 12px rgba(91, 127, 166, 0.3);
 
   mat-icon { font-size: 20px; width: 20px; height: 20px; }
   &:hover {
-    background: #799dc4;
-    transform: translateY(-1px);
-    box-shadow: 0 14px 28px rgba(106, 158, 127, 0.28);
+    background: linear-gradient(135deg, #8ba1ba 0%, #6c8db0 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(91, 127, 166, 0.4);
+  }
+  &:active {
+    transform: translateY(0);
   }
 }
 
+/* 統計設計 */
+.stats-grid {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
 
+.stat-card {
+  flex: 1;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 16px;
 
-.stat-label { color: #64748b; font-size: 0.9rem; margin-bottom: 0.5rem; }
-.stat-value { font-size: 1.75rem; font-weight: 700; color: #1e293b; }
+  .stat-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    color: #64748b;
+  }
+
+  .stat-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &.income .stat-icon { color: #10b981; }
+  &.expense .stat-icon { color: #ef4444; }
+  &.balance .stat-icon { color: #5B7FA6; }
+}
+
+.stat-label { color: #64748b; font-size: 0.9rem; }
+.stat-value { font-size: 1.75rem; font-weight: 700; color: #1e293b; line-height: 1.2; }
 
 .income .stat-value { color: #10b981; }
 .expense .stat-value { color: #ef4444; }
-.balance { background: white; }
-.balance .stat-label { color: #94a3b8; }
 .balance .stat-value { color: #000000; }
 
 /* 表格設計 */
@@ -96,6 +100,165 @@
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+.mobile-transaction-list {
+  display: none;
+}
+
+.desktop-only {
+  display: table;
+}
+
+// =============================================================================
+// ===== 手機版響應式設計 (RWD) =====
+// =============================================================================
+
+@media (max-width: 768px) {
+  .page-header {
+    padding: 16px 0 12px 0;
+    margin-bottom: 16px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .header-left {
+      h1 { font-size: 30px; }
+      .subtitle { font-size: 14px; }
+    }
+
+    .add-btn {
+      padding: 8px 16px;
+      font-size: 13px;
+      mat-icon { font-size: 18px; width: 18px; height: 18px; }
+    }
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card {
+    position: relative;
+    aspect-ratio: 1.2 / 1;
+    padding: 8px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+    min-height: unset;
+
+    .stat-icon {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      font-size: 20px !important;
+      width: 20px !important;
+      height: 20px !important;
+      opacity: 0.8;
+    }
+
+    .stat-info {
+      margin-top: 10px;
+      align-items: center;
+
+      .stat-value {
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 1;
+      }
+
+      .stat-label {
+        font-size: 12px;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+
+    .filter-group {
+      width: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+
+      .filter-item {
+        width: 100%;
+        input { width: 100%; }
+      }
+
+      .search-box {
+        width: 100%;
+        input { width: 100%; }
+      }
+
+      .clear-btn { width: 100%; }
+    }
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-transaction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .transaction-card {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-left: 4px solid transparent;
+
+    &:has(.type-tag.income) { border-left-color: #10b981; }
+    &:has(.type-tag.expense) { border-left-color: #ef4444; }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .date { font-size: 12px; color: #64748b; }
+    }
+
+    .card-body {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .category { font-size: 15px; font-weight: 600; color: #1e293b; }
+      .amount { font-size: 16px; font-weight: 700; }
+    }
+
+    .card-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 13px;
+      .remark { color: #64748b; }
+      .balance { color: #94a3b8; font-style: italic; }
+    }
+  }
+
+  .charts-container {
+    padding: 12px;
+    .chart-box {
+      min-width: 100%;
+      padding: 8px;
+    }
+  }
 }
 
 .modern-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
@@ -388,7 +551,3 @@
     min-width: 100%;        /* 手機模式改為全寬佔據 */
   }
 }
-
-
-
-

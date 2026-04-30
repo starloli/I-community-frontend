@@ -1,356 +1,240 @@
-// ===== 整體容器 =====
+// ===== 變數定義 =====
+$navy-blue: #1a1a2e; 
+$graphite-gray: #ffffff; 
+$accent-blue: #f0f2f5; 
+$text-light: #5B7FA6; 
+$text-muted: #888;
+$brand-blue: #5B7FA6; 
+$secondary-theme: #3f51b5; 
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+}
+
+// ===== 儀表板容器 =====
 .dashboard-container {
   padding: 0;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
 }
 
 // ===== 頁面標題 =====
 .page-header {
-  margin-bottom: 32px;
+  margin-bottom: 28px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
+  gap: 16px;
 
-  h1 {
-    font-size: 36px;
-    font-weight: 700;
-    color: #1a1a2e;
-    margin: 0 0 4px 0;
+  .header-left {
+    h1 {
+      font-size: 36px;
+      font-weight: 700;
+      color: $navy-blue;
+      margin: 0 0 4px 0;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: $text-muted;
+    }
   }
 
-  .subtitle {
-    font-size: 15px;
-    color: #64748b;
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
 }
 
 // ===== 日曆按鈕 =====
 .calendar-btn {
-  background: rgba(255, 255, 255, 0.55); // Glassmorphism background
+  background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-radius: 12px; // Slightly more rounded than current
-  padding: 12px; // Slightly larger padding
-  border: 1px solid rgba(255, 255, 255, 0.8); // Subtle border
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); // Subtle shadow for depth
-  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-  cursor: pointer; // Ensure it's clear it's clickable
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  mat-icon { font-size: 28px; width: 28px; height: 28px; color: $brand-blue; }
+  &:hover {
+    background: rgba(255, 255, 255, 0.75);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  }
 }
 
-.calendar-btn:hover {
-  background: rgba(255, 255, 255, 0.75); // Slightly lighter on hover
-  transform: translateY(-2px) scale(1.05); // Subtle lift and scale
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); // Enhanced shadow on hover
-}
-
-.calendar-btn mat-icon {
-  font-size: 32px; // Larger icon for prominence
-  width: 32px;
-  height: 32px;
-  color: #5B7FA6; // Use the primary blue color consistent with other dashboard elements
-}
-
-// ===== 統計卡片區塊 =====
+// ===== 統計網格 (住戶一致風格) =====
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
+  flex-shrink: 0;
 }
 
-// 每張統計卡片：白色玻璃風格
 .stat-card {
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-radius: 22px;
-  padding: 22px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   position: relative;
-  gap: 16px;
+  gap: 12px;
   border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 1);
-  transition: box-shadow 0.2s, transform 0.2s;
-  aspect-ratio: 1 / 0.7;
-
-  &:hover {
-    box-shadow:
-      0 12px 32px rgba(0, 0, 0, 0.12),
-      inset 0 1px 0 rgba(255, 255, 255, 1);
-    transform: translateY(-2px);
-  }
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1);
+  transition: all 0.2s ease;
+  aspect-ratio: 1 / 0.65;
 
   &.clickable {
     cursor: pointer;
+    &:hover {
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 1);
+      transform: translateY(-4px);
+    }
+  }
+
+  .stat-top { display: flex; justify-content: flex-end; width: 100%; }
+  
+  .stat-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 2px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,1);
+
+    mat-icon { font-size: 30px; width: 30px; height: 30px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+  }
+
+  .stat-info { display: flex; flex-direction: column; gap: 2px; }
+  .stat-label { font-size: 13px; color: $text-muted; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-value { font-size: 32px; font-weight: 400; color: #1a1a2e; line-height: 1; }
+
+  .stat-extra {
+    margin-top: auto;
+    font-size: 11px;
+    color: rgba($text-muted, 0.7);
+    text-align: right;
   }
 }
 
-.stat-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.7) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow:
-    0 2px 2px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 1),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.04);
-
-  mat-icon {
-    font-size: 35px;
-    width: 35px;
-    height: 35px;
-    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.15));
-  }
-}
-
-.stat-top {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-}
-
-.stat-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center; // 讓數值在標籤上方居中對齊
-  align-self: flex-start; // 讓整個文字區塊靠左
-  text-align: center;
-  gap: 4px;
-  margin-top: 4px;
-}
-
-.stat-label {
-  font-size: 15px;
-  color: #888;
-  font-weight: 500;
-}
-
-.stat-value {
-  font-size: 36px;
-  font-weight: 400;
-  color: #1a1a2e;
-  line-height: 1;
-}
-
-// ===== 下方兩欄 =====
+// ===== 下方內容網格 =====
 .bottom-grid {
+  flex: 1;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
+  min-height: 0; // 重要：允許 flex 子容器縮小
 }
 
 .card {
-  background: #ffffff;
-  border-radius: 16px;
+  background: white;
+  border-radius: 20px;
   padding: 24px;
   border: 1px solid #f0f0f0;
   display: flex;
   flex-direction: column;
-}
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  min-height: 0;
 
-.card-scroll-area {
-  height: 250px; // 固定高度，確保在有/無資料時卡片大小一致
-  overflow-y: auto;
-  padding-right: 8px;
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-shrink: 0;
 
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #e2e8f0;
-    border-radius: 10px;
-  }
-}
+    mat-icon { color: $brand-blue; font-size: 24px; width: 24px; height: 24px; }
+    h2 { font-size: 20px; font-weight: 700; color: $navy-blue; margin: 0; flex: 1; }
 
-.empty-state {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #94a3b8;
-  gap: 12px;
-
-  mat-icon {
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
-    opacity: 0.5;
-    color: #cbd5e1;
-  }
-
-  p {
-    margin: 0;
-    font-size: 15px;
-    font-weight: 500;
-  }
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
-
-  mat-icon {
-    color: #3f51b5;
-    font-size: 22px;
-    width: 22px;
-    height: 22px;
-    line-height: 22px;
-  }
-
-  h2 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #1a1a2e;
-    margin: 0;
-    line-height: 1;
-    flex: 1;
-  }
-
-  .card-more {
-    font-size: 14px;
-    color: #3f51b5;
-    cursor: pointer;
-    text-decoration: none;
-    white-space: nowrap;
-
-    &:hover {
-      text-decoration: underline;
+    .card-more {
+      font-size: 13px;
+      color: $brand-blue;
+      cursor: pointer;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: rgba($brand-blue, 0.05);
+      transition: all 0.2s;
+      &:hover { background: rgba($brand-blue, 0.1); text-decoration: underline; }
     }
   }
+
+  .card-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 8px;
+
+    &::-webkit-scrollbar { width: 5px; }
+    &::-webkit-scrollbar-track { background: transparent; }
+    &::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+  }
 }
 
-// ===== 公告列表 =====
-.announcements-item {
+// ===== 項目列表樣式 =====
+.announcements-item, .visitor-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 0;
-  border-bottom: 1px solid #f5f5f5;
-
-  &:last-child {
-    border-bottom: none;
-  }
+  padding: 16px 0;
+  border-bottom: 1px solid #f8fafc;
+  &:last-child { border-bottom: none; }
 }
 
-.announcements-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
+.announcements-left { display: flex; align-items: center; gap: 12px; }
 .category-badge {
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 20px;
-  background: #e8eaf6;
-  color: #3f51b5;
-  font-weight: 600;
-  white-space: nowrap;
+  font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 8px;
+  background: $accent-blue; color: $navy-blue;
 }
-
-.announcements-title {
-  font-size: 15px;
-  color: #333;
-}
-
-.announcements-date {
-  font-size: 13px;
-  color: #64748b;
-  white-space: nowrap;
-  font-weight: 500;
-}
-
-// ===== 訪客列表 =====
-.visitor-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px solid #f5f5f5;
-
-  &:last-child {
-    border-bottom: none;
-  }
-}
+.announcements-title { font-size: 14px; font-weight: 500; color: $navy-blue; }
+.announcements-date { font-size: 12px; color: $text-muted; }
 
 .visitor-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #e8eaf6;
-  color: #3f51b5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 16px;
-  flex-shrink: 0;
+  width: 38px; height: 38px; border-radius: 12px;
+  background: $accent-blue; color: $brand-blue;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 15px; flex-shrink: 0;
 }
-
 .visitor-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  flex: 1; margin-left: 12px;
+  display: flex; flex-direction: column;
+  .visitor-name { font-size: 14px; font-weight: 600; color: $navy-blue; }
+  .visitor-unit { font-size: 12px; color: $text-muted; }
 }
-
-.visitor-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-}
-
-.visitor-unit {
-  font-size: 12px;
-  color: #64748b;
-  font-weight: 500;
-}
-
-.visitor-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-}
-
-.visitor-time {
-  font-size: 12px;
-  color: #64748b;
-  font-weight: 500;
-}
-
+.visitor-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
 .visitor-status {
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 20px;
-  font-weight: 600;
+  font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px;
+  &.status-inside { background: #fff3e0; color: $brand-blue; }
+  &.status-left { background: #f1f5f9; color: $text-muted; }
 }
 
-.status-inside {
-  background: #e8f5e9;
-  color: #388e3c;
-}
-
-.status-left {
-  background: #f5f5f5;
-  color: #999;
+.empty-state {
+  height: 100%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  color: #cbd5e1; gap: 12px;
+  mat-icon { font-size: 48px; width: 48px; height: 48px; }
+  p { font-size: 15px; font-weight: 500; margin: 0; }
 }
 
 // =============================================================================
@@ -358,143 +242,68 @@
 // =============================================================================
 
 @media (max-width: 1024px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
   .dashboard-container {
-    height: 100dvh; // 使用動態視窗高度
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; // 鎖定不捲動
-    box-sizing: border-box;
-    background: transparent; // 👈 確保使用最底層 Layout 的顏色
+    height: calc(100dvh - 125px); // 扣除 Header (60px) 與 Tab Bar (65px)
+    overflow: hidden;
   }
 
   .page-header {
-    padding: 12px 0 4px; // 壓縮標題區域
-    margin-bottom: 0;
-    flex-shrink: 0;
-    h1 {
-      font-size: 36px; // 稍微調小，確保不換行
-      letter-spacing: -0.5px;
-    }
-    .subtitle {
-      font-size: 15px;
-      margin-top: -2px;
-    }
+    padding: 16px 0 12px 0;
+    margin-bottom: 12px;
+    .header-left h1 { font-size: 30px; }
   }
 
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 6px; // 縮小間距
-    padding: 8px 0;
-    flex-shrink: 0;
+    gap: 8px;
+    margin-bottom: 12px;
   }
 
   .stat-card {
-    padding: 8px 12px 8px 8px; // 減少內距，爭取空間
-    min-height: 68px;
-    position: relative; // 為了讓 icon 絕對定位
-    display: flex;
-    justify-content: flex-end; // 讓內容推到右邊
-    align-items: center;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    aspect-ratio: auto;
+    min-height: 80px;
+    padding: 12px;
+    justify-content: center;
+
+    .stat-top {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      width: auto;
+    }
 
     .stat-icon {
-      position: absolute;
-      top: 6px; // 鎖定左上角
-      left: 6px;
-      width: 35px;
-      height: 35px;
-      border-radius: 8px;
-      mat-icon {
-        font-size: 22px;
-        width: 22px;
-        height: 22px;
-      }
+      width: 32px;
+      height: 32px;
+      mat-icon { font-size: 20px; width: 20px; height: 20px; }
     }
 
     .stat-info {
-      display: flex;
-      flex-direction: column;
-      align-items: center; // 數值與標籤互相居中對齊
-      align-self: center; // 在卡片高度內垂直居中
-      text-align: center;
-      gap: 2px;
-      margin-left: auto; // 強制將整個區塊推至最右方
-
-      .stat-value {
-        font-size: 36px;
-        font-weight: 400;
-        line-height: 1;
-      }
-      .stat-label {
-        font-size: 14px;
-        white-space: nowrap;
-        color: #888;
-        line-height: 1.2;
-      }
+      align-items: center;
+      margin-left: auto;
+      .stat-value { font-size: 24px; }
+      .stat-label { font-size: 12px; }
     }
+    .stat-extra { display: none; }
   }
 
   .bottom-grid {
-    flex: 1;
-    display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr; // 強制兩個卡片平分高度，確保不溢出
-    padding: 4px 0 12px;
-    gap: 10px;
-    min-height: 0; // 關鍵：允許子元素在 Flex 容器中縮小
+    grid-template-rows: repeat(2, 1fr);
+    gap: 12px;
+    padding-bottom: 12px;
   }
 
   .card {
-    padding: 10px 12px;
-    display: flex;
-    flex-direction: column;
-    min-height: 0; // 允許卡片縮小以符合 grid rows
-    border-radius: 12px;
-
+    padding: 16px;
     .card-header {
-      margin-bottom: 6px;
-      flex-shrink: 0;
-      h2 { font-size: 13px; font-weight: 600; }
-      mat-icon { font-size: 15px; width: 16px; height: 16px; }
-      .card-more { font-size: 11px; }
+      margin-bottom: 12px;
+      h2 { font-size: 16px; }
     }
-
-    .card-scroll-area {
-      flex: 1;
-      overflow-y: auto;
-      padding-right: 4px;
-      &::-webkit-scrollbar { width: 3px; }
-      &::-webkit-scrollbar-thumb { background: #eee; border-radius: 3px; }
-    }
-
-    .announcements-item, .visitor-item {
-      padding: 5px 0;
-      border-bottom: 1px solid #fafafa;
-    }
-
-    .announcements-title {
-      font-size: 12px;
-      max-width: 140px; // 限制寬度避免擠壓日期
-    }
-
-    .visitor-avatar { width: 24px; height: 24px; font-size: 9px; }
-    .visitor-name { font-size: 12px; }
-    .visitor-unit { font-size: 10px; }
-  }
-
-  @media (max-width: 480px) {
-    .page-header h1 { font-size: 28px; }
-    .announcements-item {
-      flex-direction: row; // 在 100dvh 模式下，橫向排列能省空間
-      justify-content: space-between;
-      .announcements-date { font-size: 10px; }
-    }
+    .announcements-title { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   }
 }

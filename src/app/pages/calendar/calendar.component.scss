@@ -11,7 +11,36 @@
 .page-header {
   margin-bottom: 24px;
 
-  h1 { font-size: 30px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px 0; }
+  .title-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .back-btn {
+    background: transparent;
+    border: none;
+    color: #1a1a2e;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background 0.2s;
+
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  h1 { font-size: 30px; font-weight: 700; color: #1a1a2e; margin: 0; }
   .subtitle { font-size: 15px; color: #64748b; }
 }
 
@@ -225,6 +254,10 @@
 
 /* 手機版適應 */
 @media (max-width: 600px) {
+  .page-header {
+    padding: 16px 0 12px 0;
+  }
+
   .cell {
     min-height: 70px;
     padding: 4px;

@@ -35,13 +35,15 @@
 
   <!-- 篩選條件 -->
   <div class="filter-bar">
-    @for (cat of categories; track cat.value) {
-      <button
-        class="filter-btn"
-        [class.active]="selectedCategory === cat.value"
-        (click)="selectedCategory = cat.value; onFilterChange()"
-      >{{ cat.label }}</button>
-    }
+    <div class="filter-pills">
+      @for (cat of categories; track cat.value) {
+        <button
+          class="filter-btn"
+          [class.active]="selectedCategory === cat.value"
+          (click)="selectedCategory = cat.value; onFilterChange()"
+        >{{ cat.label }}</button>
+      }
+    </div>
     <div class="search-box">
       <mat-icon>search</mat-icon>
       <input

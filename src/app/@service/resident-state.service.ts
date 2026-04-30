@@ -5,10 +5,10 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class ResidentStateService {
-  private hasIncompleteResidentSubject = new BehaviorSubject<boolean>(false);
-  hasIncompleteResident$ = this.hasIncompleteResidentSubject.asObservable();
+  private incompleteCountSubject = new BehaviorSubject<number>(0);
+  incompleteCount$ = this.incompleteCountSubject.asObservable();
 
-  setIncompleteStatus(status: boolean): void {
-    this.hasIncompleteResidentSubject.next(status);
+  setIncompleteCount(count: number): void {
+    this.incompleteCountSubject.next(count);
   }
 }

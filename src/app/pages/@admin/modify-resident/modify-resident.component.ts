@@ -90,8 +90,8 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
         console.log(res);
         this.isLoading = false;
         // 即時檢查並更新 Sidebar 的紅點狀態
-        const hasIncomplete = this.allUsers.some(user => user.squareFootage === null || user.squareFootage === 0)
-        this.residentState.setIncompleteStatus(hasIncomplete)
+        const count = this.allUsers.filter(user => user.squareFootage === null || user.squareFootage === 0).length
+        this.residentState.setIncompleteCount(count)
       },
       error: (err) => {
         this.snackBar.open(err.message || '載入住戶資料失敗', '關閉', { duration: 2000 })

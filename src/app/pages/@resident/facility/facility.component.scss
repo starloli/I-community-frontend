@@ -603,7 +603,8 @@
   }
 }
 
-.empty-state {
+.empty-state,
+.empty-state-grid {
   position: relative; // 為了讓 info-btn 絕對定位
   padding: 80px 40px;
   text-align: center;
@@ -673,6 +674,10 @@
     color: #94a3b8;
     margin: 0 0 8px;
   }
+}
+
+.empty-state-grid {
+  grid-column: 1 / -1; // 跨越所有網格列
 }
 
 

@@ -9,7 +9,7 @@
 
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #132da1 0%, #764ba2 100%);
   min-height: 100vh;
 }
 
@@ -27,7 +27,7 @@ body {
   --color-announcement: #b07a8a;
   --color-bill: #b8935a;
   --color-facility: #7b7fba;
-  --color-package: #7ba89e;
+  --color-package: rgb(92, 145, 224);
   --color-repair: #c47a5a;
 
   --color-dashboard-light: rgba(91, 127, 166, 0.15);

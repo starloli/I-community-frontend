@@ -30,7 +30,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   userName = '';
   unitNumber = '';
   userInitial = '';
-  hasIncompleteResident = false; // 是否有坪數為 null 或 0 的住戶
+  incompleteCount = 0; // 資料異常的住戶數量
   UserRole = UserRole;
 
   private $destroy = new Subject<void>();
@@ -43,25 +43,23 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { route: 'admin/facility', icon: 'meeting_room', label: '設備管理', color: '#7B7FBA' },
     { route: 'admin/package', icon: 'inventory_2', label: '包裹管理', color: '#7BA89E' },
     { route: 'admin/repair', icon: 'build', label: '報修申請', color: '#C47A5A' },
-    { route: 'admin/ModifyResident', label: '住戶管理', color: '#5B7FA6', icon: 'manage_accounts' },
-    {route :'admin/FinancialDashboard', label: '財務明細', color: '#88acd2', icon: 'receipt_long'}
+    { route: 'admin/ModifyResident', label: '住戶管理', color: '#B07A8A', icon: 'manage_accounts' },
+    { route: 'admin/FinancialDashboard', label: '財務明細', color: '#88acd2', icon: 'receipt_long' }
   ];
-
-  // TODO: 超級管理員的個人資料編輯按鈕待實作
 
   // 切換收合狀態
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
-    }
+  }
 
   ngOnInit(): void {
     this.loadUserInfo();
     this.checkResidentIncomplete();
 
     // 訂閱即時狀態更新
-    this.residentState.hasIncompleteResident$
+    this.residentState.incompleteCount$
       .pipe(takeUntil(this.$destroy))
-      .subscribe(status => this.hasIncompleteResident = status);
+      .subscribe(count => this.incompleteCount = count);
   }
 
   ngOnDestroy(): void {
@@ -87,9 +85,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
     const getUrl = "/admin/get-all-residents-users";
     this.http.getApi<any[]>(getUrl).subscribe({
       next: (res) => {
-        // 檢查是否有坪數為 null 或 0 的住戶，並更新服務狀態
-        const hasIncomplete = res.some(user => user.squareFootage === null || user.squareFootage === 0);
-        this.residentState.setIncompleteStatus(hasIncomplete);
+        // 計算坪數為 null 或 0 的住戶數量
+        const count = res.filter(user => user.squareFootage === null || user.squareFootage === 0).length;
+        this.residentState.setIncompleteCount(count);
       },
       error: (error) => {
         console.error('取得住戶清單失敗:', error);

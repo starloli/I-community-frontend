@@ -55,7 +55,7 @@ export const routes: Routes = [
       { path: 'package', component: PackageComponent },
       { path: 'repair', component: RepairComponent },
       { path: 'ModifyResident', component: ModifyResidentComponent },
-            {path: 'FinancialDashboard' ,component:FinancialDashboardComponent},
+      { path: 'FinancialDashboard', component: FinancialDashboardComponent },
       { path: 'calendar', component: CalendarComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 
@@ -77,7 +77,7 @@ export const routes: Routes = [
       { path: 'repair', component: ResidentRepairComponent },
       { path: 'visitor', component: ResidentVisitorComponent },
       { path: 'calendar', component: CalendarComponent },
-       {path:'FinancialDashboardResidentComponent',component:FinancialDashboardResidentComponent},
+      { path: 'FinancialDashboardResidentComponent', component: FinancialDashboardResidentComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 
     ]

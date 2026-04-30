@@ -76,23 +76,49 @@
 .filter-bar {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 16px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
 
-  .filter-btn {
-    padding: 8px 20px;
-    border-radius: 20px;
-    border: 1.5px solid #e0e0e0;
-    background: #fff;
-    font-size: 14px;
-    font-weight: 500;
-    color: #555;
-    cursor: pointer;
-    transition: all 0.18s;
+  .filter-pills {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+    padding: 4px 0 12px 0;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
 
-    &:hover { border-color: #3f51b5; color: #3f51b5; }
-    &.active { background: #3f51b5; color: #fff; border-color: #3f51b5; }
+    // 隱藏捲軸
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    .filter-btn {
+      flex-shrink: 0;
+      padding: 8px 20px;
+      border-radius: 20px;
+      border: 1.5px solid #e0e0e0;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      color: #555;
+      cursor: pointer;
+      transition: all 0.18s;
+
+      &:hover {
+        border-color: #3f51b5;
+        color: #3f51b5;
+      }
+      &.active {
+        background: #3f51b5;
+        color: #fff;
+        border-color: #3f51b5;
+      }
+    }
   }
 
   .search-box {
@@ -107,15 +133,27 @@
     min-width: 240px;
     transition: border-color 0.2s;
 
-    &:focus-within { border-color: #3f51b5; }
+    &:focus-within {
+      border-color: #3f51b5;
+    }
 
-    mat-icon { color: #bbb; font-size: 20px; width: 20px; height: 20px; }
+    mat-icon {
+      color: #bbb;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
 
     input {
-      border: none; outline: none;
-      font-size: 14px; color: #333;
-      width: 100%; background: transparent;
-      &::placeholder { color: #bbb; }
+      border: none;
+      outline: none;
+      font-size: 14px;
+      color: #333;
+      width: 100%;
+      background: transparent;
+      &::placeholder {
+        color: #bbb;
+      }
     }
   }
 }
@@ -423,15 +461,30 @@
   }
 
   .filter-bar {
-    gap: 8px;
-    padding: 0 4px 8px;
-    .filter-btn {
-      padding: 6px 14px;
-      font-size: 13px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 0 0 8px;
+
+    .filter-pills {
+      justify-content: flex-start;
+      gap: 10px;
+      padding: 4px 16px 12px;
+      margin: -4px -16px 0;
+      -webkit-overflow-scrolling: touch;
+
+      .filter-btn {
+        padding: 6px 16px;
+        font-size: 13px;
+        flex: none;
+        justify-content: center;
+        white-space: nowrap;
+      }
     }
+
     .search-box {
       width: 100%;
-      margin-top: 4px;
+      margin-top: 0;
       min-width: unset;
       padding: 6px 14px;
     }

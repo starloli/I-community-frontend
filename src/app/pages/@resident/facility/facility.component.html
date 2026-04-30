@@ -101,6 +101,14 @@
       <button class="reserve-btn disabled" disabled>此設施不可預約</button>
       }
     </div>
+    } @empty {
+    <div class="empty-state-grid">
+      <div class="empty-icon-wrapper">
+        <mat-icon class="empty-icon">apartment</mat-icon>
+      </div>
+      <h3>目前沒有可預約的設施</h3>
+      <p>社區目前尚未開放任何公設預約，請稍後再試。</p>
+    </div>
     }
   </div>
   }

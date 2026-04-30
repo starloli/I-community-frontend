@@ -50,6 +50,11 @@
           </div>
           <span class="announcements-date">{{ item.date }}</span>
         </div>
+        } @empty {
+        <div class="empty-state">
+          <mat-icon>campaign</mat-icon>
+          <p>目前沒有公告</p>
+        </div>
         }
       </div>
     </div>
@@ -61,12 +66,6 @@
         <a class="card-more" (click)="navigateTo('/resident/package')">查看全部</a>
       </div>
       <div class="card-scroll-area">
-        @if (myPackages.length === 0) {
-        <div class="empty-packages">
-          <mat-icon>check_circle</mat-icon>
-          <span>目前沒有待領包裹</span>
-        </div>
-        } @else {
         @for (pkg of myPackages; track pkg.trackingNumber) {
         <div class="package-item">
           <div class="package-icon">
@@ -78,7 +77,11 @@
           </div>
           <span class="package-time">{{ pkg.arrivedAt }}</span>
         </div>
-        }
+        } @empty {
+        <div class="empty-state">
+          <mat-icon>inventory_2</mat-icon>
+          <p>目前沒有待領包裹</p>
+        </div>
         }
       </div>
     </div>
