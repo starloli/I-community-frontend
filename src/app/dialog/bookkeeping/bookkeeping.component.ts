@@ -18,6 +18,10 @@ import { HttpService } from '../../@service/http.service';
 })
 export class BookkeepingComponent {
 
+
+selectedFile: File | null = null;
+
+
   constructor(private dialogRef: MatDialogRef<BookkeepingComponent>,private http:HttpService){}
   formData = {
     type: 'EXPENSE', // 預設支出
@@ -30,7 +34,9 @@ export class BookkeepingComponent {
 
 
 
-
+onFileSelected(event: any) {
+  this.selectedFile = event.target.files[0]; // 取得選取的檔案
+}
 
 
 expenditureType = [
@@ -72,11 +78,22 @@ NewRevenueOrExpenditure(){
   }
   console.log(dateStr);
 
-this.http.postApi('/Salary/recordManualTransaction',resultfFormData).subscribe({
-  next:(res:any) =>{console.log(res),
+
+
+const finalPayload = new FormData();
+finalPayload.append('request', new Blob([JSON.stringify(resultfFormData)], {
+    type: 'application/json'
+  }));
+if (this.selectedFile) {
+    finalPayload.append('file', this.selectedFile);
+  }
+
+this.http.postApi('/Salary/recordManualTransaction',finalPayload).subscribe({
+  next:(res:any) =>{
+    // console.log('成功了',res),
     this.dialogRef.close('refresh');
 
-
+this.selectedFile = null;
 this.formData= {
     type: 'EXPENSE', // 預設支出
     amount: null,

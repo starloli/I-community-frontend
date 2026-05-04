@@ -71,6 +71,7 @@
               [(ngModel)]="formData.remark"
               placeholder="請輸入交易詳細說明..."></textarea>
   </div>
+  上傳圖片<input type="file" (change)="onFileSelected($event)" accept="image/*">
 
   <!-- 按鈕 -->
 @if((formData.amount!==null && formData.amount <=0) || !formData.amount || !formData.category ){
