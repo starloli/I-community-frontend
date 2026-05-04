@@ -193,4 +193,5 @@ export interface DayCell {
   holiday?: Holiday;
   events: Holiday[];
   reservations: Holiday[];
+  bills: Holiday[];
 }

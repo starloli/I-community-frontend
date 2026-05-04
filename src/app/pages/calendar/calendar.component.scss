@@ -10,6 +10,8 @@
 // ===== 頁面標題 =====
 .page-header {
   margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
 
   .title-container {
     display: flex;
@@ -42,6 +44,8 @@
 
   h1 { font-size: 30px; font-weight: 700; color: #1a1a2e; margin: 0; }
   .subtitle { font-size: 15px; color: #64748b; }
+
+  h2 { margin: 0; }
 }
 
 /* === Header === */
@@ -54,7 +58,7 @@
 }
 
 .nav-btn {
-  font-size: 24px;
+  font-size: 32px;
   background: #f1f3f4;
   border: none;
   padding: 6px 12px;
@@ -67,12 +71,17 @@
   background: #e0e0e0;
 }
 
-.header h2 {
+.month-switch {
+  display: flex;
+  align-items: center;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  margin: 0;
+}
+
+.month-switch h2 {
   font-weight: 500;
+  margin: 0;
 }
 
 .today-btn {
@@ -174,6 +183,7 @@
 /* 右上總覽 */
 .summary {
   display: flex;
+  justify-content: center;
 }
 
 .event {
@@ -188,6 +198,20 @@
   font-weight: 500;
   color: #3B82F6;
   margin-right: 4px;
+}
+
+.bill {
+  font-size: 14px;
+  font-weight: 500;
+  color: red;
+  margin-right: 4px;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin-bottom: -3px;
+  }
 }
 
 
@@ -341,7 +365,7 @@
   }
 
   .cell {
-    min-height: 70px;
+    min-height: 90px;
     padding: 2px;
   }
 
