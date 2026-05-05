@@ -53,3 +53,8 @@ export enum VisitorStatus {
   INSIDE = '在內',
   LEFT = '已離開'
 }
+
+export enum VerifyCodeType {
+  OLD_EMAIL_VERIFY = 'OLD_EMAIL_VERIFY',
+  NEW_EMAIL_VERIFY = 'NEW_EMAIL_VERIFY'
+}

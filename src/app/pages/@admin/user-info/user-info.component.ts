@@ -9,9 +9,8 @@ import { ToastService } from '../../../@service/toast.service';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
-// TODO: 【Phase 6】需要導入 AuthService
-// import { AuthService } from '../../../@service/auth.service';
+import { AuthService } from '../../../@service/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user-info',
@@ -21,46 +20,60 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class UserInfoComponent implements OnInit, OnDestroy {
 
-  constructor(private http: HttpService, private toast: ToastService) { }
-
-  // TODO: 【Phase 6】需要注入 AuthService
-  // constructor(private http: HttpService, private authService: AuthService, private toast: ToastService) { }
+  constructor(private http: HttpService, private snackBar: MatSnackBar, private authService: AuthService, private toast: ToastService) { }
 
   getUrl = "/user/me";
   modifyUrl = "/modify/admin";
+  verifyUrl = "/modify/superadmin/send-verify-code";
   user!: UserResponse;
   updateUser: updateUser = {
     fullName: '',
     phone: '',
     email: '',
-    password: ''
+    password: '',
+    verifyCode: ''
   };
   userRole!: UserRole;
   private $destroy = new Subject<void>();
 
-  // TODO: 超級管理員個人資料修改頁面 - 密碼驗證和信箱驗證相關變量
-  passwordVerified: boolean = false;
-  oldPassword: string = '';
+  // TODO: 【Phase 6】超級管理員個人資料修改頁面 - 純電子郵件驗證相關變量
+  // 狀態變量：
+  //
+  // - newEmailVerifyCode: 新信箱驗證碼輸入值
+  // - newEmailCodeExpiry: 新信箱驗證碼倒計時（秒）
+  // - showNewEmailVerifyModal: 新信箱驗證 modal 顯示狀態
+  // - newEmailVerified: 新信箱驗證狀態
+  //
+  // - isSubmittingOldEmailVerify: 舊信箱驗證提交中
+  // - isSubmittingNewEmailVerify: 新信箱驗證提交中
+  // - isVerifyCodeCountdownActive: 倒計時進行中
+
   showVerifyCodeModal: boolean = false;
-  verifyCode: string = '';
+  emailVerified: boolean = false;
+  verifiedEmail: string = '';
   codeExpiry: number = 0;
   isSubmittingVerify: boolean = false;
   isLoadingPasswordVerify: boolean = false;
+
+  set updateEmail(value: string) {
+    this.updateUser.email = value;
+    if (!this.verify) {
+
+    }
+  }
+
+  get verify(): boolean {
+    return this.emailVerified && this.verifiedEmail === this.updateUser.email;
+  }
+
+  verifyEmail(email: string): void {
+    this.showVerifyCodeModal = true;
+  }
 
   ngOnInit(): void {
     this.getInfo();
     const payload = JSON.parse(atob(this.getToken().split('.')[1]));
     this.userRole = payload.role;
-
-    // TODO: 【Phase 6】修改 ngOnInit() 邏輯
-    // 若是超級管理員，進入前需要驗證密碼，不應立即調用 getInfo()
-    //
-    // 修改方式：
-    // if (this.userRole === 'SUPER_ADMIN') {
-    //   this.passwordVerified = false;
-    // } else {
-    //   this.getInfo();
-    // }
   }
 
   getInfo(): void {
@@ -93,36 +106,46 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     }
   }
 
-  // TODO: 【Phase 6】新增 verifyOldPassword() 方法
-  // 功能：驗證超級管理員舊密碼
-  // - 調用 authService.verifySuperAdminPassword(this.oldPassword)
-  // - 若驗證成功，設置 passwordVerified = true，清空 oldPassword，調用 getInfo()
-  // - 若驗證失敗，顯示錯誤提示
+  // TODO: 【Phase 6】新增 sendOldEmailVerifyCode() 方法
+  // 功能：發送舊信箱驗證碼（頁面入口驗證）
+  // - 調用 authService.sendVerifyCode(user.email, 'OLD_EMAIL_VERIFY')
+  // - 若成功，設置 showOldEmailVerifyModal = true，啟動倒計時
+  // - 若失敗，顯示錯誤提示
+
+  // TODO: 【Phase 6】新增 verifyOldEmail() 方法
+  // 功能：驗證舊信箱驗證碼
+  // - 驗證驗證碼是否輸入（6位數字）
+  // - 調用 authService.verifyEmailCode(user.email, oldEmailVerifyCode, 'OLD_EMAIL_VERIFY')
+  // - 若成功，設置 oldEmailVerified = true，關閉 modal
+  // - 若失敗，顯示錯誤提示，清空驗證碼
 
   // TODO: 【Phase 6】新增 submitEditForm() 方法
-  // 功能：提交編輯表單前，發送驗證碼
-  // - 驗證表單數據是否完整
-  // - 調用 authService.sendSuperAdminPasswordChangeCode()
-  // - 若成功，設置 showVerifyCodeModal = true，啟動倒計時
+  // 功能：提交編輯表單，發送新信箱驗證碼
+  // - 驗證表單數據是否完整和新信箱是否有效
+  // - 調用 authService.sendVerifyCode(updateUser.email, 'NEW_EMAIL_VERIFY')
+  // - 若成功，設置 showNewEmailVerifyModal = true，啟動倒計時
   // - 若失敗，顯示錯誤提示
 
   // TODO: 【Phase 6】新增 confirmWithVerifyCode() 方法
-  // 功能：確認驗證碼，執行最終更新
+  // 功能：確認新信箱驗證碼，執行最終更新
   // - 驗證驗證碼是否輸入（6位數字）
-  // - 組合 updateUser 和 verifyCode
+  // - 調用 authService.verifyEmailCode(updateUser.email, newEmailVerifyCode, 'NEW_EMAIL_VERIFY')
+  // - 若驗證碼驗證成功，組合 updateUser 和 verifyCode
   // - 調用 authService.updateSuperAdminSelf(updateData)
-  // - 若成功，關閉 modal，刷新用戶信息
+  // - 若成功，關閉 modal，顯示成功提示，刷新用戶信息
   // - 若失敗，顯示錯誤提示
 
   // TODO: 【Phase 6】新增 cancelVerification() 方法
   // 功能：取消驗證流程
-  // - 關閉 showVerifyCodeModal
-  // - 清空 verifyCode 和 codeExpiry
+  // - 關閉 showOldEmailVerifyModal 或 showNewEmailVerifyModal
+  // - 清空相應的驗證碼和倒計時
+  // - 如果是舊信箱驗證被取消，oldEmailVerified 保持 false
 
   // TODO: 【Phase 6】新增 startCodeCountdown() 方法
   // 功能：驗證碼倒計時（15分鐘 = 900秒）
-  // - 每秒遞減 codeExpiry
-  // - 當 codeExpiry <= 0 時停止計時
+  // - 接收參數：type ('OLD_EMAIL' 或 'NEW_EMAIL')
+  // - 每秒遞減對應的 codeExpiry
+  // - 當 codeExpiry <= 0 時停止計時並清空驗證碼
 
   No(): void {
     this.toast.info('NO', 2000)
@@ -170,8 +193,9 @@ export class UserInfoComponent implements OnInit, OnDestroy {
 }
 
 interface updateUser {
-  fullName?: string;
-  phone?: string;
-  email?: string;
-  password?: string;
+  fullName: string;
+  phone: string;
+  email: string;
+  password: string;
+  verifyCode: string;
 }

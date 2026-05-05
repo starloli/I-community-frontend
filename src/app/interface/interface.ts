@@ -195,3 +195,11 @@ export interface DayCell {
   reservations: Holiday[];
   bills: Holiday[];
 }
+
+export interface updateUser {
+  fullName: string;
+  phone: string;
+  email: string;
+  password: string;
+  verifyCode: string;
+}

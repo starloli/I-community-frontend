@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn } from '@angular/router';
 import { SuperAdminService } from '../@service/super-admin.service';
 import { MatDialog } from '@angular/material/dialog';
-import { VerifyPasswordComponent } from '../dialog/verify-password/verify-password.component';
+import { VerifyCodeComponent } from '../dialog/verify-code/verify-code.component';
 import { map } from 'rxjs';
 
 export const superAdminGuard: CanActivateFn = (route, state) => {
@@ -14,7 +14,7 @@ export const superAdminGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  const dialogRef = dialog.open(VerifyPasswordComponent);
+  const dialogRef = dialog.open(VerifyCodeComponent);
 
   return dialogRef.afterClosed().pipe(
     map(res => {

@@ -2,7 +2,9 @@ import { ResetPasswordComponent } from '../pages/reset-password/reset-password.c
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, tap, throwError } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
+import { VerifyCodeType } from '../interface/enum';
+import { updateUser } from '../interface/interface';
 import { ToastService } from './toast.service';
 
 @Injectable({
@@ -155,21 +157,40 @@ export class AuthService {
       }))
   }
 
-  // TODO: 【Phase 5】超級管理員密碼驗證和信箱驗證相關方法
-  // 
-  // 1. verifySuperAdminPassword(password: string): Observable<any>
-  //    - POST 到 /modify/superadmin/verify-password
-  //    - 進入編輯頁面前驗證舊密碼
-  //    - 返回 { message, valid }
-  //
-  // 2. sendSuperAdminPasswordChangeCode(): Observable<any>
-  //    - POST 到 /modify/superadmin/send-change-verify-code
-  //    - 在點擊「儲存變更」時發送驗證碼到舊信箱
-  //    - 返回 { message, expiresIn: 900 }
-  //
-  // 3. updateSuperAdminSelf(updateData: any): Observable<any>
-  //    - PUT 到 /modify/superadmin/self
-  //    - 驗證碼驗證成功後，執行最終更新
-  //    - updateData 包含 verifyCode 字段
-  //    - 返回 { message }
+  sendVerifyCode(email: string, type: VerifyCodeType): Observable<any> {
+    return this.http.post(
+      this.apiUrl + '/modify/superadmin/send-verify-code',
+      {
+        "email": email,
+        "type": type
+      }
+    ).pipe(
+      catchError((error) => {
+        console.error('API error:', error);
+
+        let message = '驗證碼發送錯誤';
+        if (error.error?.message) {
+          message = error.error.message;
+        }
+
+        return throwError(() => new Error(message));
+      }))
+  }
+
+  updateSuperAdminSelf(updateData: updateUser): Observable<any> {
+    return this.http.put(
+      this.apiUrl + '/modify/superadmin/self',
+      updateData
+    ).pipe(
+      catchError((error) => {
+        console.error('API error:', error);
+
+        let message = '更新超級管理員資料錯誤';
+        if (error.error?.message) {
+          message = error.error.message;
+        }
+
+        return throwError(() => new Error(message));
+      }))
+  }
 }
