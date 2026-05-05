@@ -192,3 +192,40 @@ textarea:focus {
   color: #ef4444;
   border-color: #ef4444;
 }
+
+
+/* 針對檔案上傳群組的整體美化 */
+.form-group input[type="file"] {
+  padding: 8px; /* 增加一點內邊距 */
+  background: #f8fafc; /* 淺灰色背景 */
+  cursor: pointer;
+  color: #000000; /* 文字顏色調淡 */
+  font-size: 13px;
+}
+
+/* 這是關鍵：美化「選擇檔案」那個按鈕本身 */
+.form-group input[type="file"]::file-selector-button {
+  padding: 6px 12px;
+  margin-right: 12px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #1e293b;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* 按鈕的 Hover 效果 */
+.form-group input[type="file"]::file-selector-button:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #3b82f6; /* 懸停時文字變藍色，對應你的主色調 */
+}
+
+/* 點擊時的視覺回饋 */
+.form-group input[type="file"]::file-selector-button:active {
+  background: #e2e8f0;
+  transform: scale(0.98); /* 輕微縮小，更有點擊感 */
+}

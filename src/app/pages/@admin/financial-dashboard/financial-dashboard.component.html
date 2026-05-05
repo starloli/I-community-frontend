@@ -1,102 +1,85 @@
+
 <div class="bill-container">
-  <div class="resident-container">
-    <div class="page-header">
-      <div class="header-left">
-        <h1>財務收支明細</h1>
-        <span class="subtitle">統一管理收支、薪資與財務狀況</span>
+<div class="resident-container">
+  <div class="page-header">
+    <div class="header-left">
+      <h1>財務收支明細</h1>
+      <span class="subtitle">統一管理收支、薪資與財務狀況</span>
+    </div>
+       <div class="header-actions">
+      <button class="add-btn" (click)="openDialog()" >
+        <mat-icon >add</mat-icon> 新增收支
+      </button>
+    </div>
+  </div>
+  </div>
+
+<div class="financial-wrapper">
+  <div class="stats-grid">
+    <div class="stat-card balance">
+      <div class="stat-label">當前帳戶結餘
+
+
       </div>
-      <div class="header-actions">
-        <button class="add-btn" (click)="openDialog()">
-          <mat-icon>add</mat-icon> 新增收支
-        </button>
-      </div>
+      <div class="stat-value">{{ totalBalance | currency:'TWD':'symbol':'1.0-0' }}</div>
+    </div>
+    <div class="stat-card income">
+      <div class="stat-label">累計總收入</div>
+      <div class="stat-value">+ {{ totalIncome | currency:'TWD':'symbol':'1.0-0' }}</div>
+    </div>
+    <div class="stat-card expense">
+      <div class="stat-label">累計總支出</div>
+      <div class="stat-value">- {{ totalExpense | currency:'TWD':'symbol':'1.0-0' }}</div>
     </div>
   </div>
 
-  <div class="financial-wrapper">
-    <div class="stats-grid">
-      <div class="stat-card balance">
-        <mat-icon class="stat-icon">account_balance_wallet</mat-icon>
-        <div class="stat-info">
-          <span class="stat-value">{{ totalBalance | currency:'TWD':'symbol':'1.0-0' }}</span>
-          <span class="stat-label">當前帳戶結餘</span>
-        </div>
-      </div>
-      <div class="stat-card income">
-        <mat-icon class="stat-icon">trending_up</mat-icon>
-        <div class="stat-info">
-          <span class="stat-value">+ {{ totalIncome | currency:'TWD':'symbol':'1.0-0' }}</span>
-          <span class="stat-label">累計總收入</span>
-        </div>
-      </div>
-      <div class="stat-card expense">
-        <mat-icon class="stat-icon">trending_down</mat-icon>
-        <div class="stat-info">
-          <span class="stat-value">- {{ totalExpense | currency:'TWD':'symbol':'1.0-0' }}</span>
-          <span class="stat-label">累計總支出</span>
-        </div>
+
+<div class="charts-container">
+  <div class="chart-box">
+    <h4 class="text-center">年度盈餘趨勢</h4>
+    <canvas id="chart"></canvas>
+  </div>
+
+  <div class="chart-box">
+    <h4 class="text-center">每月收支對比</h4>
+    <canvas id="barChart"></canvas>
+  </div>
+</div>
+<p>
+</p>
+<p></p>
+
+
+  <div class="table-container">
+    <div class="table-header">
+  <div class="table-title">
+    <h3>財務收支明細</h3>
+    <span class="record-count">共 {{ transactions.length }} 筆記錄</span>
+  </div>
+
+  <div class="filter-group">
+    <div class="filter-item">
+      <label>年月份</label>
+      <input type="month"[(ngModel)]="month"
+       (ngModelChange)="serchMonth($event)">
+    </div>
+
+    <div class="filter-item search">
+      <label>搜尋</label>
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" placeholder="摘要或類別..."
+               [(ngModel)]="searchTerm"
+       (ngModelChange)="applyFilters()" >
       </div>
     </div>
 
-
-    <div class="charts-container">
-      <div class="chart-box">
-        <h4 class="text-center">年度盈餘趨勢</h4>
-        <canvas id="chart"></canvas>
-      </div>
-
-      <div class="chart-box">
-        <h4 class="text-center">每月收支對比</h4>
-        <canvas id="barChart"></canvas>
-      </div>
-    </div>
-    <p>
-    </p>
-    <p></p>
-
-
-    <div class="table-container">
-      <div class="table-header">
-        <div class="table-title">
-          <h3>財務收支明細</h3>
-          <span class="record-count">共 {{ transactions.length }} 筆記錄</span>
-        </div>
-
-        <div class="filter-group">
-          <div class="filter-item">
-            <label>年月份</label>
-            <input type="month" [(ngModel)]="month" (ngModelChange)="serchMonth($event)">
-          </div>
-
-          <div class="filter-item search">
-            <label>搜尋</label>
-            <div class="search-box">
-              <mat-icon>search</mat-icon>
-              <input type="text" placeholder="摘要或類別..." [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()">
-            </div>
-          </div>
-
-          <button class="clear-btn" (click)="resetFilters()">清除</button>
-        </div>
-      </div>
+    <button class="clear-btn" (click)="resetFilters()">清除</button>
+  </div>
+</div>
 
 
 
-<<<<<<< HEAD
-      <table class="modern-table desktop-only">
-        <thead>
-          <tr>
-            <th>交易日期</th>
-            <th>類別</th>
-            <th>摘要</th>
-            <th>金額</th>
-            <th>結餘</th>
-            <th>操作人</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (item of displayTransactions; track item.id) {
-=======
     <table class="modern-table">
       <thead>
         <tr>
@@ -106,12 +89,10 @@
           <th>金額</th>
           <th>結餘</th>
           <th>操作人</th>
-          <th>憑證</th>
         </tr>
       </thead>
       <tbody>
         @for (item of displayTransactions; track item.id) {
->>>>>>> Vince
           <tr>
             <td>{{ item.transactionDate | date:'yyyy-MM-dd HH:mm' }}</td>
             <td>
@@ -122,19 +103,6 @@
             <td class="remark-cell">
               <strong>
                 @if(item.category=='SALARY'){ 員工薪資}
-<<<<<<< HEAD
-                @else if(item.category=='REPAIR'){維修費（水電、電梯、弱電）}
-                @else if(item.category=='PURCHASE'){採購（辦公用品、清潔耗材）}
-                @else if(item.category=='WATER_ELEC'){公共水電費}
-                @else if(item.category=='CLEANING'){清潔外包}
-                @else if(item.category=='SECURITY'){保全物業費}
-                @else if(item.category=='INSURANCE'){保險費}
-                @else if(item.category=='MGMT_FEE'){管理費收入}
-                @else if(item.category=='FACILITY_RENTAL'){公設租金收入}
-                @else if(item.category=='PENALTY'){罰金/違規金收入}
-                @else if(item.category=='COMMUNITY_ACT'){社區活動}
-                @else if(item.category=='OTHER'){其他}
-=======
  @else if(item.category=='REPAIR'){維修費（水電、電梯、弱電）}
 @else if(item.category=='PURCHASE'){採購（辦公用品、清潔耗材）}
 @else if(item.category=='WATER_ELEC'){公共水電費}
@@ -147,7 +115,6 @@
 @else if (item.category=='PENALTY' && item.type!=='INCOME') {罰金/違規金支出}
   @else if(item.category=='COMMUNITY_ACT'){社區活動}
 @else if(item.category=='OTHER'){其他}
->>>>>>> Vince
 
               </strong>
               <span>{{ item.remark }}</span>
@@ -157,22 +124,7 @@
             </td>
             <td class="fw-bold">{{ item.balance | currency:'TWD':'symbol':'1.0-0' }}</td>
             <td>{{ item.operator?.fullName || '系統自動入帳' }}</td>
-
-   <td>@if (item.receiptImagePath) {
-
-           <img [src]="SERVER_URL + item.receiptImagePath" width="100"
-           (click)="openImage(item.receiptImagePath)">
-          } @else {
-            <span>無圖片</span>
-          }</td>
-
           </tr>
-<<<<<<< HEAD
-          }
-        </tbody>
-      </table>
-=======
-
         }
       </tbody>
     </table>
@@ -182,99 +134,31 @@
     <button class="page-btn"
             [disabled]="p === 1"
             (click)="goToPage(p - 1)">‹</button>
->>>>>>> Vince
 
-      <!-- 手機版列表 -->
-      <div class="mobile-transaction-list">
-        @for (item of displayTransactions; track item.id) {
-        <div class="transaction-card">
-          <div class="card-header">
-            <span class="date">{{ item.transactionDate | date:'MM-dd HH:mm' }}</span>
-            <span [class]="'type-tag ' + item.type.toLowerCase()">
-              {{ item.type === 'INCOME' ? '收入' : '支出' }}
-            </span>
-          </div>
-          <div class="card-body">
-            <div class="category">
-              @if(item.category=='SALARY'){ 員工薪資}
-              @else if(item.category=='REPAIR'){維修費}
-              @else if(item.category=='PURCHASE'){採購}
-              @else if(item.category=='WATER_ELEC'){公共水電費}
-              @else if(item.category=='CLEANING'){清潔外包}
-              @else if(item.category=='SECURITY'){保全物業費}
-              @else if(item.category=='INSURANCE'){保險費}
-              @else if(item.category=='MGMT_FEE'){管理費收入}
-              @else if(item.category=='FACILITY_RENTAL'){公設租金}
-              @else if(item.category=='PENALTY'){罰金收入}
-              @else if(item.category=='COMMUNITY_ACT'){社區活動}
-              @else if(item.category=='OTHER'){其他}
-            </div>
-            <div class="amount" [ngClass]="item.type === 'INCOME' ? 'text-green' : 'text-red'">
-              {{ item.type === 'INCOME' ? '+' : '-' }} {{ item.amount | currency:'TWD':'symbol':'1.0-0' }}
-            </div>
-          </div>
-          <div class="card-footer">
-            <span class="remark">{{ item.remark }}</span>
-            <span class="balance">結餘: {{ item.balance | currency:'TWD':'symbol':'1.0-0' }}</span>
-          </div>
-        </div>
-        }
-      </div>
-    </div>
-    @if (totalPages > 1) {
-    <div class="pagination">
-      <button class="page-btn" [disabled]="p === 1" (click)="goToPage(p - 1)">‹</button>
-
-      @for (page of pageNumbers; track page) {
-      <button class="page-btn" [class.active]="page === p" (click)="goToPage(page)">
+    @for (page of pageNumbers; track page) {
+      <button class="page-btn"
+              [class.active]="page === p"
+              (click)="goToPage(page)">
         {{ page }}
       </button>
-      }
-
-      <button class="page-btn" [disabled]="p === totalPages" (click)="goToPage(p + 1)">›</button>
-    </div>
     }
+
+    <button class="page-btn"
+            [disabled]="p === totalPages"
+            (click)="goToPage(p + 1)">›</button>
   </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-<<<<<<< HEAD
-
-
-
-
-
-
-<!-- <div class="filter-bar">
-  <div class="row g-2 align-items-end">
-    <div class="col-md-3">
-      <label class="form-label small text-muted">選擇年月份</label>
-      <input type="month" class="form-control" [(ngModel)]="filterMonth" (change)="applyFilters()">
-    </div>
-
-    <div class="col-md-4">
-      <label class="form-label small text-muted">搜尋摘要或類別</label>
-      <div class="input-group">
-        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-        <input type="text" class="form-control" placeholder="輸入關鍵字..."
-               [(ngModel)]="searchTerm" (input)="applyFilters()">
-      </div>
-    </div>
-
-    <div class="col-md-2">
-      <button class="btn btn-outline-secondary w-100" (click)="resetFilters()">清除</button>
-    </div>
+}
   </div>
-</div> -->
-=======
->>>>>>> Vince
+
+
+
+
+
+
+
+
+
+
+
+
+
