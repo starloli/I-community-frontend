@@ -1,29 +1,34 @@
+import { SuperAdminService } from './../../../@service/super-admin.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpService } from '../../../@service/http.service';
 import { UserResponse } from '../../../interface/interface';
 import { Subject, takeUntil } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormsModule } from '@angular/forms';
-import { UserRole } from '../../../interface/enum';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UserRole, VerifyCodeType } from '../../../interface/enum';
 
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../@service/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-info',
-  imports: [CommonModule, FormsModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatProgressSpinnerModule, ReactiveFormsModule],
   templateUrl: './user-info.component.html',
   styleUrl: './user-info.component.scss',
 })
 export class UserInfoComponent implements OnInit, OnDestroy {
 
-  constructor(private http: HttpService, private snackBar: MatSnackBar, private authService: AuthService) { }
+  constructor(
+    private http: HttpService,
+    private snackBar: MatSnackBar,
+    private authService: AuthService,
+    private router: Router) { }
 
   getUrl = "/user/me";
-  modifyUrl = "/modify/admin";
-  verifyUrl = "/modify/superadmin/send-verify-code";
+  modifyUrl = "/modify/superadmin/self";
   user!: UserResponse;
   updateUser: updateUser = {
     fullName: '',
@@ -35,38 +40,66 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   userRole!: UserRole;
   private $destroy = new Subject<void>();
 
-  // TODO: 【Phase 6】超級管理員個人資料修改頁面 - 純電子郵件驗證相關變量
-  // 狀態變量：
-  //
-  // - newEmailVerifyCode: 新信箱驗證碼輸入值
-  // - newEmailCodeExpiry: 新信箱驗證碼倒計時（秒）
-  // - showNewEmailVerifyModal: 新信箱驗證 modal 顯示狀態
-  // - newEmailVerified: 新信箱驗證狀態
-  //
-  // - isSubmittingOldEmailVerify: 舊信箱驗證提交中
-  // - isSubmittingNewEmailVerify: 新信箱驗證提交中
-  // - isVerifyCodeCountdownActive: 倒計時進行中
-
+  otpCtrl = Array.from({ length: 6 }, () => new FormControl(''));
   showVerifyCodeModal: boolean = false;
-  emailVerified: boolean = false;
-  verifiedEmail: string = '';
+  verifyEmailSend: boolean = false;
+  email: string = '';
   codeExpiry: number = 0;
   isSubmittingVerify: boolean = false;
   isLoadingPasswordVerify: boolean = false;
+  emailCodeExpiry: number = 0;
 
-  set updateEmail(value: string) {
-    this.updateUser.email = value;
-    if (!this.verify) {
-
-    }
-  }
+  private timer: any;
 
   get verify(): boolean {
-    return this.emailVerified && this.verifiedEmail === this.updateUser.email;
+    return this.verifyEmailSend && this.email === this.updateUser.email;
   }
 
-  verifyEmail(email: string): void {
-    this.showVerifyCodeModal = true;
+  sendVerifyCode() {
+    this.updateUser.email = this.email.trim();
+    this.snackBar.open("正在發送驗證碼...", "關閉", {
+      duration: 2000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+    });
+    this.authService.sendVerifyCode(this.updateUser.email, VerifyCodeType.NEW_EMAIL_VERIFY).subscribe({
+      next: (res) => {
+        console.log("res：", res)
+        this.snackBar.open("驗證碼已發送", "關閉", {
+          duration: 2000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+        this.startCodeCountdown(res.expiry || 900);
+        this.verifyEmailSend = true;
+      },
+      error: (err) => {
+        if (err.error.message == "此信箱已註冊") {
+          this.snackBar.open(err.error.message, "關閉", {
+            duration: 2000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+          });
+        }
+        console.error("err：", err)
+        this.snackBar.open("驗證碼發送失敗", "關閉", {
+          duration: 2000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+      }
+    })
+  }
+
+  startCodeCountdown(expiry: number) {
+    this.emailCodeExpiry = expiry;
+    this.timer = setInterval(() => {
+      if (this.emailCodeExpiry > 0) {
+        this.emailCodeExpiry--;
+      } else {
+        clearInterval(this.timer);
+      }
+    }, 1000);
   }
 
   ngOnInit(): void {
@@ -88,6 +121,8 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   }
 
   ModifySelf(): void {
+    this.updateUser.verifyCode = this.otpCtrl.map(ctrl => ctrl.value).join('');
+    console.log(this.updateUser);
     if (this.isValid(this.updateUser)) {
       console.log('this.updateUser:', this.updateUser);
 
@@ -100,6 +135,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
           })
           console.log(response);
           this.getInfo();
+          this.router.navigate(['/admin/dashboard']);
         },
         error: (error) => {
           this.snackBar.open('修改失敗', '關閉', {
@@ -110,21 +146,54 @@ export class UserInfoComponent implements OnInit, OnDestroy {
           console.error(error);
         }
       })
+    } else {
+      this.snackBar.open('請填寫完整且有效的資料', '關閉', {
+        duration: 2000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      })
+    }
+  }
+  onInput(event: any, index: number) {
+
+    const value = event.target.value;
+
+    if (!/^[0-9]$/.test(value)) {
+      this.otpCtrl[index].setValue('');
+      return;
+    }
+
+    if (value && index < 5) {
+      const nextInput = event.target.parentElement.children[index + 1];
+      nextInput.focus();
     }
   }
 
+  onPaste(event: ClipboardEvent) {
+    const pasteData = event.clipboardData?.getData('text').slice(0, 6) || '';
+
+    if (!/^\d+$/.test(pasteData)) return;
+
+    pasteData.split('').forEach((num, i) => {
+      if (this.otpCtrl[i]) {
+        this.otpCtrl[i].setValue(num);
+      }
+    });
+
+    event.preventDefault();
+  }
+
+  onKeyDown(event: KeyboardEvent, index: number) {
+    if (event.key === 'Backspace' && !this.otpCtrl[index].value && index > 0) {
+      const prevInput = (event.target as HTMLElement).parentElement!.children[index - 1];
+      (prevInput as HTMLElement).focus();
+    }
+  }
   // TODO: 【Phase 6】新增 sendOldEmailVerifyCode() 方法
   // 功能：發送舊信箱驗證碼（頁面入口驗證）
   // - 調用 authService.sendVerifyCode(user.email, 'OLD_EMAIL_VERIFY')
   // - 若成功，設置 showOldEmailVerifyModal = true，啟動倒計時
   // - 若失敗，顯示錯誤提示
-
-  // TODO: 【Phase 6】新增 verifyOldEmail() 方法
-  // 功能：驗證舊信箱驗證碼
-  // - 驗證驗證碼是否輸入（6位數字）
-  // - 調用 authService.verifyEmailCode(user.email, oldEmailVerifyCode, 'OLD_EMAIL_VERIFY')
-  // - 若成功，設置 oldEmailVerified = true，關閉 modal
-  // - 若失敗，顯示錯誤提示，清空驗證碼
 
   // TODO: 【Phase 6】新增 submitEditForm() 方法
   // 功能：提交編輯表單，發送新信箱驗證碼
@@ -169,7 +238,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
         value !== undefined &&
         value !== ''
     ) && this.isValidEmail(this.updateUser.email)
-      && this.isValidPhone(this.updateUser.phone);
+      && this.isValidPhone(this.updateUser.phone) && this.verify;
   }
 
   isValidSquareFootage(squareFootage: number): boolean {
@@ -198,6 +267,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    clearInterval(this.timer);
     this.$destroy.next();
     this.$destroy.complete();
   }

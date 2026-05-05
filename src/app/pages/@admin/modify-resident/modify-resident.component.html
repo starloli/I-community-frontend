@@ -70,7 +70,8 @@
   <div class="resident-grid">
     @for (user of pagedUsers; track user.userId) {
     <div class="resident-card">
-      @if (user.squareFootage === 0 || user.squareFootage === null) {
+      @if ((user.squareFootage === 0 || user.squareFootage === null )&& user.status === UserStatus.ACTIVE && user.role
+      === UserRole.RESIDENT) {
       <mat-icon class="error-indicator" title="坪數資料異常">error</mat-icon>
       }
       <div class="card-header">

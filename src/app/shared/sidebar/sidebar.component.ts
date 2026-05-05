@@ -34,7 +34,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
   isCollapsed = false; // 收合狀態
   userName = '';
   unitNumber = '';
-  userEmail = '';
   userInitial = '';
   hasIncompleteResident = false; // 是否有坪數為 null 或 0 的住戶
   UserRole = UserRole;
@@ -79,7 +78,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       next: (res) => {
         this.userName = res.fullName || '住戶';
         this.unitNumber = res.unitNumber || '';
-        this.userEmail = res.email || '';
+        this.SuperAdminService.setUserEmail(res.email || '');
         this.userInitial = this.userName.charAt(0) || '';
       },
       error: (error) => {

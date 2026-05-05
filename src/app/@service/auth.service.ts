@@ -138,6 +138,7 @@ export class AuthService {
   }
 
   verifyEmail(email: string, code: string) {
+    console.log(email||"沒有信箱", code);
     return this.http.post(
       this.apiUrl + '/auth/email/verify',
       {
@@ -158,6 +159,8 @@ export class AuthService {
   }
 
   sendVerifyCode(email: string, type: VerifyCodeType): Observable<any> {
+    console.log(email || "沒有信箱", type);
+
     return this.http.post(
       this.apiUrl + '/modify/superadmin/send-verify-code',
       {
