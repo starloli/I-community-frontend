@@ -50,7 +50,7 @@
 }
 
 .stat-info { display: flex; flex-direction: column; gap: 4px; }
-.stat-value { font-size: 28px; font-weight: 400; line-height: 1; }
+.stat-value { font-size: 28px; font-weight: 700; line-height: 1; }
 .stat-label { font-size: 14px; color: #888; }
 
 // ===== 篩選列 =====
@@ -200,7 +200,7 @@ tbody tr:hover { background: rgba(184, 147, 90, 0.03); }
 
     .stat-info {
       margin-top: 12px;
-      .stat-value { font-size: 22px; }
+      .stat-value { font-size: 22px; font-weight: 400; }
       .stat-label { font-size: 14px; }
     }
   }

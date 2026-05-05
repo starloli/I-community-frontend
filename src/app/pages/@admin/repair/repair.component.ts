@@ -2,17 +2,17 @@ import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Subject, takeUntil } from 'rxjs';
 
 import { RepairService } from '../../../@service/repair.service';
 import { RepairStatus } from '../../../interface/enum';
 import { RepairRequest } from '../../../interface/interface';
+import { ToastService } from '../../../@service/toast.service';
 
 @Component({
   selector: 'app-repair',
   standalone: true,
-  imports: [CommonModule, MatIconModule, FormsModule, MatSnackBarModule],
+  imports: [CommonModule, MatIconModule, FormsModule],
   templateUrl: './repair.component.html',
   styleUrl: './repair.component.scss'
 })
@@ -47,7 +47,7 @@ export class RepairComponent implements OnInit, OnDestroy {
 
   repairs: RepairRequest[] = [];
 
-  private snackBar = inject(MatSnackBar);
+  private toast = inject(ToastService);
   private destroy$ = new Subject<void>();
 
   constructor(private repairService: RepairService) {}
@@ -122,7 +122,10 @@ export class RepairComponent implements OnInit, OnDestroy {
 
   submitRepair() {
     // 地點與描述為必填，缺少任一欄位就不送出。
-    if (!this.newRepair.location || !this.newRepair.description) return;
+    if (!this.newRepair.location || !this.newRepair.description) {
+      this.toast.warning('請先填寫完整報修資訊', 2000);
+      return;
+    }
 
     // 組出新增報修要送往後端的資料。
     const newRep = {
@@ -132,10 +135,20 @@ export class RepairComponent implements OnInit, OnDestroy {
       submittedAt: new Date().toLocaleDateString('zh-TW')
     };
 
-    this.repairService.post(newRep)
-      .subscribe(res => console.log(res));
-
-    this.closeForm();
+    this.repairService.post(newRep).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.toast.success('報修新增成功', 2000);
+        this.closeForm();
+      },
+      error: (error) => {
+        console.error('報修新增失敗:', error);
+        const message =
+          error?.error?.message ||
+          (error?.status ? `報修新增失敗（${error.status}）` : '報修新增失敗，請稍後再試');
+        this.toast.error(message, 3000);
+      }
+    });
   }
 
   openEditForm(repair: RepairRequest) {
@@ -171,7 +184,7 @@ export class RepairComponent implements OnInit, OnDestroy {
   deleteRepair(repair: RepairRequest) {
     if (confirm('確定要刪除此維修單嗎？')) {
       this.repairService.deleteById(repair.repairId).subscribe(() => {
-        this.snackBar.open('維修單已成功刪除', '關閉', { duration: 2000 });
+        this.toast.success('維修單已成功刪除', 2000);
       });
     }
 

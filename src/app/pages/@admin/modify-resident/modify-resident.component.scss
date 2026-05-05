@@ -89,11 +89,25 @@
 
 .filter-pills {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 12px;
+  overflow-x: auto;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+  padding: 15px 16px 10px 4px; // 頂部預留更多空間給 badge
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+
+  // 隱藏捲軸
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 
   .filter-btn {
-    position: relative; // 為了讓 badge 定位
+    flex-shrink: 0;
+    position: relative; 
+    overflow: visible; // 確保 badge 不會被按鈕自身切掉
     padding: 8px 24px;
     border-radius: 20px;
     border: 1.5px solid #e0e0e0;
@@ -304,31 +318,31 @@
   }
 
   .info-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #555;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #555;
 
-    mat-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-      color: #aaa;
-    }
-
-    .label {
-      font-size: 13px;
-      color: #999;
-      min-width: 50px;
-    }
-
-    .value {
-      font-size: 14px;
-      font-weight: 600;
-      color: #333;
-    }
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: #7d96b1; // 稍微加深一點，與主題呼應
   }
-}
+
+  .label {
+    font-size: 14px;
+    color: #777; // 比原本稍微深一點，提升對比度
+    min-width: 55px;
+    font-weight: 500;
+  }
+
+  .value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+  }
+  }}
 
 .card-actions {
   margin-top: auto;
@@ -342,14 +356,15 @@
     justify-content: center;
     gap: 8px;
     padding: 12px;
-    background: #5B7FA6;
+    background: linear-gradient(135deg, #4a69bd, #6c5ce7);
     color: #ffffff;
     border: none;
     border-radius: 12px;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(74, 105, 189, 0.2);
 
     mat-icon {
       font-size: 18px;
@@ -358,7 +373,13 @@
     }
 
     &:hover {
-      background: #4a6b8a;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(74, 105, 189, 0.3);
+      filter: brightness(1.1);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
 }
@@ -542,14 +563,28 @@
 
   .filter-pills {
     justify-content: flex-start;
-    gap: 8px;
+    gap: 10px;
+    padding: 12px 24px 12px 16px; // 頂部預留空間給 badge
+    margin: -4px -16px 0 -16px;
+    overflow-x: auto;
+    overflow-y: visible; // 允許 badge 向上延伸
 
     .filter-btn {
-      padding: 6px 14px;
+      padding: 6px 16px;
       font-size: 13px;
-      flex: 1;
+      flex: none;
       justify-content: center;
       white-space: nowrap;
+      position: relative;
+      overflow: visible; // 確保 badge 不被切掉
+
+      .count-badge {
+        top: -8px; // 調整手機版位置
+        right: -6px;
+        min-width: 18px;
+        height: 18px;
+        font-size: 10px;
+      }
     }
   }
 

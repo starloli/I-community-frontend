@@ -1,4 +1,3 @@
-import { SuperAdminService } from './../../../@service/super-admin.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpService } from '../../../@service/http.service';
 import { UserResponse } from '../../../interface/interface';
@@ -12,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../@service/auth.service';
 import { Router } from '@angular/router';
+import { ToastService } from '../../../@service/toast.service';
 
 @Component({
   selector: 'app-user-info',
@@ -25,7 +25,9 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     private http: HttpService,
     private snackBar: MatSnackBar,
     private authService: AuthService,
-    private router: Router) { }
+    private router: Router,
+    private toast: ToastService,
+  ) { }
 
   getUrl = "/user/me";
   modifyUrl = "/modify/superadmin/self";
@@ -128,21 +130,13 @@ export class UserInfoComponent implements OnInit, OnDestroy {
 
       this.http.putApi(this.modifyUrl, this.updateUser).pipe(takeUntil(this.$destroy)).subscribe({
         next: (response) => {
-          this.snackBar.open('修改成功', '關閉', {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          })
+          this.toast.success('修改成功', 2000)
           console.log(response);
           this.getInfo();
           this.router.navigate(['/admin/dashboard']);
         },
         error: (error) => {
-          this.snackBar.open('修改失敗', '關閉', {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          })
+          this.toast.error('修改失敗', 2000)
           console.error(error);
         }
       })
@@ -224,11 +218,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   // - 當 codeExpiry <= 0 時停止計時並清空驗證碼
 
   No(): void {
-    this.snackBar.open('NO', 'NO', {
-      duration: 2000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-    })
+    this.toast.info('NO', 2000)
   }
 
   isValid(user: updateUser): boolean {

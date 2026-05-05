@@ -68,6 +68,46 @@
 // ===== 報修列表 =====
 .repair-list { display: flex; flex-direction: column; gap: 12px; }
 
+// ===== 空狀態樣式 (Empty State) =====
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px dashed rgba(196, 122, 90, 0.3);
+  margin-top: 12px;
+  min-height: 400px;
+
+  .empty-icon {
+    font-size: 80px;
+    width: 80px;
+    height: 80px;
+    color: #cbd5e1;
+    margin-bottom: 24px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.05));
+  }
+
+  h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #475569;
+    margin: 0 0 12px 0;
+  }
+
+  p {
+    font-size: 15px;
+    color: #94a3b8;
+    max-width: 450px;
+    margin: 0;
+    line-height: 1.6;
+  }
+}
+
 .repair-card {
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
@@ -150,7 +190,21 @@
   mat-icon { font-size: 18px; width: 18px; height: 18px; }
 }
 
-.edit-btn   { background: #e3f2fd; color: #0288d1; &:hover { background: #0288d1; color: #fff; } }
+.edit-btn {
+  background: linear-gradient(135deg, #4a69bd, #6c5ce7);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(74, 105, 189, 0.2);
+
+  &:hover {
+    filter: brightness(1.1);
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(74, 105, 189, 0.3);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
 .delete-btn { background: #ffebee; color: #e53935; &:hover { background: #e53935; color: #fff; } }
 
 .complete-btn {
@@ -288,8 +342,8 @@
     margin-bottom: 16px;
 
     .header-left {
-      h1 { font-size: 20px; margin-bottom: 2px; }
-      .subtitle { font-size: 13px; }
+      h1 { font-size: 30px; margin-bottom: 2px; }
+      .subtitle { font-size: 15px; }
     }
 
     .add-btn {
@@ -476,5 +530,24 @@
     .form-header, .form-body, .form-footer {
       padding: 16px 20px;
     }
+  }
+
+  // 空狀態手機版
+  .empty-container {
+    min-height: 300px;
+    padding: 40px 16px;
+    border-radius: 16px;
+    background: transparent;
+    border-color: #eee;
+
+    .empty-icon {
+      font-size: 60px;
+      width: 60px;
+      height: 60px;
+      margin-bottom: 16px;
+    }
+
+    h3 { font-size: 18px; }
+    p { font-size: 14px; }
   }
 }

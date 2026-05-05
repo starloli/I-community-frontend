@@ -1,9 +1,9 @@
 import { SuperAdminService } from './../../@service/super-admin.service';
 import { UserRole } from './../../interface/enum';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DOCUMENT, CommonModule } from '@angular/common';
+import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common';
 import { HttpService } from '../../@service/http.service';
 import { ResidentStateService } from '../../@service/resident-state.service';
 import { User } from '../../interface/interface';
@@ -21,7 +21,9 @@ import { VerifyCodeComponent } from '../../dialog/verify-code/verify-code.compon
     '[class.sidebar-collapsed-host]': 'isCollapsed'
   }
 })
-export class SidebarComponent implements OnInit, OnDestroy {
+export class SidebarComponent implements OnInit, OnDestroy, AfterViewInit {
+  private readonly document = inject(DOCUMENT);
+  private readonly renderer = inject(Renderer2);
 
   constructor(
     private router: Router,
@@ -35,10 +37,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
   userName = '';
   unitNumber = '';
   userInitial = '';
-  hasIncompleteResident = false; // 是否有坪數為 null 或 0 的住戶
+  incompleteCount = 0; // 資料異常的住戶數量
   UserRole = UserRole;
+  isMobileNavHidden = false;
 
   private $destroy = new Subject<void>();
+  private lastScrollTop = 0;
+  private removeScrollListener?: () => void;
+  private removeResizeListener?: () => void;
 
   navItems = [
     { route: 'admin/dashboard', icon: 'home_work', label: '社區總覽', color: '#5B7FA6' },
@@ -48,8 +54,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { route: 'admin/facility', icon: 'meeting_room', label: '設備管理', color: '#7B7FBA' },
     { route: 'admin/package', icon: 'inventory_2', label: '包裹管理', color: '#7BA89E' },
     { route: 'admin/repair', icon: 'build', label: '報修申請', color: '#C47A5A' },
-    { route: 'admin/ModifyResident', label: '住戶管理', color: '#5B7FA6', icon: 'manage_accounts' },
-    { route: 'admin/FinancialDashboard', label: '財務收支明細', color: '#4075ae', icon: 'receipt_long' }
+    { route: 'admin/ModifyResident', label: '住戶管理', color: '#B07A8A', icon: 'manage_accounts' },
+    { route: 'admin/FinancialDashboard', label: '財務明細', color: '#88acd2', icon: 'receipt_long' }
   ];
 
   // 切換收合狀態
@@ -62,14 +68,23 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.checkResidentIncomplete();
 
     // 訂閱即時狀態更新
-    this.residentState.hasIncompleteResident$
+    this.residentState.incompleteCount$
       .pipe(takeUntil(this.$destroy))
-      .subscribe(status => this.hasIncompleteResident = status);
+      .subscribe(count => this.incompleteCount = count);
+  }
+
+  ngAfterViewInit(): void {
+    this.bindMobileScrollListener();
+    this.removeResizeListener = this.renderer.listen('window', 'resize', () => {
+      this.bindMobileScrollListener();
+    });
   }
 
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
+    this.removeScrollListener?.();
+    this.removeResizeListener?.();
   }
 
   private loadUserInfo(): void {
@@ -95,9 +110,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
     const getUrl = "/admin/get-all-residents-users";
     this.http.getApi<any[]>(getUrl).subscribe({
       next: (res) => {
-        // 檢查是否有坪數為 null 或 0 的住戶，並更新服務狀態
-        const hasIncomplete = res.some(user => user.squareFootage === null || user.squareFootage === 0);
-        this.residentState.setIncompleteStatus(hasIncomplete);
+        // 計算坪數為 null 或 0 的住戶數量
+        const count = res.filter(user => user.squareFootage === null || user.squareFootage === 0).length;
+        this.residentState.setIncompleteCount(count);
       },
       error: (error) => {
         console.error('取得住戶清單失敗:', error);
@@ -112,6 +127,16 @@ export class SidebarComponent implements OnInit, OnDestroy {
   get userRole(): UserRole {
     const payload = JSON.parse(atob(this.token.split('.')[1]))
     return payload.role;
+  }
+
+  get roleName(): string {
+    switch (this.userRole) {
+      case UserRole.SUPER_ADMIN: return '超級管理員';
+      case UserRole.ADMIN: return '社區管理員';
+      case UserRole.GUARD: return '社區保全';
+      case UserRole.RESIDENT: return '社區住戶';
+      default: return '系統使用者';
+    }
   }
 
   get token(): string {
@@ -129,5 +154,35 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.SuperAdminService.setVerified(false);
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
+  }
+
+  private bindMobileScrollListener(): void {
+    this.removeScrollListener?.();
+    this.isMobileNavHidden = false;
+
+    if (!window.matchMedia('(max-width: 768px)').matches) {
+      return;
+    }
+
+    const scrollHost = this.document.querySelector('.main-content') as HTMLElement | null;
+    if (!scrollHost) {
+      return;
+    }
+
+    this.lastScrollTop = scrollHost.scrollTop;
+    this.removeScrollListener = this.renderer.listen(scrollHost, 'scroll', () => {
+      const currentScrollTop = scrollHost.scrollTop;
+      const delta = currentScrollTop - this.lastScrollTop;
+
+      if (currentScrollTop <= 8) {
+        this.isMobileNavHidden = false;
+      } else if (delta > 8) {
+        this.isMobileNavHidden = true;
+      } else if (delta < -8) {
+        this.isMobileNavHidden = false;
+      }
+
+      this.lastScrollTop = currentScrollTop;
+    });
   }
 }

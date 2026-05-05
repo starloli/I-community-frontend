@@ -10,26 +10,24 @@ $text-secondary: #666;
 $border-color: #e0e0e0;
 $hover-bg: #f5f5f5;
 
-// ===== ä¸»å®¹??=====
+// ===== ä¸»å®¹å™¨ =====
 .calendar-container {
   --calendar-time-column-width: 80px;
   --calendar-hour-height: 60px;
   --calendar-grid-border: rgba(123, 127, 186, 0.12);
   --calendar-grid-border-strong: rgba(123, 127, 186, 0.2);
   --calendar-cell-bg: rgba(255, 255, 255, 0.95);
-  width: 92vw;                      /* å·¦å³?™å‡ºç©ºé? */
-  max-width: 800px;
-  min-height: 300px;
-  max-height: 75vh;                 /* ç¸®çŸ­é«˜åº¦ï¼Œç¢ºä¿ä?ä¸‹ç???*/
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
   background: $background;
-  border-radius: 15px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  margin: 20px auto;                /* å±…ä¸­ä¸¦ä??å??Šè? */
+  margin: 0;
 }
 
-// ===== å°èˆª??=====
+// ===== å°èˆªåˆ— =====
 .calendar-nav {
   display: flex;
   justify-content: center;
@@ -64,7 +62,7 @@ $hover-bg: #f5f5f5;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
 
-    // ä¸­é??„ã€Œå??°ç¾?¨ã€æ??•ç‰¹æ®Šæ¨£å¼?
+    // ä¸­é–“ã€Œå›åˆ°ä»Šå¤©ã€æŒ‰éˆ•ç‰¹æ®Šæ¨£å¼
     &:nth-child(2) {
       background: rgba(255, 255, 255, 1);
       color: $accent-color;
@@ -72,19 +70,17 @@ $hover-bg: #f5f5f5;
     }
   }
 }
-// ===== Calendar ä¸»é?æ¨??è¦†å¯« =====
+// ===== Calendar ä¸»é«”æ¨£å¼è¦†å¯« =====
 ::ng-deep {
-  // ?´é?å®¹å™¨
+  // é€±è¦–åœ–å®¹å™¨
   .cal-week-view {
     min-width: 0;
-    background-color: #f5f5f5 !important; // æ·ºç°?²åŸºåº?
-    //  // ?±è??Œç›®?æ??“ã€æ?è¨˜ç?
+    background-color: #f5f5f5 !important; // æ·ºç°è‰²åŸºåº•
+    // ã€Œç›®å‰æ™‚é–“ã€æ¨™è¨˜ç·š
     .cal-current-time-marker {
       background-color: #000000a7 !important;
       height: 2px !important;
       opacity: 0.8 !important;
-
-
     }
     .cal-day-headers {
       padding-left: var(--calendar-time-column-width) !important;
@@ -93,7 +89,7 @@ $hover-bg: #f5f5f5;
     .cal-hour-segment.cal-disabled {
       background-color: #d9d9d9 !important;
       cursor: not-allowed !important;
-      pointer-events: none !important; // ?ªæ??™æ ¼ä¸èƒ½é»?
+      pointer-events: none !important; // ç¦ç”¨çš„å–®å…ƒæ ¼ä¸èƒ½é»æ“Š
       opacity: 1 !important;
       border-top: 1px solid rgba(255, 255, 255, 0.4);
       box-shadow: inset 0 0 0 1px rgba(120, 120, 120, 0.08);
@@ -106,29 +102,29 @@ $hover-bg: #f5f5f5;
         rgba(255, 255, 255, 0.1) 20px
       );
 
-      // ?±è??™æ ¼??hover ?‡å?
+      // ç¦ç”¨çš„å–®å…ƒæ ¼ hover æ•ˆæœ
       &::before {
         display: none !important;
       }
     }
   }
 
-  // ?€?€ äº‹ä»¶æ¨?? ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
+  // äº‹ä»¶å€å¡Š
   .cal-event {
     border: none !important;
     box-shadow: none !important;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4px; // å¢å?ä¸€äº›å…§?Šè?
+    padding: 4px; // å¢åŠ ä¸€äº›å…§è·
 
     .cal-event-title {
-      text-shadow: none !important; // ç§»é™¤?‡å??°å½±
+      text-shadow: none !important; // ç§»é™¤æ–‡å­—é™°å½±
       font-weight: 600;
     }
   }
 
-  // ?€?€ è¡¨é ­æ¨?? ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
+  // è¡¨é ­å€å¡Š
   .cal-header {
     background: #fafbfc;
     border-bottom: 2px solid $border-color;
@@ -156,7 +152,7 @@ $hover-bg: #f5f5f5;
           background: rgba(123, 127, 186, 0.05);
         }
 
-        // ?¥æ??‡å?æ¨??
+        // æ˜ŸæœŸèˆ‡æ—¥æœŸæ¨™é¡Œ
         b {
           display: block;
           font-size: 18px;
@@ -174,7 +170,7 @@ $hover-bg: #f5f5f5;
           line-height: 1.2;
         }
 
-        // ä»Šå¤©?„æ—¥?Ÿç‰¹æ®Šæ?ç¤?
+        // ä»Šå¤©æ—¥æœŸçš„ç‰¹æ®Šæ¨£å¼
         &.cal-today {
           background: linear-gradient(
             135deg,
@@ -192,7 +188,7 @@ $hover-bg: #f5f5f5;
           }
         }
 
-        // ?±æœ«æ¨??
+        // é€±æœ«æ¨£å¼
         &.cal-weekend {
           background: rgba(0, 0, 0, 0.02);
 
@@ -205,7 +201,7 @@ $hover-bg: #f5f5f5;
     }
   }
 
-  // ?€?€ ?‚é?è»¸è??§å®¹?€???€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
+  // æ™‚é–“è»¸æ¬„ä½å®¹å™¨
   .cal-time-label-column {
     width: var(--calendar-time-column-width);
     min-width: var(--calendar-time-column-width);
@@ -246,7 +242,7 @@ $hover-bg: #f5f5f5;
     }
   }
 
-  // ?€?€ ?¥æ?æ¬„ä? ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
+  // æ—¥æœŸæ¬„ä½
   .cal-day-columns {
     width: calc(100% - var(--calendar-time-column-width));
     min-width: calc(100% - var(--calendar-time-column-width));
@@ -265,14 +261,14 @@ $hover-bg: #f5f5f5;
         border-right: none;
       }
 
-      // ?±æœ«?Œæ™¯??
+      // é€±æœ«èƒŒæ™¯
       &.cal-weekend {
         background: rgba(0, 0, 0, 0.01);
       }
     }
   }
 
-  // ?€?€ ?‚é??¼å?ï¼ˆå¯é»æ??€?Ÿï??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
+  // å°æ™‚å–®å…ƒæ ¼ï¼ˆå¯é»æ“Šé ç´„ï¼‰
   .cal-hour-segment {
     border-bottom: 1px solid var(--calendar-grid-border);
     height: var(--calendar-hour-height) !important;
@@ -283,7 +279,7 @@ $hover-bg: #f5f5f5;
     background: var(--calendar-cell-bg);
     box-sizing: border-box;
 
-    // ?¸å??ˆæ?
+    // æ‡¸åœæ•ˆæœ
     &:hover:not(.cal-disabled) {
       background: linear-gradient(
         135deg,
@@ -293,7 +289,7 @@ $hover-bg: #f5f5f5;
       box-shadow: inset 0 0 0 1px rgba(123, 127, 186, 0.18);
 
       &::before {
-        content: "é»æ??ç?";
+        content: "é»æ“Šé ç´„";
         position: absolute;
         top: 50%;
         left: 50%;
@@ -306,7 +302,7 @@ $hover-bg: #f5f5f5;
       }
     }
 
-    // å·²ç??¨ç??‚é??¼ï??å»?‚é?ï¼?
+    // å·²é ç´„æˆ–å·²éå»çš„å–®å…ƒæ ¼
     &.cal-disabled {
       background-color: #d9d9d9 !important;
       background-image: repeating-linear-gradient(
@@ -325,7 +321,7 @@ $hover-bg: #f5f5f5;
     }
   }
 
-  // ?€?€ ?ç?äº‹ä»¶æ¨?? ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
+  // é ç´„äº‹ä»¶æ¢
   .cal-event {
     min-height: 34px;
     width: calc(100% - 8px);
@@ -347,7 +343,7 @@ $hover-bg: #f5f5f5;
       z-index: 10;
     }
 
-    // äº‹ä»¶æ¨™é??‡å?
+    // äº‹ä»¶æ¨™é¡Œæ¨£å¼
     .cal-event-title {
       font-size: 11px;
       font-weight: 600;
@@ -357,7 +353,7 @@ $hover-bg: #f5f5f5;
       line-height: 1.25;
       overflow-wrap: anywhere;
     }
-    // ?¯ç”¨?€?‹ï??è‰²ï¼?
+    // é ç´„ä¸­ï¼ˆè—è‰²ï¼‰
     &[style*="background-color: rgb(30, 144, 255)"],
     &[style*="background-color:#1e90ff"] {
       background: linear-gradient(135deg, #1e90ff 0%, #4fa3ff 100%) !important;
@@ -371,7 +367,7 @@ $hover-bg: #f5f5f5;
       }
     }
 
-    // è­¦å??€?‹ï?é»ƒè‰²ï¼?
+    // è­¦å‘Š/ç†±é–€ï¼ˆé»ƒè‰²ï¼‰
     &[style*="background-color: rgb(227, 188, 8)"],
     &[style*="background-color:#e3bc08"] {
       background: linear-gradient(135deg, #e3bc08 0%, #f0ca1f 100%) !important;
@@ -385,7 +381,7 @@ $hover-bg: #f5f5f5;
       }
     }
 
-    // é¡æ»¿?€?‹ï?ç´…è‰²ï¼?
+    // é¡æ»¿ï¼ˆç´…è‰²ï¼‰
     &[style*="background-color: rgb(173, 33, 33)"],
     &[style*="background-color:#ad2121"] {
       background: linear-gradient(135deg, #ad2121 0%, #c73535 100%) !important;
@@ -399,7 +395,7 @@ $hover-bg: #f5f5f5;
     }
   }
 
-  // ?€?€ ?¶å¤©æ¨™è? ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
+  // ä»Šå¤©æ¨™è¨˜
   .cal-day-column.cal-today {
     background: linear-gradient(
       to bottom,
@@ -423,12 +419,12 @@ $hover-bg: #f5f5f5;
     }
   }
 
-  // ?€?€ ?‚é??†é?ç·??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
+  // å°æ™‚ç·šéš±è—
   .cal-hour:not(:last-child) {
     border-bottom: none;
   }
 
-  // ?€?€ ?´é??‚é?å¼·èª¿ ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
+  // å°æ™‚ç·šæ¢äº¤æ›¿å¼·èª¿
   .cal-hour:nth-child(odd) {
     .cal-hour-segment:not(.cal-disabled) {
       background: rgba(0, 0, 0, 0.01);
@@ -436,17 +432,17 @@ $hover-bg: #f5f5f5;
   }
 }
 
-// ===== ?¿æ?å¼è¨­è¨?(RWD) =====
+// ===== éŸ¿æ‡‰å¼è¨­è¨ˆ (RWD) =====
 @media (max-width: 768px) {
   .calendar-container {
     --calendar-time-column-width: 60px;
     --calendar-hour-height: 60px;
-    width: 92vw;                      /* ?‹æ??ˆå·¦?³ç???*/
+    width: 92vw;                      /* è®“æ‰‹æ©Ÿç‰ˆå·¦å³ç•™ç™½ */
     max-width: none;
     min-height: 50vh;
-    max-height: 80vh;                 /* ?ä?é«˜åº¦ç¢ºä?ä¸Šä??™ç™½ */
+    max-height: 80vh;                 /* é™åˆ¶é«˜åº¦ç¢ºä¿ä¸Šä¸‹ç•™ç™½ */
     margin: 10px auto;
-    border-radius: 12px;              /* ?‹æ??ˆæ¢å¾©å?è§’å?? ç???*/
+    border-radius: 12px;              /* åœ“è§’èª¿æ•´ */
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
@@ -476,14 +472,14 @@ $hover-bg: #f5f5f5;
   }
 
   .calendar-scroll-area {
-    overflow: auto; /* ?Ÿç”¨?™å??²å? */
+    overflow: auto; /* å•Ÿç”¨æ²å‹• */
     -webkit-overflow-scrolling: touch;
     flex: 1;
   }
 
   ::ng-deep {
     .cal-week-view {
-      min-width: 700px; /* å¼·åˆ¶?€å°å¯¬åº¦ä»¥?Ÿç”¨æ©«å??²å? */
+      min-width: 700px; /* å¼·åˆ¶æœ€å°å¯¬åº¦ä»¥å•Ÿç”¨æ©«å‘æ²å‹• */
     }
 
     .cal-header .cal-day-headers .cal-header {
@@ -513,7 +509,7 @@ $hover-bg: #f5f5f5;
   }
 }
 
-// ===== è¼‰å…¥?•ç•« =====
+// ===== è¼‰å…¥å‹•ç•« =====
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -523,7 +519,7 @@ $hover-bg: #f5f5f5;
   animation: fadeIn 0.3s ease-out;
 }
 
-// ===== ?ªå?ç¾©æ²è»¸æ¨£å¼?=====
+// ===== è‡ªå®šç¾©æ²è»¸æ¨£å¼ =====
 .calendar-scroll-area {
   flex: 1;
   min-height: 0;

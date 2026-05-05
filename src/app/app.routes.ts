@@ -33,6 +33,7 @@ import { FinancialDashboardComponent } from './pages/@admin/financial-dashboard/
 
 import { CalendarComponent } from './pages/calendar/calendar.component';
 import { superAdminGuard } from './guards/super-admin-guard';
+import { FinancialDashboardResidentComponent } from './pages/@resident/financial-dashboard-resident/financial-dashboard-resident.component';
 
 export const routes: Routes = [
   // ── 登入頁 ──────────────────────────────────────────
@@ -41,6 +42,7 @@ export const routes: Routes = [
   { path: 'visitorDialog', component: VisitorDialogComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'forget-password', component: ForgetPasswordComponent },
+
   {
     path: 'admin', component: LayoutComponent,
     canActivate: [adminGuard],
@@ -57,6 +59,7 @@ export const routes: Routes = [
       { path: 'ModifyResident', component: ModifyResidentComponent },
       { path: 'FinancialDashboard', component: FinancialDashboardComponent },
       { path: 'calendar', component: CalendarComponent },
+
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ]
   },
@@ -76,7 +79,9 @@ export const routes: Routes = [
       { path: 'repair', component: ResidentRepairComponent },
       { path: 'visitor', component: ResidentVisitorComponent },
       { path: 'calendar', component: CalendarComponent },
+      { path: 'FinancialDashboardResidentComponent', component: FinancialDashboardResidentComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+
     ]
   },
 

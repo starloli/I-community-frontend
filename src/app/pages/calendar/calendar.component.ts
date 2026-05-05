@@ -2,10 +2,12 @@ import { Component, computed, signal } from '@angular/core';
 import { DayCell, Holiday } from '../../interface/interface';
 import { HolidayService } from '../../@service/holiday-service';
 import { AuthService } from '../../@service/auth.service';
+import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-calendar',
-  imports: [],
+  imports: [MatIconModule],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss',
 })
@@ -18,6 +20,8 @@ export class CalendarComponent {
 
   holidays = signal<Holiday[]>([]);
   events = signal<Holiday[]>([]);
+  reservations = signal<Holiday[]>([]);
+  bills = signal<Holiday[]>([]);
 
   selectedDate = signal<string | null>(null);
 
@@ -25,13 +29,20 @@ export class CalendarComponent {
 
   constructor(
     private service: HolidayService,
-    private auth: AuthService
+    private auth: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit() {
     this.loadHolidays();
     this.loadEvents();
+    this.loadReservations();
+    this.loadBills();
     this.isAdmin = this.auth.isAdmin();
+  }
+
+  goBack() {
+    this.router.navigate(['/admin/dashboard']);
   }
 
   // 🔁 載入當月假日
@@ -47,6 +58,20 @@ export class CalendarComponent {
 
     this.service.getEvents(start)
       .subscribe(res => this.events.set(res));
+  }
+
+  loadReservations() {
+    const start = `${this.year()}-${this.pad(this.month()+1)}-01`;
+
+    this.service.getReservations(start)
+      .subscribe(res => this.reservations.set(res));
+  }
+
+  loadBills() {
+    const start = `${this.year()}-${this.pad(this.month()+1)}-01`;
+
+    this.service.getBills(start)
+      .subscribe(res => this.bills.set(res));
   }
 
   // 📅 計算月曆 grid
@@ -85,17 +110,19 @@ export class CalendarComponent {
 
   private buildCell(date: Date, inMonth: boolean): DayCell {
     const dateStr = this.format(date);
-
     const holiday = this.holidays().find(h => h.date === dateStr);
-
     const events = this.events().filter(e => e.date === dateStr) || [];
+    const reservations = this.reservations().filter(r => r.date === dateStr) || [];
+    const bills = this.bills().filter(b => b.date === dateStr) || [];
 
     return {
       date,
       inMonth,
       isToday: this.format(date) === this.format(this.today),
       holiday,
-      events
+      events,
+      reservations,
+      bills
     };
   }
 
@@ -118,6 +145,8 @@ export class CalendarComponent {
     }
     this.loadHolidays();
     this.loadEvents();
+    this.loadReservations();
+    this.loadBills();
   }
 
   nextMonth() {
@@ -129,6 +158,17 @@ export class CalendarComponent {
     }
     this.loadHolidays();
     this.loadEvents();
+    this.loadReservations();
+    this.loadBills();
+  }
+
+  toTodayMonth() {
+    this.year = signal(this.today.getFullYear());
+    this.month = signal(this.today.getMonth());
+    this.loadHolidays();
+    this.loadEvents();
+    this.loadReservations();
+    this.loadBills();
   }
 
   selectDay(day: DayCell) {
@@ -146,6 +186,20 @@ export class CalendarComponent {
     if (!date) return [];
 
     return this.events().filter(e => e.date === date) || [];
+  });
+
+  selectedReservations = computed(() => {
+    const date = this.selectedDate();
+    if (!date) return [];
+
+    return this.reservations().filter(r => r.date === date) || [];
+  });
+
+  selectedBills = computed(() => {
+    const date = this.selectedDate();
+    if (!date) return [];
+
+    return this.bills().filter(b => b.date === date) || [];
   });
 
   newEventTitle = signal('');

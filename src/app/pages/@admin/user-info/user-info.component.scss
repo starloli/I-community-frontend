@@ -268,6 +268,37 @@
 }
 
 // ===== 響應式 =====
+@media (max-width: 768px) {
+  .profile-container {
+    padding-top: 0px;
+  }
+
+  .page-header {
+    padding: 16px;
+    margin-bottom: 8px;
+    .header-left {
+      h1 {
+        font-size: 30px;
+        letter-spacing: -0.5px;
+      }
+      .subtitle {
+        font-size: 15px;
+      }
+    }
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0 12px 40px;
+  }
+
+  .profile-card {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+}
+
 @media (max-width: 992px) {
   .profile-grid {
     grid-template-columns: 1fr;

@@ -45,19 +45,21 @@
 }
 
 .stat-info { display: flex; flex-direction: column; gap: 4px; }
-.stat-value { font-size: 28px; font-weight: 700; line-height: 1; }
+.stat-value { font-size: 32px; font-weight: 700; line-height: 1; }
 .stat-label { font-size: 14px; color: #888; }
 
 // ===== 篩選列 =====
 .filter-row {
   display: flex;
   gap: 8px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
+  margin-bottom: 24px;
   align-items: center;
 }
 
 .filter-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 8px 20px;
   border-radius: 20px;
   border: 1.5px solid #e0e0e0;
@@ -66,10 +68,20 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
 
-  &:hover { border-color: #7B7FBA; color: #7B7FBA; }
-  &.active { background: #7B7FBA; border-color: #7B7FBA; color: #ffffff; }
+  &:hover {
+    border-color: #7B7FBA;
+    color: #7B7FBA;
+    background: rgba(123, 127, 186, 0.05);
+  }
+  &.active {
+    background: #7B7FBA;
+    border-color: #7B7FBA;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(123, 127, 186, 0.25);
+  }
 }
 
 // ===== 帳單表格 =====
@@ -111,22 +123,22 @@ tbody tr:hover { background: rgba(123, 127, 186, 0.03); }
 
   // 頁面標題
   .page-header {
-    padding: 12px 0 4px;
-    margin-bottom: 0;
+    padding: 16px 0 12px 0;
+    margin-bottom: 16px;
 
     .header-left {
       h1 {
-        font-size: 22px;
+        font-size: 30px;
         letter-spacing: -0.5px;
       }
       .subtitle {
-        font-size: 11px;
-        margin-top: -2px;
+        font-size: 14px;
+        color: #64748b;
       }
     }
   }
 
-  // 統計卡片 - 參考社區公告頁排版 (3 欄並排)
+  // 統計卡片 - 3 欄並排
   .stats-row {
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
@@ -147,14 +159,15 @@ tbody tr:hover { background: rgba(123, 127, 186, 0.03); }
     text-align: center;
     min-height: unset;
     width: 100%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 
     mat-icon {
       position: absolute;
       top: 6px;
       left: 6px;
-      font-size: 20px !important;
-      width: 20px !important;
-      height: 20px !important;
+      font-size: 18px !important;
+      width: 18px !important;
+      height: 18px !important;
       opacity: 0.8;
     }
 
@@ -166,52 +179,45 @@ tbody tr:hover { background: rgba(123, 127, 186, 0.03); }
       gap: 2px;
 
       .stat-value {
-        font-size: 32px;
-        font-weight: 400;
+        font-size: 28px;
+        font-weight: 400; // 手機版調輕
         line-height: 1;
       }
 
       .stat-label {
-        font-size: 14px;
+        font-size: 12px;
         color: #888;
         white-space: nowrap;
         font-weight: 500;
       }
     }
 
-    // 確保所有卡片（包括第一個）都遵循相同樣式
     &:first-child {
       grid-column: unset;
       flex-direction: column;
       justify-content: center;
       padding: 6px;
       text-align: center;
-
-      mat-icon {
-        position: absolute;
-        top: 6px;
-        left: 6px;
-        margin-right: 0;
-      }
-
-      .stat-info {
-        margin-top: 8px;
-        align-items: center;
-        .stat-value { font-size: 32px; }
-      }
+      mat-icon { position: absolute; top: 6px; left: 6px; margin-right: 0; }
+      .stat-info { margin-top: 8px; align-items: center; .stat-value { font-size: 20px; } }
     }
   }
 
   // 篩選列
   .filter-row {
+    display: flex;
     gap: 8px;
+    margin-bottom: 16px;
+    padding: 0 4px;
+    width: 100%;
+    box-sizing: border-box;
 
     .filter-btn {
-      padding: 6px 16px;
-      font-size: 13px;
       flex: 1;
-      text-align: center;
-      white-space: nowrap;
+      padding: 8px 4px;
+      font-size: 13px;
+      border-radius: 20px;
+      min-width: 0;
     }
   }
 
@@ -223,6 +229,7 @@ tbody tr:hover { background: rgba(123, 127, 186, 0.03); }
   .mobile-bill-list {
     display: flex;
     flex-direction: column;
+    gap: 12px;
     background: transparent;
   }
 
@@ -233,18 +240,9 @@ tbody tr:hover { background: rgba(123, 127, 186, 0.03); }
     flex-direction: column;
     gap: 12px;
     cursor: pointer;
-    position: relative;
-
-    // 縮短的區隔線
-    &:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 20px;
-      right: 20px;
-      height: 1px;
-      background: rgba(0, 0, 0, 0.05);
-    }
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    border: 1px solid #f0f0f0;
 
     &.row-overdue { border-left: 4px solid #e53935; }
 
@@ -257,14 +255,14 @@ tbody tr:hover { background: rgba(123, 127, 186, 0.03); }
         display: flex;
         flex-direction: column;
         gap: 2px;
-        .bill-title { font-size: 16px; font-weight: 700; color: #7B7FBA; }
+        .bill-title { font-size: 16px; font-weight: 700; color: #1a1a2e; }
         .bill-month { font-size: 12px; color: #888; }
       }
 
       .amount-info {
         font-size: 18px;
         font-weight: 700;
-        color: #1a1a2e;
+        color: #7B7FBA;
       }
     }
 
@@ -272,17 +270,17 @@ tbody tr:hover { background: rgba(123, 127, 186, 0.03); }
       .item-details {
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        background: #f8f9fa;
-        padding: 8px 12px;
-        border-radius: 8px;
+        gap: 6px;
+        background: #f8fafc;
+        padding: 10px 14px;
+        border-radius: 10px;
 
         .detail-row {
           display: flex;
           justify-content: space-between;
           font-size: 13px;
           .label { color: #888; }
-          .value { color: #555; }
+          .value { color: #475569; font-weight: 500; }
         }
       }
     }
@@ -292,6 +290,8 @@ tbody tr:hover { background: rgba(123, 127, 186, 0.03); }
       justify-content: space-between;
       align-items: center;
       margin-top: 4px;
+      padding-top: 10px;
+      border-top: 1px dashed #f1f5f9;
 
       .badge-group {
         display: flex;
@@ -300,29 +300,36 @@ tbody tr:hover { background: rgba(123, 127, 186, 0.03); }
       }
 
       .mobile-pay-btn {
-        padding: 6px 14px;
+        padding: 8px 16px;
         background: #7B7FBA;
         color: #fff;
         border: none;
-        border-radius: 8px;
+        border-radius: 10px;
         font-size: 13px;
         font-weight: 600;
+        box-shadow: 0 4px 10px rgba(123, 127, 186, 0.2);
       }
     }
   }
 
   .empty-mobile-state {
-    padding: 40px;
+    padding: 60px 20px;
     text-align: center;
-    color: #bbb;
-    mat-icon { font-size: 48px; width: 48px; height: 48px; margin-bottom: 8px; }
+    background: #fff;
+    border-radius: 20px;
+    border: 2px dashed #f1f5f9;
+    color: #94a3b8;
+    mat-icon { font-size: 48px; width: 48px; height: 48px; margin-bottom: 12px; color: #cbd5e1; }
+    p { font-size: 15px; margin: 0; }
   }
 
   .pagination {
+    margin-top: 24px;
     .page-btn {
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 36px;
       font-size: 13px;
+      border-radius: 50%;
     }
   }
 }

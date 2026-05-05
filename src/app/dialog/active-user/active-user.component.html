@@ -1,5 +1,22 @@
-<h1>是否確認啟用{{data.fullName}}的帳號</h1>
-<div class="form-footer">
-  <button (click)="onClose(true)" class="active-btn">是</button>
-  <button (click)="onClose(false)" class="cancel-btn">否</button>
+<div class="form-card">
+  <div class="form-header">
+    <h1>帳號啟用確認</h1>
+  </div>
+
+  <div class="form-body">
+    <div class="confirm-content">
+      <div class="icon-circle">
+        <mat-icon>how_to_reg</mat-icon>
+      </div>
+      <p class="confirm-message">
+        是否確認啟用 <strong>{{data.fullName}}</strong> 的帳號？
+      </p>
+      <p class="confirm-sub-message">啟用後，該住戶將可以登入系統並使用各項服務。</p>
+    </div>
+  </div>
+
+  <div class="form-footer">
+    <button type="button" class="cancel-btn" (click)="onClose(false)">取消</button>
+    <button type="button" class="confirm-btn" (click)="onClose(true)">確認啟用</button>
+  </div>
 </div>

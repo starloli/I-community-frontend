@@ -24,7 +24,7 @@
           <span>email：{{ user.email }}</span>
         </div>
         <div class="side-info-item">
-          <mat-icon>home</mat-icon>
+          <mat-icon>phone_iphone</mat-icon>
           <span>電話：{{ user.phone }}</span>
         </div>
       </div>
@@ -85,8 +85,8 @@
         <div class="form-group">
           <label>新密碼</label>
           <div class="input-wrapper">
-            <mat-icon>home</mat-icon>
-            <input type="password" [(ngModel)]="updateUser.password" placeholder="請輸入新密碼">
+            <mat-icon>lock</mat-icon>
+            <input type="text" [(ngModel)]="updateUser.password" placeholder="請輸入新密碼">
           </div>
           <span class="hint-text">請務必記下此密碼</span>
         </div>
@@ -101,21 +101,6 @@
     </div>
 
   </div>
-
-  <!-- TODO: 【Phase 7.2】添加新信箱驗證 Modal（更新資料前驗證）
-       條件：showNewEmailVerifyModal === true
-       功能：
-       - 顯示驗證訊息「新信箱驗證碼已發送至 [新信箱地址]」
-       - 驗證碼輸入框（6位數字）
-       - 顯示倒計時（newEmailCodeExpiry 秒）
-       - 「重新發送」按鈕（倒計時結束後啟用）
-       - 「取消」按鈕 → 調用 cancelVerification()
-       - 「確認」按鈕 → 調用 confirmWithVerifyCode()
-       - 倒計時結束時禁用「確認」按鈕
-       - 支援 Enter 鍵提交
-       - 加載中狀態（isSubmittingNewEmailVerify）
-  -->
-
   } @else {
   <div class="loading-shade">
     <mat-spinner diameter="40"></mat-spinner>

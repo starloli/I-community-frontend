@@ -1,12 +1,10 @@
 <div class="dashboard-container">
   <div class="page-header">
-    <div>
-      <h1>
-        歡迎回來，管理員{{userName}}
-      </h1>
-      <span class="subtitle">Overview of your community management system</span>
+    <div class="header-left">
+      <h1>管理後台 | {{userName}}</h1>
+      <span class="subtitle">社區管理系統概覽</span>
     </div>
-    <div>
+    <div class="header-actions">
       <button class="calendar-btn" (click)="navigateTo('/admin/calendar')">
         <mat-icon>calendar_month</mat-icon>
       </button>
@@ -15,20 +13,22 @@
 
   <div class="stats-grid">
     @for (stat of stats; track stat.label) {
-      <div class="stat-card" [class.clickable]="!!stat.route" (click)="navigateTo(stat.route)">
-        <div class="stat-top">
-          <div class="stat-icon" [style.background]="stat.bg">
-            <mat-icon [style.color]="stat.color">{{ stat.icon }}</mat-icon>
-          </div>
+    <div class="stat-card" [class.clickable]="!!stat.route" (click)="navigateTo(stat.route)">
+      <div class="stat-top">
+        <div class="stat-icon" [style.background]="stat.bg">
+          <mat-icon [style.color]="stat.color">{{ stat.icon }}</mat-icon>
         </div>
-
-        <div class="stat-info">
-          <span class="stat-value">{{ stat.value }}</span>
-          <span class="stat-label">{{ stat.label }}</span>
-        </div>
-
-        <div class="stat-extra"></div>
       </div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stat.value }}</span>
+        <span class="stat-label">{{ stat.label }}</span>
+      </div>
+      @if (stat.trend) {
+      <div class="stat-extra">
+        <span class="stat-trend">{{ stat.trend }}</span>
+      </div>
+      }
+    </div>
     }
   </div>
 
@@ -48,6 +48,11 @@
               <span class="announcements-title">{{ item.title }}</span>
             </div>
             <span class="announcements-date">{{ item.publishedAt | date: 'yyyy/MM/dd' }}</span>
+          </div>
+        } @empty {
+          <div class="empty-state">
+            <mat-icon>campaign</mat-icon>
+            <p>目前沒有公告</p>
           </div>
         }
       </div>
@@ -80,6 +85,11 @@
                 <span class="visitor-status status-left">{{ visitor.status }}</span>
               }
             </div>
+          </div>
+        } @empty {
+          <div class="empty-state">
+            <mat-icon>person_outline</mat-icon>
+            <p>目前沒有訪客</p>
           </div>
         }
       </div>

@@ -603,7 +603,8 @@
   }
 }
 
-.empty-state {
+.empty-state,
+.empty-state-grid {
   position: relative; // 為了讓 info-btn 絕對定位
   padding: 80px 40px;
   text-align: center;
@@ -675,6 +676,10 @@
   }
 }
 
+.empty-state-grid {
+  grid-column: 1 / -1; // 跨越所有網格列
+}
+
 
 .reserve-btn-sm {
   display: flex;
@@ -720,12 +725,17 @@
   .page-header {
     padding: 12px 0 4px;
     margin-bottom: 0;
+
+    .header-left {
+      margin-bottom: 12px;
+    }
+
     h1 {
-      font-size: 22px;
+      font-size: 30px !important;
       letter-spacing: -0.5px;
     }
     .subtitle {
-      font-size: 11px;
+      font-size: 15px !important;
       margin-top: -2px;
     }
   }

@@ -26,6 +26,20 @@ export class HolidayService {
     return this.http.get<Holiday[]>(this.apiUrl, { params });
   }
 
+  getReservations(start: string): Observable<Holiday[]> {
+    const params = new HttpParams()
+      .set('start', start)
+
+    return this.http.get<Holiday[]>(this.apiUrl + '/reservation', { params });
+  }
+
+  getBills(start: string): Observable<Holiday[]> {
+    const params = new HttpParams()
+      .set('start', start)
+
+    return this.http.get<Holiday[]>(this.apiUrl + '/bill', { params });
+  }
+
   postEvent(event: any) {
     return this.http.post<Holiday>(this.apiUrl, event);
   }

@@ -10,21 +10,55 @@
 // ===== 頁面標題 =====
 .page-header {
   margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
 
-  h1 { font-size: 30px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px 0; }
+  .title-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .back-btn {
+    background: transparent;
+    border: none;
+    color: #1a1a2e;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background 0.2s;
+
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  h1 { font-size: 30px; font-weight: 700; color: #1a1a2e; margin: 0; }
   .subtitle { font-size: 15px; color: #64748b; }
+
+  h2 { margin: 0; }
 }
 
 /* === Header === */
 .header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
 }
 
-.header button {
-  font-size: 24px;
+.nav-btn {
+  font-size: 32px;
   background: #f1f3f4;
   border: none;
   padding: 6px 12px;
@@ -33,13 +67,36 @@
   transition: 0.2s;
 }
 
-.header button:hover {
+.nav-btn:hover {
   background: #e0e0e0;
 }
 
-.header h2 {
-  margin: 0;
+.month-switch {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.month-switch h2 {
   font-weight: 500;
+  margin: 0;
+}
+
+.today-btn {
+  padding: 4px 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #d0d5dd;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 0;
+}
+
+.today-btn:hover {
+  background: #f5f7fa;
 }
 
 /* === Grid === */
@@ -49,25 +106,10 @@
   gap: 3px;
 }
 
-/* === 星期標題 === */
-.header-cell-Sun-Sat {
-  text-align: center;
-  font-weight: bold;
-  padding: 6px 0;
-  color: #E57373;
-}
-
-.header-cell {
-  text-align: center;
-  font-weight: bold;
-  padding: 6px 0;
-  color: #6B7280;
-}
-
-/* === 日期單元格 === */
+/* === 日期格 === */
 .cell {
   border: 1px solid #e0e0e0;
-  min-height: 90px;
+  min-height: 95px;
   padding: 6px;
   border-radius: 8px;
   background: white;
@@ -75,6 +117,25 @@
   flex-direction: column;
   justify-content: space-between;
   transition: 0.2s;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* === 星期標題 === */
+.header-cell-Sun-Sat {
+  text-align: center;
+  font-weight: bold;
+  padding: 6px 0;
+  color: #E57373;
+  min-height: 60px;
+}
+
+.header-cell {
+  text-align: center;
+  font-weight: bold;
+  padding: 6px 0;
+  color: #6B7280;
+  min-height: 60px;
 }
 
 /* hover 效果 */
@@ -91,7 +152,8 @@
 
 /* 今天 */
 .today {
-  border: 2px solid red;
+  background: #E57373;
+  color: white;
 }
 
 /* 假日 */
@@ -99,31 +161,79 @@
   background: #fff4f4;
 }
 
+/* 日期標題 */
+.date-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 /* 日期數字 */
 .date {
   font-size: 14px;
   font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
 }
 
-/* 假日標題 */
+/* 右上總覽 */
+.summary {
+  display: flex;
+  justify-content: center;
+}
+
+.event {
+  font-size: 14px;
+  font-weight: 500;
+  color: #F97316;
+  margin-right: 4px;
+}
+
+.reservation {
+  font-size: 14px;
+  font-weight: 500;
+  color: #3B82F6;
+  margin-right: 4px;
+}
+
+.bill {
+  font-size: 14px;
+  font-weight: 500;
+  color: red;
+  margin-right: 4px;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin-bottom: -3px;
+  }
+}
+
+
+/* 假日文字 */
 .holiday-text {
   font-size: 12px;
   color: #d93025;
-  margin-top: 4px;
+  margin-left: 5px;
   line-height: 1.2;
   word-break: break-word;
 }
 
 .events {
-  margin-top: 4px;
   display: flex;
   flex-direction: column;
   gap: 2px;
+  margin-left: 5px;
 }
 
-.event-item {
+.event-text {
   font-size: 16px;
-  color: #333;
+  color: #5A5A5A;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -147,12 +257,22 @@
   justify-content: space-between;
   font-weight: 600;
   margin-bottom: 12px;
+  color: #E57373;
 }
 
-.event-list {
+.panel-list {
   max-height: 200px;
   overflow-y: auto;
+  margin-bottom: 15px;
+}
+
+.list-header {
+  font-size: 24px;
+  font-weight: 600;
+  padding-bottom: 10px;
+  border-bottom: 1px solid black;
   margin-bottom: 10px;
+  color: #8C8C8C;
 }
 
 .event-row {
@@ -161,6 +281,7 @@
   align-items: center;
   padding: 6px 4px;
   border-bottom: 1px solid #eee;
+  color: #5A5A5A;
 }
 
 .event-row:hover {
@@ -225,16 +346,54 @@
 
 /* 手機版適應 */
 @media (max-width: 600px) {
-  .cell {
-    min-height: 70px;
-    padding: 4px;
+  .page-header {
+    padding: 12px 0 4px; // 壓縮標題區域
+    margin-bottom: 0;
+    flex-shrink: 0;
+    h1 {
+      font-size: 22px; // 稍微調小
+      letter-spacing: -0.5px;
+    }
+    .subtitle {
+      font-size: 11px;
+      margin-top: -2px;
+    }
   }
 
-  .holiday-text {
-    font-size: 10px;
+  .grid {
+    gap: 2px;
+  }
+
+  .cell {
+    min-height: 90px;
+    padding: 2px;
+  }
+
+  .header-cell-Sun-Sat {
+    min-height: 40px;
+  }
+
+  .header-cell {
+    min-height: 40px;
   }
 
   .header h2 {
     font-size: 16px;
+  }
+
+  .events {
+    display: none;
+  }
+
+  .date-header {
+    display: inline;
+  }
+
+  .summary {
+    display: inline;
+  }
+
+  .holiday-text {
+    display: none;
   }
 }

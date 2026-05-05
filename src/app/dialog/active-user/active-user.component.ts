@@ -1,10 +1,12 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { UserResponse } from '../../interface/interface';
+import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-active-user',
-  imports: [],
+  imports: [MatDialogModule, MatIconModule, CommonModule],
   standalone: true,
   templateUrl: './active-user.component.html',
   styleUrl: './active-user.component.scss',

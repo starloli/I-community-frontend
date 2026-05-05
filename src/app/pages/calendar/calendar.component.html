@@ -1,11 +1,25 @@
 <div class="page-header">
-  <h1>社區行事曆</h1>
+  <div class="title-container">
+    <button class="back-btn" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>社區行事曆</h1>
+  </div>
+
+  @if (!isAdmin) {
+    <div>
+      <h2>本月有 {{bills().length}} 份帳單到期</h2>
+    </div>
+  }
 </div>
 
 <div class="header">
-  <button (click)="prevMonth()">‹</button>
-  <h2>{{ year() }} / {{ month() + 1 }}</h2>
-  <button (click)="nextMonth()">›</button>
+  <button class="today-btn" (click)="toTodayMonth()">Today</button>
+  <div class="month-switch">
+    <button class="nav-btn" (click)="prevMonth()">‹</button>
+    <h2>{{ year() }} / {{ month() + 1 }}</h2>
+    <button class="nav-btn" (click)="nextMonth()">›</button>
+  </div>
 </div>
 
 <div class="grid">
@@ -21,15 +35,38 @@
     <div class="cell"
         (click)="selectDay(day)"
         [class.out]="!day.inMonth"
-        [class.today]="day.isToday"
         [class.holiday]="day.holiday">
 
-      <div class="date">{{ day.date.getDate() }}</div>
+
+      <div class="date-header">
+        <div class="date" [class.today]="day.isToday && day.inMonth">{{ day.date.getDate() }}</div>
+        <div class="summary">
+          <div class="event">
+            @if(day.events.length) {
+              📢 {{ day.events.length }}
+            }
+          </div>
+          @if (!isAdmin) {
+            <div class="reservation">
+              @if(day.reservations.length) {
+                📅 {{ day.reservations.length }}
+              }
+            </div>
+            <div class="bill">
+              @if(day.bills.length) {
+                <mat-icon>description</mat-icon> {{ day.bills.length }}
+              }
+            </div>
+          }
+
+        </div>
+
+      </div>
 
       @if (day.events.length) {
         <div class="events">
           @for (e of day.events.slice(0, 2); track e.title) {
-            <div class="event-item">
+            <div class="event-text">
               • {{ e.title }}
             </div>
           }
@@ -53,7 +90,8 @@
       <button class="close-btn" (click)="selectedDate.set(null)">✕</button>
     </div>
 
-    <div class="event-list">
+    <div class="list-header">[活動]</div>
+    <div class="panel-list">
       @if (selectedEvents().length === 0) {
         <div class="empty">
           <span>No events</span>
@@ -69,6 +107,39 @@
         }
       }
     </div>
+
+    @if (!isAdmin) {
+      <div class="list-header">[預約]</div>
+      <div class="panel-list">
+        @if (selectedReservations().length === 0) {
+          <div class="empty">
+            <span>No reservations</span>
+          </div>
+        } @else {
+          @for (r of selectedReservations(); track r.id) {
+            <div class="event-row">
+              <mat-icon>schedule</mat-icon><span> {{ r.title }}</span>
+            </div>
+          }
+        }
+      </div>
+
+      <div class="list-header">[未繳帳單]</div>
+      <div class="panel-list">
+        @if (selectedBills().length === 0) {
+          <div class="empty">
+            <span>No bills</span>
+          </div>
+        } @else {
+          @for (b of selectedBills(); track b.id) {
+            <div class="event-row">
+              <span> {{ b.title }}</span>
+            </div>
+          }
+        }
+      </div>
+    }
+
 
     @if (isAdmin) {
       <div class="add-event">

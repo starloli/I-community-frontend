@@ -46,7 +46,6 @@ export class EditUserComponent implements OnInit, OnDestroy {
     this.user.status = value ? UserStatus.ACTIVE : UserStatus.INACTIVE;
   }
 
-
   returnUser(user: UserResponse): void {
     // console.log(user);
     if (this.validNumber(user.squareFootage) && this.validNumber(user.motorParkingSpace) && this.validNumber(user.carParkingSpace)) {

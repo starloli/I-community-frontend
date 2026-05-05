@@ -25,10 +25,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   userName = '';
   getUrl = '/user/me';
   stats = [
-    { label: '社區住戶總數', value: '載入中...', icon: 'people', color: '#3f51b5', bg: '#e8eaf6', },
-    { label: '今日訪客登記', value: '載入中...', icon: 'person_add', color: '#0288d1', bg: '#e1f5fe', route: '/admin/visitor' },
-    { label: '待處理報修', value: '載入中...', icon: 'build', color: '#f57c00', bg: '#fff3e0', route: '/admin/repair' },
-    { label: '待領取包裹', value: '載入中...', icon: 'inventory_2', color: '#388e3c', bg: '#e8f5e9', route: '/admin/package' },
+    { label: '社區住戶總數', value: '載入中...', icon: 'people', color: '#5B7FA6', bg: 'rgba(91, 127, 166, 0.12)', trend: '(名單中)' },
+    { label: '今日訪客登記', value: '載入中...', icon: 'person_add', color: '#7BA89E', bg: 'rgba(123, 168, 158, 0.12)', trend: '較昨日 +0', route: '/admin/visitor' },
+    { label: '待處理報修', value: '載入中...', icon: 'build', color: '#C47A5A', bg: 'rgba(196, 122, 90, 0.12)', trend: '(處理中)', route: '/admin/repair' },
+    { label: '待領取包裹', value: '載入中...', icon: 'inventory_2', color: '#7B7FBA', bg: 'rgba(123, 127, 186, 0.12)', trend: '較昨日 +0', route: '/admin/package' },
   ];
 
   announcements: Announcement[] = [];

@@ -7,6 +7,7 @@ import { RepairStatus, UserRole, UserStatus } from '../../../interface/enum';
 import { AuthService } from '../../../@service/auth.service';
 import { RepairService } from '../../../@service/repair.service';
 import { Subject, takeUntil } from 'rxjs';
+import { ToastService } from '../../../@service/toast.service';
 
 @Component({
   selector: 'app-resident-repair',
@@ -74,7 +75,11 @@ export class ResidentRepairComponent implements OnInit {
   private destroy$ = new Subject<void>();
   repairs: RepairRequest[] = [];
 
-  constructor(private authService: AuthService, private repairService: RepairService) {}
+  constructor(
+    private authService: AuthService,
+    private repairService: RepairService,
+    private toast: ToastService
+  ) {}
 
   ngOnInit() {
     // 從登入資訊取得目前住戶資料，供畫面顯示與後續流程使用。
@@ -159,7 +164,10 @@ export class ResidentRepairComponent implements OnInit {
 
   submitRepair() {
     // 地點與描述為必填，缺少任一欄位就不送出。
-    if (!this.newRepair.location || !this.newRepair.description) return;
+    if (!this.newRepair.location || !this.newRepair.description) {
+      this.toast.warning('請先填寫完整報修資訊', 2000);
+      return;
+    }
 
     // 組出新增報修要送往後端的資料。
     const newRep = {
@@ -169,10 +177,20 @@ export class ResidentRepairComponent implements OnInit {
       submittedAt: new Date().toLocaleDateString('zh-TW')
     };
 
-    this.repairService.post(newRep)
-      .subscribe(res => console.log(res));
-
-    this.closeForm();
+    this.repairService.post(newRep).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.toast.success('報修新增成功', 2000);
+        this.closeForm();
+      },
+      error: (error) => {
+        console.error('報修新增失敗:', error);
+        const message =
+          error?.error?.message ||
+          (error?.status ? `報修新增失敗（${error.status}）` : '報修新增失敗，請稍後再試');
+        this.toast.error(message, 3000);
+      }
+    });
   }
 
   openEditForm(repair: RepairRequest) {

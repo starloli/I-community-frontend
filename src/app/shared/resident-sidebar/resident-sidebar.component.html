@@ -13,7 +13,7 @@
     
     <div class="m-header-center">
       <div class="user-avatar-mini">{{ userInitial }}</div>
-      <span class="user-name-mini">{{ userName }}</span>
+      <span class="user-name-mini">{{ roleName }}</span>
       <button class="edit-btn-mini" routerLink="/resident/userInfo" aria-label="編輯個人資訊">
         <mat-icon>edit</mat-icon>
       </button>
@@ -39,8 +39,8 @@
   <div class="user-info" [class.collapsed]="isCollapsed">
     <div class="user-avatar">{{ userInitial }}</div>
     <div class="user-detail">
-      <span class="user-name">{{ userName }}</span>
-      <span class="user-unit">{{ unitNumber }}</span>
+      <span class="user-name">{{ roleName }}</span>
+      <span class="user-unit">{{ userName }} {{ unitNumber }}</span>
     </div>
     <button class="edit-button" aria-label="編輯使用者資訊" routerLink="/resident/userInfo">
       <mat-icon>edit</mat-icon>
@@ -48,7 +48,7 @@
   </div>
 
   <!-- 導覽選單 (手機版將變為底部 Tab Bar) -->
-  <nav class="sidebar-nav">
+  <nav class="sidebar-nav" [class.mobile-hidden]="isMobileNavHidden">
     @for (item of navItems; track item.route) {
       <a
         class="nav-item"

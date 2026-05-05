@@ -81,7 +81,7 @@
         <div class="resident-main-info">
           <h2 class="resident-name">{{ user.fullName }}</h2>
           <span class="role-badge" [class.admin]="user.role === UserRole.ADMIN">
-            {{ user.status === UserStatus.ACTIVE? user.role === UserRole.ADMIN ? '管理員' : '住戶': user.status ===
+            {{ user.status === UserStatus?.ACTIVE? user.role === UserRole?.ADMIN ? '管理員' : '住戶': user.status ===
             UserStatus.INACTIVE ?'已停用':'未驗證' }}
           </span>
         </div>
