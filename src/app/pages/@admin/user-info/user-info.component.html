@@ -6,15 +6,6 @@
     </div>
   </div>
 
-  <!-- TODO: 【Phase 7】添加超級管理員密碼驗證 Modal
-      條件：userRole === 'SUPER_ADMIN' && !passwordVerified
-      功能：
-      - 顯示密碼輸入框
-      - 「驗證」按鈕 → 調用 verifyOldPassword()
-      - 支援 Enter 鍵提交
-      - 加載中狀態
-  -->
-
   @if (user) {
   <div class="profile-grid">
     <!-- 左側：個人頭像與基本資訊摘要 -->
@@ -57,18 +48,32 @@
 
         <div class="form-group">
           <label>新電子信箱</label>
-          <div class="input-wrapper" [class.error]="(emailModel.touched || emailModel.dirty) && !isValidEmail(updateUser.email)">
+          <div class="input-wrapper"
+            [class.error]="(emailModel.touched || emailModel.dirty) && !isValidEmail(updateUser.email)">
             <mat-icon>mail</mat-icon>
-            <input type="email" [(ngModel)]="updateUser.email" #emailModel="ngModel" placeholder="example@mail.com">
+            <input type="email" [(ngModel)]="email" #emailModel="ngModel" placeholder="example@mail.com">
           </div>
-          @if((emailModel.touched || emailModel.dirty) && !isValidEmail(updateUser.email)) {
+          @if((emailModel.touched || emailModel.dirty) && !isValidEmail(email)) {
           <span class="error-text">Email 格式不正確</span>
+          }
+          @if (!verifyEmailSend) {
+          <button [disabled]="!isValidEmail(email)" (click)="sendVerifyCode()">發送驗證碼</button>
+          }@else {
+          <div class="otp-container" style="align-items: center; justify-content: center;">
+            @for (ctrl of otpCtrl; track $index; let i = $index) {
+            <input maxlength="1" [formControl]="ctrl" type="text" (input)="onInput($event, i)"
+              (keydown)="onKeyDown($event, i)" (paste)="onPaste($event)" />
+            }
+          </div>
+          <span>驗證碼有效時間：{{this.emailCodeExpiry}}秒</span>
+          <button (click)="sendVerifyCode()">再次發送驗證碼</button>
           }
         </div>
 
         <div class="form-group">
           <label>新聯絡電話</label>
-          <div class="input-wrapper" [class.error]="(phoneModel.touched || phoneModel.dirty) && !isValidPhone(updateUser.phone)">
+          <div class="input-wrapper"
+            [class.error]="(phoneModel.touched || phoneModel.dirty) && !isValidPhone(updateUser.phone)">
             <mat-icon>phone</mat-icon>
             <input type="tel" [(ngModel)]="updateUser.phone" #phoneModel="ngModel" placeholder="09xxxxxxxx">
           </div>
@@ -88,7 +93,7 @@
 
       </div>
       <div class="form-actions">
-        <button class="submit-btn" [disabled]="!isValid(updateUser)" (click)="ModifySelf()">
+        <button class="submit-btn" [disabled]="isValid(updateUser)" (click)="ModifySelf()">
           <mat-icon>save</mat-icon>
           儲存變更
         </button>
@@ -96,18 +101,6 @@
     </div>
 
   </div>
-
-  <!-- TODO: 【Phase 7】添加驗證碼確認 Modal
-      條件：showVerifyCodeModal === true
-      功能：
-      - 顯示驗證碼輸入框（6位數字）
-      - 顯示倒計時（codeExpiry 秒）
-      - 「取消」按鈕 → 調用 cancelVerification()
-      - 「確認」按鈕 → 調用 confirmWithVerifyCode()
-      - 倒計時結束時禁用「確認」按鈕
-      - 支援 Enter 鍵提交
-  -->
-
   } @else {
   <div class="loading-shade">
     <mat-spinner diameter="40"></mat-spinner>

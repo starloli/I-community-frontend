@@ -30,8 +30,6 @@ export class EditResidentComponent implements OnInit, OnDestroy {
 
   private $destroy = new Subject<void>();
 
-  // TODO:社區行事曆功能，讓住戶可以看到社區活動資訊
-
   returnUser(user: UserResponse): void {
     // console.log(user);
     if (this.validNumber(user.squareFootage) && this.validNumber(user.motorParkingSpace) && this.validNumber(user.carParkingSpace)) {
