@@ -85,6 +85,7 @@
             <th>金額</th>
             <th>結餘</th>
             <th>操作人</th>
+            <th>憑證</th>
           </tr>
         </thead>
         <tbody>
@@ -121,6 +122,13 @@
             <td class="fw-bold">{{ item.balance | currency:'TWD':'symbol':'1.0-0' }}</td>
             <td>{{ item.operator?.fullName || '系統自動入帳' }}</td>
           </tr>
+          <td>@if (item.receiptImagePath) {
+
+            <img [src]="SERVER_URL + item.receiptImagePath" width="100" (click)="openImage(item.receiptImagePath)">
+            } @else {
+            <span>無圖片</span>
+            }
+          </td>
           }
         </tbody>
       </table>
