@@ -19,6 +19,10 @@
       </div>
     </div>
 
+    <mat-label>啟用狀態</mat-label>
+    <!-- <mat-icon matPrefix>check_box</mat-icon> -->
+    <mat-slide-toggle [(ngModel)]="isUserActive"></mat-slide-toggle>
+
     <mat-form-field appearance="outline">
       <mat-label>住址</mat-label>
       <mat-icon matPrefix>home</mat-icon>
@@ -55,9 +59,6 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-label>啟用狀態</mat-label>
-    <mat-icon matPrefix>check_box</mat-icon>
-    <mat-slide-toggle [(ngModel)]="isUserActive"></mat-slide-toggle>
   </div>
   <div class="form-footer">
     <button (click)="returnUser(user)">儲存變更</button>
