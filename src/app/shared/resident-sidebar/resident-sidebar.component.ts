@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { DOCUMENT, CommonModule } from '@angular/common';
+import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpService } from '../../@service/http.service';
@@ -12,11 +12,17 @@ import { User } from '../../interface/interface';
   templateUrl: './resident-sidebar.component.html',
   styleUrls: ['./resident-sidebar.component.scss']
 })
-export class ResidentSidebarComponent implements OnInit {
+export class ResidentSidebarComponent implements OnInit, AfterViewInit, OnDestroy {
+  private readonly document = inject(DOCUMENT);
+  private readonly renderer = inject(Renderer2);
 
   constructor(private router: Router, private http: HttpService) {}
 
   isCollapsed = false;
+  isMobileNavHidden = false;
+  private lastScrollTop = 0;
+  private removeScrollListener?: () => void;
+  private removeResizeListener?: () => void;
 
   navItems = [
     { route: 'resident/dashboard', icon: 'home_work', label: '住戶首頁', color: '#5B7FA6' },
@@ -37,6 +43,13 @@ export class ResidentSidebarComponent implements OnInit {
     this.loadUserInfo();
   }
 
+  ngAfterViewInit(): void {
+    this.bindMobileScrollListener();
+    this.removeResizeListener = this.renderer.listen('window', 'resize', () => {
+      this.bindMobileScrollListener();
+    });
+  }
+
   private loadUserInfo(): void {
     const getUrl = "/user/me";
     this.http.getApi<User>(getUrl).subscribe({
@@ -55,8 +68,43 @@ export class ResidentSidebarComponent implements OnInit {
     this.isCollapsed = !this.isCollapsed;
   }
 
+  ngOnDestroy(): void {
+    this.removeScrollListener?.();
+    this.removeResizeListener?.();
+  }
+
   logout(): void {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
+  }
+
+  private bindMobileScrollListener(): void {
+    this.removeScrollListener?.();
+    this.isMobileNavHidden = false;
+
+    if (!window.matchMedia('(max-width: 768px)').matches) {
+      return;
+    }
+
+    const scrollHost = this.document.querySelector('.main-content') as HTMLElement | null;
+    if (!scrollHost) {
+      return;
+    }
+
+    this.lastScrollTop = scrollHost.scrollTop;
+    this.removeScrollListener = this.renderer.listen(scrollHost, 'scroll', () => {
+      const currentScrollTop = scrollHost.scrollTop;
+      const delta = currentScrollTop - this.lastScrollTop;
+
+      if (currentScrollTop <= 8) {
+        this.isMobileNavHidden = false;
+      } else if (delta > 8) {
+        this.isMobileNavHidden = true;
+      } else if (delta < -8) {
+        this.isMobileNavHidden = false;
+      }
+
+      this.lastScrollTop = currentScrollTop;
+    });
   }
 }

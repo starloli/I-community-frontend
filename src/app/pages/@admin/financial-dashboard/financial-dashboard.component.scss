@@ -3,6 +3,10 @@
   padding: 0;
 }
 
+.financial-wrapper {
+  padding-bottom: 24px; // 保留底部安全距離，避免表格內容貼齊滾動區底邊
+}
+
 // ===== 頁面標題 =====
 .page-header {
   display: flex;
@@ -115,6 +119,10 @@
 // =============================================================================
 
 @media (max-width: 768px) {
+  .financial-wrapper {
+    padding-bottom: 12px;
+  }
+
   .page-header {
     padding: 16px 0 12px 0;
     margin-bottom: 16px;

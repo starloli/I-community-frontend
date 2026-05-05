@@ -368,11 +368,17 @@
 }
 
 .edit-btn {
-  background: #7B7FBA;
+  background: linear-gradient(135deg, #4a69bd, #6c5ce7);
+  box-shadow: 0 4px 12px rgba(74, 105, 189, 0.2);
 
   &:hover {
-    background: #6569a4;
-    box-shadow: 0 14px 28px rgba(123, 127, 186, 0.24);
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(74, 105, 189, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 }
 

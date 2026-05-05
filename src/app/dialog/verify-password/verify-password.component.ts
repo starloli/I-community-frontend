@@ -3,7 +3,7 @@ import { Component } from '@angular/core'
 import { HttpService } from '../../@service/http.service'
 import { MatDialog, MatDialogRef } from '@angular/material/dialog'
 import { FormsModule } from '@angular/forms'
-import { MatSnackBar } from '@angular/material/snack-bar'
+import { ToastService } from '../../@service/toast.service'
 
 @Component({
   selector: 'app-verify-password',
@@ -16,7 +16,7 @@ export class VerifyPasswordComponent {
   constructor(
     private http: HttpService,
     private dialogRef: MatDialogRef<VerifyPasswordComponent>,
-    private snackBar: MatSnackBar,
+    private toast: ToastService,
     private router: Router
   ) { }
   password = ''
@@ -30,21 +30,13 @@ export class VerifyPasswordComponent {
           // if (res) {
           //   this.dialogRef.close(true);
           // }
-          this.snackBar.open("驗證成功", "關閉", {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          });
+          this.toast.success('驗證成功', 2000);
           this.dialogRef.close(true);
         },
         error: (err) => {
           console.error("err：", err)
           if (err.error.message === "密碼不正確") {
-            this.snackBar.open("密碼不正確", "關閉", {
-              duration: 2000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top',
-            });
+            this.toast.error('密碼不正確', 2000);
           }
         }
       })

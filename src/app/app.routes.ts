@@ -33,6 +33,7 @@ import { FinancialDashboardComponent } from './pages/@admin/financial-dashboard/
 
 import { CalendarComponent } from './pages/calendar/calendar.component';
 import { superAdminGuard } from './guards/super-admin-guard';
+import { FinancialDashboardResidentComponent } from './pages/@resident/financial-dashboard-resident/financial-dashboard-resident.component';
 
 export const routes: Routes = [
   // ── 登入頁 ──────────────────────────────────────────

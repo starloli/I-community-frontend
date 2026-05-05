@@ -9,6 +9,7 @@ import { VisitorServiceService } from '../../../@service/visitor-service.service
 import { VisitorDialogComponent } from '../../../dialog/visitor-dialog/visitor-dialog.component';
 import { VisitorRecord } from '../../../interface/interface';
 import { HttpService } from '../../../@service/http.service';
+import { ToastService } from '../../../@service/toast.service';
 
 @Component({
   selector: 'app-visitor',
@@ -21,6 +22,7 @@ export class VisitorComponent implements OnInit {
   private http = inject(HttpService);
   private dialog = inject(MatDialog);
   private visitorService = inject(VisitorServiceService);
+  private toast = inject(ToastService);
 
   // Current resident's visitor records shown in the table.
   visitors: VisitorRecord[] = [];
@@ -133,17 +135,19 @@ export class VisitorComponent implements OnInit {
     };
 
     this.http.postApi('/visitor/user/save', payload).subscribe(() => {
+      this.toast.success(`訪客 ${payload.visitorName} 預約登記成功`);
       this.getMyVisitors();
       this.closeForm();
     });
   }
 
-  checkOut(visitorId: number): void {
-    if (!visitorId) {
+  checkOut(visitor: VisitorRecord): void {
+    if (!visitor.visitorId) {
       return;
     }
 
-    this.http.putApi(`/visitor/checkOut/${visitorId}`).subscribe(() => {
+    this.http.putApi(`/visitor/checkOut/${visitor.visitorId}`).subscribe(() => {
+      this.toast.success(`訪客 ${visitor.visitorName} 已登記離場`);
       this.getMyVisitors();
     });
   }
@@ -312,18 +316,16 @@ export class VisitorComponent implements OnInit {
   }
 
   //住戶刪除訪客
-  deleteByVisitor(id: number) {
-    console.log(id);
-
-    this.http.deleteApi('/visitor/delete/' + id).subscribe({
+  deleteByVisitor(visitor: VisitorRecord) {
+    this.http.deleteApi('/visitor/delete/' + visitor.visitorId).subscribe({
       next: (res: any) => {
-        console.log('刪除成功', res);
+        this.toast.success(`已刪除訪客 ${visitor.visitorName} 的預約`);
         // 成功後才重新獲取清單，確保畫面數據是最新的
         this.getMyVisitors();
       },
       error: (err) => {
         console.error('刪除失敗', err);
-        alert('刪除失敗：' + (err.error?.message || '伺服器錯誤'));
+        this.toast.error('刪除失敗：' + (err.error?.message || '伺服器錯誤'));
       }
     });
   }

@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject, takeUntil } from 'rxjs';
 
 import { HttpService } from '../../../@service/http.service';
@@ -12,6 +11,7 @@ import { ReservationCalendarComponent } from '../../../dialog/reservation-calend
 import { ReservationStatus } from '../../../interface/enum';
 import { Facility, ResReservation, User } from '../../../interface/interface';
 import { ReservationService } from '../../../@service/reservation.service';
+import { ToastService } from '../../../@service/toast.service';
 
 @Component({
   selector: 'app-resident-facility',
@@ -23,7 +23,7 @@ import { ReservationService } from '../../../@service/reservation.service';
 export class ResidentFacilityComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpService,
-    private snackBar: MatSnackBar,
+    private toast: ToastService,
     private dialog: MatDialog,
     private reservationService: ReservationService
   ) { }
@@ -133,11 +133,7 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
         }
       },
       error: err => {
-        this.snackBar.open('取得使用者資料失敗 ' + err.status, '關閉', {
-          duration: 2000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+        this.toast.error('取得使用者資料失敗 ' + err.status, 2000);
       }
     });
 
@@ -181,11 +177,7 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
           }
         },
         error: err => {
-          this.snackBar.open('取得設施失敗 ' + err.status, '關閉', {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+          this.toast.error('取得設施失敗 ' + err.status, 2000);
         }
       });
   }
@@ -268,22 +260,14 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
           dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe({
             next: dialogResult => {
               if (dialogResult) {
-                this.snackBar.open('預約成功', '關閉', {
-                  duration: 2000,
-                  horizontalPosition: 'center',
-                  verticalPosition: 'top'
-                });
+                this.toast.success('預約成功', 2000);
                 this.refreshReservations();
               }
             }
           });
         },
         error: err => {
-          this.snackBar.open('取得設施預約資料失敗 ' + err.status, '關閉', {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+          this.toast.error('取得設施預約資料失敗 ' + err.status, 2000);
         }
       });
   }
@@ -301,20 +285,12 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
       this.http.putApi(this.cancelReservationUrl, id).pipe(takeUntil(this.destroy$)).subscribe({
         next: res => {
           if (res) {
-            this.snackBar.open('取消預約成功', '關閉', {
-              duration: 2000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top'
-            });
+            this.toast.success('取消預約成功', 2000);
             this.refreshReservations();
           }
         },
         error: err => {
-          this.snackBar.open('取消預約失敗 ' + err.status, '關閉', {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+          this.toast.error('取消預約失敗 ' + err.status, 2000);
         }
       });
     }

@@ -271,12 +271,16 @@
     padding: 12px 0 4px;
     margin-bottom: 0;
 
+    .header-left {
+      margin-bottom: 12px;
+    }
+
     h1 {
-      font-size: 22px;
+      font-size: 30px !important;
       letter-spacing: -0.5px;
     }
     .subtitle {
-      font-size: 11px;
+      font-size: 15px !important;
       margin-top: -2px;
     }
   }
@@ -458,8 +462,18 @@
     padding: 16px 20px;
     gap: 12px;
   }
+.form-footer {
+  padding: 16px 20px;
+}
+}
 
-  .form-footer {
-    padding: 16px 20px;
-  }
+
+@media (max-width: 480px) {
+.page-header {
+.header-left {
+  margin-bottom: 12px;
+  h1 { font-size: 30px !important; }
+  .subtitle { font-size: 15px !important; }
+}
+}
 }

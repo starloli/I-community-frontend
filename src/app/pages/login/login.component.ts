@@ -6,7 +6,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../@service/auth.service';
 import { HttpService } from '../../@service/http.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../@service/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +16,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class LoginComponent {
 
-  constructor(private router: Router, private http: HttpService, private auth: AuthService, private snackBar: MatSnackBar) { }
+  constructor(
+    private router: Router,
+    private http: HttpService,
+    private auth: AuthService,
+    private toast: ToastService
+  ) { }
 
   booleanSignup = false;
   booleanIsManager: boolean = false;
@@ -68,52 +73,49 @@ export class LoginComponent {
 
     this.http.postApi('/auth/login', loginAccount).subscribe({
       next: (res: any) => {
-        // console.log('登入成功:', res);
         this.userloginStatus = true;
-
-        // 儲存 token
         localStorage.setItem('token', res.accessToken);
 
-        // 解析 JWT token 取得 role，根據角色導向不同路由
+        let roleDisplay = '';
         try {
           const payload = JSON.parse(atob(res.accessToken.split('.')[1]));
-          console.log('payload:', payload);
-          console.log('角色:', payload.role);
+          const role = payload.role;
 
-          if (payload.role === 'ADMIN') {
-            this.router.navigate(['/admin/dashboard']);
-          } else if (payload.role === 'SUPER_ADMIN') {
+          // 角色顯示名稱映射
+          const roleMap: { [key: string]: string } = {
+            'SUPER_ADMIN': '超級管理員',
+            'ADMIN': '管理員',
+            'RESIDENT': '住戶',
+            'GUARD': '警衛保全'
+          };
+          roleDisplay = roleMap[role] || '使用者';
+
+          // 顯示登入成功 Toast
+          this.toast.success(`登入成功\n您的身分為：${roleDisplay}`);
+
+          // 根據角色導向不同路由
+          if (role === 'ADMIN' || role === 'SUPER_ADMIN') {
             this.router.navigate(['/admin/dashboard']);
           } else {
-            // RESIDENT 或 GUARD
             this.router.navigate(['/resident/dashboard']);
           }
         } catch {
-          // token 解析失敗，預設導向管理員
+          this.toast.success('登入成功');
           this.router.navigate(['/admin/dashboard']);
         }
       },
       error: (err: HttpErrorResponse) => {
-        console.log('狀態碼:', err.status);
-        console.log('錯誤訊息:', err.message);
-        console.log('錯誤內容:', err.error);
-
-        switch (err.error.errorCode) {
+        const errorCode = err.error?.errorCode;
+        
+        switch (errorCode) {
           case 'ACCOUNT_PENDING':
-            this.snackBar.open('帳號尚未啟用，請聯繫管理員', '關閉', {
-              duration: 2000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top',
-            });
+            this.toast.error('帳號尚未啟用，請聯繫管理員');
             break;
           case 'ACCOUNT_INACTIVE':
-            this.snackBar.open('帳號已被停用，請聯繫管理員', '關閉', {
-              duration: 2000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top',
-            });
+            this.toast.error('帳號已被停用，請聯繫管理員');
             break;
           default:
+            this.toast.error('登入失敗，請檢查帳號與密碼');
             this.userloginStatus = false;
         }
       }

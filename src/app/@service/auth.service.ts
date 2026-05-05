@@ -1,16 +1,16 @@
 import { ResetPasswordComponent } from '../pages/reset-password/reset-password.component';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { catchError, tap, throwError } from 'rxjs';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private snackBar = inject(MatSnackBar);
+  private toast = inject(ToastService);
   private apiUrl = 'http://localhost:8083';
 
   constructor(
@@ -112,7 +112,7 @@ export class AuthService {
     if (confirm('確定要登出嗎？')) {
       localStorage.removeItem('token');
       this.router.navigate(['/login']);
-      this.snackBar.open('登出成功', '關閉', { duration: 2000 });
+      this.toast.success('登出成功', 2000);
     }
   }
 
