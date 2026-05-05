@@ -183,39 +183,6 @@ export class UserInfoComponent implements OnInit, OnDestroy {
       (prevInput as HTMLElement).focus();
     }
   }
-  // TODO: 【Phase 6】新增 sendOldEmailVerifyCode() 方法
-  // 功能：發送舊信箱驗證碼（頁面入口驗證）
-  // - 調用 authService.sendVerifyCode(user.email, 'OLD_EMAIL_VERIFY')
-  // - 若成功，設置 showOldEmailVerifyModal = true，啟動倒計時
-  // - 若失敗，顯示錯誤提示
-
-  // TODO: 【Phase 6】新增 submitEditForm() 方法
-  // 功能：提交編輯表單，發送新信箱驗證碼
-  // - 驗證表單數據是否完整和新信箱是否有效
-  // - 調用 authService.sendVerifyCode(updateUser.email, 'NEW_EMAIL_VERIFY')
-  // - 若成功，設置 showNewEmailVerifyModal = true，啟動倒計時
-  // - 若失敗，顯示錯誤提示
-
-  // TODO: 【Phase 6】新增 confirmWithVerifyCode() 方法
-  // 功能：確認新信箱驗證碼，執行最終更新
-  // - 驗證驗證碼是否輸入（6位數字）
-  // - 調用 authService.verifyEmailCode(updateUser.email, newEmailVerifyCode, 'NEW_EMAIL_VERIFY')
-  // - 若驗證碼驗證成功，組合 updateUser 和 verifyCode
-  // - 調用 authService.updateSuperAdminSelf(updateData)
-  // - 若成功，關閉 modal，顯示成功提示，刷新用戶信息
-  // - 若失敗，顯示錯誤提示
-
-  // TODO: 【Phase 6】新增 cancelVerification() 方法
-  // 功能：取消驗證流程
-  // - 關閉 showOldEmailVerifyModal 或 showNewEmailVerifyModal
-  // - 清空相應的驗證碼和倒計時
-  // - 如果是舊信箱驗證被取消，oldEmailVerified 保持 false
-
-  // TODO: 【Phase 6】新增 startCodeCountdown() 方法
-  // 功能：驗證碼倒計時（15分鐘 = 900秒）
-  // - 接收參數：type ('OLD_EMAIL' 或 'NEW_EMAIL')
-  // - 每秒遞減對應的 codeExpiry
-  // - 當 codeExpiry <= 0 時停止計時並清空驗證碼
 
   No(): void {
     this.toast.info('NO', 2000)
