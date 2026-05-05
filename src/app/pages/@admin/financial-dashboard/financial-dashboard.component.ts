@@ -10,6 +10,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { BookkeepingComponent } from '../../../dialog/bookkeeping/bookkeeping.component';
+import { ImageComponent } from '../../../dialog/image/image.component';
+import { VisitorServiceService } from '../../../@service/visitor-service.service';
 @Component({
   selector: 'app-financial-dashboard',
   imports: [MatIconModule, CommonModule, MatDialogModule, CommonModule, FormsModule, MatPaginatorModule, MatButtonModule,FormsModule],
@@ -18,7 +20,7 @@ import { BookkeepingComponent } from '../../../dialog/bookkeeping/bookkeeping.co
 })
 export class FinancialDashboardComponent {
   readonly dialog = inject(MatDialog);
-  constructor(private http:HttpService){}
+  constructor(private http:HttpService,private service:VisitorServiceService){}
 
   // 資料儲存
   transactions: any[] = [];
@@ -43,6 +45,10 @@ p: number = 1;              // 當前頁碼 (從1開始較直覺)
 itemsPerPage: number = 7;  // 每頁顯示 10 筆
 
 displayTransactions: any[] = []; // 存放「當前頁面」要顯示的資料
+
+
+
+readonly SERVER_URL = 'http://localhost:8083';
 
   ngOnInit() {
     this.fetchFinancialData();
@@ -71,6 +77,16 @@ displayTransactions: any[] = []; // 存放「當前頁面」要顯示的資料
     });
   }
 
+    openImage(imagePath: string) {
+      this.service.image=imagePath;
+    const ref = this.dialog.open(ImageComponent, {
+
+      data:{imageUrl: this.SERVER_URL + imagePath},
+      width: '500px',
+      disableClose: false // 點擊背景是否可以關閉
+    });
+
+  }
   fetchFinancialData() {
     this.http.getApi('/Salary/summary/total')
       .subscribe({
@@ -204,12 +220,7 @@ this.myBarChart = new Chart(ctx, {
     options: options,
   });
 
-// 創建圖表
-// new Chart(ctx, {
-//   type: 'bar',
-//   data: data,
-//   options: options,
-// });
+
 }
 
 
@@ -276,8 +287,10 @@ filteredTransactions: any[] = []; // 存放過濾後的結果
 fetchDashboardFinancialData() {
   this.http.getApi('/Salary/summary/now').subscribe({
     next: (res: any) => {
+      console.log(res ,'看看有沒有圖片');
+
       this.transactions = res;
-      this.applyFilters(); // <--- 重點！抓到資料後立刻去計算顯示內容
+      this.applyFilters();
     }
   });
 }

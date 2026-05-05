@@ -72,6 +72,11 @@
               placeholder="請輸入交易詳細說明..."></textarea>
   </div>
 
+    <div class="form-group">
+    <label>上傳圖片</label>
+    <input type="file" (change)="onFileSelected($event)" accept="image/*">
+  </div>
+
   <!-- 按鈕 -->
 @if((formData.amount!==null && formData.amount <=0) || !formData.amount || !formData.category ){
 

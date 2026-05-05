@@ -25,7 +25,7 @@
   - 驗證郵件碼
   
 - 👥 **角色權限控制**
-  - **4 個用戶角色**：`SUPER_ADMIN` (超級管理員)、`ADMIN` (管理員)、`GUARD` (保全)、`RESIDENT` (住戶)
+  - **4 個用戶角色**：`SUPER_ADMIN` (超級管理員)、`ADMIN` (管理員)、`RESIDENT` (住戶)
   - 路由守衛：`adminGuard`、`authGuard`
 
 ---

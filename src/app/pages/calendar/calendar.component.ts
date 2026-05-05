@@ -21,6 +21,7 @@ export class CalendarComponent {
   holidays = signal<Holiday[]>([]);
   events = signal<Holiday[]>([]);
   reservations = signal<Holiday[]>([]);
+  bills = signal<Holiday[]>([]);
 
   selectedDate = signal<string | null>(null);
 
@@ -36,6 +37,7 @@ export class CalendarComponent {
     this.loadHolidays();
     this.loadEvents();
     this.loadReservations();
+    this.loadBills();
     this.isAdmin = this.auth.isAdmin();
   }
 
@@ -63,6 +65,13 @@ export class CalendarComponent {
 
     this.service.getReservations(start)
       .subscribe(res => this.reservations.set(res));
+  }
+
+  loadBills() {
+    const start = `${this.year()}-${this.pad(this.month()+1)}-01`;
+
+    this.service.getBills(start)
+      .subscribe(res => this.bills.set(res));
   }
 
   // 📅 計算月曆 grid
@@ -104,6 +113,7 @@ export class CalendarComponent {
     const holiday = this.holidays().find(h => h.date === dateStr);
     const events = this.events().filter(e => e.date === dateStr) || [];
     const reservations = this.reservations().filter(r => r.date === dateStr) || [];
+    const bills = this.bills().filter(b => b.date === dateStr) || [];
 
     return {
       date,
@@ -111,7 +121,8 @@ export class CalendarComponent {
       isToday: this.format(date) === this.format(this.today),
       holiday,
       events,
-      reservations
+      reservations,
+      bills
     };
   }
 
@@ -135,6 +146,7 @@ export class CalendarComponent {
     this.loadHolidays();
     this.loadEvents();
     this.loadReservations();
+    this.loadBills();
   }
 
   nextMonth() {
@@ -147,6 +159,7 @@ export class CalendarComponent {
     this.loadHolidays();
     this.loadEvents();
     this.loadReservations();
+    this.loadBills();
   }
 
   toTodayMonth() {
@@ -155,6 +168,7 @@ export class CalendarComponent {
     this.loadHolidays();
     this.loadEvents();
     this.loadReservations();
+    this.loadBills();
   }
 
   selectDay(day: DayCell) {
@@ -179,6 +193,13 @@ export class CalendarComponent {
     if (!date) return [];
 
     return this.reservations().filter(r => r.date === date) || [];
+  });
+
+  selectedBills = computed(() => {
+    const date = this.selectedDate();
+    if (!date) return [];
+
+    return this.bills().filter(b => b.date === date) || [];
   });
 
   newEventTitle = signal('');

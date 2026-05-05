@@ -6,7 +6,6 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpService } from '../../@service/http.service';
 import { ToastService } from '../../@service/toast.service';
-
 @Component({
   selector: 'app-bookkeeping',
   imports: [CommonModule,
@@ -19,11 +18,11 @@ import { ToastService } from '../../@service/toast.service';
 })
 export class BookkeepingComponent {
 
-  constructor(
-    private dialogRef: MatDialogRef<BookkeepingComponent>,
-    private http: HttpService,
-    private toast: ToastService
-  ) {}
+
+selectedFile: File | null = null;
+
+
+  constructor(private dialogRef: MatDialogRef<BookkeepingComponent>,private http:HttpService,private toast:ToastService){}
   formData = {
     type: 'EXPENSE', // 預設支出
     amount: null,
@@ -35,7 +34,9 @@ export class BookkeepingComponent {
 
 
 
-
+onFileSelected(event: any) {
+  this.selectedFile = event.target.files[0]; // 取得選取的檔案
+}
 
 
 expenditureType = [
@@ -82,12 +83,22 @@ NewRevenueOrExpenditure(){
   }
   console.log(dateStr);
 
-this.http.postApi('/Salary/recordManualTransaction',resultfFormData).subscribe({
-  next:(res:any) =>{console.log(res),
-    this.toast.success('收支儲存成功', 2500);
+
+
+const finalPayload = new FormData();
+finalPayload.append('request', new Blob([JSON.stringify(resultfFormData)], {
+    type: 'application/json'
+  }));
+if (this.selectedFile) {
+    finalPayload.append('file', this.selectedFile);
+  }
+
+this.http.postApi('/Salary/recordManualTransaction',finalPayload).subscribe({
+  next:(res:any) =>{
+    // console.log('成功了',res),
     this.dialogRef.close('refresh');
 
-
+this.selectedFile = null;
 this.formData= {
     type: 'EXPENSE', // 預設支出
     amount: null,
