@@ -35,7 +35,7 @@ export class VisitorComponent implements OnInit {
 
   // ── 分頁設定 ──────────────────────────────────────────
   currentPage = 1;
-  pageSize = 10;
+  pageSize = 8;
 
   // ── 訪客資料相關 ──────────────────────────────────────
   allVisitor: any[] = [];                    // 所有訪客列表

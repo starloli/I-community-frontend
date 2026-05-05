@@ -45,14 +45,14 @@ p: number = 1;              // 當前頁碼 (從1開始較直覺)
 itemsPerPage: number = 7;  // 每頁顯示 10 筆
 
 displayTransactions: any[] = []; // 存放「當前頁面」要顯示的資料
-
+role!:string;
 
 
 readonly SERVER_URL = 'http://localhost:8083';
 
   ngOnInit() {
     this.fetchFinancialData();
-
+this.role=this.service.role;
     this.getMonth();
 
   }

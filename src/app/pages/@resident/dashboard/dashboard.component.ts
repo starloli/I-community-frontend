@@ -1,3 +1,4 @@
+import { Visitor } from './../../../interface/interface';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -39,10 +40,8 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
   announcements: Array<{ title: string; date: string; category: string }> = [];
   myPackages: Array<{ courier: string; arrivedAt: string; trackingNumber: string }> = [];
 
-  visitorHighlights = [
-    '可提前登記訪客資訊，減少櫃台等待時間',
-    '可查詢訪客進出紀錄與目前狀態',
-    '支援住戶自行新增與管理訪客資料'
+  visitorHighlights:any[] = [
+
   ];
 
   constructor(
@@ -60,7 +59,19 @@ export class ResidentDashboardComponent implements OnInit, OnDestroy {
     this.loadPackages();
     this.loadBillsCount();
     this.loadPendingRepairs();
+    this.getVisitor();
   }
+
+getVisitor(){
+ this.http.getApi('/visitor/my-visitors').subscribe({
+      next: (res: any) => {
+        console.log('訪客是什麽東西',res);
+
+     this.visitorHighlights=res.reverse().slice(0,5);
+
+      }
+    });
+}
 
   private loadUserInfo(): void {
     this.http.getApi<User>(this.getUserUrl).pipe(takeUntil(this.$destroy)).subscribe({

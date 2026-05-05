@@ -7,6 +7,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../@service/auth.service';
 import { HttpService } from '../../@service/http.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { VisitorServiceService } from '../../@service/visitor-service.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class LoginComponent {
 
-  constructor(private router: Router, private http: HttpService, private auth: AuthService, private snackBar: MatSnackBar) { }
+  constructor(private router: Router, private http: HttpService, private auth: AuthService, private snackBar: MatSnackBar
+    ,private service:VisitorServiceService
+  ) { }
 
   booleanSignup = false;
   booleanIsManager: boolean = false;
@@ -79,6 +82,7 @@ export class LoginComponent {
           const payload = JSON.parse(atob(res.accessToken.split('.')[1]));
           console.log('payload:', payload);
           console.log('角色:', payload.role);
+          this.service.role = payload.role;
 
           if (payload.role === 'ADMIN') {
             this.router.navigate(['/admin/dashboard']);

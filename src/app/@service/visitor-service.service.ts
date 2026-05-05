@@ -26,4 +26,6 @@ booleanOpenDialog!:string;
 //傳遞圖片的路徑  從financial-dashboard來的
 image!:string;
 
+//現在的角色
+role!:string;
 }
