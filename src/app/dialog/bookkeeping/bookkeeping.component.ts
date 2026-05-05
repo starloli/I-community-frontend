@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpService } from '../../@service/http.service';
-
+import { ToastService } from '../../@service/toast.service';
 @Component({
   selector: 'app-bookkeeping',
   imports: [CommonModule,
@@ -22,7 +22,7 @@ export class BookkeepingComponent {
 selectedFile: File | null = null;
 
 
-  constructor(private dialogRef: MatDialogRef<BookkeepingComponent>,private http:HttpService){}
+  constructor(private dialogRef: MatDialogRef<BookkeepingComponent>,private http:HttpService,private toast:ToastService){}
   formData = {
     type: 'EXPENSE', // 預設支出
     amount: null,
@@ -62,6 +62,11 @@ expenditureType = [
 
 
 NewRevenueOrExpenditure(){
+  if (!this.formData.amount || this.formData.amount <= 0 || !this.formData.category || !this.formData.transactionDate) {
+    this.toast.warning('請先填寫完整收支資訊', 2000);
+    return;
+  }
+
   let dateStr = this.formData.transactionDate;
   if (dateStr && dateStr.length === 16) {
     // 這裡要賦值回去！並補上 :00
@@ -105,6 +110,7 @@ this.formData= {
   },
 error: (err: any) => {
       console.log(err);
+      this.toast.error(err?.error?.message || '收支儲存失敗，請稍後再試', 3000);
   }
 })
 }

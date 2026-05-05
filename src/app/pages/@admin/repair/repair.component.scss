@@ -190,7 +190,21 @@
   mat-icon { font-size: 18px; width: 18px; height: 18px; }
 }
 
-.edit-btn   { background: #e3f2fd; color: #0288d1; &:hover { background: #0288d1; color: #fff; } }
+.edit-btn {
+  background: linear-gradient(135deg, #4a69bd, #6c5ce7);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(74, 105, 189, 0.2);
+
+  &:hover {
+    filter: brightness(1.1);
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(74, 105, 189, 0.3);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
 .delete-btn { background: #ffebee; color: #e53935; &:hover { background: #e53935; color: #fff; } }
 
 .complete-btn {

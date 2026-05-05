@@ -5,6 +5,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { BillsdialogComponent } from '../billsdialog/billsdialog.component';
 import { Router, RouterLink } from "@angular/router";
 import { HttpService } from '../../@service/http.service';
+import { ToastService } from '../../@service/toast.service';
 
 @Component({
   selector: 'app-send-bill',
@@ -14,7 +15,12 @@ import { HttpService } from '../../@service/http.service';
 })
 export class SendBillComponent {
 
-  constructor(private http: HttpService, private dialogRef: MatDialogRef<SendBillComponent>, private router: Router) { }
+  constructor(
+    private http: HttpService,
+    private dialogRef: MatDialogRef<SendBillComponent>,
+    private router: Router,
+    private toast: ToastService
+  ) { }
   title!: string;
   billingMonth!: string;
   dueDate!: string;
@@ -55,11 +61,17 @@ export class SendBillComponent {
       }
     }
 
-    this.http.postApi("/bills/sendAllBills", billData).subscribe((res: any) => {
-      console.log(res, "成功發送賬單");
-      this.page = 1
-      this.dialogRef.close('refresh');
-
+    this.http.postApi("/bills/sendAllBills", billData).subscribe({
+      next: (res: any) => {
+        console.log(res, "成功發送賬單");
+        this.toast.success('帳單新增成功', 2500);
+        this.page = 1;
+        this.dialogRef.close('refresh');
+      },
+      error: (err) => {
+        console.log(err);
+        this.toast.error(err?.error?.message || '帳單新增失敗，請稍後再試', 3000);
+      }
     })
   }
   cancel() {

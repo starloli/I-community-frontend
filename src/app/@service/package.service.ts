@@ -68,17 +68,22 @@ export class PackageService {
   }
 
   pickupById(id: number, pickupAt: string) {
-    return this.http.putApi<any>(`${'/admin/package'}/${id}/pickup`, pickupAt)
-        .subscribe(() => {
-          const current = this.packagesSubject.value;
+    return this.http.putApi<any>(`${'/admin/package'}/${id}/pickup`, pickupAt).pipe(
+      tap(() => {
+        const current = this.packagesSubject.value;
 
-          const updated = current.map(pkg =>
-            pkg.id === id
-              ? { ...pkg, status: PackageStatus.PICKED_UP, pickupAt: pickupAt }
-              : pkg
-          );
+        const updated = current.map(pkg =>
+          pkg.id === id
+            ? { ...pkg, status: PackageStatus.PICKED_UP, pickupAt: pickupAt }
+            : pkg
+        );
 
-          this.packagesSubject.next(updated);
-        });
+        this.packagesSubject.next(updated);
+      }),
+      catchError((error) => {
+        console.error('包裹領取更新失敗', error);
+        return throwError(() => error);
+      })
+    );
   }
 }

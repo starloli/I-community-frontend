@@ -10,8 +10,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
+import { ToastService } from '../../@service/toast.service';
 
 @Component({
   selector: 'app-reserve-facility',
@@ -26,7 +26,7 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
   constructor(
     private dialogRef: MatDialogRef<ReserveFacilityComponent>,
     private http: HttpService,
-    private snackBar: MatSnackBar,
+    private toast: ToastService,
     @Inject(MAT_DIALOG_DATA) public data: { facility: Facility, time: Date },
   ) { }
 
@@ -64,11 +64,7 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
           };
         },
         error: err => {
-          this.snackBar.open(err.error.message, '關閉', {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          })
+          this.toast.error(err.error.message, 2000)
           console.log(err.error.message);
         }
       });
@@ -84,11 +80,7 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
       status: ReservationStatus.CONFIRMING,
       attendees: this.attendeesControl.value || 1
     };
-    this.snackBar.open('正在提交預約...', '關閉', {
-      duration: 2000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top'
-    });
+    this.toast.info('正在提交預約...', 2000);
     console.log('res:', this.reservation);
     this.http.postApi<Res>(this.postUrl, this.reservation)
       .pipe(takeUntil(this.destroy$)).subscribe({
@@ -96,11 +88,7 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
           this.dialogRef.close(true);
         },
         error: err => {
-          this.snackBar.open(err.error.message, '關閉', {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          })
+          this.toast.error(err.error.message, 2000)
           console.log(err);
         }
       })

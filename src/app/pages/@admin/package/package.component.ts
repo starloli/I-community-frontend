@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Subject, takeUntil } from 'rxjs';
 
 import { AuthService } from '../../../@service/auth.service';
@@ -13,11 +12,12 @@ import { HttpService } from '../../../@service/http.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PackegeDiologComponent } from '../../../dialog/packege-diolog/packege-diolog.component';
 import { MatButtonModule } from '@angular/material/button';
+import { ToastService } from '../../../@service/toast.service';
 
 @Component({
   selector: 'app-package',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatSnackBarModule,MatButtonModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule],
   templateUrl: './package.component.html',
   styleUrls: ['./package.component.scss']
 })
@@ -77,8 +77,7 @@ export class PackageComponent implements OnInit, OnDestroy {
     private http: HttpService,
     private authService: AuthService,
     private packageService: PackageService,
-    private snackBar: MatSnackBar,
-
+    private toast: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -327,6 +326,7 @@ readonly dialog = inject(MatDialog);
       !form.unitNumber.trim() ||
       !form.trackingNumber.trim()
     ) {
+      this.toast.warning('請先填寫完整包裹資訊', 2500);
       return;
     }
 
@@ -340,15 +340,15 @@ readonly dialog = inject(MatDialog);
       notes: form.notes.trim()
     }).subscribe({
       next: () => {
-        this.snackBar.open('包裹新增成功', '關閉', { duration: 2500 });
+        this.toast.success('包裹新增成功', 2500);
         this.closeAdd();
       },
       error: (error) => {
         console.error('包裹新增失敗:', error);
         const message =
           error?.error?.message ||
-          (error?.status ? `新增失敗（${error.status}）` : '新增失敗，請稍後再試');
-        this.snackBar.open(message, '關閉', { duration: 4000 });
+          (error?.status ? `包裹新增失敗（${error.status}）` : '包裹新增失敗，請稍後再試');
+        this.toast.error(message, 4000);
       }
     });
   }
@@ -370,8 +370,19 @@ readonly dialog = inject(MatDialog);
       return;
     }
 
-    this.packageService.pickupById(id, new Date().toISOString());
-    this.closePickup();
+    this.packageService.pickupById(id, new Date().toISOString()).subscribe({
+      next: () => {
+        this.toast.success('包裹已標記為已領取', 2500);
+        this.closePickup();
+      },
+      error: (error) => {
+        console.error('包裹領取更新失敗:', error);
+        const message =
+          error?.error?.message ||
+          (error?.status ? `包裹領取更新失敗（${error.status}）` : '包裹領取更新失敗，請稍後再試');
+        this.toast.error(message, 4000);
+      }
+    });
   }
 
   goToPage(page: number): void {
@@ -412,6 +423,7 @@ this.newPackageForm.notes=res.notes;
 
         },
           error: (err) => {console.log('報錯了');
+            this.toast.error('圖片解析失敗，請改為手動輸入包裹資訊', 3000);
             this.openDialog('0','0');
           }
     })

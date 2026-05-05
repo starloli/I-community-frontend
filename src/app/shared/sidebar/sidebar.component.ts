@@ -1,12 +1,14 @@
 import { UserRole } from './../../interface/enum';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DOCUMENT, CommonModule } from '@angular/common';
+import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common';
 import { HttpService } from '../../@service/http.service';
 import { ResidentStateService } from '../../@service/resident-state.service';
 import { User } from '../../interface/interface';
 import { Subject, takeUntil } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { VerifyPasswordComponent } from '../../dialog/verify-password/verify-password.component';
 
 @Component({
   selector: 'app-sidebar',
@@ -18,12 +20,15 @@ import { Subject, takeUntil } from 'rxjs';
     '[class.sidebar-collapsed-host]': 'isCollapsed'
   }
 })
-export class SidebarComponent implements OnInit, OnDestroy {
+export class SidebarComponent implements OnInit, OnDestroy, AfterViewInit {
+  private readonly document = inject(DOCUMENT);
+  private readonly renderer = inject(Renderer2);
 
   constructor(
     private router: Router,
     private http: HttpService,
-    private residentState: ResidentStateService
+    private residentState: ResidentStateService,
+    private dialog: MatDialog
   ) { }
 
   isCollapsed = false; // 收合狀態
@@ -32,8 +37,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
   userInitial = '';
   incompleteCount = 0; // 資料異常的住戶數量
   UserRole = UserRole;
+  isMobileNavHidden = false;
 
   private $destroy = new Subject<void>();
+  private lastScrollTop = 0;
+  private removeScrollListener?: () => void;
+  private removeResizeListener?: () => void;
 
   navItems = [
     { route: 'admin/dashboard', icon: 'home_work', label: '社區總覽', color: '#5B7FA6' },
@@ -62,10 +71,23 @@ export class SidebarComponent implements OnInit, OnDestroy {
       .subscribe(count => this.incompleteCount = count);
   }
 
+  ngAfterViewInit(): void {
+    this.bindMobileScrollListener();
+    this.removeResizeListener = this.renderer.listen('window', 'resize', () => {
+      this.bindMobileScrollListener();
+    });
+  }
+
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
+    this.removeScrollListener?.();
+    this.removeResizeListener?.();
   }
+
+  // verifyPasswordDialog() {
+  //   this.router.navigate(['/admin/userInfo']);
+  // }
 
   private loadUserInfo(): void {
     const getUrl = "/user/me";
@@ -104,6 +126,16 @@ export class SidebarComponent implements OnInit, OnDestroy {
     return payload.role
   }
 
+  get roleName(): string {
+    switch (this.userRole) {
+      case UserRole.SUPER_ADMIN: return '超級管理員';
+      case UserRole.ADMIN: return '社區管理員';
+      case UserRole.GUARD: return '社區保全';
+      case UserRole.RESIDENT: return '社區住戶';
+      default: return '系統使用者';
+    }
+  }
+
   get token(): string {
     const token = localStorage.getItem('token')
     if (!token) {
@@ -117,5 +149,35 @@ export class SidebarComponent implements OnInit, OnDestroy {
   logout() {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
+  }
+
+  private bindMobileScrollListener(): void {
+    this.removeScrollListener?.();
+    this.isMobileNavHidden = false;
+
+    if (!window.matchMedia('(max-width: 768px)').matches) {
+      return;
+    }
+
+    const scrollHost = this.document.querySelector('.main-content') as HTMLElement | null;
+    if (!scrollHost) {
+      return;
+    }
+
+    this.lastScrollTop = scrollHost.scrollTop;
+    this.removeScrollListener = this.renderer.listen(scrollHost, 'scroll', () => {
+      const currentScrollTop = scrollHost.scrollTop;
+      const delta = currentScrollTop - this.lastScrollTop;
+
+      if (currentScrollTop <= 8) {
+        this.isMobileNavHidden = false;
+      } else if (delta > 8) {
+        this.isMobileNavHidden = true;
+      } else if (delta < -8) {
+        this.isMobileNavHidden = false;
+      }
+
+      this.lastScrollTop = currentScrollTop;
+    });
   }
 }

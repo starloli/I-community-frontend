@@ -7,6 +7,7 @@ import { SendBillComponent } from '../send-bill/send-bill.component';
 import { Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ToastService } from '../../@service/toast.service';
 
 @Component({
   selector: 'app-send-bill-to-unitnumber',
@@ -18,7 +19,12 @@ export class SendBillToUnitnumberComponent {
   currentResidents: any[] = [];
   addressMap = new Map<string, any>();
   addressList: string[] = [];
-  constructor(private http: HttpService, private dialogRef: MatDialogRef<SendBillComponent>, private router: Router) { }
+  constructor(
+    private http: HttpService,
+    private dialogRef: MatDialogRef<SendBillComponent>,
+    private router: Router,
+    private toast: ToastService
+  ) { }
   title!: string;
   billingMonth!: string;
   dueDate!: string;
@@ -60,11 +66,17 @@ this.getAllAddresses();
       }
     }
 
-    this.http.postApi("/bills/chargeRepairFee", billData).subscribe((res: any) => {
-      console.log(res, "成功發送賬單");
-      this.page = 1
-      this.dialogRef.close('refresh');
-
+    this.http.postApi("/bills/chargeRepairFee", billData).subscribe({
+      next: (res: any) => {
+        console.log(res, "成功發送賬單");
+        this.toast.success('帳單新增成功', 2500);
+        this.page = 1;
+        this.dialogRef.close('refresh');
+      },
+      error: (err) => {
+        console.log(err);
+        this.toast.error(err?.error?.message || '帳單新增失敗，請稍後再試', 3000);
+      }
     })
   }
   cancel() {

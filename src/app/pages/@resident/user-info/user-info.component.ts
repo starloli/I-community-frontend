@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject, takeUntil } from 'rxjs';
 import { HttpService } from '../../../@service/http.service';
 import { UserResponse } from '../../../interface/interface';
@@ -7,6 +6,7 @@ import { FormsModule } from "@angular/forms";
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ToastService } from '../../../@service/toast.service';
 
 @Component({
   selector: 'app-user-info',
@@ -17,7 +17,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class UserInfoComponent implements OnInit, OnDestroy {
 
-  constructor(private http: HttpService, private snackBar: MatSnackBar) { }
+  constructor(private http: HttpService, private toast: ToastService) { }
 
   getUrl = "/user/me";
   modifyUrl = "/modify/myself";
@@ -52,20 +52,12 @@ export class UserInfoComponent implements OnInit, OnDestroy {
         phone: this.userPhone
       }).pipe(takeUntil(this.$destroy)).subscribe({
         next: (response) => {
-          this.snackBar.open('修改成功', '關閉', {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          })
+          this.toast.success('修改成功', 2000)
           console.log(response);
           this.getInfo();
         },
         error: (error) => {
-          this.snackBar.open('修改失敗', '關閉', {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          })
+          this.toast.error('修改失敗', 2000)
           console.error(error);
         }
       })
@@ -73,11 +65,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   }
 
   No(): void {
-    this.snackBar.open('NO', 'NO', {
-      duration: 2000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-    })
+    this.toast.info('NO', 2000)
   }
 
 

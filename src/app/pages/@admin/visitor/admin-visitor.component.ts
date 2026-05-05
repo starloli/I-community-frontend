@@ -9,6 +9,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { VisitorServiceService } from '../../../@service/visitor-service.service';
 import { VisitorDialogComponent } from '../../../dialog/visitor-dialog/visitor-dialog.component';
 import { HttpService } from '../../../@service/http.service';
+import { ToastService } from '../../../@service/toast.service';
 
 @Component({
   selector: 'app-visitor',
@@ -29,6 +30,7 @@ export class VisitorComponent implements OnInit {
   private http = inject(HttpService);
   private service = inject(VisitorServiceService);
   private dialog = inject(MatDialog);
+  private toast = inject(ToastService);
 
   // ── 公開 Math 物件給模板使用 ───────────────────────────
   readonly Math = Math;
@@ -202,6 +204,7 @@ export class VisitorComponent implements OnInit {
     };
 
     this.http.postApi('/visitor/saveVisitor', payload).subscribe(() => {
+      this.toast.success(`訪客 ${payload.visitorName} 登記成功`);
       this.getAllVisitors();
       this.closeForm();
     });
@@ -209,18 +212,24 @@ export class VisitorComponent implements OnInit {
 
   /**
    * 記錄訪客離開
-   * @param id - 訪客 ID
+   * @param visitor - 訪客物件
    */
-  checkOut(id: number) {
-    this.http.putApi(`/visitor/checkOut/${id}`).subscribe(() => this.getAllVisitors());
+  checkOut(visitor: any) {
+    this.http.putApi(`/visitor/checkOut/${visitor.visitorId}`).subscribe(() => {
+      this.toast.success(`訪客 ${visitor.visitorName} 已登記離場`);
+      this.getAllVisitors();
+    });
   }
 
   /**
    * 記錄訪客進入
-   * @param id - 訪客 ID
+   * @param visitor - 訪客物件
    */
-  enterInside(id: number) {
-    this.http.putApi(`/visitor/inside/${id}`).subscribe(() => this.getAllVisitors());
+  enterInside(visitor: any) {
+    this.http.putApi(`/visitor/inside/${visitor.visitorId}`).subscribe(() => {
+      this.toast.success(`訪客 ${visitor.visitorName} 已登記入內`);
+      this.getAllVisitors();
+    });
   }
 
   /**

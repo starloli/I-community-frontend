@@ -1,7 +1,6 @@
 import { UserStatus } from './../../../interface/enum';
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
-import { MatSnackBar } from '@angular/material/snack-bar'
 import { Subject, takeUntil } from 'rxjs'
 import { HttpService } from '../../../@service/http.service'
 import { ResidentStateService } from '../../../@service/resident-state.service'
@@ -18,6 +17,8 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { EditUserComponent } from '../../../dialog/edit-user/edit-user.component'
+import { ActiveUserComponent } from '../../../dialog/active-user/active-user.component';
+import { ToastService } from '../../../@service/toast.service';
 
 type PaginationItem = number | '...';
 
@@ -60,7 +61,7 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
 
   constructor(
     private http: HttpService,
-    private snackBar: MatSnackBar,
+    private toast: ToastService,
     private dialog: MatDialog,
     private residentState: ResidentStateService
   ) { }
@@ -94,7 +95,7 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
         this.residentState.setIncompleteCount(count)
       },
       error: (err) => {
-        this.snackBar.open(err.message || '載入住戶資料失敗', '關閉', { duration: 2000 })
+        this.toast.error(err.message || '載入住戶資料失敗', 2000)
         this.isLoading = false
         console.error(err)
       }
@@ -267,14 +268,27 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
     }
   }
 
+  activeUser(user: UserResponse): void {
+    const dialogRef = this.dialog.open(ActiveUserComponent, {
+      width: '400px',
+      data: { ...user }
+    })
+    dialogRef.afterClosed().pipe(takeUntil(this.$destroy)).subscribe(result => {
+      if (result) {
+        const updatedUser = { ...user, status: UserStatus.ACTIVE }
+        this.updateUser(updatedUser)
+      }
+    })
+  }
+
   updateUser(user: UserResponse): void {
     this.http.putApi(this.userRole === UserRole.ADMIN ? this.putadminUrl : this.superAdminUrl, user).pipe(takeUntil(this.$destroy)).subscribe({
       next: () => {
-        this.snackBar.open('使用者資料更新成功', '關閉', { duration: 2000 })
+        this.toast.success('使用者資料更新成功', 2000)
         this.getUser() // 重新載入資料
       },
       error: (err) => {
-        this.snackBar.open(err.message || '使用者資料更新失敗', '關閉', { duration: 2000 })
+        this.toast.error(err.message || '使用者資料更新失敗', 2000)
         console.error(err)
       }
     })

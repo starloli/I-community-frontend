@@ -5,9 +5,9 @@ import { CalendarDateFormatter, CalendarEvent, CalendarModule, CalendarView, Cal
 import { startOfDay, addHours, addMinutes } from 'date-fns';
 import { Facility, ResReservation } from '../../interface/interface';
 import { ReserveFacilityComponent } from '../reserve-facility/reserve-facility.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { takeUntil } from 'rxjs';
 import { parse } from 'date-fns';
+import { ToastService } from '../../@service/toast.service';
 
 @Injectable()
 class ReservationCalendarDateFormatter extends CalendarDateFormatter {
@@ -37,7 +37,7 @@ export class ReservationCalendarComponent implements OnInit {
   constructor(
     private dialogRefSelf: MatDialogRef<ReservationCalendarComponent>,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar,
+    private toast: ToastService,
     @Inject(MAT_DIALOG_DATA) public data: { facility: Facility, reservations: ResReservation[] }
   ) {
   }
@@ -99,11 +99,7 @@ export class ReservationCalendarComponent implements OnInit {
           }
         },
         error: err => {
-          this.snackBar.open(err.error.message, '關閉', {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+          this.toast.error(err.error.message, 2000);
           console.log(err.error.message);
         }
       })
@@ -117,11 +113,7 @@ export class ReservationCalendarComponent implements OnInit {
       console.log('NO');
     } else {
       if (this.events.some(event => event.start.getTime() === time.getTime() && event.meta.full)) {
-        this.snackBar.open('這個時段已經額滿了喔', '關閉', {
-          duration: 2000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        })
+        this.toast.warning('這個時段已經額滿了喔', 2000)
         return;
       } else {
         const dialogRef = this.dialog.open(ReserveFacilityComponent, {
@@ -141,11 +133,7 @@ export class ReservationCalendarComponent implements OnInit {
             }
           },
           error: err => {
-            this.snackBar.open(err.error.message, '關閉', {
-              duration: 2000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top'
-            });
+            this.toast.error(err.error.message, 2000);
             console.log(err.error.message);
           }
         })
@@ -207,11 +195,7 @@ export class ReservationCalendarComponent implements OnInit {
     } else if (i === 0) {
       this.viewDate = new Date();
     } else {
-      this.snackBar.open('亂輸入啥毛毛呢', '關閉', {
-        duration: 2000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      })
+      this.toast.warning('亂輸入啥毛毛呢', 2000)
     }
   }
 

@@ -307,21 +307,22 @@ $transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 
 @media (max-width: 768px) {
   .user-info-container {
+    padding-top: 70px;
     .page-header {
-      padding: 12px 0 4px;
-      margin-bottom: 0;
+      padding: 16px 16px 8px;
+      margin-bottom: 16px;
 
       .header-left {
         .title-row {
           gap: 8px;
           .header-icon { font-size: 24px; width: 24px; height: 24px; }
           h1 {
-            font-size: 22px;
+            font-size: 30px;
             letter-spacing: -0.5px;
           }
         }
         .subtitle {
-          font-size: 11px;
+          font-size: 15px;
           margin-top: -2px;
         }
       }

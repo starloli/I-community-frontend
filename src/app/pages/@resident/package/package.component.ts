@@ -2,16 +2,16 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Subject, takeUntil } from 'rxjs';
 
 import { PackageService } from '../../../@service/package.service';
 import { PackageStatus } from '../../../interface/enum';
+import { ToastService } from '../../../@service/toast.service';
 
 @Component({
   selector: 'app-package',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatSnackBarModule],
+  imports: [CommonModule, FormsModule, MatIconModule],
   templateUrl: './package.component.html',
   styleUrl: './package.component.scss'
 })
@@ -29,7 +29,7 @@ export class PackageComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(
-    private snackBar: MatSnackBar,
+    private toast: ToastService,
     private packageService: PackageService
   ) {}
 
@@ -123,12 +123,20 @@ export class PackageComponent implements OnInit, OnDestroy {
   }
 
   pickupPackage(pkg: any): void {
-    pkg.status = PackageStatus.PICKED_UP;
-    pkg.pickupAt = new Date().toISOString();
-    this.packageService.pickupById(pkg.id, new Date().toISOString());
-    this.snackBar.open('包裹已標記為已領取', '', {
-      duration: 2500,
-      panelClass: ['snackbar-success']
+    const pickupAt = new Date().toISOString();
+    this.packageService.pickupById(pkg.id, pickupAt).subscribe({
+      next: () => {
+        pkg.status = PackageStatus.PICKED_UP;
+        pkg.pickupAt = pickupAt;
+        this.toast.success('包裹已標記為已領取', 2500);
+      },
+      error: (error) => {
+        console.error('包裹領取更新失敗:', error);
+        const message =
+          error?.error?.message ||
+          (error?.status ? `包裹領取更新失敗（${error.status}）` : '包裹領取更新失敗，請稍後再試');
+        this.toast.error(message, 4000);
+      }
     });
   }
 

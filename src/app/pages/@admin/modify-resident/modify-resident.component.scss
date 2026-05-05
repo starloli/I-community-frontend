@@ -356,14 +356,15 @@
     justify-content: center;
     gap: 8px;
     padding: 12px;
-    background: #5B7FA6;
+    background: linear-gradient(135deg, #4a69bd, #6c5ce7);
     color: #ffffff;
     border: none;
     border-radius: 12px;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(74, 105, 189, 0.2);
 
     mat-icon {
       font-size: 18px;
@@ -372,7 +373,13 @@
     }
 
     &:hover {
-      background: #4a6b8a;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(74, 105, 189, 0.3);
+      filter: brightness(1.1);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
 }

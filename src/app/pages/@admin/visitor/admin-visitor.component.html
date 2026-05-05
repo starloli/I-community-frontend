@@ -66,9 +66,9 @@
               </td>
               <td class="col-action">
                 @if (visitor.status === 'NOTYET') {
-                <button class="checkout-btn arrival-btn" (click)="enterInside(visitor.visitorId)">登記入內</button>
+                <button class="checkout-btn arrival-btn" (click)="enterInside(visitor)">登記入內</button>
                 } @else if (visitor.status === 'INSIDE') {
-                <button class="checkout-btn" (click)="checkOut(visitor.visitorId)">登記離開</button>
+                <button class="checkout-btn" (click)="checkOut(visitor)">登記離開</button>
                 }
               </td>
             </tr>

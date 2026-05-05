@@ -1,4 +1,3 @@
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -10,6 +9,7 @@ import { Facility } from '../../../interface/interface';
 import { RegistFacilityComponent } from '../../../dialog/regist-facility/regist-facility.component';
 import { UpdateFacilityComponent } from '../../../dialog/update-facility/update-facility.component';
 import { FacilityConfigComponent } from '../../../dialog/facility-config/facility-config.component';
+import { ToastService } from '../../../@service/toast.service';
 
 @Component({
   selector: 'app-facility',
@@ -22,7 +22,7 @@ export class FacilityComponent implements OnInit, OnDestroy {
 
   readonly Math = Math;
 
-  constructor(private http: HttpService, private snackBar: MatSnackBar, private dialogRef: MatDialog) { }
+  constructor(private http: HttpService, private toast: ToastService, private dialogRef: MatDialog) { }
 
   private destroy$ = new Subject<void>();
 
@@ -137,11 +137,7 @@ export class FacilityComponent implements OnInit, OnDestroy {
         }
       },
       error: err => {
-        this.snackBar.open('發生錯誤，錯誤代碼：' + err.status, '關閉', {
-          duration: 2000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+        this.toast.error('發生錯誤，錯誤代碼：' + err.status, 2000);
         console.log(err);
       }
     });
@@ -151,19 +147,11 @@ export class FacilityComponent implements OnInit, OnDestroy {
     if (confirm('確定要刪除這個設施嗎？\n此動作無法復原 且會刪除相關預約資料\n\n若要停用設施 請使用編輯功能')) {
       this.http.deleteApi(this.deleteUrl, facilityId).pipe(takeUntil(this.destroy$)).subscribe({
         next: res => {
-          this.snackBar.open('刪除成功', '關閉', {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+          this.toast.success('刪除成功', 2000);
           this.getFacility();
         },
         error: err => {
-          this.snackBar.open('發生錯誤，錯誤代碼：' + err.status, '關閉', {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+          this.toast.error('發生錯誤，錯誤代碼：' + err.status, 2000);
           console.log(err);
         }
       });
@@ -188,11 +176,7 @@ export class FacilityComponent implements OnInit, OnDestroy {
           }
         },
         error: err => {
-          this.snackBar.open('發生錯誤，錯誤代碼：' + err.status, '關閉', {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+          this.toast.error('發生錯誤，錯誤代碼：' + err.status, 2000);
           console.log(err);
         }
       })

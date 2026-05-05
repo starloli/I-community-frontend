@@ -2,9 +2,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../@service/auth.service';
 import { AnnouncementService } from '../../../@service/announcement.service';
+import { ToastService } from '../../../@service/toast.service';
 import { Announcement, AnnouncementPayload } from '../../../interface/interface';
 
 @Component({
@@ -15,7 +15,7 @@ import { Announcement, AnnouncementPayload } from '../../../interface/interface'
   styleUrls: ['./announcement.component.scss']
 })
 export class AnnouncementComponent implements OnInit {
-  private snackBar = inject(MatSnackBar);
+  private toast = inject(ToastService);
 
   isAdmin = false;
   searchKeyword = '';
@@ -206,7 +206,7 @@ export class AnnouncementComponent implements OnInit {
 
   submitForm(): void {
     if (!this.formData.title?.trim() || !this.formData.content?.trim()) {
-      this.snackBar.open('請先填寫公告標題與內容', '關閉', { duration: 2000 });
+      this.toast.warning('請先填寫公告標題與內容', 2000);
       return;
     }
 
@@ -214,7 +214,7 @@ export class AnnouncementComponent implements OnInit {
     const expiresAtValue = this.formData.expiresAt;
 
     if (typeof expiresAtValue === 'string' && expiresAtValue && expiresAtValue < this.minDateTime) {
-      this.snackBar.open('到期日期不可早於今天', '關閉', { duration: 2000 });
+      this.toast.warning('到期日期不可早於今天', 2000);
       return;
     }
 
@@ -228,17 +228,17 @@ export class AnnouncementComponent implements OnInit {
 
     if (this.isEditMode) {
       if (!this.formData.announcementId) {
-        this.snackBar.open('找不到要更新的公告 ID', '關閉', { duration: 2000 });
+        this.toast.error('找不到要更新的公告 ID', 2000);
         return;
       }
 
       this.service.updateById(this.formData.announcementId, payload).subscribe({
         next: () => {
-          this.snackBar.open('公告更新成功', '關閉', { duration: 2000 });
+          this.toast.success('公告更新成功', 2000);
           this.closeForm();
         },
         error: () => {
-          this.snackBar.open('公告更新失敗，請稍後再試', '關閉', { duration: 2500 });
+          this.toast.error('公告更新失敗，請稍後再試', 2500);
         }
       });
       return;
@@ -246,11 +246,11 @@ export class AnnouncementComponent implements OnInit {
 
     this.service.postAnnoun(payload).subscribe({
       next: () => {
-        this.snackBar.open('公告發布成功', '關閉', { duration: 2000 });
+        this.toast.success('公告發布成功', 2000);
         this.closeForm();
       },
       error: () => {
-        this.snackBar.open('公告發布失敗，請稍後再試', '關閉', { duration: 2500 });
+        this.toast.error('公告發布失敗，請稍後再試', 2500);
       }
     });
   }
@@ -258,7 +258,7 @@ export class AnnouncementComponent implements OnInit {
   openDelete(id: number | undefined, event: Event): void {
     event.stopPropagation();
     if (id === undefined) {
-      this.snackBar.open('找不到要刪除的公告 ID', '關閉', { duration: 2000 });
+      this.toast.error('找不到要刪除的公告 ID', 2000);
       return;
     }
 
@@ -271,11 +271,11 @@ export class AnnouncementComponent implements OnInit {
       const idToDelete = this.deleteTargetId;
       this.service.deleteById(idToDelete).subscribe({
         next: () => {
-          this.snackBar.open('公告已成功刪除', '關閉', { duration: 2000 });
+          this.toast.success('公告已成功刪除', 2000);
           this.announcements = this.announcements.filter(a => a.announcementId !== idToDelete);
         },
         error: () => {
-          this.snackBar.open('公告刪除失敗，請稍後再試', '關閉', { duration: 2500 });
+          this.toast.error('公告刪除失敗，請稍後再試', 2500);
         }
       });
     }
