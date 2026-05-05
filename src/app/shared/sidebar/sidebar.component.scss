@@ -211,7 +211,13 @@ $brand-blue: #5B7FA6;
     z-index: 1;
   }
 
-  &.dot-beside-label { display: block; }
+  &.dot-beside-label { 
+    display: block; 
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }
 
 .sidebar.collapsed {
