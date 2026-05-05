@@ -45,7 +45,7 @@
       <span class="user-unit">{{ unitNumber }}</span>
     </div>
     @if (userRole === UserRole.SUPER_ADMIN) {
-    <button class="edit-button" aria-label="編輯超級管理者資訊" routerLink="/admin/userInfo">
+    <button class="edit-button" aria-label="編輯超級管理者資訊" (click)="verify()">
       <mat-icon>edit</mat-icon>
     </button>
     }

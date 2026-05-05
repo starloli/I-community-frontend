@@ -1,0 +1,13 @@
+@if (!nextStep) {
+<span>需驗證才能進入此頁面</span>
+<button (click)="return()">返回</button>
+<button (click)="sendVerifyCode()">發送驗證碼</button>
+}
+@if (nextStep) {
+@for (ctrl of otpCtrl; track $index; let i = $index) {
+<input maxlength="1" [formControl]="ctrl" type="text" />
+}
+<button (click)="return()">取消</button>
+<button (click)="sendVerifyCode()">再次發送驗證碼</button>
+<button (click)="verifyCode(otpCtrl)">確認</button>
+}

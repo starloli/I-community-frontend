@@ -1,4 +1,5 @@
-﻿import { CommonModule } from '@angular/common';
+﻿import { SuperAdminService } from './../../../@service/super-admin.service';
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
@@ -40,7 +41,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private packageService: PackageService,
     private repairService: RepairService,
     private router: Router,
-    private http: HttpService
+    private http: HttpService,
+    private superAdminService: SuperAdminService
   ) { }
 
   ngOnInit(): void {
@@ -57,6 +59,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.http.getApi(this.getUrl).pipe(takeUntil(this.$destroy)).subscribe({
       next: (res: any) => {
         this.userName = res.fullName || res.userName || '管理員';
+        this.superAdminService.setUserEmail(res.email || '');
       },
       error: () => {
         this.loadUserInfoFromToken();

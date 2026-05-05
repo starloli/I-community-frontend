@@ -1,3 +1,4 @@
+import { SuperAdminService } from './../../@service/super-admin.service';
 import { UserRole } from './../../interface/enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
@@ -8,7 +9,7 @@ import { ResidentStateService } from '../../@service/resident-state.service';
 import { User } from '../../interface/interface';
 import { Subject, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { VerifyPasswordComponent } from '../../dialog/verify-password/verify-password.component';
+import { VerifyCodeComponent } from '../../dialog/verify-code/verify-code.component';
 
 @Component({
   selector: 'app-sidebar',
@@ -26,12 +27,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private router: Router,
     private http: HttpService,
     private residentState: ResidentStateService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private SuperAdminService: SuperAdminService
   ) { }
 
   isCollapsed = false; // 收合狀態
   userName = '';
   unitNumber = '';
+  userEmail = '';
   userInitial = '';
   hasIncompleteResident = false; // 是否有坪數為 null 或 0 的住戶
   UserRole = UserRole;
@@ -49,8 +52,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { route: 'admin/ModifyResident', label: '住戶管理', color: '#5B7FA6', icon: 'manage_accounts' },
     { route: 'admin/FinancialDashboard', label: '財務收支明細', color: '#4075ae', icon: 'receipt_long' }
   ];
-
-  // TODO: 超級管理員的個人資料編輯按鈕待實作
 
   // 切換收合狀態
   toggleCollapse() {
@@ -72,22 +73,23 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  // verifyPasswordDialog() {
-  //   this.router.navigate(['/admin/userInfo']);
-  // }
-
   private loadUserInfo(): void {
     const getUrl = "/user/me";
     this.http.getApi<User>(getUrl).subscribe({
       next: (res) => {
         this.userName = res.fullName || '住戶';
         this.unitNumber = res.unitNumber || '';
+        this.userEmail = res.email || '';
         this.userInitial = this.userName.charAt(0) || '';
       },
       error: (error) => {
         console.error('取得住戶資訊失敗:', error);
       }
     });
+  }
+
+  verify(): void {
+    this.router.navigate(['/admin/userInfo']);
   }
 
   private checkResidentIncomplete(): void {
@@ -110,7 +112,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   get userRole(): UserRole {
     const payload = JSON.parse(atob(this.token.split('.')[1]))
-    return payload.role
+    return payload.role;
   }
 
   get token(): string {
@@ -124,6 +126,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   login() { this.router.navigate(['/login']); }
 
   logout() {
+    this.SuperAdminService.setUserEmail('');
+    this.SuperAdminService.setVerified(false);
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
   }

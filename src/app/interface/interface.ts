@@ -193,3 +193,11 @@ export interface DayCell {
   holiday?: Holiday;
   events: Holiday[];
 }
+
+export interface updateUser {
+  fullName: string;
+  phone: string;
+  email: string;
+  password: string;
+  verifyCode: string;
+}

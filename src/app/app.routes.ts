@@ -82,6 +82,4 @@ export const routes: Routes = [
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
-
-  // TODO: 重發驗證碼會跳到忘記密碼頁面，需修正
 ]
