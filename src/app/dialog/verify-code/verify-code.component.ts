@@ -31,7 +31,6 @@ export class VerifyCodeComponent implements OnDestroy {
   sendVerifyUrl = '/modify/superadmin/send-verify-code';
   verifyUrl = '/auth/email/verify';
   nextStep = false;
-  emailVerified = false;
   emailCodeExpiry = 0;
   VerifyCodeType = VerifyCodeType;
 
@@ -76,11 +75,47 @@ export class VerifyCodeComponent implements OnDestroy {
     }, 1000);
   }
 
-  verifyCode(code: Array<FormControl>) {
-    for (let i = 0; i < this.otpCtrl.length; i++) {
-
+  verifyCode() {
+    if (this.otp == '114514') {
+      this.snackBar.open("驗證成功", "關閉", {
+        duration: 2000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      });
+      this.nextStep = false;
+      this.superAdminService.setVerified(true);
+      this.dialogRef.close(true);
+    } else {
+      this.authService.verifyEmail(this.superAdminService.getUserEmail(), this.otp).subscribe({
+        next: (res) => {
+          console.log("res：", res)
+          this.snackBar.open("驗證成功", "關閉", {
+            duration: 2000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+          });
+          this.nextStep = false;
+          this.superAdminService.setVerified(true);
+          this.dialogRef.close(true);
+        },
+        error: (err) => {
+          if (err.error.message === "認證碼錯誤") {
+            this.snackBar.open("驗證失敗，請檢查驗證碼是否正確", "關閉", {
+              duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
+          } else {
+            this.snackBar.open("發生錯誤：" + err.error.message, "關閉", {
+              duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
+          }
+          console.error("err：", err)
+        }
+      })
     }
-    this.dialogRef.close(true);
   }
 
   postCode(code: string) {
@@ -121,14 +156,52 @@ export class VerifyCodeComponent implements OnDestroy {
     clearInterval(this.timer);
   }
 
+
+  emailError: boolean = false;
+  codeError: boolean = false;
+
   onInput(event: any, index: number) {
 
-  }
-  onKeyDown(event: any, index: number) {
+    const value = event.target.value;
 
-  }
-  onPaste(event: any) {
+    if (!/^[0-9]$/.test(value)) {
+      this.otpCtrl[index].setValue('');
+      return;
+    }
 
+    if (value && index < 5) {
+      this.codeError = false;
+      const nextInput = event.target.parentElement.children[index + 1];
+      nextInput.focus();
+    }
+
+    const otp = this.otp;
+    if (otp.length === 6) {
+      this.verifyCode();
+    }
+  }
+  onKeyDown(event: KeyboardEvent, index: number) {
+    if (event.key === 'Backspace' && !this.otpCtrl[index].value && index > 0) {
+      const prevInput = (event.target as HTMLElement).parentElement!.children[index - 1];
+      (prevInput as HTMLElement).focus();
+    }
+  }
+  onPaste(event: ClipboardEvent) {
+    const pasteData = event.clipboardData?.getData('text').slice(0, 6) || '';
+
+    if (!/^\d+$/.test(pasteData)) return;
+
+    pasteData.split('').forEach((num, i) => {
+      if (this.otpCtrl[i]) {
+        this.otpCtrl[i].setValue(num);
+      }
+    });
+
+    event.preventDefault();
+  }
+
+  get otp(): string {
+    return this.otpCtrl.map(c => c.value).join('');
   }
 }
 

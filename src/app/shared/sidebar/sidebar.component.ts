@@ -36,7 +36,6 @@ export class SidebarComponent implements OnInit, OnDestroy, AfterViewInit {
   isCollapsed = false; // 收合狀態
   userName = '';
   unitNumber = '';
-  userEmail = '';
   userInitial = '';
   incompleteCount = 0; // 資料異常的住戶數量
   UserRole = UserRole;
@@ -94,7 +93,7 @@ export class SidebarComponent implements OnInit, OnDestroy, AfterViewInit {
       next: (res) => {
         this.userName = res.fullName || '住戶';
         this.unitNumber = res.unitNumber || '';
-        this.userEmail = res.email || '';
+        this.SuperAdminService.setUserEmail(res.email || '');
         this.userInitial = this.userName.charAt(0) || '';
       },
       error: (error) => {

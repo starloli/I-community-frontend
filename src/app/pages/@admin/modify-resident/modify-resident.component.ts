@@ -108,11 +108,6 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
   get userRole(): UserRole {
     const payload = JSON.parse(atob(this.token.split('.')[1]))
     console.log('角色:', payload.role)
-    if (payload.role === UserRole.SUPER_ADMIN) {
-      console.log('超')
-    } else if (payload.role === UserRole.ADMIN) {
-      console.log('普')
-    }
     return payload.role
   }
 
@@ -145,7 +140,7 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
     } else if (this.selectedFilter === 'COMPLETE') {
       users = users.filter(user => user.squareFootage !== null && user.squareFootage !== 0)
     } else if (this.selectedFilter === 'INCOMPLETE') {
-      users = users.filter(user => user.squareFootage === null || user.squareFootage === 0)
+      users = users.filter(user => user.squareFootage === null || user.squareFootage === 0 && user.status === UserStatus.ACTIVE && user.role === UserRole.RESIDENT)
     } else if (this.selectedFilter === 'PENDING') {
       users = users.filter(user => user.status === UserStatus.PENDING)
     }
@@ -156,12 +151,10 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
     // 第二優先：資料完整度 (異常排前面)
     // 第三優先：角色
     users.sort((a, b) => {
-      const statusOrder = [UserStatus.ACTIVE, UserStatus.PENDING, UserStatus.INACTIVE];
-      const statusDiff = statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
-      if (statusDiff !== 0) return statusDiff;
+      const aIncomplete = a.squareFootage === null || a.squareFootage === 0 && a.status === UserStatus.ACTIVE && a.role === UserRole.RESIDENT
+      const bIncomplete = b.squareFootage === null || b.squareFootage === 0 && b.status === UserStatus.ACTIVE && b.role === UserRole.RESIDENT
 
-      const aIncomplete = a.squareFootage === null || a.squareFootage === 0;
-      const bIncomplete = b.squareFootage === null || b.squareFootage === 0;
+
       if (aIncomplete && !bIncomplete) return -1;
       if (!aIncomplete && bIncomplete) return 1;
 
@@ -182,7 +175,7 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
   }
 
   get incompleteCount(): number {
-    return this.allUsers.filter(user => user.squareFootage === null || user.squareFootage === 0 && user.status === UserStatus.ACTIVE).length
+    return this.allUsers.filter(user => user.squareFootage === null || user.squareFootage === 0 && user.role === UserRole.RESIDENT && user.status === UserStatus.ACTIVE).length
   }
 
   get completeCount(): number {
@@ -276,18 +269,6 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
     }
   }
 
-  activeUser(user: UserResponse): void {
-    const dialogRef = this.dialog.open(ActiveUserComponent, {
-      width: '400px',
-      data: { ...user }
-    })
-    dialogRef.afterClosed().pipe(takeUntil(this.$destroy)).subscribe(result => {
-      if (result) {
-        const updatedUser = { ...user, status: UserStatus.ACTIVE }
-        this.updateUser(updatedUser)
-      }
-    })
-  }
 
   updateUser(user: UserResponse): void {
     this.http.putApi(this.userRole === UserRole.ADMIN ? this.putadminUrl : this.superAdminUrl, user).pipe(takeUntil(this.$destroy)).subscribe({
