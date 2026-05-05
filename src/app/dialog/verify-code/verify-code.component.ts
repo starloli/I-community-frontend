@@ -1,6 +1,7 @@
+import { VerifyCodeType } from './../../interface/enum';
 import { SuperAdminService } from './../../@service/super-admin.service';
 import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core'
+import { Component, OnDestroy, OnInit } from '@angular/core'
 import { HttpService } from '../../@service/http.service'
 import { MatDialogRef } from '@angular/material/dialog'
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms'
@@ -15,7 +16,7 @@ import { AuthService } from '../../@service/auth.service';
   templateUrl: './verify-code.component.html',
   styleUrl: './verify-code.component.scss',
 })
-export class VerifyCodeComponent {
+export class VerifyCodeComponent implements OnDestroy {
 
   constructor(
     private http: HttpService,
@@ -32,12 +33,48 @@ export class VerifyCodeComponent {
   nextStep = false;
   emailVerified = false;
   emailCodeExpiry = 0;
+  VerifyCodeType = VerifyCodeType;
+
+  private timer: any;
 
   sendVerifyCode() {
-
-    this.nextStep = true;
+    this.snackBar.open("正在發送驗證碼...", "關閉", {
+      duration: 2000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+    });
+    this.authService.sendVerifyCode(this.superAdminService.getUserEmail(), VerifyCodeType.OLD_EMAIL_VERIFY).subscribe({
+      next: (res) => {
+        console.log("res：", res)
+        this.snackBar.open("驗證碼已發送", "關閉", {
+          duration: 2000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+        this.startCodeCountdown(res.expiry || 900);
+        this.nextStep = true;
+      },
+      error: (err) => {
+        console.error("err：", err)
+        this.snackBar.open("驗證碼發送失敗", "關閉", {
+          duration: 2000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+      }
+    })
   }
 
+  startCodeCountdown(expiry: number) {
+    this.emailCodeExpiry = expiry;
+    this.timer = setInterval(() => {
+      if (this.emailCodeExpiry > 0) {
+        this.emailCodeExpiry--;
+      } else {
+        clearInterval(this.timer);
+      }
+    }, 1000);
+  }
 
   verifyCode(code: Array<FormControl>) {
     for (let i = 0; i < this.otpCtrl.length; i++) {
@@ -78,6 +115,20 @@ export class VerifyCodeComponent {
       this.router.navigate(['/admin/dashboard']);
     }
     this.dialogRef.close(false);
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.timer);
+  }
+
+  onInput(event: any, index: number) {
+
+  }
+  onKeyDown(event: any, index: number) {
+
+  }
+  onPaste(event: any) {
+
   }
 }
 

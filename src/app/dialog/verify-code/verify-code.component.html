@@ -4,9 +4,13 @@
 <button (click)="sendVerifyCode()">發送驗證碼</button>
 }
 @if (nextStep) {
-@for (ctrl of otpCtrl; track $index; let i = $index) {
-<input maxlength="1" [formControl]="ctrl" type="text" />
-}
+<div class="otp-container" style="align-items: center; justify-content: center;">
+  @for (ctrl of otpCtrl; track $index; let i = $index) {
+  <input maxlength="1" [formControl]="ctrl" type="text" (input)="onInput($event, i)" (keydown)="onKeyDown($event, i)"
+    (paste)="onPaste($event)" />
+  }
+</div>
+<span>驗證碼有效時間：{{emailCodeExpiry}}秒</span>
 <button (click)="return()">取消</button>
 <button (click)="sendVerifyCode()">再次發送驗證碼</button>
 <button (click)="verifyCode(otpCtrl)">確認</button>
