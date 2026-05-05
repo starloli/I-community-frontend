@@ -32,8 +32,8 @@ export enum RepairStatus {
 
 export enum UserStatus {
   ACTIVE = 'ACTIVE',
+  PENDING = 'PENDING',
   INACTIVE = 'INACTIVE',
-  PENDING = 'PENDING'
 }
 
 export enum ReservationStatus {

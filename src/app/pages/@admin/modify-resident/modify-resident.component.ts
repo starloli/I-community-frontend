@@ -85,8 +85,11 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
       next: (res) => {
         this.allUsers = res;
         this.allUsers.sort((a, b) => {
-          const roles = Object.values(UserRole);
+          const roles = [this.UserRole.SUPER_ADMIN, this.UserRole.ADMIN, this.UserRole.RESIDENT];
           return roles.indexOf(a.role) - roles.indexOf(b.role);
+        }).sort((a, b) => {
+          const statusOrder = [UserStatus.ACTIVE, UserStatus.PENDING, UserStatus.INACTIVE];
+          return statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
         })
         console.log(res);
         this.isLoading = false;
@@ -137,17 +140,14 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
     }
 
     // 2. 資料完整度篩選
-    if (this.selectedFilter !== 'INACTIVE' && this.selectedFilter !== 'PENDING') {
-      users = users.filter(user => user.status === UserStatus.ACTIVE)
-      if (this.selectedFilter === 'COMPLETE') {
-        users = users.filter(user => user.squareFootage !== null && user.squareFootage !== 0)
-      } else if (this.selectedFilter === 'INCOMPLETE') {
-        users = users.filter(user => user.squareFootage === null || user.squareFootage === 0)
-      }
+    if (this.selectedFilter === 'INACTIVE') {
+      users = users.filter(user => user.status === UserStatus.INACTIVE)
+    } else if (this.selectedFilter === 'COMPLETE') {
+      users = users.filter(user => user.squareFootage !== null && user.squareFootage !== 0)
+    } else if (this.selectedFilter === 'INCOMPLETE') {
+      users = users.filter(user => user.squareFootage === null || user.squareFootage === 0)
     } else if (this.selectedFilter === 'PENDING') {
       users = users.filter(user => user.status === UserStatus.PENDING)
-    } else if (this.selectedFilter === 'INACTIVE') {
-      users = users.filter(user => user.status === UserStatus.INACTIVE)
     }
 
 
