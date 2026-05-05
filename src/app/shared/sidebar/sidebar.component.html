@@ -13,7 +13,7 @@
 
     <div class="m-header-center">
       <div class="user-avatar-mini"><mat-icon>admin_panel_settings</mat-icon></div>
-      <span class="user-name-mini">{{ userName }}</span>
+      <span class="user-name-mini">{{ roleName }}</span>
       @if (userRole==UserRole.SUPER_ADMIN) {
       <button class="edit-btn-mini" routerLink="/admin/userInfo" aria-label="編輯個人資訊">
         <mat-icon>edit</mat-icon>
@@ -41,7 +41,7 @@
   <div class="user-info" [class.collapsed]="isCollapsed">
     <div class="user-avatar"><mat-icon>admin_panel_settings</mat-icon></div>
     <div class="user-detail">
-      <span class="user-name">管理員</span>
+      <span class="user-name">{{ roleName }}</span>
       <span class="user-unit">{{ userName }}</span>
     </div>
     @if (userRole === UserRole.SUPER_ADMIN) {

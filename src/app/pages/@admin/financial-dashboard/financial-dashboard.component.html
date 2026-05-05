@@ -1,52 +1,54 @@
 <div class="bill-container">
-  <div class="resident-container">
-    <div class="page-header">
-      <div class="header-left">
-        <h1>財務收支明細</h1>
-        <span class="subtitle">統一管理收支、薪資與財務狀況</span>
-      </div>
-      <div class="header-actions">
-        <button class="add-btn" (click)="openDialog()">
-          <mat-icon>add</mat-icon> 新增收支
-        </button>
-      </div>
+  <div class="page-header">
+    <div class="header-left">
+      <h1>財務收支明細</h1>
+      <span class="subtitle">統一管理收支、薪資與財務狀況</span>
+    </div>
+    <div class="header-actions">
+      <button class="add-btn" (click)="openDialog()">
+        <mat-icon>add</mat-icon> 新增收支
+      </button>
     </div>
   </div>
 
   <div class="financial-wrapper">
     <div class="stats-grid">
       <div class="stat-card balance">
-        <div class="stat-label">當前帳戶結餘
-
-
+        <mat-icon class="stat-icon-wrap" style="color: #5B7FA6">account_balance_wallet</mat-icon>
+        <div class="stat-info">
+          <span class="stat-value" style="color: #5B7FA6">{{ totalBalance | currency:'TWD':'symbol':'1.0-0' }}</span>
+          <span class="stat-label">當前帳戶結餘</span>
         </div>
-        <div class="stat-value">{{ totalBalance | currency:'TWD':'symbol':'1.0-0' }}</div>
       </div>
+
       <div class="stat-card income">
-        <div class="stat-label">累計總收入</div>
-        <div class="stat-value">+ {{ totalIncome | currency:'TWD':'symbol':'1.0-0' }}</div>
+        <mat-icon class="stat-icon-wrap" style="color: #10b981">trending_up</mat-icon>
+        <div class="stat-info">
+          <span class="stat-value" style="color: #10b981">+ {{ totalIncome | currency:'TWD':'symbol':'1.0-0' }}</span>
+          <span class="stat-label">累計總收入</span>
+        </div>
       </div>
+
       <div class="stat-card expense">
-        <div class="stat-label">累計總支出</div>
-        <div class="stat-value">- {{ totalExpense | currency:'TWD':'symbol':'1.0-0' }}</div>
+        <mat-icon class="stat-icon-wrap" style="color: #ef4444">trending_down</mat-icon>
+        <div class="stat-info">
+          <span class="stat-value" style="color: #ef4444">- {{ totalExpense | currency:'TWD':'symbol':'1.0-0' }}</span>
+          <span class="stat-label">累計總支出</span>
+        </div>
       </div>
     </div>
 
-
     <div class="charts-container">
       <div class="chart-box">
-        <h4 class="text-center">年度盈餘趨勢</h4>
+        <h4>年度盈餘趨勢</h4>
         <canvas id="chart"></canvas>
       </div>
 
       <div class="chart-box">
-        <h4 class="text-center">每月收支對比</h4>
+        <h4>每月收支對比</h4>
         <canvas id="barChart"></canvas>
       </div>
     </div>
-    <p>
-    </p>
-    <p></p>
 
 
     <div class="table-container">
@@ -65,7 +67,7 @@
           <div class="filter-item search">
             <label>搜尋</label>
             <div class="search-box">
-              <span>🔍</span>
+              <mat-icon>search</mat-icon>
               <input type="text" placeholder="摘要或類別..." [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()">
             </div>
           </div>
@@ -121,7 +123,6 @@
             </td>
             <td class="fw-bold">{{ item.balance | currency:'TWD':'symbol':'1.0-0' }}</td>
             <td>{{ item.operator?.fullName || '系統自動入帳' }}</td>
-          </tr>
           <td>@if (item.receiptImagePath) {
 
             <img [src]="SERVER_URL + item.receiptImagePath" width="100" (click)="openImage(item.receiptImagePath)">
@@ -129,6 +130,8 @@
             <span>無圖片</span>
             }
           </td>
+          </tr>
+          
           }
         </tbody>
       </table>

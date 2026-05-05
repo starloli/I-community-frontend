@@ -1,3 +1,4 @@
+import { UserRole } from './../../interface/enum';
 import { DOCUMENT, CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
@@ -38,6 +39,23 @@ export class ResidentSidebarComponent implements OnInit, AfterViewInit, OnDestro
   userName = '';
   unitNumber = '';
   userInitial = '';
+
+  get userRole(): UserRole {
+    const token = localStorage.getItem('token')
+    if (!token) return UserRole.RESIDENT; // Default fallback
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    return payload.role
+  }
+
+  get roleName(): string {
+    switch (this.userRole) {
+      case UserRole.SUPER_ADMIN: return '超級管理員';
+      case UserRole.ADMIN: return '社區管理員';
+      case UserRole.GUARD: return '社區保全';
+      case UserRole.RESIDENT: return '社區住戶';
+      default: return '社區住戶';
+    }
+  }
 
   ngOnInit(): void {
     this.loadUserInfo();

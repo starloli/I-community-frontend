@@ -126,6 +126,16 @@ export class SidebarComponent implements OnInit, OnDestroy, AfterViewInit {
     return payload.role
   }
 
+  get roleName(): string {
+    switch (this.userRole) {
+      case UserRole.SUPER_ADMIN: return '超級管理員';
+      case UserRole.ADMIN: return '社區管理員';
+      case UserRole.GUARD: return '社區保全';
+      case UserRole.RESIDENT: return '社區住戶';
+      default: return '系統使用者';
+    }
+  }
+
   get token(): string {
     const token = localStorage.getItem('token')
     if (!token) {
