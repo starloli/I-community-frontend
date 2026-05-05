@@ -151,17 +151,25 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
     }
 
 
-    // 3. 排序：將坪數為 null 或 0 的住戶排在最上方
+    // 3. 排序：
+    // 第一優先：狀態 (ACTIVE > PENDING > INACTIVE)
+    // 第二優先：資料完整度 (異常排前面)
+    // 第三優先：角色
     users.sort((a, b) => {
-      const aIncomplete = a.squareFootage === null || a.squareFootage === 0
-      const bIncomplete = b.squareFootage === null || b.squareFootage === 0
+      const statusOrder = [UserStatus.ACTIVE, UserStatus.PENDING, UserStatus.INACTIVE];
+      const statusDiff = statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+      if (statusDiff !== 0) return statusDiff;
 
-      if (aIncomplete && !bIncomplete) return -1
-      if (!aIncomplete && bIncomplete) return 1
-      return 0
-    })
+      const aIncomplete = a.squareFootage === null || a.squareFootage === 0;
+      const bIncomplete = b.squareFootage === null || b.squareFootage === 0;
+      if (aIncomplete && !bIncomplete) return -1;
+      if (!aIncomplete && bIncomplete) return 1;
 
-    return users
+      const roles = [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.RESIDENT];
+      return roles.indexOf(a.role) - roles.indexOf(b.role);
+    });
+
+    return users;
   }
 
   get pagedUsers(): UserResponse[] {

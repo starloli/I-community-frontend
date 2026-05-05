@@ -55,7 +55,7 @@ export class SidebarComponent implements OnInit, OnDestroy, AfterViewInit {
     { route: 'admin/facility', icon: 'meeting_room', label: '設備管理', color: '#7B7FBA' },
     { route: 'admin/package', icon: 'inventory_2', label: '包裹管理', color: '#7BA89E' },
     { route: 'admin/repair', icon: 'build', label: '報修申請', color: '#C47A5A' },
-    { route: 'admin/ModifyResident', label: '住戶管理', color: '#B07A8A', icon: 'manage_accounts' },
+    { route: 'admin/ModifyResident', label: '帳號管理', color: '#B07A8A', icon: 'manage_accounts' },
     { route: 'admin/FinancialDashboard', label: '財務明細', color: '#88acd2', icon: 'receipt_long' }
   ];
 

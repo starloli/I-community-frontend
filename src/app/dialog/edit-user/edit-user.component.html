@@ -19,38 +19,39 @@
       </div>
     </div>
 
-    <mat-label>啟用狀態</mat-label>
-    <!-- <mat-icon matPrefix>check_box</mat-icon> -->
-    <mat-slide-toggle [(ngModel)]="isUserActive"></mat-slide-toggle>
+    <div class="status-toggle-row">
+      <span class="status-label">帳號啟用狀態</span>
+      <mat-slide-toggle [(ngModel)]="isUserActive"></mat-slide-toggle>
+    </div>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" [class.disabled-field]="!isUserActive">
       <mat-label>住址</mat-label>
       <mat-icon matPrefix>home</mat-icon>
-      <input matInput type="text" [(ngModel)]="user.unitNumber">
+      <input matInput type="text" [(ngModel)]="user.unitNumber" [disabled]="!isUserActive">
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" [class.disabled-field]="!isUserActive">
       <mat-label>坪數</mat-label>
       <mat-icon matPrefix>square_foot</mat-icon>
-      <input matInput type="number" [(ngModel)]="user.squareFootage" min="0">
+      <input matInput type="number" [(ngModel)]="user.squareFootage" min="0" [disabled]="!isUserActive">
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" [class.disabled-field]="!isUserActive">
       <mat-label>機車位</mat-label>
       <mat-icon matPrefix>two_wheeler</mat-icon>
-      <input matInput type="number" [(ngModel)]="user.motorParkingSpace" min="0">
+      <input matInput type="number" [(ngModel)]="user.motorParkingSpace" min="0" [disabled]="!isUserActive">
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" [class.disabled-field]="!isUserActive">
       <mat-label>汽車位</mat-label>
       <mat-icon matPrefix>directions_car</mat-icon>
-      <input matInput type="number" [(ngModel)]="user.carParkingSpace" min="0">
+      <input matInput type="number" [(ngModel)]="user.carParkingSpace" min="0" [disabled]="!isUserActive">
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" [class.disabled-field]="!isUserActive">
       <mat-label>權限</mat-label>
       <mat-icon matPrefix>security</mat-icon>
-      <mat-select [(ngModel)]="user.role">
+      <mat-select [(ngModel)]="user.role" [disabled]="!isUserActive">
         @for (role of roles; track role) {
         <mat-option [value]="role">
           {{ role }}

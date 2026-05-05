@@ -59,12 +59,12 @@
       [title]="isCollapsed ? item.label : ''">
       <div class="icon-wrapper">
         <mat-icon>{{ item.icon }}</mat-icon>
-        @if (item.label === '住戶管理' && incompleteCount > 0) {
+        @if (item.label === '帳號管理' && incompleteCount > 0) {
         <span class="notification-dot dot-on-icon"></span>
         }
       </div>
       <span class="nav-label">{{ item.label }}</span>
-      @if (item.label === '住戶管理' && incompleteCount > 0) {
+      @if (item.label === '帳號管理' && incompleteCount > 0) {
       <span class="notification-dot dot-beside-label"></span>
       }
     </a>

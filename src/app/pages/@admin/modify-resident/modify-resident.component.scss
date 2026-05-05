@@ -238,6 +238,17 @@
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   }
 
+  &.inactive-card {
+    filter: grayscale(0.8);
+    opacity: 0.7;
+    cursor: not-allowed;
+
+    .role-badge {
+      background: #f0f0f0;
+      color: #777;
+    }
+  }
+
   .error-indicator {
     position: absolute;
     top: 16px;
