@@ -21,10 +21,22 @@ import { SendBillChooseComponent } from '../../../dialog/send-bill-choose/send-b
 
 
 
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ShortNumberPipe } from '../../../shared/pipes/short-number.pipe';
+
 @Component({
   selector: 'app-bill',
   standalone: true,
-  imports: [MatIconModule, CommonModule, MatDialogModule, CommonModule, FormsModule, MatPaginatorModule, MatButtonModule,],
+  imports: [
+    MatIconModule, 
+    CommonModule, 
+    MatDialogModule, 
+    FormsModule, 
+    MatPaginatorModule, 
+    MatButtonModule,
+    MatTooltipModule,
+    ShortNumberPipe
+  ],
   templateUrl: './bill.component.html',
   styleUrl: './bill.component.scss'
 })
