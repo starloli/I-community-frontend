@@ -252,11 +252,11 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
               reservations: res
             },
             disableClose: false,
-            width: '800px',
+            width: '900px', // 稍微放寬一點
             maxWidth: '95vw',
+            maxHeight: '85vh', // 限制高度，確保上下留白
             panelClass: 'reservation-calendar-dialog'
           });
-
           dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe({
             next: dialogResult => {
               if (dialogResult) {
