@@ -53,6 +53,8 @@ readonly SERVER_URL = 'http://localhost:8083';
   ngOnInit() {
     this.fetchFinancialData();
 this.role=this.service.role;
+console.log('這是什麽角色',this.role);
+
     this.getMonth();
 
   }
