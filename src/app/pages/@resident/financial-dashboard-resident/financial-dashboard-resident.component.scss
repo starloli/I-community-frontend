@@ -100,7 +100,22 @@ $expense-red: #ef4444;
   }
 
   .stat-label { font-size: 14px; color: #64748b; font-weight: 500; text-transform: none; letter-spacing: normal; }
-  .stat-value { font-size: 28px; font-weight: 700; color: inherit; line-height: 1.1; }
+  .stat-value { 
+    font-size: 28px; 
+    font-weight: 700; 
+    color: inherit; 
+    line-height: 1.1;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    cursor: help;
+
+    .currency {
+      font-size: 0.6em;
+      font-weight: 600;
+      opacity: 0.9;
+    }
+  }
 }
 
 // ===== 圖表容器 =====
@@ -324,9 +339,12 @@ $expense-red: #ef4444;
 
       .stat-value {
         font-size: 20px;
-        font-weight: 500;
+        font-weight: 400;
         line-height: 1.2;
-        word-break: break-all;
+        display: flex;
+        align-items: baseline;
+        gap: 2px;
+        justify-content: center;
       }
 
       .stat-label {

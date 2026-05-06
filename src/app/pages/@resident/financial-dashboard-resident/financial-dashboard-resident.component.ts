@@ -11,9 +11,20 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { BookkeepingComponent } from '../../../dialog/bookkeeping/bookkeeping.component';
 
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ShortNumberPipe } from '../../../shared/pipes/short-number.pipe';
+
 @Component({
   selector: 'app-financial-dashboard-resident',
-  imports: [MatIconModule, CommonModule, MatDialogModule, CommonModule, FormsModule, MatPaginatorModule, MatButtonModule, FormsModule],
+  imports: [
+    MatIconModule, 
+    CommonModule, 
+    FormsModule, 
+    MatPaginatorModule, 
+    MatButtonModule,
+    MatTooltipModule,
+    ShortNumberPipe
+  ],
   templateUrl: './financial-dashboard-resident.component.html',
   styleUrl: './financial-dashboard-resident.component.scss',
 })

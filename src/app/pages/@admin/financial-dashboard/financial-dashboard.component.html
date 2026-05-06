@@ -16,7 +16,9 @@
       <div class="stat-card balance">
         <mat-icon class="stat-icon-wrap" style="color: #5B7FA6">account_balance_wallet</mat-icon>
         <div class="stat-info">
-          <span class="stat-value" style="color: #5B7FA6">{{ totalBalance | currency:'TWD':'symbol':'1.0-0' }}</span>
+          <span class="stat-value" style="color: #5B7FA6" [matTooltip]="'NT$ ' + totalBalance.toLocaleString()" matTooltipShowDelay="0">
+            <span class="currency">NT$</span>{{ totalBalance | shortNumber }}
+          </span>
           <span class="stat-label">當前帳戶結餘</span>
         </div>
       </div>
@@ -24,7 +26,9 @@
       <div class="stat-card income">
         <mat-icon class="stat-icon-wrap" style="color: #10b981">trending_up</mat-icon>
         <div class="stat-info">
-          <span class="stat-value" style="color: #10b981">+ {{ totalIncome | currency:'TWD':'symbol':'1.0-0' }}</span>
+          <span class="stat-value" style="color: #10b981" [matTooltip]="'NT$ ' + totalIncome.toLocaleString()" matTooltipShowDelay="0">
+            <span class="currency">NT$</span>+ {{ totalIncome | shortNumber }}
+          </span>
           <span class="stat-label">累計總收入</span>
         </div>
       </div>
@@ -32,7 +36,9 @@
       <div class="stat-card expense">
         <mat-icon class="stat-icon-wrap" style="color: #ef4444">trending_down</mat-icon>
         <div class="stat-info">
-          <span class="stat-value" style="color: #ef4444">- {{ totalExpense | currency:'TWD':'symbol':'1.0-0' }}</span>
+          <span class="stat-value" style="color: #ef4444" [matTooltip]="'NT$ ' + totalExpense.toLocaleString()" matTooltipShowDelay="0">
+            <span class="currency">NT$</span>- {{ totalExpense | shortNumber }}
+          </span>
           <span class="stat-label">累計總支出</span>
         </div>
       </div>

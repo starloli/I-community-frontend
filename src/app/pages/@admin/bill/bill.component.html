@@ -22,14 +22,18 @@
   <div class="stat-card">
     <mat-icon style="color:#B8935A;font-size:32px;width:32px;height:32px;">payments</mat-icon>
     <div class="stat-info">
-      <span class="stat-value" style="color:#B8935A">{{ formatAmount(adminTotalAmount) }}</span>
+      <span class="stat-value" style="color:#B8935A" [matTooltip]="'NT$ ' + adminTotalAmount.toLocaleString()" matTooltipShowDelay="0">
+        <span class="currency">NT$</span>{{ adminTotalAmount | shortNumber }}
+      </span>
       <span class="stat-label">應收總額</span>
     </div>
   </div>
   <div class="stat-card">
     <mat-icon style="color:#388e3c;font-size:32px;width:32px;height:32px;">check_circle</mat-icon>
     <div class="stat-info">
-      <span class="stat-value" style="color:#388e3c">{{ formatAmount(adminPaidAmount) }}</span>
+      <span class="stat-value" style="color:#388e3c" [matTooltip]="'NT$ ' + adminPaidAmount.toLocaleString()" matTooltipShowDelay="0">
+        <span class="currency">NT$</span>{{ adminPaidAmount | shortNumber }}
+      </span>
       <span class="stat-label">已收金額</span>
     </div>
   </div>
