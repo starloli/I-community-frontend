@@ -17,7 +17,6 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { EditUserComponent } from '../../../dialog/edit-user/edit-user.component'
-import { ActiveUserComponent } from '../../../dialog/active-user/active-user.component';
 import { ToastService } from '../../../@service/toast.service';
 
 type PaginationItem = number | '...';
@@ -175,7 +174,11 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
   }
 
   get incompleteCount(): number {
-    return this.allUsers.filter(user => user.squareFootage === null || user.squareFootage === 0 && user.role === UserRole.RESIDENT && user.status === UserStatus.ACTIVE).length
+    return this.allUsers.filter(user => (user.squareFootage === null || user.squareFootage === 0) && user.role === UserRole.RESIDENT && user.status === UserStatus.ACTIVE).length
+  }
+
+  get pendingCount(): number {
+    return this.allUsers.filter(user => user.status === UserStatus.PENDING).length
   }
 
   get completeCount(): number {
