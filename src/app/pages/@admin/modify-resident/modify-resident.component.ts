@@ -93,7 +93,7 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
         console.log(res);
         this.isLoading = false;
         // 即時檢查並更新 Sidebar 的紅點狀態
-        const count = this.allUsers.filter(user => user.squareFootage === null || user.squareFootage === 0).length
+        const count = this.allUsers.filter(user => (user.squareFootage === null || user.squareFootage === 0) && user.status === UserStatus.ACTIVE && user.role === UserRole.RESIDENT).length
         this.residentState.setIncompleteCount(count)
       },
       error: (err) => {
