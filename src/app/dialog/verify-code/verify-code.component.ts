@@ -5,13 +5,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core'
 import { HttpService } from '../../@service/http.service'
 import { MatDialogRef } from '@angular/material/dialog'
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { MatSnackBar } from '@angular/material/snack-bar'
-import { takeUntil } from 'rxjs';
+import { ToastService } from '../../@service/toast.service';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../@service/auth.service';
 
 @Component({
   selector: 'app-verify-password',
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, MatIconModule, CommonModule],
   standalone: true,
   templateUrl: './verify-code.component.html',
   styleUrl: './verify-code.component.scss',
@@ -21,7 +22,7 @@ export class VerifyCodeComponent implements OnDestroy {
   constructor(
     private http: HttpService,
     private dialogRef: MatDialogRef<VerifyCodeComponent>,
-    private snackBar: MatSnackBar,
+    private toast: ToastService,
     private router: Router,
     private authService: AuthService,
     private superAdminService: SuperAdminService
@@ -37,29 +38,17 @@ export class VerifyCodeComponent implements OnDestroy {
   private timer: any;
 
   sendVerifyCode() {
-    this.snackBar.open("正在發送驗證碼...", "關閉", {
-      duration: 2000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-    });
+    this.toast.info("正在發送驗證碼...", 2000);
     this.authService.sendVerifyCode(this.superAdminService.getUserEmail(), VerifyCodeType.OLD_EMAIL_VERIFY).subscribe({
       next: (res) => {
         console.log("res：", res)
-        this.snackBar.open("驗證碼已發送", "關閉", {
-          duration: 2000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
+        this.toast.success("驗證碼已發送", 2000);
         this.startCodeCountdown(res.expiry || 900);
         this.nextStep = true;
       },
       error: (err) => {
         console.error("err：", err)
-        this.snackBar.open("驗證碼發送失敗", "關閉", {
-          duration: 2000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
+        this.toast.error("驗證碼發送失敗", 2000);
       }
     })
   }
@@ -77,11 +66,7 @@ export class VerifyCodeComponent implements OnDestroy {
 
   verifyCode() {
     if (this.otp == '114514') {
-      this.snackBar.open("驗證成功", "關閉", {
-        duration: 2000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
-      });
+      this.toast.success("驗證成功", 2000);
       this.nextStep = false;
       this.superAdminService.setVerified(true);
       this.dialogRef.close(true);
@@ -89,28 +74,16 @@ export class VerifyCodeComponent implements OnDestroy {
       this.authService.verifyEmail(this.superAdminService.getUserEmail(), this.otp).subscribe({
         next: (res) => {
           console.log("res：", res)
-          this.snackBar.open("驗證成功", "關閉", {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          });
+          this.toast.success("驗證成功", 2000);
           this.nextStep = false;
           this.superAdminService.setVerified(true);
           this.dialogRef.close(true);
         },
         error: (err) => {
-          if (err.error.message === "認證碼錯誤") {
-            this.snackBar.open("驗證失敗，請檢查驗證碼是否正確", "關閉", {
-              duration: 2000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top',
-            });
+          if (err.message === "認證碼錯誤") {
+            this.toast.error("驗證失敗，請檢查驗證碼是否正確", 2000); 
           } else {
-            this.snackBar.open("發生錯誤：" + err.error.message, "關閉", {
-              duration: 2000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top',
-            });
+            this.toast.error("發生錯誤：" + (err.message || '未知錯誤'), 2000);
           }
           console.error("err：", err)
         }
@@ -122,24 +95,13 @@ export class VerifyCodeComponent implements OnDestroy {
     this.http.postApi(this.verifyUrl, { code }).subscribe({
       next: (res) => {
         console.log("res：", res)
-        // if (res) {
-        //   this.dialogRef.close(true);
-        // }
-        this.snackBar.open("驗證成功", "關閉", {
-          duration: 2000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
+        this.toast.success("驗證成功", 2000);
         this.dialogRef.close(true);
       },
       error: (err) => {
         console.error("err：", err)
         if (err.error.message === "密碼不正確") {
-          this.snackBar.open("密碼不正確", "關閉", {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          });
+          this.toast.error("密碼不正確", 2000);
         }
       }
     })
@@ -173,11 +135,6 @@ export class VerifyCodeComponent implements OnDestroy {
       this.codeError = false;
       const nextInput = event.target.parentElement.children[index + 1];
       nextInput.focus();
-    }
-
-    const otp = this.otp;
-    if (otp.length === 6) {
-      this.verifyCode();
     }
   }
   onKeyDown(event: KeyboardEvent, index: number) {

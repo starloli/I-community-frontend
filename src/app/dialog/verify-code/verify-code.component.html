@@ -1,17 +1,67 @@
-@if (!nextStep) {
-<span>需驗證才能進入此頁面</span>
-<button (click)="return()">返回</button>
-<button (click)="sendVerifyCode()">發送驗證碼</button>
-}
-@if (nextStep) {
-<div class="otp-container" style="align-items: center; justify-content: center;">
-  @for (ctrl of otpCtrl; track $index; let i = $index) {
-  <input maxlength="1" [formControl]="ctrl" type="text" (input)="onInput($event, i)" (keydown)="onKeyDown($event, i)"
-    (paste)="onPaste($event)" />
-  }
+<div class="verify-dialog-container">
+  <div class="dialog-header">
+    <div class="header-icon">
+      <mat-icon>security</mat-icon>
+    </div>
+    <h2 class="dialog-title">安全驗證</h2>
+    <p class="dialog-subtitle">為了保護您的帳戶安全，請完成身份驗證</p>
+  </div>
+
+  <div class="dialog-content">
+    @if (!nextStep) {
+    <div class="initial-step">
+      <div class="info-box">
+        <mat-icon>info_outline</mat-icon>
+        <span>進入此頁面需要進行二階段驗證。我們將發送驗證碼至您的註冊信箱。</span>
+      </div>
+      <div class="action-row">
+        <button class="btn-secondary" (click)="return()">
+          <mat-icon>arrow_back</mat-icon>
+          返回
+        </button>
+        <button class="btn-primary" (click)="sendVerifyCode()">
+          <mat-icon>send</mat-icon>
+          發送驗證碼
+        </button>
+      </div>
+    </div>
+    }
+
+    @if (nextStep) {
+    <div class="otp-step">
+      <p class="otp-hint">請輸入發送至信箱的 6 位數驗證碼</p>
+
+      <div class="otp-container">
+        @for (ctrl of otpCtrl; track $index; let i = $index) {
+        <input maxlength="1" [formControl]="ctrl" type="text" (input)="onInput($event, i)" (keydown)="onKeyDown($event, i)"
+          (paste)="onPaste($event)" placeholder="-" />
+        }
+      </div>
+
+      <div class="timer-row">
+        <mat-icon [class.expiring]="emailCodeExpiry < 60">timer</mat-icon>
+        <span class="expiry-text">
+          驗證碼有效時間：<strong [class.expiring]="emailCodeExpiry < 60">{{ emailCodeExpiry }}秒</strong>
+        </span>
+      </div>
+
+      <div class="action-column">
+        <button class="btn-verify" (click)="verifyCode()" [disabled]="otp.length < 6">
+          <mat-icon>check_circle</mat-icon>
+          確認驗證
+        </button>
+
+        <div class="secondary-actions">
+          <button class="btn-text" (click)="sendVerifyCode()" [disabled]="emailCodeExpiry > 840">
+            <mat-icon>refresh</mat-icon>
+            重新發送驗證碼
+          </button>
+          <button class="btn-text cancel" (click)="return()">
+            取消
+          </button>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
 </div>
-<span>驗證碼有效時間：{{emailCodeExpiry}}秒</span>
-<button (click)="return()">取消</button>
-<button (click)="sendVerifyCode()">再次發送驗證碼</button>
-<button (click)="verifyCode()">確認</button>
-}
