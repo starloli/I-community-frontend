@@ -113,6 +113,8 @@ export class LoginComponent {
       },
       error: (err: HttpErrorResponse) => {
         const errorCode = err.error?.errorCode;
+        console.log(err);
+
 
         switch (errorCode) {
           case 'ACCOUNT_PENDING':

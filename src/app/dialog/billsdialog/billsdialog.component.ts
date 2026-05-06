@@ -7,6 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpService } from '../../@service/http.service';
+import { ToastService } from '../../@service/toast.service';
+
 @Component({
   selector: 'app-billsdialog',
   imports: [CommonModule, MatButtonModule, MatIconModule, MatDialogModule],
@@ -14,8 +16,12 @@ import { HttpService } from '../../@service/http.service';
   styleUrl: './billsdialog.component.scss'
 })
 export class BillsdialogComponent {
-  constructor(private service: VisitorServiceService, private http: HttpService, private cdRef: ChangeDetectorRef, private dialogRef: MatDialogRef<BillsdialogComponent>
-
+  constructor(
+    private service: VisitorServiceService,
+    private http: HttpService,
+    private cdRef: ChangeDetectorRef,
+    private dialogRef: MatDialogRef<BillsdialogComponent>,
+    private toast: ToastService
   ) { }
   bill!: any;
   dialogType!: string;
@@ -51,6 +57,7 @@ export class BillsdialogComponent {
   userPay(id: number) {
     this.http.putApi("/bills/pay/admin/" + id).subscribe((res: any) => {
       console.log(res);
+      this.toast.success('收款成功', 2000);
       this.dialogType = "";
       this.service.booleanOpenDialog = "";
       this.dialogRef.close('refresh');

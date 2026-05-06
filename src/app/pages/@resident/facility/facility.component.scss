@@ -262,12 +262,15 @@
   margin-bottom: 0;
 }
 
-// 精簡版下一筆預約卡片
-.header-next-info {
-  flex: 0 0 320px;
+// 精簡版下一筆預約與統計卡片容器
+.header-stats-info {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
 }
 
 .next-card-mini {
+  flex: 0 0 300px;
   background: linear-gradient(135deg, #7b7fba 0%, #5c60a0 100%);
   border-radius: 20px;
   padding: 16px 20px;
@@ -315,7 +318,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 180px;
+    max-width: 170px;
   }
 
   .mini-meta {
@@ -344,12 +347,63 @@
   }
 }
 
+// 玻璃感統計卡片
+.glass-stat-card {
+  flex: 0 0 140px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 20px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
+  color: #1a1a2e;
+
+  .stat-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      color: #10b981;
+    }
+
+    span {
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .stat-value {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
 // 預約佈局與滾動容器
 .reservation-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 280px;
   gap: 24px;
   align-items: start;
+
+  &.single-col {
+    grid-template-columns: 1fr;
+  }
 }
 
 .reservation-main {
@@ -718,8 +772,35 @@
     margin-bottom: 24px;
   }
 
-  .header-next-info {
+  .header-stats-info {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .next-card-mini {
     flex: 1;
+    padding: 16px;
+    .mini-name { font-size: 18px; max-width: none; }
+    .mini-icon { width: 44px; height: 44px; mat-icon { font-size: 24px; } }
+  }
+
+  .glass-stat-card {
+    flex: 1;
+    width: 100%;
+    padding: 16px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .stat-header {
+      margin-bottom: 0;
+      span { font-size: 14px; }
+      mat-icon { font-size: 20px; width: 20px; height: 20px; }
+    }
+
+    .stat-value {
+      font-size: 36px;
+    }
   }
 
   .page-header {
@@ -789,16 +870,16 @@
     gap: 10px;
     position: static;
 
-    // 歷史紀錄頁的 3 個卡片並列
+    // 歷史紀錄頁的統計卡片並列
     &:has(.stat-card-history) {
-      grid-template-columns: repeat(3, 1fr); // 三欄並列
+      grid-template-columns: repeat(2, 1fr); // 改為兩欄並列，因為移除了已過期卡片
       .stat-card-history { grid-column: auto; }
 
       .summary-card {
         padding: 12px 4px;
-        .summary-value { font-size: 22px; }
-        .summary-label { font-size: 11px; }
-        .stat-header { gap: 4px; mat-icon { font-size: 16px; width: 16px; height: 16px; } }
+        .summary-value { font-size: 24px; }
+        .summary-label { font-size: 12px; }
+        .stat-header { gap: 6px; mat-icon { font-size: 18px; width: 18px; height: 18px; } }
       }
     }
 

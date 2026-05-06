@@ -17,7 +17,6 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { EditUserComponent } from '../../../dialog/edit-user/edit-user.component'
-import { ActiveUserComponent } from '../../../dialog/active-user/active-user.component';
 import { ToastService } from '../../../@service/toast.service';
 
 type PaginationItem = number | '...';
@@ -85,8 +84,11 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
       next: (res) => {
         this.allUsers = res;
         this.allUsers.sort((a, b) => {
-          const roles = Object.values(UserRole);
+          const roles = [this.UserRole.SUPER_ADMIN, this.UserRole.ADMIN, this.UserRole.RESIDENT];
           return roles.indexOf(a.role) - roles.indexOf(b.role);
+        }).sort((a, b) => {
+          const statusOrder = [UserStatus.ACTIVE, UserStatus.PENDING, UserStatus.INACTIVE];
+          return statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
         })
         console.log(res);
         this.isLoading = false;
@@ -105,11 +107,6 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
   get userRole(): UserRole {
     const payload = JSON.parse(atob(this.token.split('.')[1]))
     console.log('角色:', payload.role)
-    if (payload.role === UserRole.SUPER_ADMIN) {
-      console.log('超')
-    } else if (payload.role === UserRole.ADMIN) {
-      console.log('普')
-    }
     return payload.role
   }
 
@@ -137,31 +134,34 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
     }
 
     // 2. 資料完整度篩選
-    if (this.selectedFilter !== 'INACTIVE' && this.selectedFilter !== 'PENDING') {
-      users = users.filter(user => user.status === UserStatus.ACTIVE)
-      if (this.selectedFilter === 'COMPLETE') {
-        users = users.filter(user => user.squareFootage !== null && user.squareFootage !== 0)
-      } else if (this.selectedFilter === 'INCOMPLETE') {
-        users = users.filter(user => user.squareFootage === null || user.squareFootage === 0)
-      }
+    if (this.selectedFilter === 'INACTIVE') {
+      users = users.filter(user => user.status === UserStatus.INACTIVE)
+    } else if (this.selectedFilter === 'COMPLETE') {
+      users = users.filter(user => user.squareFootage !== null && user.squareFootage !== 0)
+    } else if (this.selectedFilter === 'INCOMPLETE') {
+      users = users.filter(user => (user.squareFootage === null || user.squareFootage === 0) && user.status === UserStatus.ACTIVE && user.role === UserRole.RESIDENT)
     } else if (this.selectedFilter === 'PENDING') {
       users = users.filter(user => user.status === UserStatus.PENDING)
-    } else if (this.selectedFilter === 'INACTIVE') {
-      users = users.filter(user => user.status === UserStatus.INACTIVE)
     }
 
 
-    // 3. 排序：將坪數為 null 或 0 的住戶排在最上方
+    // 3. 排序：
+    // 第一優先：狀態 (ACTIVE > PENDING > INACTIVE)
+    // 第二優先：資料完整度 (異常排前面)
+    // 第三優先：角色
     users.sort((a, b) => {
-      const aIncomplete = a.squareFootage === null || a.squareFootage === 0
-      const bIncomplete = b.squareFootage === null || b.squareFootage === 0
+      const aIncomplete = (a.squareFootage === null || a.squareFootage === 0) && a.status === UserStatus.ACTIVE && a.role === UserRole.RESIDENT
+      const bIncomplete = (b.squareFootage === null || b.squareFootage === 0) && b.status === UserStatus.ACTIVE && b.role === UserRole.RESIDENT
 
-      if (aIncomplete && !bIncomplete) return -1
-      if (!aIncomplete && bIncomplete) return 1
-      return 0
-    })
 
-    return users
+      if (aIncomplete && !bIncomplete) return -1;
+      if (!aIncomplete && bIncomplete) return 1;
+
+      const roles = [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.RESIDENT];
+      return roles.indexOf(a.role) - roles.indexOf(b.role);
+    });
+
+    return users;
   }
 
   get pagedUsers(): UserResponse[] {
@@ -174,7 +174,11 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
   }
 
   get incompleteCount(): number {
-    return this.allUsers.filter(user => user.squareFootage === null || user.squareFootage === 0 && user.status === UserStatus.ACTIVE).length
+    return this.allUsers.filter(user => (user.squareFootage === null || user.squareFootage === 0) && user.role === UserRole.RESIDENT && user.status === UserStatus.ACTIVE).length
+  }
+
+  get pendingCount(): number {
+    return this.allUsers.filter(user => user.status === UserStatus.PENDING).length
   }
 
   get completeCount(): number {
@@ -268,18 +272,6 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
     }
   }
 
-  activeUser(user: UserResponse): void {
-    const dialogRef = this.dialog.open(ActiveUserComponent, {
-      width: '400px',
-      data: { ...user }
-    })
-    dialogRef.afterClosed().pipe(takeUntil(this.$destroy)).subscribe(result => {
-      if (result) {
-        const updatedUser = { ...user, status: UserStatus.ACTIVE }
-        this.updateUser(updatedUser)
-      }
-    })
-  }
 
   updateUser(user: UserResponse): void {
     this.http.putApi(this.userRole === UserRole.ADMIN ? this.putadminUrl : this.superAdminUrl, user).pipe(takeUntil(this.$destroy)).subscribe({
