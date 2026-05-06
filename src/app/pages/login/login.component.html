@@ -231,7 +231,7 @@
             <button class="lastStep" (click)="lastStep()">上一步</button>
             @if(this.email.trim() && this.phone && this.unitNumber.trim() && isValidEmail(email) && isValidPhone(phone)){
               <button class="nextStep" (click)="stepper2()">下一步</button>
-                <button (click)="signUpStep=4">跳轉到4頁</button>
+                <!-- <button (click)="signUpStep=4">跳轉到4頁</button> -->
             }
             @else{
               <button class="errornext2">下一步</button>

@@ -114,7 +114,8 @@ export class BillComponent implements OnInit, OnDestroy {
       const kw = this.adminSearchKeyword.trim().toLowerCase();
       list = list.filter(b =>
         (b.billingMonth?.includes(kw) || false) || // 使用 ?. 和 || false
-        (b.unitNumber?.toLowerCase().includes(kw) || false)
+        (b.unitNumber?.toLowerCase().includes(kw) || false) ||
+        (b.title?.toLowerCase().includes(kw) || false)
       );
     }
 
