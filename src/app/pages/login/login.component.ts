@@ -106,7 +106,9 @@ export class LoginComponent {
       },
       error: (err: HttpErrorResponse) => {
         const errorCode = err.error?.errorCode;
-        
+        console.log(err);
+
+
         switch (errorCode) {
           case 'ACCOUNT_PENDING':
             this.toast.error('帳號尚未啟用，請聯繫管理員');
