@@ -76,15 +76,8 @@ export class UserInfoComponent implements OnInit, OnDestroy {
         this.verifyEmailSend = true;
       },
       error: (err) => {
-        if (err.error.message == "此信箱已註冊") {
-          this.snackBar.open(err.error.message, "關閉", {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          });
-        }
-        console.error("err：", err)
-        this.snackBar.open("驗證碼發送失敗", "關閉", {
+        console.error("message:" + err.message || err);
+        this.snackBar.open(err.message || err, "關閉", {
           duration: 2000,
           horizontalPosition: 'center',
           verticalPosition: 'top',

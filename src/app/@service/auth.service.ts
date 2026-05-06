@@ -137,7 +137,7 @@ export class AuthService {
   }
 
   verifyEmail(email: string, code: string) {
-    console.log(email||"沒有信箱", code);
+    console.log(email || "沒有信箱", code);
     return this.http.post(
       this.apiUrl + '/auth/email/verify',
       {
@@ -167,13 +167,10 @@ export class AuthService {
         "type": type
       }
     ).pipe(
-      catchError((error) => {
-        console.error('API error:', error);
+      catchError((err) => {
+        console.error('API error:', err);
 
-        let message = '驗證碼發送錯誤';
-        if (error.error?.message) {
-          message = error.error.message;
-        }
+        let message = err.error?.errors?.[0]?.message || err.error?.message || '驗證碼發送錯誤';
 
         return throwError(() => new Error(message));
       }))
