@@ -18,10 +18,9 @@ $hover-bg: #f5f5f5;
   --calendar-grid-border-strong: rgba(123, 127, 186, 0.2);
   --calendar-cell-bg: rgba(255, 255, 255, 0.95);
   width: 100%;
-  height: 100%;
-  min-height: 400px;
+  height: 85vh; // 限制容器高度與 MatDialog 的 maxHeight 一致
   background: $background;
-  overflow: hidden;
+  overflow: hidden; // 保持外層不捲動
   display: flex;
   flex-direction: column;
   margin: 0;
@@ -62,7 +61,6 @@ $hover-bg: #f5f5f5;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
 
-    // 中間「回到今天」按鈕特殊樣式
     &:nth-child(2) {
       background: rgba(255, 255, 255, 1);
       color: $accent-color;
@@ -70,13 +68,38 @@ $hover-bg: #f5f5f5;
     }
   }
 }
+
+// ===== 自定義捲軸樣式容器 =====
+.calendar-scroll-area {
+  flex: 1;
+  width: 100%;
+  overflow-y: auto; // 啟用垂直捲動
+  overflow-x: auto; // 啟用水平捲動（僅在內容溢出時）
+  position: relative;
+  background: #f5f5f5;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+    &:hover { background: #bbb; }
+  }
+}
+
 // ===== Calendar 主體樣式覆寫 =====
 ::ng-deep {
-  // 週視圖容器
   .cal-week-view {
-    min-width: 0;
-    background-color: #f5f5f5 !important; // 淺灰色基底
-    // 「目前時間」標記線
+    min-width: 0; // 電腦版恢復為 0，讓日曆自動符合容器寬度
+    background-color: #f5f5f5 !important;
+    
     .cal-current-time-marker {
       background-color: #000000a7 !important;
       height: 2px !important;
@@ -89,7 +112,7 @@ $hover-bg: #f5f5f5;
     .cal-hour-segment.cal-disabled {
       background-color: #d9d9d9 !important;
       cursor: not-allowed !important;
-      pointer-events: none !important; // 禁用的單元格不能點擊
+      pointer-events: none !important;
       opacity: 1 !important;
       border-top: 1px solid rgba(255, 255, 255, 0.4);
       box-shadow: inset 0 0 0 1px rgba(120, 120, 120, 0.08);
@@ -102,29 +125,26 @@ $hover-bg: #f5f5f5;
         rgba(255, 255, 255, 0.1) 20px
       );
 
-      // 禁用的單元格 hover 效果
       &::before {
         display: none !important;
       }
     }
   }
 
-  // 事件區塊
   .cal-event {
     border: none !important;
     box-shadow: none !important;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4px; // 增加一些內距
+    padding: 4px;
 
     .cal-event-title {
-      text-shadow: none !important; // 移除文字陰影
+      text-shadow: none !important;
       font-weight: 600;
     }
   }
 
-  // 表頭區塊
   .cal-header {
     background: #fafbfc;
     border-bottom: 2px solid $border-color;
@@ -152,7 +172,6 @@ $hover-bg: #f5f5f5;
           background: rgba(123, 127, 186, 0.05);
         }
 
-        // 星期與日期標題
         b {
           display: block;
           font-size: 18px;
@@ -170,7 +189,6 @@ $hover-bg: #f5f5f5;
           line-height: 1.2;
         }
 
-        // 今天日期的特殊樣式
         &.cal-today {
           background: linear-gradient(
             135deg,
@@ -188,20 +206,14 @@ $hover-bg: #f5f5f5;
           }
         }
 
-        // 週末樣式
         &.cal-weekend {
           background: rgba(0, 0, 0, 0.02);
-
-          b,
-          span {
-            color: #999;
-          }
+          b, span { color: #999; }
         }
       }
     }
   }
 
-  // 時間軸欄位容器
   .cal-time-label-column {
     width: var(--calendar-time-column-width);
     min-width: var(--calendar-time-column-width);
@@ -217,9 +229,6 @@ $hover-bg: #f5f5f5;
       .cal-hour-segment {
         height: var(--calendar-hour-height) !important;
         background: transparent !important;
-        background-image: none !important;
-        box-shadow: none !important;
-        border-top: none !important;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -229,20 +238,10 @@ $hover-bg: #f5f5f5;
         font-size: 12px;
         font-weight: 700;
         color: #55607a;
-        cursor: default;
-        pointer-events: none;
-      }
-
-      .cal-hour-segment.cal-disabled {
-        background: transparent !important;
-        background-image: none !important;
-        opacity: 1 !important;
-        color: #55607a !important;
       }
     }
   }
 
-  // 日期欄位
   .cal-day-columns {
     width: calc(100% - var(--calendar-time-column-width));
     min-width: calc(100% - var(--calendar-time-column-width));
@@ -261,14 +260,12 @@ $hover-bg: #f5f5f5;
         border-right: none;
       }
 
-      // 週末背景
       &.cal-weekend {
         background: rgba(0, 0, 0, 0.01);
       }
     }
   }
 
-  // 小時單元格（可點擊預約）
   .cal-hour-segment {
     border-bottom: 1px solid var(--calendar-grid-border);
     height: var(--calendar-hour-height) !important;
@@ -279,7 +276,6 @@ $hover-bg: #f5f5f5;
     background: var(--calendar-cell-bg);
     box-sizing: border-box;
 
-    // 懸停效果
     &:hover:not(.cal-disabled) {
       background: linear-gradient(
         135deg,
@@ -298,11 +294,9 @@ $hover-bg: #f5f5f5;
         color: $accent-color;
         font-weight: 600;
         opacity: 0.8;
-        pointer-events: none;
       }
     }
 
-    // 已預約或已過去的單元格
     &.cal-disabled {
       background-color: #d9d9d9 !important;
       background-image: repeating-linear-gradient(
@@ -314,121 +308,37 @@ $hover-bg: #f5f5f5;
       ) !important;
       cursor: not-allowed !important;
       opacity: 1 !important;
-
-      &:hover::before {
-        display: none;
-      }
+      &:hover::before { display: none; }
     }
   }
 
-  // 預約事件條
   .cal-event {
     min-height: 34px;
     width: calc(100% - 8px);
     margin: 2px auto;
     border-radius: 5px;
-    border: none;
     padding: 4px 6px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
     transition: all 0.2s ease;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
 
-    &:hover {
-      transform: translateX(2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-      z-index: 10;
-    }
-
-    // 事件標題樣式
     .cal-event-title {
       font-size: 11px;
       font-weight: 600;
       color: #ffffff;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
       white-space: normal;
       line-height: 1.25;
-      overflow-wrap: anywhere;
-    }
-    // 預約中（藍色）
-    &[style*="background-color: rgb(30, 144, 255)"],
-    &[style*="background-color:#1e90ff"] {
-      background: linear-gradient(135deg, #1e90ff 0%, #4fa3ff 100%) !important;
-
-      &:hover {
-        background: linear-gradient(
-          135deg,
-          #0d7ee0 0%,
-          #3a92ee 100%
-        ) !important;
-      }
-    }
-
-    // 警告/熱門（黃色）
-    &[style*="background-color: rgb(227, 188, 8)"],
-    &[style*="background-color:#e3bc08"] {
-      background: linear-gradient(135deg, #e3bc08 0%, #f0ca1f 100%) !important;
-
-      &:hover {
-        background: linear-gradient(
-          135deg,
-          #d0aa07 0%,
-          #ddb610 100%
-        ) !important;
-      }
-    }
-
-    // 額滿（紅色）
-    &[style*="background-color: rgb(173, 33, 33)"],
-    &[style*="background-color:#ad2121"] {
-      background: linear-gradient(135deg, #ad2121 0%, #c73535 100%) !important;
-      cursor: not-allowed;
-      opacity: 0.85;
-
-      &:hover {
-        transform: none;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-      }
     }
   }
 
-  // 今天標記
   .cal-day-column.cal-today {
     background: linear-gradient(
       to bottom,
       rgba(123, 127, 186, 0.08),
       rgba(255, 255, 255, 0.92)
     );
-
-    .cal-hour-segment {
-      box-shadow: inset 2px 0 0 rgba(123, 127, 186, 0.2);
-    }
-
-    .cal-hour-segment.cal-disabled {
-      background-color: #d9d9d9 !important;
-      background-image: repeating-linear-gradient(
-        45deg,
-        rgba(120, 120, 120, 0.22) 0,
-        rgba(120, 120, 120, 0.22) 10px,
-        rgba(255, 255, 255, 0.14) 10px,
-        rgba(255, 255, 255, 0.14) 20px
-      ) !important;
-    }
-  }
-
-  // 小時線隱藏
-  .cal-hour:not(:last-child) {
-    border-bottom: none;
-  }
-
-  // 小時線條交替強調
-  .cal-hour:nth-child(odd) {
-    .cal-hour-segment:not(.cal-disabled) {
-      background: rgba(0, 0, 0, 0.01);
-    }
   }
 }
 
@@ -436,80 +346,20 @@ $hover-bg: #f5f5f5;
 @media (max-width: 768px) {
   .calendar-container {
     --calendar-time-column-width: 60px;
-    --calendar-hour-height: 60px;
-    width: 92vw;                      /* 讓手機版左右留白 */
-    max-width: none;
-    min-height: 50vh;
-    max-height: 80vh;                 /* 限制高度確保上下留白 */
+    height: 80vh; 
+    width: 92vw;
     margin: 10px auto;
-    border-radius: 12px;              /* 圓角調整 */
-    display: flex;
-    flex-direction: column;
+    border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  }
-
-  .calendar-nav {
-    padding: 10px;
-    gap: 6px;
-    background: #fff;
-    border-bottom: 1px solid #eee;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-
-    button {
-      padding: 6px 10px;
-      font-size: 12px;
-      flex: 1;
-      background: #f1f5f9;
-      color: #334155;
-      border: 1px solid #e2e8f0;
-      box-shadow: none;
-
-      &:nth-child(2) {
-        background: $primary-color;
-        color: #fff;
-      }
-    }
-  }
-
-  .calendar-scroll-area {
-    overflow: auto; /* 啟用捲動 */
-    -webkit-overflow-scrolling: touch;
-    flex: 1;
   }
 
   ::ng-deep {
     .cal-week-view {
-      min-width: 700px; /* 強制最小寬度以啟用橫向捲動 */
-    }
-
-    .cal-header .cal-day-headers .cal-header {
-      min-height: 50px;
-      padding: 8px 4px;
-      b { font-size: 14px; }
-      span { font-size: 10px; }
-    }
-
-    .cal-time-label-column {
-      width: var(--calendar-time-column-width) !important;
-      min-width: var(--calendar-time-column-width) !important;
-      flex: 0 0 var(--calendar-time-column-width) !important;
-    }
-
-    .cal-hour-segment {
-      height: var(--calendar-hour-height) !important;
-      min-height: var(--calendar-hour-height) !important;
-      &:hover:not(.cal-disabled)::before { content: none; }
-    }
-
-    .cal-event {
-      min-height: 28px;
-      padding: 2px;
-      .cal-event-title { font-size: 9px; }
+      min-width: 700px !important; // 手機版維持橫向捲動
     }
   }
 }
 
-// ===== 載入動畫 =====
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -517,26 +367,4 @@ $hover-bg: #f5f5f5;
 
 .calendar-container {
   animation: fadeIn 0.3s ease-out;
-}
-
-// ===== 自定義捲軸樣式 =====
-.calendar-scroll-area {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-
-  &::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 3px;
-    &:hover { background: #bbb; }
-  }
 }
