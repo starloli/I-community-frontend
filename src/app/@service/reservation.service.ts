@@ -18,7 +18,7 @@ export class ReservationService {
     return this.http.getApi<Array<ResReservation>>(this.apiUrl, userId).pipe(
       map(res => {
         const sortedReservations = [...(res ?? [])].sort(
-          (a, b) => this.getReservationSortTime(b) - this.getReservationSortTime(a)
+          (a, b) => this.getReservationSortTime(a) - this.getReservationSortTime(b)
         );
         this.reservationsSubject.next(sortedReservations);
         return sortedReservations;
