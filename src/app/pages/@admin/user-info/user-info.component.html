@@ -74,10 +74,7 @@
             </button>
             } @else {
             <div class="otp-container">
-              @for (ctrl of otpCtrl; track $index; let i = $index) {
-              <input maxlength="1" [formControl]="ctrl" type="text" (input)="onInput($event, i)"
-                (keydown)="onKeyDown($event, i)" (paste)="onPaste($event)" />
-              }
+              <input maxlength="6" [(ngModel)]="updateUser.verifyCode" type="text"/>
             </div>
             <div class="countdown-wrapper">
               <mat-icon>timer</mat-icon>
@@ -96,7 +93,7 @@
           <div class="input-wrapper"
             [class.error]="(phoneModel.touched || phoneModel.dirty) && !isValidPhone(updateUser.phone)">
             <mat-icon>phone</mat-icon>
-            <input type="tel" [(ngModel)]="updateUser.phone" #phoneModel="ngModel" placeholder="09xxxxxxxx">
+            <input type="tel" [(ngModel)]="updateUser.phone" #phoneModel="ngModel" placeholder="09xxxxxxxx" >
           </div>
           @if((phoneModel.touched || phoneModel.dirty) && !isValidPhone(updateUser.phone)) {
           <span class="error-text">電話格式不正確</span>
