@@ -77,7 +77,7 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
   submitReservation() {
     this.reservation = {
       ...this.reservation,
-      status: ReservationStatus.CONFIRMING,
+      status: ReservationStatus.CONFIRMED,
       attendees: this.attendeesControl.value || 1
     };
     this.toast.info('正在提交預約...', 2000);

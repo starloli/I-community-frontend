@@ -58,36 +58,17 @@ export class UserInfoComponent implements OnInit, OnDestroy {
 
   sendVerifyCode() {
     this.updateUser.email = this.email.trim();
-    this.snackBar.open("正在發送驗證碼...", "關閉", {
-      duration: 2000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-    });
+    this.toast.info("正在發送驗證碼...", 2000);
     this.authService.sendVerifyCode(this.updateUser.email, VerifyCodeType.NEW_EMAIL_VERIFY).subscribe({
       next: (res) => {
         console.log("res：", res)
-        this.snackBar.open("驗證碼已發送", "關閉", {
-          duration: 2000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
+        this.toast.success("驗證碼已發送", 2000);
         this.startCodeCountdown(res.expiry || 900);
         this.verifyEmailSend = true;
       },
       error: (err) => {
-        if (err.error.message == "此信箱已註冊") {
-          this.snackBar.open(err.error.message, "關閉", {
-            duration: 2000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          });
-        }
         console.error("err：", err)
-        this.snackBar.open("驗證碼發送失敗", "關閉", {
-          duration: 2000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
+        this.toast.error(err.message || "驗證碼發送失敗", 2000);
       }
     })
   }
@@ -140,11 +121,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
         }
       })
     } else {
-      this.snackBar.open('請填寫完整且有效的資料', '關閉', {
-        duration: 2000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
-      })
+      this.toast.warning('請填寫完整且有效的資料', 2000)
     }
   }
   onInput(event: any, index: number) {

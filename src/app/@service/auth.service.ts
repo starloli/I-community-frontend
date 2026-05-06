@@ -149,10 +149,7 @@ export class AuthService {
       catchError((error) => {
         console.error('API error:', error);
 
-        let message = '信箱認證錯誤';
-        if (error.error?.message) {
-          message = error.error.message;
-        }
+        let message =error.error?.errors?.[0]?.message || error.error?.message || '信箱認證錯誤';
 
         return throwError(() => new Error(message));
       }))
@@ -168,13 +165,10 @@ export class AuthService {
         "type": type
       }
     ).pipe(
-      catchError((error) => {
-        console.error('API error:', error);
+      catchError((err) => {
+        console.error('API error:', err);
 
-        let message = '驗證碼發送錯誤';
-        if (error.error?.message) {
-          message = error.error.message;
-        }
+        let message =err.error?.errors?.[0]?.message || err.error?.message || '驗證碼發送錯誤';
 
         return throwError(() => new Error(message));
       }))
@@ -188,10 +182,7 @@ export class AuthService {
       catchError((error) => {
         console.error('API error:', error);
 
-        let message = '更新超級管理員資料錯誤';
-        if (error.error?.message) {
-          message = error.error.message;
-        }
+        let message =error.error?.errors?.[0]?.message || error.error?.message || '更新超級管理員資料錯誤';
 
         return throwError(() => new Error(message));
       }))
