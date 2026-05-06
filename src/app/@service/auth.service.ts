@@ -6,6 +6,7 @@ import { VerifyCodeType } from '../interface/enum';
 import { updateUser } from '../interface/interface';
 import { ToastService } from './toast.service';
 
+
 @Injectable({
   providedIn: 'root'
 })

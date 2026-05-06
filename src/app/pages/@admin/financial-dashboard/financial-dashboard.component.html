@@ -4,11 +4,12 @@
       <h1>財務收支明細</h1>
       <span class="subtitle">統一管理收支、薪資與財務狀況</span>
     </div>
-    <div class="header-actions">
-      <button class="add-btn" (click)="openDialog()">
-        <mat-icon>add</mat-icon> 新增收支
+    @if(role==='SUPER_ADMIN'){
+       <div class="header-actions">
+      <button class="add-btn" (click)="openDialog()" >
+        <mat-icon >add</mat-icon> 新增收支
       </button>
-    </div>
+    </div>}
   </div>
 
   <div class="financial-wrapper">
@@ -131,7 +132,7 @@
             }
           </td>
           </tr>
-          
+
           }
         </tbody>
       </table>

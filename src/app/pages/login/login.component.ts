@@ -6,6 +6,8 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../@service/auth.service';
 import { HttpService } from '../../@service/http.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { VisitorServiceService } from '../../@service/visitor-service.service';
 import { ToastService } from '../../@service/toast.service';
 
 @Component({
@@ -16,11 +18,13 @@ import { ToastService } from '../../@service/toast.service';
 })
 export class LoginComponent {
 
+
   constructor(
     private router: Router,
     private http: HttpService,
     private auth: AuthService,
-    private toast: ToastService
+    private toast: ToastService,
+    private service:VisitorServiceService
   ) { }
 
   booleanSignup = false;
@@ -79,6 +83,9 @@ export class LoginComponent {
         let roleDisplay = '';
         try {
           const payload = JSON.parse(atob(res.accessToken.split('.')[1]));
+          console.log('payload:', payload);
+          console.log('角色:', payload.role);
+          this.service.role = payload.role;
           const role = payload.role;
 
           // 角色顯示名稱映射
