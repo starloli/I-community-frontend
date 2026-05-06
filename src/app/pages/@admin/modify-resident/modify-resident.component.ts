@@ -139,7 +139,7 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
     } else if (this.selectedFilter === 'COMPLETE') {
       users = users.filter(user => user.squareFootage !== null && user.squareFootage !== 0)
     } else if (this.selectedFilter === 'INCOMPLETE') {
-      users = users.filter(user => user.squareFootage === null || user.squareFootage === 0 && user.status === UserStatus.ACTIVE && user.role === UserRole.RESIDENT)
+      users = users.filter(user => (user.squareFootage === null || user.squareFootage === 0) && user.status === UserStatus.ACTIVE && user.role === UserRole.RESIDENT)
     } else if (this.selectedFilter === 'PENDING') {
       users = users.filter(user => user.status === UserStatus.PENDING)
     }
@@ -147,8 +147,8 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
 
     // 3. 排序：將坪數為 null 或 0 的住戶排在最上方
     users.sort((a, b) => {
-      const aIncomplete = a.squareFootage === null || a.squareFootage === 0 && a.status === UserStatus.ACTIVE && a.role === UserRole.RESIDENT
-      const bIncomplete = b.squareFootage === null || b.squareFootage === 0 && b.status === UserStatus.ACTIVE && b.role === UserRole.RESIDENT
+      const aIncomplete = (a.squareFootage === null || a.squareFootage === 0) && a.status === UserStatus.ACTIVE && a.role === UserRole.RESIDENT
+      const bIncomplete = (b.squareFootage === null || b.squareFootage === 0) && b.status === UserStatus.ACTIVE && b.role === UserRole.RESIDENT
 
       if (aIncomplete && !bIncomplete) return -1
       if (!aIncomplete && bIncomplete) return 1
