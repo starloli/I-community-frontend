@@ -32,7 +32,7 @@ export class ResidentSidebarComponent implements OnInit, AfterViewInit, OnDestro
     { route: 'resident/repair', icon: 'build', label: '我的報修', color: '#C47A5A' },
     { route: 'resident/package', icon: 'inventory_2', label: '我的包裹', color: '#7BA89E' },
     { route: 'resident/facility', icon: 'meeting_room', label: '設施預約', color: '#7B7FBA' },
-    { route: 'resident/bill', icon: 'receipt_long', label: '帳單繳費', color: '#B8935A' },
+    { route: 'resident/bill', icon: 'paid', label: '帳單繳費', color: '#B8935A' },
     { route: 'resident/FinancialDashboardResidentComponent', label: '財務明細', color: '#88acd2', icon: 'receipt_long' }
   ];
 
