@@ -123,7 +123,7 @@
         <div class="repair-complete-col">
           @if (repair.status === RepairStatus.IN_PROGRESS) {
           <button class="complete-btn" (click)="openCompleteForm(repair)">
-            <mat-icon>done</mat-icon>
+            <!-- <mat-icon>done</mat-icon> -->
             完工回報
           </button>
           }
@@ -140,7 +140,7 @@
             目前尚無任何報修申請，當有住戶提交報修後將會顯示在此。
           } @else {
             目前沒有狀態為「{{
-              selectedFilter === RepairStatus.PENDING ? '待處理' : 
+              selectedFilter === RepairStatus.PENDING ? '待處理' :
               selectedFilter === RepairStatus.IN_PROGRESS ? '處理中' : '已完工'
             }}」的報修申請。
           }
