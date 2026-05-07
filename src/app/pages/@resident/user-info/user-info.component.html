@@ -9,119 +9,148 @@
     </div>
   </div>
 
-  @if (user) {
-    <div class="info-content">
-      <div class="readonly-cards">
-        <!-- 唯讀資訊區：基本資訊 -->
-        <div class="info-group">
-          <div class="title-container">
-            <mat-icon class="group-header-icon">assignment</mat-icon>
-            <h2 class="section-title">基本資訊</h2>
-          </div>
-
-          <div class="info-list">
-            <div class="info-item">
-              <mat-icon>person</mat-icon>
-              <div class="text-group">
-                <label>姓名</label>
-                <span>{{user.fullName}}</span>
-              </div>
-            </div>
-            <div class="info-item">
-              <mat-icon>badge</mat-icon>
-              <div class="text-group">
-                <label>使用者帳號</label>
-                <span>{{user.userName}}</span>
-              </div>
-            </div>
-            <div class="info-item">
-              <mat-icon>home</mat-icon>
-              <div class="text-group">
-                <label>居住地址</label>
-                <span>{{user.unitNumber}}</span>
-              </div>
-            </div>
-            <div class="info-item">
-              <mat-icon>straighten</mat-icon>
-              <div class="text-group">
-                <label>居住坪數</label>
-                <span>{{user.squareFootage}} 坪</span>
-              </div>
-            </div>
-          </div>
+  @if (localUser) {
+  <div class="info-content">
+    <div class="readonly-cards">
+      <!-- 唯讀資訊區：基本資訊 -->
+      <div class="info-group">
+        <div class="title-container">
+          <mat-icon class="group-header-icon">assignment</mat-icon>
+          <h2 class="section-title">基本資訊</h2>
         </div>
 
-        <!-- 唯讀資訊區：車位資訊 -->
-        <div class="info-group">
-          <div class="title-container">
-            <mat-icon class="group-header-icon">local_parking</mat-icon>
-            <h2 class="section-title">車位資訊</h2>
-          </div>
-
-          <div class="info-list">
-            <div class="info-item">
-              <mat-icon>moped</mat-icon>
-              <div class="text-group">
-                <label>機車位</label>
-                <span>{{user.motorParkingSpace}} 個</span>
-              </div>
+        <div class="info-list">
+          <div class="info-item">
+            <mat-icon>person</mat-icon>
+            <div class="text-group">
+              <label>姓名</label>
+              <span>{{localUser.fullName}}</span>
             </div>
-            <div class="info-item">
-              <mat-icon>directions_car</mat-icon>
-              <div class="text-group">
-                <label>汽車位</label>
-                <span>{{user.carParkingSpace}} 個</span>
-              </div>
+          </div>
+          <div class="info-item">
+            <mat-icon>badge</mat-icon>
+            <div class="text-group">
+              <label>使用者帳號</label>
+              <span>{{localUser.userName}}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <mat-icon>home</mat-icon>
+            <div class="text-group">
+              <label>居住地址</label>
+              <span>{{localUser.unitNumber}}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <mat-icon>straighten</mat-icon>
+            <div class="text-group">
+              <label>居住坪數</label>
+              <span>{{localUser.squareFootage}} 坪</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 編輯區 -->
-      <div class="edit-section">
-        <h2 class="section-title">聯絡資訊編輯</h2>
-        <p class="edit-hint">* 您目前僅可自行修改電子信箱與電話</p>
+      <!-- 唯讀資訊區：車位資訊 -->
+      <div class="info-group">
+        <div class="title-container">
+          <mat-icon class="group-header-icon">local_parking</mat-icon>
+          <h2 class="section-title">車位資訊</h2>
+        </div>
 
-        <div class="edit-form">
-          <div class="input-group">
-            <label>電子信箱
-              @if(!isValidEmail(userEmail)) {
-                <span class="error-badge">格式不正確</span>
-              }
-            </label>
-            <div class="input-wrapper" [class.input-error]="!isValidEmail(userEmail)">
+        <div class="info-list">
+          <div class="info-item">
+            <mat-icon>moped</mat-icon>
+            <div class="text-group">
+              <label>機車位</label>
+              <span>{{localUser.motorParkingSpace}} 個</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <mat-icon>directions_car</mat-icon>
+            <div class="text-group">
+              <label>汽車位</label>
+              <span>{{localUser.carParkingSpace}} 個</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 編輯區 -->
+    <div class="edit-section">
+      <h2 class="section-title">聯絡資訊編輯</h2>
+      <p class="edit-hint">* 您目前僅可自行修改電子信箱與電話</p>
+
+      <div class="form-group email-group">
+        <label>新電子信箱</label>
+        <div class="input-with-action">
+          <div class="email-input-side">
+            <div class="input-wrapper" [class.error]="(emailModel.touched || emailModel.dirty) && !isValidEmail(email)">
               <mat-icon>mail</mat-icon>
-              <input type="email" placeholder="請輸入您的Email" [(ngModel)]="userEmail" (keydown.space)="$event.preventDefault()">
+              <input type="email" [(ngModel)]="email" #emailModel="ngModel" placeholder="example@gmail.com">
             </div>
+            @if((emailModel.touched || emailModel.dirty) && !isValidEmail(email)) {
+            <span class="error-text">Email 格式不正確</span>
+            }
           </div>
+          @if (!verifyEmailSend) {
+          <button class="send-code-btn" [disabled]="!isValidEmail(email)" (click)="sendVerifyCode()">
+            <mat-icon>send</mat-icon>
+            發送驗證碼
+          </button>
+          }
+        </div>
 
-          <div class="input-group">
-            <label>聯絡電話
-              @if(!isValidPhone(userPhone)) {
-                <span class="error-badge">格式不正確</span>
-              }
-            </label>
-            <div class="input-wrapper" [class.input-error]="!isValidPhone(userPhone)">
-              <mat-icon>phone_iphone</mat-icon>
-              <input type="tel" placeholder="請輸入您的電話 (09xxxxxxxx)" [(ngModel)]="userPhone" (keydown.space)="$event.preventDefault()">
+        @if (verifyEmailSend) {
+        <div class="otp-full-wrapper">
+          <div class="otp-container">
+            @for (ctrl of otpCtrl; track $index; let i = $index) {
+            <input maxlength="1" [formControl]="ctrl" type="text" (input)="onInput($event, i)"
+              (keydown)="onKeyDown($event, i)" (paste)="onPaste($event)" />
+            }
+          </div>
+          <div class="countdown-row">
+            <div class="countdown-wrapper">
+              <mat-icon>timer</mat-icon>
+              <span>驗證碼有效時間：<strong>{{this.emailCodeExpiry}}秒</strong></span>
             </div>
-          </div>
-
-          <div class="form-actions">
-            <button class="submit-btn"
-              [disabled]="!userEmail || !userPhone || !isValidEmail(userEmail) || !isValidPhone(userPhone)"
-              (click)="isValidEmail(userEmail) && isValidPhone(userPhone) ? ModifyResident() : No()">
-              <mat-icon>save</mat-icon>
-              儲存更新
+            <button class="send-code-btn" (click)="sendVerifyCode()">
+              <mat-icon>refresh</mat-icon>
+              重新發送
             </button>
           </div>
         </div>
+        }
+      </div>
+
+      <div class="input-group">
+        <label>聯絡電話
+          @if((phoneModel.touched || phoneModel.dirty)&&!isValidPhone(updateUser.phone)) {
+          <span class="error-badge">格式不正確</span>
+          }
+        </label>
+        <div class="input-wrapper"
+          [class.input-error]="(phoneModel.touched || phoneModel.dirty)&&!isValidPhone(updateUser.phone)">
+          <mat-icon>phone_iphone</mat-icon>
+          <input type="tel" placeholder="請輸入您的電話 (09xxxxxxxx)" [(ngModel)]="updateUser.phone" #phoneModel="ngModel"
+            (keydown.space)="$event.preventDefault()">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="submit-btn" [disabled]=" !isValidEmail(updateUser.email) || !isValidPhone(updateUser.phone)"
+          (click)="isValidEmail(updateUser.email) && isValidPhone(updateUser.phone) ? ModifyResident() : No()">
+          <mat-icon>save</mat-icon>
+          儲存更新
+        </button>
       </div>
     </div>
+  </div>
   } @else {
-    <div class="loading-container">
-      <mat-spinner diameter="40"></mat-spinner>
-      <span>正在取得資料...</span>
-    </div>
+  <div class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>正在取得資料...</span>
+  </div>
   }
 </div>
