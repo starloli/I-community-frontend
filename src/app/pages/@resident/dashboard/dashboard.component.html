@@ -86,25 +86,57 @@
       </div>
     </div>
 
-    <div class="card visitor-card">
+<div class="card">
       <div class="card-header">
         <mat-icon>person_add</mat-icon>
-        <h2>訪客登記</h2>
-        <a class="card-more" (click)="navigateTo('/resident/visitor')">前往頁面</a>
+        <h2>訪客</h2>
+        <a class="card-more" (click)="navigateTo('/resident/visitor')">查看全部</a>
       </div>
-
       <div class="card-scroll-area">
-        <p class="visitor-copy">提前為來訪親友完成登記，方便社區櫃台快速確認資料。</p>
+        @for (item of visitorHighlights; track $index) {
+        <div class="announcements-item">
+          <div class="announcements-left">
+            <!-- <span class="category-badge">{{ item.visitorName }}</span> -->
 
-        <div class="visitor-highlights">
-          @for (item of visitorHighlights; track item) {
-          <div class="visitor-highlight">
-            <mat-icon>check_circle</mat-icon>
-            <span>{{ item }}</span>
+
+
+            <span class="announcements-title">{{ item?.visitorName }}</span>
+
           </div>
-          }
+   <span class="announcements-date">
+@if(item.status=='LEFT'){
+  <span class="category-badge2">已離</span>
+  }
+  @else if (item.status=='INSIDE') { <span class="category-badge1">在内</span> }
+@else {<span class="category-badge3">未到</span>}
+   </span>
         </div>
+        } @empty {
+        <div class="empty-state">
+          <mat-icon>campaign</mat-icon>
+          <p>目前沒有訪客</p>
+        </div>
+        }
       </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   </div>
 </div>

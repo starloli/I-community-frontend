@@ -48,12 +48,12 @@ export class SidebarComponent implements OnInit, OnDestroy, AfterViewInit {
 
   navItems = [
     { route: 'admin/dashboard', icon: 'home_work', label: '社區總覽', color: '#5B7FA6' },
-    { route: 'admin/visitor', icon: 'person_add', label: '訪客登記', color: '#6A9E7F' },
     { route: 'admin/announcement', icon: 'campaign', label: '社區公告', color: '#B07A8A' },
-    { route: 'admin/bill', icon: 'payments', label: '帳單繳費', color: '#B8935A' },
-    { route: 'admin/facility', icon: 'meeting_room', label: '設備管理', color: '#7B7FBA' },
-    { route: 'admin/package', icon: 'inventory_2', label: '包裹管理', color: '#7BA89E' },
+    { route: 'admin/visitor', icon: 'person_add', label: '訪客登記', color: '#6A9E7F' },
     { route: 'admin/repair', icon: 'build', label: '報修申請', color: '#C47A5A' },
+    { route: 'admin/package', icon: 'inventory_2', label: '包裹管理', color: '#7BA89E' },
+    { route: 'admin/facility', icon: 'meeting_room', label: '設備管理', color: '#7B7FBA' },
+    { route: 'admin/bill', icon: 'receipt_long', label: '帳單繳費', color: '#B8935A' },
     { route: 'admin/ModifyResident', label: '帳號管理', color: '#B07A8A', icon: 'manage_accounts' },
     { route: 'admin/FinancialDashboard', label: '財務明細', color: '#88acd2', icon: 'receipt_long' }
   ];

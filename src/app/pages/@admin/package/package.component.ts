@@ -65,7 +65,7 @@ export class PackageComponent implements OnInit, OnDestroy {
 
   PackageStatus = PackageStatus;
 
-  couriers = ['黑貓宅急便', '新竹物流',  '宅配通', '順豐速運', 'DHL', 'Lalamove', 'FedEx', '中華郵局','其他'];
+  couriers = ['黑貓宅急便', '新竹物流', '宅配通', '順豐速運', 'DHL', 'Lalamove', 'FedEx', '中華郵局', '其他'];
 
   addressList: string[] = [];
   packages: any[] = [];
@@ -78,7 +78,7 @@ export class PackageComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private packageService: PackageService,
     private toast: ToastService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadCurrentUser();
@@ -88,7 +88,7 @@ export class PackageComponent implements OnInit, OnDestroy {
 
 
 
-readonly dialog = inject(MatDialog);
+  readonly dialog = inject(MatDialog);
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(PackegeDiologComponent, {
@@ -130,6 +130,8 @@ readonly dialog = inject(MatDialog);
     switch (role) {
       case 'ADMIN':
         return UserRole.ADMIN;
+      case 'SUPER_ADMIN':
+        return UserRole.SUPER_ADMIN;
       case 'GUARD':
         return UserRole.GUARD;
       default:
@@ -195,7 +197,7 @@ readonly dialog = inject(MatDialog);
   }
 
   get isAdmin(): boolean {
-    return this.currentUser.role === UserRole.ADMIN;
+    return this.currentUser.role === UserRole.ADMIN || this.currentUser.role === UserRole.SUPER_ADMIN;
   }
 
   get isGuard(): boolean {
@@ -401,36 +403,37 @@ readonly dialog = inject(MatDialog);
 
 
   onFileSelected(event: any) {
-  const file: File = event.target.files[0];
-  if (file) {
-    this.selectedFileName = file.name; // 儲存檔名以供 UI 顯示
-    const reader = new FileReader();
+    const file: File = event.target.files[0];
+    if (file) {
+      this.selectedFileName = file.name; // 儲存檔名以供 UI 顯示
+      const reader = new FileReader();
 
-    reader.onload = (e: any) => {
-      const base64String = e.target.result;
+      reader.onload = (e: any) => {
+        const base64String = e.target.result;
 
-      console.log('這是可以傳給後端的 Base64:', base64String);
-      const payload = { image: base64String };
-    this.http.postApi("/api/ocr/scan-package",payload).subscribe({
-        next: (res:any) => {
-      console.log(res);
-      this.newPackageForm.recipientName=res.recipientName;
-      this.newPackageForm.unitNumber=res.unitNumber;
-      this.newPackageForm.trackingNumber=res.trackingNumber;
-this.newPackageForm.phoneNumber=res.phoneNumber;
-this.newPackageForm.courier=res.courier;
-this.newPackageForm.notes=res.notes;
+        console.log('這是可以傳給後端的 Base64:', base64String);
+        const payload = { image: base64String };
+        this.http.postApi("/api/ocr/scan-package", payload).subscribe({
+          next: (res: any) => {
+            console.log(res);
+            this.newPackageForm.recipientName = res.recipientName;
+            this.newPackageForm.unitNumber = res.unitNumber;
+            this.newPackageForm.trackingNumber = res.trackingNumber;
+            this.newPackageForm.phoneNumber = res.phoneNumber;
+            this.newPackageForm.courier = res.courier;
+            this.newPackageForm.notes = res.notes;
 
-        },
-          error: (err) => {console.log('報錯了');
+          },
+          error: (err) => {
+            console.log('報錯了');
             this.toast.error('圖片解析失敗，請改為手動輸入包裹資訊', 3000);
-            this.openDialog('0','0');
+            this.openDialog('0', '0');
           }
-    })
-    };
-    reader.readAsDataURL(file);
+        })
+      };
+      reader.readAsDataURL(file);
+    }
   }
-}
 
 
 }

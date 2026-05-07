@@ -168,8 +168,9 @@
             (keydown.space)="$event.preventDefault()" (focus)="isConfirmTouched = true"
             [class.input-error]="isConfirmTouched && signUpPassword !== confirmPassword">
         </div>@if(this.signUpUserName.trim() && this.signUpPassword.trim() && this.confirmPassword.trim() &&
-        this.signUpPassword == this.confirmPassword &&(signUpPassword.length<=12 && signUpPassword.length>=6)){
+        this.signUpPassword == this.confirmPassword &&(signUpPassword.length<=12 && signUpPassword.length>=6) ){
           <button class="logtb" (click)="Stepper1()">下一步</button>
+
           }
           @else{<button class="errorNext">下一步</button>}
           <div class="bottom-text"><span>
@@ -230,6 +231,7 @@
             <button class="lastStep" (click)="lastStep()">上一步</button>
             @if(this.email.trim() && this.phone && this.unitNumber.trim() && isValidEmail(email) && isValidPhone(phone)){
               <button class="nextStep" (click)="stepper2()">下一步</button>
+                <!-- <button (click)="signUpStep=4">跳轉到4頁</button> -->
             }
             @else{
               <button class="errornext2">下一步</button>

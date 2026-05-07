@@ -2,9 +2,9 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, Observable, tap, throwError } from 'rxjs';
-import { ToastService } from './toast.service';
 import { VerifyCodeType } from '../interface/enum';
 import { updateUser } from '../interface/interface';
+import { ToastService } from './toast.service';
 
 
 @Injectable({

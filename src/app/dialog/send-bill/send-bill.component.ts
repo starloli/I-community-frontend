@@ -70,7 +70,7 @@ export class SendBillComponent {
       },
       error: (err) => {
         console.log(err);
-        this.toast.error(err?.error?.message || '帳單新增失敗，請稍後再試', 3000);
+        this.toast.error(err?.error?.errors?.[0]?.message || '帳單新增失敗，請稍後再試', 3000);
       }
     })
   }
