@@ -16,38 +16,38 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './send-bill-choose.component.scss',
 })
 export class SendBillChooseComponent {
- readonly dialog = inject(MatDialog);
+  readonly dialog = inject(MatDialog);
 
   private $destroy = new Subject<void>();
 
 constructor(private dialogRef: MatDialogRef<SendBillChooseComponent>){}
 
-onOpenUnitNumber() {
+  onOpenUnitNumber() {
     // 1. 先關閉自己
     this.dialogRef.close();
 
     // 2. 開啟另一個 Dialog
-setTimeout(() => {
-    this.dialog.open(SendBillToUnitnumberComponent, {
+    setTimeout(() => {
+      this.dialog.open(SendBillToUnitnumberComponent, {
       width: 'min(600px, 92vw)',
       maxHeight: '85vh',
       disableClose: false,
       panelClass: 'custom-dialog-container'
-    });
-  }, 200);
+      });
+    }, 200);
   }
 
   // 處理「發送月度賬單」按鈕
   onOpenMonthlyBill() {
     this.dialogRef.close();
-   setTimeout(() => {
-    this.dialog.open(SendBillComponent, {
+    setTimeout(() => {
+      this.dialog.open(SendBillComponent, {
       width: 'min(650px, 92vw)',
       maxHeight: '85vh',
       disableClose: false,
       panelClass: 'custom-dialog-container'
-    });
-  }, 200);
+      });
+    }, 200);
   }
 
 
@@ -66,7 +66,7 @@ setTimeout(() => {
     });
   }
 openDialogToUnitNumber(){
-  const ref = this.dialog.open(SendBillToUnitnumberComponent, {
+    const ref = this.dialog.open(SendBillToUnitnumberComponent, {
       width: '500px',
       disableClose: false // 點擊背景是否可以關閉
     });
