@@ -159,7 +159,7 @@ export class AuthService {
     console.log(email || "沒有信箱", type);
 
     return this.http.post(
-      this.apiUrl + '/modify/superadmin/send-verify-code',
+      this.apiUrl + '/user/email/code',
       {
         "email": email,
         "type": type
