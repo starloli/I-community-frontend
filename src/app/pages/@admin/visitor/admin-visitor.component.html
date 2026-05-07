@@ -140,7 +140,9 @@
         </div>
         @if (currentResidents.length > 0) {
         <div class="form-group">
-          <label>請選擇住戶 <span class="required">*</span></label>
+          <label>請選擇住戶
+            <!-- <span class="required">*</span> -->
+          </label>
           <select class="form-control" [(ngModel)]="addressID">
             <option [value]="null">-- 請選擇住戶 --</option>
             @for (person of currentResidents; track person.userId) {
