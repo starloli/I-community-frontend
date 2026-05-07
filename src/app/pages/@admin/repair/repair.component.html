@@ -72,12 +72,14 @@
             @if (repair.status === RepairStatus.DONE) {
             <span>
               <mat-icon>done_all</mat-icon>
+
               完工：{{ repair.resolvedAt | date: 'yyyy/MM/dd HH:mm' }}
             </span>
             <span>
               <mat-icon>person</mat-icon>
               處理：{{ repair.handlerName }}
             </span>
+
             }
             @if (repair.status === RepairStatus.IN_PROGRESS) {
             <span>
@@ -89,6 +91,7 @@
           @if (repair.note) {
           <div class="repair-note">
             <mat-icon>notes</mat-icon>
+
             {{ repair.note }}
           </div>
           }
@@ -106,6 +109,7 @@
           <span class="status-badge status-processing">處理中</span>
           } @else {
           <span class="status-badge status-done">已完工</span>
+
           }
         </div>
 
@@ -140,7 +144,7 @@
             目前尚無任何報修申請，當有住戶提交報修後將會顯示在此。
           } @else {
             目前沒有狀態為「{{
-              selectedFilter === RepairStatus.PENDING ? '待處理' : 
+              selectedFilter === RepairStatus.PENDING ? '待處理' :
               selectedFilter === RepairStatus.IN_PROGRESS ? '處理中' : '已完工'
             }}」的報修申請。
           }
