@@ -7,8 +7,16 @@
   </div>
 
   @if (!isAdmin) {
-    <div>
-      <h2>本月有 {{bills().length}} 份帳單到期</h2>
+    <div style="margin-bottom: 20px;">
+      @if (bills().length > 0) {
+        <h2 style="font-size: 16px; color: #475569; font-weight: 500;">
+          本月有 {{bills().length}} 份帳單到期
+        </h2>
+      } @else {
+        <h2 style="font-size: 16px; color: #475569; font-weight: 500;">
+          本月無待繳帳單
+        </h2>
+      }
     </div>
   }
 </div>
