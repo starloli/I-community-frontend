@@ -22,7 +22,6 @@ export class UserInfoComponent implements OnInit, OnDestroy {
 
   constructor(
     private http: HttpService,
-    private snackBar: MatSnackBar,
     private authService: AuthService,
     private router: Router,
     private toast: ToastService) { }
