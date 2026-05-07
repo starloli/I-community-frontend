@@ -67,12 +67,12 @@
           <div class="repair-meta">
             <span>
               <mat-icon>calendar_today</mat-icon>
-              提交：{{ repair.submittedAt | date: 'yyyy/MM/dd HH:mm' }}
+              提交：{{ repair.submittedAt | date: 'yyyy/MM/dd' }}
             </span>
             @if (repair.status === RepairStatus.DONE) {
             <span>
               <mat-icon>done_all</mat-icon>
-              完工：{{ repair.resolvedAt | date: 'yyyy/MM/dd HH:mm' }}
+              完工：{{ repair.resolvedAt | date: 'yyyy/MM/dd' }}
             </span>
             <span>
               <mat-icon>person</mat-icon>
@@ -111,12 +111,14 @@
 
         <!-- 第2欄：編輯 + 刪除 -->
         <div class="repair-icons-col">
-          <button class="icon-btn edit-btn" (click)="openEditForm(repair)" title="編輯">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button class="icon-btn delete-btn" (click)="deleteRepair(repair)" title="刪除">
-            <mat-icon>delete</mat-icon>
-          </button>
+          @if (repair.status !== RepairStatus.DONE) {
+            <button class="icon-btn edit-btn" (click)="openEditForm(repair)" title="編輯">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button class="icon-btn delete-btn" (click)="deleteRepair(repair)" title="刪除">
+              <mat-icon>delete</mat-icon>
+            </button>
+          }
         </div>
 
         <!-- 第3欄：完工回報（沒有時留空白）-->
