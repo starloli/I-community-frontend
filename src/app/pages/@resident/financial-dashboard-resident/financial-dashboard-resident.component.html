@@ -77,7 +77,9 @@
         <tbody>
           @for (item of displayTransactions; track item.year + item.month + item.category) {
           <tr>
-            <td>{{ item?.year }} - {{item?.month}}</td>
+            <td>{{ item?.year }} -
+              @if(item?.month < 10) {0{{item?.month}}}
+              @else {{{item?.month}}}</td>
             <td>
               <span [class]="'type-tag ' + item.type.toLowerCase()">
                 {{ item.type === 'INCOME' ? '收入' : '支出' }}
