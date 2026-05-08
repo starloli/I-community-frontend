@@ -249,7 +249,9 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
           const dialogRef = this.dialog.open(ReservationCalendarComponent, {
             data: {
               facility,
-              reservations: res
+              reservations: res.filter(r =>
+                this.reservationService.isReservationExpired(r) ? false : true
+              )
             },
             disableClose: false,
             width: '900px', // 稍微放寬一點

@@ -34,7 +34,10 @@ export class EditUserComponent implements OnInit, OnDestroy {
   ) { }
 
   user!: UserResponse
-  roles = [UserRole.ADMIN, UserRole.RESIDENT]
+  roles = [
+    { value: UserRole.ADMIN, label: '管理員' },
+    { value: UserRole.RESIDENT, label: '一般住戶' }
+  ]
 
   private $destroy = new Subject<void>()
 
