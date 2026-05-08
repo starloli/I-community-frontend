@@ -82,70 +82,72 @@
       <h2 class="section-title">聯絡資訊編輯</h2>
       <p class="edit-hint">* 您目前僅可自行修改電子信箱與電話</p>
 
-      <div class="form-group email-group">
-        <label>新電子信箱</label>
-        <div class="input-with-action">
-          <div class="email-input-side">
-            <div class="input-wrapper" [class.error]="(emailModel.touched || emailModel.dirty) && !isValidEmail(email)">
-              <mat-icon>mail</mat-icon>
-              <input type="email" [(ngModel)]="email" #emailModel="ngModel" placeholder="example@gmail.com">
-            </div>
+      <div class="edit-form">
+        <!-- 聯絡電話 -->
+        <div class="input-group">
+          <label>聯絡電話
+            @if((phoneModel.touched || phoneModel.dirty) && !isValidPhone(updateUser.phone)) {
+            <span class="error-badge">格式不正確</span>
+            }
+          </label>
+          <div class="input-wrapper"
+            [class.input-error]="(phoneModel.touched || phoneModel.dirty) && !isValidPhone(updateUser.phone)">
+            <mat-icon>phone_iphone</mat-icon>
+            <input type="tel" placeholder="請輸入您的電話 (09xxxxxxxx)" [(ngModel)]="updateUser.phone" #phoneModel="ngModel"
+              (keydown.space)="$event.preventDefault()">
+          </div>
+        </div>
+
+        <!-- 電子信箱 -->
+        <div class="email-group">
+          <label>新電子信箱
             @if((emailModel.touched || emailModel.dirty) && !isValidEmail(email)) {
-            <span class="error-text">Email 格式不正確</span>
+              <span class="error-badge">格式不正確</span>
             }
+          </label>
+          <div class="input-wrapper" [class.input-error]="(emailModel.touched || emailModel.dirty) && !isValidEmail(email)">
+            <mat-icon>mail</mat-icon>
+            <input type="email" [(ngModel)]="email" #emailModel="ngModel" placeholder="example@gmail.com">
           </div>
+
           @if (!verifyEmailSend) {
-          <button class="send-code-btn" [disabled]="!isValidEmail(email)" (click)="sendVerifyCode()">
-            <mat-icon>send</mat-icon>
-            發送驗證碼
-          </button>
-          }
-        </div>
-
-        @if (verifyEmailSend) {
-        <div class="otp-full-wrapper">
-          <div class="otp-container">
-            @for (ctrl of otpCtrl; track $index; let i = $index) {
-            <input maxlength="1" [formControl]="ctrl" type="text" (input)="onInput($event, i)"
-              (keydown)="onKeyDown($event, i)" (paste)="onPaste($event)" />
-            }
-          </div>
-          <div class="countdown-row">
-            <div class="countdown-wrapper">
-              <mat-icon>timer</mat-icon>
-              <span>驗證碼有效時間：<strong>{{this.emailCodeExpiry}}秒</strong></span>
-            </div>
-            <button class="send-code-btn" (click)="sendVerifyCode()">
-              <mat-icon>refresh</mat-icon>
-              重新發送
+            <button class="send-code-btn send-code-main" [disabled]="!isValidEmail(email)" (click)="sendVerifyCode()">
+              <mat-icon>send</mat-icon>
+              發送驗證碼
             </button>
-          </div>
-        </div>
-        }
-      </div>
-
-      <div class="input-group">
-        <label>聯絡電話
-          @if((phoneModel.touched || phoneModel.dirty)&&!isValidPhone(updateUser.phone)) {
-          <span class="error-badge">格式不正確</span>
           }
-        </label>
-        <div class="input-wrapper"
-          [class.input-error]="(phoneModel.touched || phoneModel.dirty)&&!isValidPhone(updateUser.phone)">
-          <mat-icon>phone_iphone</mat-icon>
-          <input type="tel" placeholder="請輸入您的電話 (09xxxxxxxx)" [(ngModel)]="updateUser.phone" #phoneModel="ngModel"
-            (keydown.space)="$event.preventDefault()">
-        </div>
-      </div>
 
-      <div class="form-actions">
-        <button class="submit-btn" [disabled]=" !isValidEmail(updateUser.email) || !isValidPhone(updateUser.phone)"
-          (click)="isValidEmail(updateUser.email) && isValidPhone(updateUser.phone) ? ModifyResident() : No()">
-          <mat-icon>save</mat-icon>
-          儲存更新
-        </button>
-      </div>
-    </div>
+          @if (verifyEmailSend) {
+          <div class="otp-full-wrapper">
+            <div class="otp-container">
+              @for (ctrl of otpCtrl; track $index; let i = $index) {
+              <input maxlength="1" [formControl]="ctrl" type="text" (input)="onInput($event, i)"
+                (keydown)="onKeyDown($event, i)" (paste)="onPaste($event)" />
+              }
+            </div>
+            <div class="countdown-row">
+              <div class="countdown-wrapper">
+                <mat-icon>timer</mat-icon>
+                <span>驗證碼有效時間：<strong>{{this.emailCodeExpiry}}秒</strong></span>
+              </div>
+              <button class="send-code-btn" (click)="sendVerifyCode()">
+                <mat-icon>refresh</mat-icon>
+                重新發送
+              </button>
+            </div>
+          </div>
+          }
+        </div>
+
+        <div class="form-actions">
+          <button class="submit-btn" [disabled]=" !isValidEmail(updateUser.email) || !isValidPhone(updateUser.phone)"
+            (click)="isValidEmail(updateUser.email) && isValidPhone(updateUser.phone) ? ModifyResident() : No()">
+            <mat-icon>save</mat-icon>
+            儲存更新
+          </button>
+        </div>
+      </div> <!-- end edit-form -->
+    </div> <!-- end edit-section -->
   </div>
   } @else {
   <div class="loading-container">
