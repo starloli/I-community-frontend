@@ -85,7 +85,9 @@ export class UpdateFacilityComponent implements OnInit {
       this.toast.warning('請輸入完整資訊', 2000);
     } else {
       if (!this.facility.isAvailable && this.oldFacility.isAvailable !== this.facility.isAvailable) {
-        const dialogRef = this.dialog.open(FacilityCloseCheckComponent);
+        const dialogRef = this.dialog.open(FacilityCloseCheckComponent, {
+          panelClass: 'custom-confirm-dialog'
+        });
         dialogRef.afterClosed().pipe(takeUntil(this.dialogRef.afterClosed())).subscribe(result => {
           if (result) {
             this.updateFacility();

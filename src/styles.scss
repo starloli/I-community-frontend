@@ -129,6 +129,21 @@ body {
   }
 }
 
+// ===== 確認對話框樣式修正 =====
+.custom-confirm-dialog {
+  .mat-mdc-dialog-container {
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  
+  .mat-mdc-dialog-surface {
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important; // 允許陰影擴散
+  }
+}
+
 // ===== 修正 Angular Material 透明度問題 =====
 ::ng-deep {
   // 1. 修正輸入框本身的底色（未展開時）

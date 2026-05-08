@@ -1,9 +1,10 @@
 import { MatDialogRef } from '@angular/material/dialog';
 import { Component } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-facility-close-check',
-  imports: [],
+  imports: [MatIconModule],
   standalone: true,
   templateUrl: './facility-close-check.component.html',
   styleUrl: './facility-close-check.component.scss',
