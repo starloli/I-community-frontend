@@ -140,8 +140,8 @@
         </div>
 
         <div class="form-actions">
-          <button class="submit-btn" [disabled]=" !isValidEmail(updateUser.email) || !isValidPhone(updateUser.phone)"
-            (click)="isValidEmail(updateUser.email) && isValidPhone(updateUser.phone) ? ModifyResident() : No()">
+          <button class="submit-btn" [disabled]="!isValid()"
+            (click)="isValid() ? ModifyResident() : No()">
             <mat-icon>save</mat-icon>
             儲存更新
           </button>

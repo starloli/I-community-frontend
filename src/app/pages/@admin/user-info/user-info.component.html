@@ -64,7 +64,7 @@
                 </button>
               }
             </div>
-            
+
             @if (verifyEmailSend) {
               <div class="otp-full-wrapper">
                 <div class="otp-container">
@@ -110,7 +110,7 @@
         </div> <!-- end form-grid -->
 
         <div class="form-actions">
-          <button class="submit-btn" [disabled]="isValid(updateUser)" (click)="ModifySelf()">
+          <button class="submit-btn" [disabled]="!isValid(updateUser)" (click)="ModifySelf()">
             <mat-icon>save</mat-icon>
             儲存變更
           </button>

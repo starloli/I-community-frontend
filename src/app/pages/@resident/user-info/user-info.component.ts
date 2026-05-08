@@ -37,7 +37,8 @@ export class UserInfoComponent implements OnInit, OnDestroy {
 
   updateUser: updateUser = {
     phone: '',
-    email: ''
+    email: '',
+    verifycode: ''
   }
   private $destroy = new Subject<void>();
 
@@ -63,7 +64,8 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   }
 
   ModifyResident(): void {
-    if (this.isValidEmail(this.updateUser.email) && this.isValidPhone(this.updateUser.phone)) {
+    if (this.isValid()) {
+      this.updateUser.verifycode = this.otpCtrl.map(ctrl => ctrl.value).join('');
       this.http.putApi(this.modifyUrl, this.updateUser).pipe(takeUntil(this.$destroy)).subscribe({
         next: (response) => {
           this.toast.success('修改成功', 2000)
@@ -142,6 +144,13 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
+  isValid(): boolean {
+    return this.isValidEmail(this.updateUser.email) && this.isValidPhone(this.updateUser.phone)&& this.isCodeValid();
+  }
+
+  isCodeValid(): boolean {
+    return this.otpCtrl.every(ctrl => ctrl.value && /^\d$/.test(ctrl.value))&& this.updateUser.email.trim() === this.email.trim();
+  }
 
   isValidEmail(email: string): boolean {
     if (!email) return false;
@@ -165,4 +174,5 @@ export class UserInfoComponent implements OnInit, OnDestroy {
 interface updateUser {
   phone: string;
   email: string;
+  verifycode: string;
 }

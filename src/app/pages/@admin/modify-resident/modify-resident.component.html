@@ -46,13 +46,15 @@
         <span class="count-badge">{{ incompleteCount }}</span>
         }
       </button>
+      @if(this.userRole === UserRole.SUPER_ADMIN){
       <button class="filter-btn active" [class.active]="selectedFilter === 'PENDING'"
         (click)="selectedFilter = 'PENDING'; onFilterChange()">
         待審核
         @if (pendingCount > 0) {
-          <span class="count-badge">{{ pendingCount }}</span>
+        <span class="count-badge">{{ pendingCount }}</span>
         }
       </button>
+      }
       <button class="filter-btn" [class.active]="selectedFilter === 'INACTIVE'"
         (click)="selectedFilter = 'INACTIVE'; onFilterChange()">已停用</button>
     </div>
