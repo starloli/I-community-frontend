@@ -95,7 +95,7 @@ export class ReservationCalendarComponent implements OnInit {
       dialogRef.afterClosed().pipe(takeUntil(this.dialogRefSelf.afterClosed())).subscribe({
         next: res => {
           if (res) {
-            this.dialogRefSelf.close(true);
+            // this.dialogRefSelf.close(true);
           }
         },
         error: err => {
@@ -129,7 +129,7 @@ export class ReservationCalendarComponent implements OnInit {
         dialogRef.afterClosed().pipe(takeUntil(this.dialogRefSelf.afterClosed())).subscribe({
           next: res => {
             if (res) {
-              this.dialogRefSelf.close(true);
+              // this.dialogRefSelf.close(true);
             }
           },
           error: err => {
