@@ -38,7 +38,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   updateUser: updateUser = {
     phone: '',
     email: '',
-    verifycode: ''
+    verifyCode: ''
   }
   private $destroy = new Subject<void>();
 
@@ -69,7 +69,9 @@ export class UserInfoComponent implements OnInit, OnDestroy {
 
   ModifyResident(): void {
     if (this.isValid()) {
-      this.updateUser.verifycode = this.otpCtrl.map(ctrl => ctrl.value).join('');
+      this.updateUser.verifyCode = this.otpCtrl.map(ctrl => ctrl.value).join('');
+      console.log(this.updateUser);
+
       this.http.putApi(this.modifyUrl, this.updateUser).pipe(takeUntil(this.$destroy)).subscribe({
         next: (response) => {
           this.toast.success('修改成功', 2000)
@@ -178,5 +180,5 @@ export class UserInfoComponent implements OnInit, OnDestroy {
 interface updateUser {
   phone: string;
   email: string;
-  verifycode: string;
+  verifyCode: string;
 }
