@@ -106,7 +106,6 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
 
   get userRole(): UserRole {
     const payload = JSON.parse(atob(this.token.split('.')[1]))
-    console.log('角色:', payload.role)
     return payload.role
   }
 

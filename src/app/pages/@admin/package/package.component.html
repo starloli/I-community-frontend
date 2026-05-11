@@ -118,7 +118,7 @@
         <div class="pkg-pickup-col" (click)="$event.stopPropagation()">
           @if (pkg.status === PackageStatus.WAITING) {
           <button class="pickup-btn" (click)="openPickup(pkg, $event)">
-            <mat-icon>check</mat-icon>
+            <!-- <mat-icon>check</mat-icon> -->
             領取
           </button>
           }

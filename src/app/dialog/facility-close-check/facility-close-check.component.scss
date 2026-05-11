@@ -1,0 +1,140 @@
+.close-check-container {
+  padding: 32px;
+  background:
+    radial-gradient(circle at top right, rgba(229, 57, 53, 0.08), transparent 40%),
+    rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 24px;
+  max-width: 400px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+}
+
+.icon-box {
+  width: 64px;
+  height: 64px;
+  background: rgba(229, 57, 53, 0.1);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(229, 57, 53, 0.15);
+
+  mat-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    color: #e53935;
+  }
+}
+
+.content-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    color: #666;
+    line-height: 1.6;
+
+    span {
+      color: #e53935;
+      font-weight: 700;
+    }
+  }
+
+  .warning-text {
+    font-size: 14px;
+    color: #888;
+  }
+}
+
+.action-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+}
+
+button {
+  padding: 12px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+}
+
+.cancel-btn {
+  background: #f5f5f5;
+  color: #666;
+
+  &:hover {
+    background: #eeeeee;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.confirm-btn {
+  background: #e53935;
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(229, 57, 53, 0.25);
+
+  &:hover {
+    background: #d32f2f;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(229, 57, 53, 0.35);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
+  }
+}
+
+@media (max-width: 480px) {
+  .close-check-container {
+    padding: 24px;
+    width: calc(100vw - 48px);
+    border-radius: 20px;
+  }
+
+  .icon-box {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+  }
+
+  .content-box {
+    h2 {
+      font-size: 20px;
+    }
+    p {
+      font-size: 14px;
+    }
+  }
+}

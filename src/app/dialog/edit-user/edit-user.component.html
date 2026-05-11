@@ -54,7 +54,7 @@
       <mat-select [(ngModel)]="user.role" [disabled]="!isUserActive">
         @for (role of roles; track role) {
         <mat-option [value]="role">
-          {{ role }}
+          {{ role.label }}
         </mat-option>
         }
       </mat-select>
