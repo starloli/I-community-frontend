@@ -38,7 +38,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   updateUser: updateUser = {
     phone: '',
     email: '',
-    verifycode: ''
+    verifyCode: ''
   }
   private $destroy = new Subject<void>();
 
@@ -65,15 +65,16 @@ export class UserInfoComponent implements OnInit, OnDestroy {
 
   ModifyResident(): void {
     if (this.isValid()) {
-      this.updateUser.verifycode = this.otpCtrl.map(ctrl => ctrl.value).join('');
+      this.updateUser.verifyCode = this.otpCtrl.map(ctrl => ctrl.value).join('');
       this.http.putApi(this.modifyUrl, this.updateUser).pipe(takeUntil(this.$destroy)).subscribe({
         next: (response) => {
           this.toast.success('修改成功', 2000)
           console.log(response);
           this.getInfo();
+          this.reset();
         },
         error: (error) => {
-          this.toast.error('修改失敗', 2000)
+          this.toast.error('修改失敗，請檢查驗證碼是否正確', 2000)
           console.error(error);
         }
       })
@@ -145,11 +146,11 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   }
 
   isValid(): boolean {
-    return this.isValidEmail(this.updateUser.email) && this.isValidPhone(this.updateUser.phone)&& this.isCodeValid();
+    return this.isValidEmail(this.updateUser.email) && this.isValidPhone(this.updateUser.phone) && this.isCodeValid();
   }
 
   isCodeValid(): boolean {
-    return this.otpCtrl.every(ctrl => ctrl.value && /^\d$/.test(ctrl.value))&& this.updateUser.email.trim() === this.email.trim();
+    return this.otpCtrl.every(ctrl => ctrl.value && /^\d$/.test(ctrl.value)) && this.updateUser.email.trim() === this.email.trim();
   }
 
   isValidEmail(email: string): boolean {
@@ -170,9 +171,15 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
+  reset(): void {
+    this.otpCtrl.forEach(ctrl => ctrl.setValue(''));
+    this.verifyEmailSend = false;
+    this.emailCodeExpiry = 0;
+    clearInterval(this.timer);
+  }
 }
 interface updateUser {
   phone: string;
   email: string;
-  verifycode: string;
+  verifyCode: string;
 }
