@@ -8,6 +8,8 @@ import { ReserveFacilityComponent } from '../reserve-facility/reserve-facility.c
 import { takeUntil } from 'rxjs';
 import { parse } from 'date-fns';
 import { ToastService } from '../../@service/toast.service';
+import { HttpService } from '../../@service/http.service';
+import { ReservationService } from '../../@service/reservation.service';
 
 @Injectable()
 class ReservationCalendarDateFormatter extends CalendarDateFormatter {
@@ -38,9 +40,13 @@ export class ReservationCalendarComponent implements OnInit {
     private dialogRefSelf: MatDialogRef<ReservationCalendarComponent>,
     private dialog: MatDialog,
     private toast: ToastService,
-    @Inject(MAT_DIALOG_DATA) public data: { facility: Facility, reservations: ResReservation[] }
+    private http: HttpService,
+    private reservationService: ReservationService,
+    @Inject(MAT_DIALOG_DATA) public data: { facility: Facility }
   ) {
   }
+
+  getReservationByFacilityIdUrl = '/reservation/byFacilityId';
 
   // 顯示週視圖
   view: CalendarView = CalendarView.Week;
@@ -52,35 +58,46 @@ export class ReservationCalendarComponent implements OnInit {
 
   // 這是行事曆的核心：事件陣列
   events: CalendarEvent[] = [];
+  eventColors = {
+    available: { primary: '#D6EAF8', secondary: '#206894' },  // 淺藍色背景，深藍色文字
+    warning: { primary: '#FCF3CF', secondary: '#ae7802' },    // 淺黃色背景，深橘色文字
+    full: { primary: '#FADBD8', secondary: '#ad1c0f' }        // 淺紅色背景，深紅色文字
+  };
 
   ngOnInit(): void {
     this.openTime = Number(this.data.facility.openTime.split(':')[0]);
     this.closeTime = Number(this.data.facility.closeTime.split(':')[0]) - 1;
-    let resTime = this.sortReservations(this.data.reservations);
+    this.getFacilityReservations();
+  }
 
-    const eventColors = {
-      available: { primary: '#D6EAF8', secondary: '#206894' },  // 淺藍色背景，深藍色文字
-      warning: { primary: '#FCF3CF', secondary: '#ae7802' },    // 淺黃色背景，深橘色文字
-      full: { primary: '#FADBD8', secondary: '#ad1c0f' }        // 淺紅色背景，深紅色文字
-    };
-
-
-    this.events = resTime.map((reservation): CalendarEvent => {
-      let full = reservation.attendees >= this.data.facility.capacity;
-      return {
-        start: addHours(startOfDay(new Date(reservation.date)), Number(reservation.startTime.split(':')[0])),
-        end: addHours(startOfDay(new Date(reservation.date)), Number(reservation.endTime.split(':')[0])),
-        title: full ? '已額滿' : `尚有${this.data.facility.capacity - reservation.attendees}位空位`,
-        color: full ? eventColors.full : reservation.attendees >= this.data.facility.capacity / 2 ? eventColors.warning : eventColors.available,
-        meta: {
-          data: {
-            ...reservation,
-            attendees: this.data.facility.capacity - reservation.attendees
-          },
-          full: full
-        } // 你可以自定義額外資訊
-      }
-    })
+  getFacilityReservations(): void {
+    this.http.getApi<Array<ResReservation>>(this.getReservationByFacilityIdUrl, this.data.facility.facilityId)
+      .pipe(takeUntil(this.dialogRefSelf.afterClosed()))
+      .subscribe({
+        next: res => {
+          this.events = this.sortReservations(res.filter(r =>
+            this.reservationService.isReservationExpired(r) ? false : true
+          )).map((reservation): CalendarEvent => {
+            let full = reservation.attendees >= this.data.facility.capacity;
+            return {
+              start: addHours(startOfDay(new Date(reservation.date)), Number(reservation.startTime.split(':')[0])),
+              end: addHours(startOfDay(new Date(reservation.date)), Number(reservation.endTime.split(':')[0])),
+              title: full ? '已額滿' : `尚有${this.data.facility.capacity - reservation.attendees}位空位`,
+              color: full ? this.eventColors.full : reservation.attendees >= this.data.facility.capacity / 2 ? this.eventColors.warning : this.eventColors.available,
+              meta: {
+                data: {
+                  ...reservation,
+                  attendees: this.data.facility.capacity - reservation.attendees
+                },
+                full: full
+              } // 你可以自定義額外資訊
+            }
+          })
+        },
+        error: err => {
+          this.toast.error('取得設施預約資料失敗 ' + err.status, 2000);
+        }
+      });
   }
 
   // 當使用者點擊時間格子時觸發
@@ -95,6 +112,7 @@ export class ReservationCalendarComponent implements OnInit {
       dialogRef.afterClosed().pipe(takeUntil(this.dialogRefSelf.afterClosed())).subscribe({
         next: res => {
           if (res) {
+            this.toast.success('預約成功', 2000);
             // this.dialogRefSelf.close(true);
           }
         },
@@ -129,7 +147,9 @@ export class ReservationCalendarComponent implements OnInit {
         dialogRef.afterClosed().pipe(takeUntil(this.dialogRefSelf.afterClosed())).subscribe({
           next: res => {
             if (res) {
+              this.toast.success('預約成功', 2000);
               // this.dialogRefSelf.close(true);
+              this.getFacilityReservations(); // 預約成功後更新行事曆事件
             }
           },
           error: err => {
@@ -200,7 +220,6 @@ export class ReservationCalendarComponent implements OnInit {
   }
 
   sortReservations(resvation: ResReservation[]): Re[] {
-
     const res = Object.values(
       resvation.reduce((acc, curr) => {
         if (!acc[curr.date + '' + curr.startTime]) {
