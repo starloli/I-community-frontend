@@ -150,9 +150,6 @@
             <div class="res-info">
               <div class="res-title-row">
                 <span class="res-name">{{ r.facilityName }}</span>
-                <span class="res-status" [ngClass]="getReservationStatusClass(r)">
-                  {{ getReservationStatusLabel(r) }}
-                </span>
               </div>
               <div class="res-details">
                 <span><mat-icon>calendar_today</mat-icon>{{ formatDate(r.date) }}</span>
