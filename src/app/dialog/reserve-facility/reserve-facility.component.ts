@@ -21,7 +21,7 @@ import { ToastService } from '../../@service/toast.service';
   providers: [provideNativeDateAdapter()],
   styleUrl: './reserve-facility.component.scss'
 })
-export class ReserveFacilityComponent implements OnInit, OnDestroy {
+export class ReserveFacilityComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<ReserveFacilityComponent>,
@@ -50,7 +50,7 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.http.getApi<User>(this.getUrl)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.dialogRef.afterClosed()))
       .subscribe({
         next: res => {
           this.reservation = {
@@ -92,11 +92,6 @@ export class ReserveFacilityComponent implements OnInit, OnDestroy {
           console.log(err);
         }
       })
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   get capacity(): number[] {

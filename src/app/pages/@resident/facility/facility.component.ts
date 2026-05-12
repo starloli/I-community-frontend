@@ -33,7 +33,6 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
 
   getFacilityUrl = '/user/facility';
   getReservationByUserIdUrl = '/reservation/byUserId';
-  getReservationByFacilityIdUrl = '/reservation/byFacilityId';
   cancelReservationUrl = '/reservation/cancel';
   getUserUrl = '/user/me';
 
@@ -242,36 +241,18 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
   // 開啟日曆前先抓這個設施既有預約，讓 dialog 能判斷時段是否可用。
   // 開啟預約日曆前，先抓取該設施既有預約資料並傳入 dialog。
   openRC(facility: Facility): void {
-    this.http.getApi<Array<ResReservation>>(this.getReservationByFacilityIdUrl, facility.facilityId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: res => {
-          const dialogRef = this.dialog.open(ReservationCalendarComponent, {
-            data: {
-              facility,
-              reservations: res.filter(r =>
-                this.reservationService.isReservationExpired(r) ? false : true
-              )
-            },
-            disableClose: false,
-            width: '900px', // 稍微放寬一點
-            maxWidth: '95vw',
-            maxHeight: '85vh', // 限制高度，確保上下留白
-            panelClass: 'reservation-calendar-dialog'
-          });
-          dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe({
-            next: dialogResult => {
-              if (dialogResult) {
-                this.toast.success('預約成功', 2000);
-                this.refreshReservations();
-              }
-            }
-          });
-        },
-        error: err => {
-          this.toast.error('取得設施預約資料失敗 ' + err.status, 2000);
-        }
-      });
+    const dialogRef = this.dialog.open(ReservationCalendarComponent, {
+      data: { facility },
+      disableClose: false,
+      width: '900px', // 稍微放寬一點
+      maxWidth: '95vw',
+      maxHeight: '85vh', // 限制高度，確保上下留白
+      panelClass: 'reservation-calendar-dialog'
+    });
+    // dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe({
+    //   next: dialogResult => {
+    //   }
+    // });
   }
 
   // 安全格式化時間，避免 slice 報錯
