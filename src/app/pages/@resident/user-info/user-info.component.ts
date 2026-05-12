@@ -63,6 +63,10 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     });
   }
 
+  get code(): string {
+    return this.otpCtrl.map(ctrl => ctrl.value).join('');
+  }
+
   ModifyResident(): void {
     if (this.isValid()) {
       this.updateUser.verifyCode = this.otpCtrl.map(ctrl => ctrl.value).join('');
