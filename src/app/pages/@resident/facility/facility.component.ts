@@ -172,6 +172,12 @@ export class ResidentFacilityComponent implements OnInit, OnDestroy {
               const aIsOpen = this.isFacilityOpen(a);
               const bIsOpen = this.isFacilityOpen(b);
               return (bIsOpen ? 1 : 0) - (aIsOpen ? 1 : 0);
+            }).sort((a, b) => {
+              // 先比 isAvailable，如果一樣再比 isReservable
+              if (a.isAvailable !== b.isAvailable) {
+                return a.isAvailable ? -1 : 1;
+              }
+              return a.isReservable === b.isReservable ? 0 : (a.isReservable ? -1 : 1);
             });
           }
         },
