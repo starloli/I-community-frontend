@@ -238,14 +238,25 @@
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   }
 
-  &.inactive-card {
-    filter: grayscale(0.8);
-    opacity: 0.7;
-    cursor: not-allowed;
+  &.inactive {
+    background: rgba(245, 245, 245, 0.6);
+    border-color: rgba(224, 224, 224, 0.8);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    
+    .resident-avatar {
+      background: rgba(0, 0, 0, 0.05);
+      mat-icon { color: #999; }
+    }
 
-    .role-badge {
-      background: #f0f0f0;
-      color: #777;
+    .resident-name {
+      color: #999 !important;
+    }
+
+    .info-item {
+      color: #bbb !important;
+      mat-icon { color: #ccc !important; }
+      .label { color: #bbb !important; }
+      .value { color: #aaa !important; }
     }
   }
 
@@ -318,6 +329,11 @@
   &.admin {
     background: rgba(91, 127, 166, 0.1);
     color: #5B7FA6;
+  }
+
+  &.inactive {
+    background: #f1f5f9;
+    color: #94a3b8;
   }
 }
 
