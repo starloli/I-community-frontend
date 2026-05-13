@@ -5,7 +5,7 @@ import { catchError, Observable, tap, throwError } from 'rxjs';
 import { VerifyCodeType } from '../interface/enum';
 import { updateUser } from '../interface/interface';
 import { ToastService } from './toast.service';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
