@@ -14,6 +14,7 @@ import { ImageComponent } from '../../../dialog/image/image.component';
 import { VisitorServiceService } from '../../../@service/visitor-service.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ShortNumberPipe } from '../../../shared/pipes/short-number.pipe';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-financial-dashboard',
@@ -60,7 +61,7 @@ export class FinancialDashboardComponent {
   role!: string;
 
 
-  readonly SERVER_URL = 'http://localhost:8083';
+  readonly SERVER_URL = environment.baseUrl;
 
   ngOnInit() {
     this.fetchFinancialData();

@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { Announcement, AnnouncementPayload } from '../interface/interface';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AnnouncementService {
 
-  private apiUrl = 'http://localhost:8083'; // 與攔截器中的 apiUrl 一致
+  private apiUrl = environment.baseUrl; // 與攔截器中的 apiUrl 一致
   private announsSubject = new BehaviorSubject<Announcement[]>([]);
   announs$ = this.announsSubject.asObservable();
 

@@ -1,9 +1,10 @@
 import { HttpInterceptorFn } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   const token = localStorage.getItem('token');
-  const apiUrl = 'http://localhost:8083'; // 確保與後端 API 基礎網址一致
+  const apiUrl = environment.baseUrl; // 確保與後端 API 基礎網址一致
 
   // 排除不需要 token 的 API (如登入)
   if (req.url.includes('/auth/login')) {

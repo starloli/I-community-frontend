@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, tap, throwError } from 'rxjs';
 import { Bill } from '../interface/interface';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BillService {
 
-  private apiUrl = 'http://localhost:8083';
+  private apiUrl = environment.baseUrl;
   private billsSubject = new BehaviorSubject<Bill[]>([]);
   bills$ = this.billsSubject.asObservable();
 

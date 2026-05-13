@@ -5,6 +5,7 @@ import { catchError, Observable, tap, throwError } from 'rxjs';
 import { VerifyCodeType } from '../interface/enum';
 import { updateUser } from '../interface/interface';
 import { ToastService } from './toast.service';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({
@@ -13,7 +14,7 @@ import { ToastService } from './toast.service';
 export class AuthService {
 
   private toast = inject(ToastService);
-  private apiUrl = 'http://localhost:8083';
+  private apiUrl = environment.baseUrl;
 
   constructor(
     private http: HttpClient,

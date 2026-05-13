@@ -6,6 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { VisitorServiceService } from '../../@service/visitor-service.service';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-image',
   imports: [CommonModule, MatButtonModule, MatIconModule],
@@ -16,7 +17,7 @@ export class ImageComponent {
 constructor(private dialogRef: MatDialogRef<ImageComponent>,private service:VisitorServiceService){}
 
 image!:string;
-readonly SERVER_URL = 'http://localhost:8083';
+readonly SERVER_URL = environment.baseUrl;
 ngOnInit(): void {
 this.image=this.service.image;
 console.log('完整的圖片網址將會是:', this.SERVER_URL + this.image);
