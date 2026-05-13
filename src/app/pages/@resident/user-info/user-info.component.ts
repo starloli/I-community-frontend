@@ -63,6 +63,10 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     });
   }
 
+  get code(): string {
+    return this.otpCtrl.map(ctrl => ctrl.value).join('');
+  }
+
   ModifyResident(): void {
     if (this.isValid()) {
       this.updateUser.verifyCode = this.otpCtrl.map(ctrl => ctrl.value).join('');
@@ -71,9 +75,10 @@ export class UserInfoComponent implements OnInit, OnDestroy {
           this.toast.success('修改成功', 2000)
           console.log(response);
           this.getInfo();
+          this.reset();
         },
         error: (error) => {
-          this.toast.error('修改失敗', 2000)
+          this.toast.error('修改失敗，請檢查驗證碼是否正確', 2000)
           console.error(error);
         }
       })
@@ -145,11 +150,11 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   }
 
   isValid(): boolean {
-    return this.isValidEmail(this.updateUser.email) && this.isValidPhone(this.updateUser.phone)&& this.isCodeValid();
+    return this.isValidEmail(this.updateUser.email) && this.isValidPhone(this.updateUser.phone) && this.isCodeValid();
   }
 
   isCodeValid(): boolean {
-    return this.otpCtrl.every(ctrl => ctrl.value && /^\d$/.test(ctrl.value))&& this.updateUser.email.trim() === this.email.trim();
+    return this.otpCtrl.every(ctrl => ctrl.value && /^\d$/.test(ctrl.value)) && this.updateUser.email.trim() === this.email.trim();
   }
 
   isValidEmail(email: string): boolean {
@@ -170,6 +175,12 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
+  reset(): void {
+    this.otpCtrl.forEach(ctrl => ctrl.setValue(''));
+    this.verifyEmailSend = false;
+    this.emailCodeExpiry = 0;
+    clearInterval(this.timer);
+  }
 }
 interface updateUser {
   phone: string;

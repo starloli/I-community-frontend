@@ -272,7 +272,7 @@
   max-height: 200px;
   overflow-y: auto;
   margin-bottom: 15px;
-  
+
   /* 隱藏捲動條 */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
@@ -297,6 +297,7 @@
   padding: 6px 4px;
   border-bottom: 1px solid #eee;
   color: #5A5A5A;
+  font-size: 20px;
 }
 
 .event-row:hover {
