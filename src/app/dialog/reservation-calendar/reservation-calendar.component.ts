@@ -114,6 +114,7 @@ export class ReservationCalendarComponent implements OnInit {
           if (res) {
             this.toast.success('預約成功', 2000);
             // this.dialogRefSelf.close(true);
+              this.getFacilityReservations(); // 預約成功後更新行事曆事件
           }
         },
         error: err => {

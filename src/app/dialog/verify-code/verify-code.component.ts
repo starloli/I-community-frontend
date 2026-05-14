@@ -65,30 +65,23 @@ export class VerifyCodeComponent implements OnDestroy {
   }
 
   verifyCode() {
-    if (this.otp == '114514') {
-      this.toast.success("驗證成功", 2000);
-      this.nextStep = false;
-      this.superAdminService.setVerified(true);
-      this.dialogRef.close(true);
-    } else {
-      this.authService.verifyEmail(this.superAdminService.getUserEmail(), this.otp).subscribe({
-        next: (res) => {
-          console.log("res：", res)
-          this.toast.success("驗證成功", 2000);
-          this.nextStep = false;
-          this.superAdminService.setVerified(true);
-          this.dialogRef.close(true);
-        },
-        error: (err) => {
-          if (err.message === "認證碼錯誤") {
-            this.toast.error("驗證失敗，請檢查驗證碼是否正確", 2000); 
-          } else {
-            this.toast.error("發生錯誤：" + (err.message || '未知錯誤'), 2000);
-          }
-          console.error("err：", err)
+    this.authService.verifyEmail(this.superAdminService.getUserEmail(), this.otp).subscribe({
+      next: (res) => {
+        console.log("res：", res)
+        this.toast.success("驗證成功", 2000);
+        this.nextStep = false;
+        this.superAdminService.setVerified(true);
+        this.dialogRef.close(true);
+      },
+      error: (err) => {
+        if (err.message === "認證碼錯誤") {
+          this.toast.error("驗證失敗，請檢查驗證碼是否正確", 2000);
+        } else {
+          this.toast.error("發生錯誤：" + (err.message || '未知錯誤'), 2000);
         }
-      })
-    }
+        console.error("err：", err)
+      }
+    })
   }
 
   postCode(code: string) {
