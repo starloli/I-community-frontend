@@ -251,7 +251,6 @@
           <select [(ngModel)]="editForm.status">
             <option [ngValue]="RepairStatus.PENDING">待處理</option>
             <option [ngValue]="RepairStatus.IN_PROGRESS">處理中</option>
-            <option [ngValue]="RepairStatus.DONE">已完工</option>
           </select>
         </div>
       </div>
@@ -272,10 +271,6 @@
         <mat-icon class="close-btn" (click)="closeCompleteForm()">close</mat-icon>
       </div>
       <div class="form-body">
-        <div class="form-group">
-          <label>處理人員 <span class="required">*</span></label>
-          <input type="text" [(ngModel)]="completeForm.handler" placeholder="請輸入處理人員姓名" />
-        </div>
         <div class="form-group">
           <label>完工備註</label>
           <textarea [(ngModel)]="completeForm.note" rows="4" placeholder="請描述處理方式及結果..."></textarea>
