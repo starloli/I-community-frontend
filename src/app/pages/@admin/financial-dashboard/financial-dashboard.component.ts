@@ -60,7 +60,7 @@ export class FinancialDashboardComponent {
   role!: string;
 
 
-  readonly SERVER_URL = 'http://localhost:8083';
+  readonly SERVER_URL = 'https://i-community-backstage-production.up.railway.app';
 
   ngOnInit() {
     this.fetchFinancialData();

@@ -8,7 +8,7 @@ import { Holiday } from '../interface/interface';
 })
 export class HolidayService {
 
-  private apiUrl = 'http://localhost:8083/calendar';
+  private apiUrl = 'https://i-community-backstage-production.up.railway.app/calendar';
 
   constructor(private http: HttpClient) {}
 

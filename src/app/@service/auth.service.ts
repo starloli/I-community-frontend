@@ -13,7 +13,7 @@ import { ToastService } from './toast.service';
 export class AuthService {
 
   private toast = inject(ToastService);
-  private apiUrl = 'http://localhost:8083';
+  private apiUrl = 'https://i-community-backstage-production.up.railway.app';
 
   constructor(
     private http: HttpClient,

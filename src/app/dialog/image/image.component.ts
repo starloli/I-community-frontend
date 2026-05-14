@@ -16,7 +16,7 @@ export class ImageComponent {
 constructor(private dialogRef: MatDialogRef<ImageComponent>,private service:VisitorServiceService){}
 
 image!:string;
-readonly SERVER_URL = 'http://localhost:8083';
+readonly SERVER_URL = 'https://i-community-backstage-production.up.railway.app';
 ngOnInit(): void {
 this.image=this.service.image;
 console.log('完整的圖片網址將會是:', this.SERVER_URL + this.image);

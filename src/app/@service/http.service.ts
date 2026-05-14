@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class HttpService {
 
-  private baseUrl = 'http://localhost:8083';
+  private baseUrl = 'https://i-community-backstage-production.up.railway.app';
 
   constructor(private http: HttpClient) { }
 

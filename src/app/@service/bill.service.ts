@@ -8,7 +8,7 @@ import { Bill } from '../interface/interface';
 })
 export class BillService {
 
-  private apiUrl = 'http://localhost:8083';
+  private apiUrl = 'https://i-community-backstage-production.up.railway.app';
   private billsSubject = new BehaviorSubject<Bill[]>([]);
   bills$ = this.billsSubject.asObservable();
 
