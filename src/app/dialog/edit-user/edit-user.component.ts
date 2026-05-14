@@ -53,7 +53,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
     // console.log(user);
     if (this.validNumber(user.squareFootage) && this.validNumber(user.motorParkingSpace) && this.validNumber(user.carParkingSpace)) {
       this.dialog.close(user);
-    }else{
+    } else {
       alert('坪數、機車位、汽車位必須為非負數');
     }
   }
@@ -71,7 +71,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
   }
 
-  validNumber(value:number): boolean {
+  validNumber(value: number): boolean {
     return value >= 0
   }
 

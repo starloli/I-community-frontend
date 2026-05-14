@@ -53,7 +53,7 @@
       <mat-icon matPrefix>security</mat-icon>
       <mat-select [(ngModel)]="user.role" [disabled]="!isUserActive">
         @for (role of roles; track role) {
-        <mat-option [value]="role">
+        <mat-option [value]="role.value">
           {{ role.label }}
         </mat-option>
         }

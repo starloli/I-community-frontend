@@ -273,6 +273,7 @@ export class ModifyResidentComponent implements OnInit, OnDestroy {
 
 
   updateUser(user: UserResponse): void {
+    console.log(user);
     this.http.putApi(this.userRole === UserRole.ADMIN ? this.putadminUrl : this.superAdminUrl, user).pipe(takeUntil(this.$destroy)).subscribe({
       next: () => {
         this.toast.success('使用者資料更新成功', 2000)
