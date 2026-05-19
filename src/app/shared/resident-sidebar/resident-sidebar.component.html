@@ -42,7 +42,7 @@
       <span class="user-name">{{ roleName }}</span>
       <span class="user-unit">{{ userName }} {{ unitNumber }}</span>
     </div>
-    <button class="edit-button" aria-label="編輯使用者資訊" routerLink="/resident/userInfo">
+    <button class="edit-button" aria-label="編輯使用者資訊" (click)="editSelfInfo()">
       <mat-icon>edit</mat-icon>
     </button>
   </div>
