@@ -279,7 +279,8 @@ export class LoginComponent {
   }
 
   toForgetPage() {
-    this.router.navigate(['/forget-password']);
+    this.toast.info('此功能目前不可用', 2000);
+    // this.router.navigate(['/forget-password']);
   }
 
   emailError: boolean = false; // 重複信箱錯誤
