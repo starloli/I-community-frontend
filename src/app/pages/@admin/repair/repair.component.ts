@@ -205,7 +205,7 @@ export class RepairComponent implements OnInit, OnDestroy {
   }
 
   submitComplete() {
-    if (!this.selectedRepair || !this.completeForm.handler) return;
+    if (!this.selectedRepair) return;
 
     this.repairService.completeById(this.selectedRepair.repairId, {
       handler: this.completeForm.handler,

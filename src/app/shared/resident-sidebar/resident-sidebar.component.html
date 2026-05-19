@@ -10,11 +10,11 @@
     <div class="m-header-left">
       <mat-icon class="logo-icon">home_work</mat-icon>
     </div>
-    
+
     <div class="m-header-center">
       <div class="user-avatar-mini">{{ userInitial }}</div>
       <span class="user-name-mini">{{ roleName }}</span>
-      <button class="edit-btn-mini" routerLink="/resident/userInfo" aria-label="編輯個人資訊">
+      <button class="edit-btn-mini" (click)="editSelfInfo()" aria-label="編輯個人資訊">
         <mat-icon>edit</mat-icon>
       </button>
     </div>

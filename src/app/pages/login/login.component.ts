@@ -3,10 +3,9 @@ import { Component } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../@service/auth.service';
 import { HttpService } from '../../@service/http.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { VisitorServiceService } from '../../@service/visitor-service.service';
 import { ToastService } from '../../@service/toast.service';
 
@@ -24,7 +23,7 @@ export class LoginComponent {
     private http: HttpService,
     private auth: AuthService,
     private toast: ToastService,
-    private service:VisitorServiceService
+    private service: VisitorServiceService
   ) { }
 
   booleanSignup = false;
@@ -51,6 +50,7 @@ export class LoginComponent {
   isClickPhone = false;
   isClickEmail = false;
   isPasswordLength = false;
+  isOnline = true;
 
 
   // imageSrc='login_bg.png';
@@ -161,7 +161,12 @@ export class LoginComponent {
   loginstatus() { this.userloginStatus = true; }
   adminloginstatus() { this.isManagerStatus = true; }
 
-  sign_up() { this.booleanSignup = !this.booleanSignup; }
+  sign_up() {
+    if (this.isOnline)
+      this.toast.info('目前為離線模式，無法註冊新帳號');
+    else
+      this.booleanSignup = !this.booleanSignup;
+  }
 
   switchUser() {
     this.booleanIsManager = !this.booleanIsManager;

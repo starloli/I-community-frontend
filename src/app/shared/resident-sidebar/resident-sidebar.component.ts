@@ -5,6 +5,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpService } from '../../@service/http.service';
 import { User } from '../../interface/interface';
+import { ToastService } from '../../@service/toast.service';
 
 @Component({
   selector: 'app-resident-sidebar',
@@ -17,7 +18,7 @@ export class ResidentSidebarComponent implements OnInit, AfterViewInit, OnDestro
   private readonly document = inject(DOCUMENT);
   private readonly renderer = inject(Renderer2);
 
-  constructor(private router: Router, private http: HttpService) { }
+  constructor(private router: Router, private http: HttpService, private toast: ToastService) { }
 
   isCollapsed = false;
   isMobileNavHidden = false;
@@ -80,6 +81,11 @@ export class ResidentSidebarComponent implements OnInit, AfterViewInit, OnDestro
         console.error('取得住戶資訊失敗:', error);
       }
     });
+  }
+
+  editSelfInfo(): void {
+    this.toast.info('此功能目前不可用', 2000);
+    // this.router.navigate(['/resident/userInfo']);
   }
 
   toggleCollapse(): void {
